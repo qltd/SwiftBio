@@ -1,27 +1,79 @@
 body {
     height: 100%;
-    background: $black;
+    background: $white;
+    font-family: $primary-font;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    text-transform: uppercase;
     line-height: 1.4;
+    margin-top: 0;
 }
 
-p {
-    font-size: 2.3rem;
+h1 {
+    font-size: 2.8rem;
+    color: $purple;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 2.8rem;
+    color: $purple;
+    font-weight: 300;
+}
+
+h3 {
+    font-size: 2.2rem;
+    font-weight: 300;
+    font-style: italic;
+    color: $purple;
+}
+
+h4 {
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: $darkblue;
+}
+
+h5 {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+p, ul, ol {
+    margin-top: 0;
+    font-size: 1.8rem;
+}
+
+ul {
+    list-style: none;
+    padding-left: 2.5rem;
+
+    .main & li:before {
+        font-family: FontAwesome;
+        content: "\f0da";
+        color: $purple;
+        margin-right: 1rem;
+    }
 }
 
 a {
     text-decoration: none;
     transition: all 0.3s ease;
+    color: $blue;
+
+    &:focus {
+        outline: 0;
+    }
+
+    &:hover {
+        color: $purple;
+    }
 }
 
 .row {
     max-width: $site-width;
     margin: 0 auto;
     display: flex;
-    flex-wrap: wrap;
 
     &.full {
         max-width: 100%;
@@ -29,43 +81,112 @@ a {
 }
 
 /* Header */
+header {
+    .top-bar {
+        background: $darkblue;
+        height: 6rem;
+
+        .row {
+            justify-content: flex-end;
+            align-items: center;
+            height: 100%;
+        }
+
+        a {
+            color: $white;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-left: 3rem;
+        }
+
+        i.fa {
+            font-size: 2.2rem;
+        }
+    }
+
+    .menu-bar {
+        height: 7rem;
+        background: $lightgray;
+        position: relative;
+        z-index: 2;
+
+        .row {
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        .logo {
+            width: 115px;
+            margin-top: 2px;
+        }
+
+        .home & {
+            background: rgba($white, 0.54);
+
+            .row {
+                justify-content: flex-end;
+            }
+
+            .logo {
+                display: none;
+            }
+        }
+    }
+}
+
+#search {
+    display: flex;
+    align-items: center;
+
+    input {
+        height: 2.6rem;
+        border: none;
+        width: 38rem;
+    }
+
+    button {
+        background: none;
+        border: none;
+        color: $white;
+        font-size: 2rem;
+        margin-left: 1.2rem;
+        line-height: 1.2;
+    }
+}
+
+.logo img {
+    max-width: 200px;
+}
 
 .nav-toggle {
     background: none;
     border: none;
-    padding: 0;
-    margin: 0.4rem 5rem 0 0;
-    float: left;
+    font-weight: bold;
     outline: none;
     transition: all 0.3s ease;
+    font-size: 3rem;
+    color: $darkblue;
 
-    .bar {
-        display: block;
-        height: 0.4rem;
-        width: 4rem;
-        background: $black;
-        margin-bottom: 0.7rem;
-    }
-
-    &:hover {
-        .bar {
-            background: $pink;
-        }
+    i {
+        margin-left: 25px;
     }
 }
 
 /* Nav Overlay */
 .nav-overlay {
-    background: $black;
+    background: $white;
     position: absolute;
     top: 0;
     z-index: 99999;
-    left: -100%;
-    padding: 1% 3%;
-    transition: left 0.5s ease;
+    right: -100%;
+    padding: 1% 0;
+    width: 40%;
+    transition: right 0.5s ease;
 
     &.show {
-        left: 0;
+        right: 0;
     }
 
     @include responsive("959px") {
@@ -74,60 +195,88 @@ a {
 
 
     .nav-close {
-        font-family: $secondary-font;
         font-weight: 300;
-        font-size: 4.3rem;
+        font-size: 3rem;
         display: inline-block;
         margin-bottom: 5rem;
-    }
-
-    ul {
-        margin: 0 0 100px 0;
-        padding: 0;
-    }
-
-    a {
-        color: $white;
-        font-size: 5.5rem;
-        font-size: 4.3vh;
-        font-family: $primary-font;
+        margin-right: 3rem;
+        color: $blue;
+        float: right;
+        letter-spacing: 0;
         text-transform: uppercase;
-        font-weight: bold;
-        letter-spacing: 0.3em;
+        display: flex;
+        align-items: center;
 
-        @include responsive("959px") {
-            font-size: 4.8rem;
-            font-size: 6vh;
+        i {
+            margin-left: 3rem;
+            font-size: 5rem;
         }
-
 
         &:hover {
-            color: $gray;
+            color: $purple;
         }
     }
 
-    .primary-nav {
-        a {
-            font-size: 7rem;
-            font-size: 6.2vh;
+    nav {
+        margin-top: 10rem;
+        width: 100%;
 
-            @include responsive("959px") {
-                font-size: 4.8rem;
-                font-size: 10vh;
+        a {
+            width: 100%;
+            color: $blue;
+            font-size: 1.6rem;
+            font-weight: bold;
+            display: inline-block;
+            padding: 5px 0 5px 4.5rem;
+            margin-bottom: 0.5px;
+
+            &:hover {
+                color: $purple;
+                background: $lightgray;
             }
         }
 
-        li.design a:hover {
-            color: $design;
+        > ul {
+            > li {
+                margin-bottom: 3rem;
+
+                > a {
+                    font-size: 2rem;
+                    text-transform: uppercase;
+                    font-weight: 300;
+                    color: $gray;
+
+                    &:hover {
+                        background: none;
+                        color: $gray;
+                    }
+                }
+            }
+
+            ul ul.sub-menu {
+                a {
+                    padding-left: 8.5rem;
+                    font-weight: normal;
+                }
+            }
         }
 
-        li.development a:hover {
-            color: $development;
-        }
+        .home a {
+            font-weight: bold;
+            color: $blue;
 
-        li.branding a:hover {
-            color: $branding;
+            &:hover {
+                color: $purple;
+                background: $lightgray;
+            }
         }
+    }
+
+    ul {
+        width: 100%;
+        list-style: none;
+        margin: 0;
+        padding: 0;
     }
 }
 
@@ -137,7 +286,7 @@ a {
     background: rgba(0, 0, 0, 0.5);
     width: 100%;
     height: 100%;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 9999;
@@ -150,3 +299,535 @@ a {
 }
 
 /* Home */
+.masthead {
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    margin-top: -70px;
+    padding-top: 70px;
+    min-height: 50rem;
+
+    .row {
+        padding: 20px 0;
+        display: block;
+    }
+
+    .text {
+        margin-top: 4rem;
+        max-width: 55%;
+
+        h1 {
+            text-transform: capitalize;
+        }
+
+        a {
+            color: $blue;
+            font-weight: bold;
+        }
+    }
+}
+
+.applications-section {
+    background: $blue;
+    text-align: center;
+    color: $white;
+    padding: 3rem 0;
+
+    .row {
+        display: block;
+    }
+
+    h2 {
+        color: $white;
+        font-weight: bold;
+    }
+
+    .select2-container {
+        height: 42px !important;
+        width: 380px !important;
+    }
+
+    .select2-container .select2-selection--single .select2-selection__rendered {
+        line-height: 42px;
+        height: 42px;
+        padding-left: 0;
+        padding-right: 42px;
+        font-size: 2rem;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .select2-container--default .select2-selection--single {
+        border-radius: 0;
+        border: none;
+        height: 42px !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        background: $darkblue !important;
+        color: $white;
+        margin-left: 20px;
+        width: 44px;
+        height: 42px;
+        right: 0;
+        top: 0;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+        border-color: transparent !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow b:before {
+        font-family: FontAwesome;
+        content: "\f13a";
+        color: white;
+        font-size: 2rem;
+        position: absolute;
+        top: -17px;
+        left: -7px;
+    }
+
+    .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+        border-color: transparent !important;
+    }
+
+    .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b:before {
+        font-family: FontAwesome;
+        content: "\f139";
+        color: white;
+        font-size: 2rem;
+        top: -12px;
+    }
+
+    .select2-results {
+        border-color: #fff !important;
+    }
+}
+
+.callouts {
+    background: $lightblue;
+    padding: 4rem 0;
+
+    .callout {
+        flex: 1;
+        padding: 0 3rem;
+
+        &:nth-child(2) {
+            border-left: 1px solid $white;
+            border-right: 1px solid $white;
+        }
+    }
+
+    h3 {
+        font-size: 2.8rem;
+        margin-top: 0.5rem;
+        font-weight: 300;
+        font-style: normal;
+        color: $black;
+    }
+
+    .button {
+        margin: 0 auto;
+    }
+}
+
+.button {
+    display: block;
+    width: 28rem;
+    border: 1px solid $gray;
+    text-align: center;
+    padding: 1rem;
+    font-size: 2rem;
+    font-weight: bold;
+    color: $blue;
+    text-transform: uppercase;
+
+    &:after {
+        font-family: FontAwesome;
+        content: "\f138";
+        margin-left: 10px;
+    }
+
+    &:hover {
+        color: $purple;
+    }
+
+    &.purple {
+        color: $purple;
+
+        &:hover {
+            color: $blue;
+        }
+    }
+}
+
+.testimonial {
+    background: $lightgray;
+    padding: 3rem 0 1rem;
+
+    .row {
+        display: block;
+        text-align: center;
+    }
+
+    h4 {
+        font-size: 2.8rem;
+        font-weight: 300;
+        color: $purple;
+    }
+
+    p {
+        font-size: 2.6rem;
+    }
+}
+
+.features {
+    padding: 3rem 0;
+
+    .feature {
+        width: 50%;
+        padding-right: 2rem;
+
+        &:first-child {
+            border-right: 1px solid $purple;
+        }
+
+        &:last-child {
+            padding-left: 3rem;
+        }
+    }
+
+    img {
+        margin-right: 2rem;
+        margin-bottom: 2rem;
+        float: left;
+    }
+
+    h2 {
+        margin-bottom: 0;
+        line-height: 1.2;
+
+        a {
+            color: $purple;
+
+            &:hover {
+                color: $blue;
+            }
+        }
+    }
+
+    h5 {
+        font-size: 1.8rem;
+        font-weight: bold;
+    }
+
+    p {
+        font-size: 1.8rem;
+
+        a {
+            white-space: nowrap;
+        }
+    }
+
+    .button {
+        margin: 0 auto;
+        clear: both;
+    }
+}
+
+.event-callout {
+    background: $lightgray;
+    width: $site-width;
+    margin: 2rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .left {
+        width: 280px;
+        background: $blue;
+        height: 100%;
+        color: $white;
+        text-align: center;
+        padding: 4.1rem;
+        text-transform: uppercase;
+        font-weight: bold;
+        line-height: 1.2;
+    }
+
+    .day, .year {
+        display: block;
+        font-size: 1.6rem;
+    }
+
+    .date {
+        font-size: 3.8rem;
+        white-space: nowrap;
+    }
+
+    .middle {
+        width: 100%;
+        padding: 0 2rem;
+
+        h2 {
+            margin: 0 0 1rem;
+        }
+
+        h5 {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 0;
+        }
+    }
+
+    .right {
+        padding: 2rem;
+
+        .button:first-child {
+            margin-bottom: 2rem;
+        }
+    }
+}
+
+/* Footer */
+.site-footer {
+    margin-top: 4rem;
+    border-top: 1rem solid $purple;
+    background: $lightgray;
+    padding: 4rem 0 0;
+
+    .logo img {
+        max-width: 150px;
+        margin-bottom: 2rem;
+    }
+
+    .col {
+        margin-bottom: 4rem;
+        margin-right: 2rem;
+    }
+
+    address {
+        font-size: 1.8rem;
+        font-weight: 300;
+        line-height: 1.2;
+        margin-bottom: 2rem;
+    }
+
+    p {
+        font-size: 1.8rem;
+        font-weight: 300;
+        line-height: 1.2;
+        margin-bottom: 2rem;
+    }
+
+    .email-button {
+        width: 280px;
+        display: block;
+        background: $blue;
+        color: $white;
+        font-size: 1.6rem;
+        font-weight: bold;
+        padding: 1rem 2rem;
+        margin-bottom: 2rem;
+
+        i {
+            background: $white;
+            color: $blue;
+            padding: 3px;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        &:hover {
+            background: $purple;
+
+            i {
+                color: $purple;
+            }
+        }
+    }
+
+    .footer-btm {
+        background: $white;
+        padding: 2rem 0 0;
+
+        p {
+            font-size: 1.4rem;
+        }
+
+        a {
+            font-weight: bold;
+        }
+    }
+
+    nav {
+        .home {
+            display: none;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        > ul {
+            float: left;
+
+            > li {
+                > a {
+                    font-size: 1.8rem;
+                    color: $gray;
+                    text-transform: uppercase;
+                    font-weight: 300;
+                }
+
+                > ul.sub-menu {
+                    margin: 0;
+                    padding: 0;
+
+                    ul.sub-menu a {
+                        font-weight: normal;
+                    }
+                }
+            }
+        }
+
+        .menu-item-75, .menu-item-76 {
+            float: left;
+            margin-right: 2rem;
+            width: 28rem;
+            height: 100%;
+            min-height: 400px;
+        }
+
+        .menu-item-77 {
+            float: right;
+            margin-bottom: 2rem;
+        }
+
+        a {
+            display: inline-block;
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+    }
+}
+
+.social-icons {
+    margin: 0;
+    padding: 0;
+
+    li {
+        margin-right: 1rem;
+        list-style: none;
+        float: left;
+    }
+
+    i {
+        text-align: center;
+        width: 25px;
+        height: 25px;
+        padding: 5px;
+        font-size: 1.6rem;
+        background: $blue;
+        color: $white;
+        border-radius: 5px;
+
+        &:hover {
+            background: $purple;
+        }
+    }
+}
+
+/* Page Layout */
+.main {
+    width: 100%;
+}
+
+.sidebar {
+    width: 28rem;
+}
+
+/* Page */
+
+/* Buckets */
+.bucket {
+    margin-bottom: 3rem;
+}
+
+.sidebar_callout {
+    h5 {
+        background: $darkblue;
+        font-size: 1.6rem;
+        text-transform: uppercase;
+        color: $white;
+        margin: 0;
+        padding: 1rem 2rem;
+    }
+
+    .text {
+        background: $lightgray;
+        padding: 2rem 2rem 0;
+        line-height: 0;
+
+        p {
+            text-align: left;
+            line-height: 1.4;
+            font-size: 2.2rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+        }
+
+        img {
+            line-height: 0;
+        }
+    }
+
+    &.video {
+        .text {
+            padding-bottom: 0.6rem;
+        }
+
+        img {
+            margin-bottom: 1rem;
+        }
+    }
+}
+
+/* Accordion */
+.expander {
+    background: $lightgray;
+    display: flex;
+    width: 100%;
+    font-size: 2.2rem;
+    padding: 0rem 1rem;
+    color: $darkblue;
+    font-weight: 300;
+    align-items: center;
+    justify-content: space-between;
+
+    i {
+        color: $blue;
+        font-size: 2.6rem;
+    }
+}
+
+.expand-collapse {
+    margin-bottom: 0rem;
+
+    .content {
+        transition: opacity 0s ease-out;
+        opacity: 0;
+        height: 0;
+        overflow: hidden;
+        padding: 1rem 0;
+    }
+
+    &.open {
+        .content {
+            opacity: 1;
+            height: auto;
+            transition: opacity 1s ease-out;
+        }
+    }
+}

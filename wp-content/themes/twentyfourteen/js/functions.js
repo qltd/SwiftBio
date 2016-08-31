@@ -5,22 +5,7 @@
  * footer widgets and Featured Content slider
  *
  */
-function updateQty(qty, el){
-
-}
-
 ( function( $ ) {
-
-        $('.input-text.qty').on('keyup change', function(){
-            var qty = $(this).val();
-            if (qty > 999){
-               var qty = 999
-            }
-            var id = $(this).data('product');
-            $('a[data-product_id=' + id + ']').data('quantity', qty);
-
-        });
-
 	var body    = $( 'body' ),
 		_window = $( window ),
 		nav, button, menu;

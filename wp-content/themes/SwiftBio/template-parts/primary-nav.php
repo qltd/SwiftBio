@@ -1,5 +1,4 @@
-<ul class="primary-nav">
-    <li class="branding"><a href="<?php echo get_permalink(7); ?>">Branding</a></li>
-    <li class="design"><a href="<?php echo get_permalink(9); ?>">Design</a></li>
-    <li class="development"><a href="<?php echo get_permalink(11); ?>">Development</a></li>
+<ul>
+    <li class="home"><a href="/">Home</a></li>
+    <?php wp_nav_menu(array('container' => '', 'items_wrap' => '%3$s', 'theme_location' => 'primary', 'menu_id' => 'primary-menu'));?>
 </ul>

@@ -17,42 +17,54 @@
             <link rel="profile" href="http://gmpg.org/xfn/11">
             <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
 
+            <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700" rel="stylesheet">
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-            <script src="https://use.typekit.net/ilp1uhx.js"></script>
-            <script>try{Typekit.load({ async: true });}catch(e){}</script>
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css" rel="stylesheet" />
             <?php wp_head(); ?>
         </head>
 
         <body <?php body_class(); ?>>
             <div class="nav-overlay">
--                <a href="#" class="nav-close">Close X</a>
-+
--                <nav>
+                <a href="#" class="nav-close">Close <i class="fa fa-times-circle"></i></a>
+                <nav>
                     <?php get_template_part('template-parts/primary-nav'); ?>
-                 </nav>-
--            </div>
+                </nav>
+            </div>
 
--            <div class="bg-overlay"></div>
+            <div class="bg-overlay"></div>
 
 
             <header class="site-header">
 
                 <div class="top-bar">
-                    <a href="/" title="home" class="logo"><img src="<?php bloginfo('template_directory'); ?>/img/qltd-logo.svg" alt="Swift Biosciences" /></a>
+                    <div class="row">
 
-                    <form>
-                        <input type="text" />
-                    </form>
+                        <div class="search">
 
-                    <a href="#">View Cart</a>
+                           <form method="get" id="search" action="<?php bloginfo('url'); ?>/">
+                                <input type="text" size="18" value="<?php echo $s; ?>" name="s" id="s" />
+                                <button id="searchsubmit" ><i class="fa fa-search"></i></button>
+                            </form>
+                        </div>
 
-                    <a href="#">Login/MyAccount</a>
+                        <a href="<?php echo get_permalink(5); ?>"><i class="fa fa-shopping-cart"></i></a>
+
+                        <?php if (is_user_logged_in()): ?>
+                        <a href="<?php echo get_permalink(7); ?>">Account</a>
+                        <?php else: ?>
+                        <a href="<?php echo wp_login_url(); ?>" title="Login">Login</a>
+                        <?php endif; ?>
+                    </div>
+
                 </div>
 
                 <div class="menu-bar">
-                    <button class="nav-toggle">MENU <span class="bar"></span><span class="bar"></span><span class="bar"></span></button>
+                    <div class="row">
+                    <a href="/" title="home" class="logo"><img src="<?php bloginfo('template_directory'); ?>/img/swift-logo.svg" alt="Swift Biosciences" /></a>
+                    <button class="nav-toggle">MENU <i class="fa fa-bars"></i></button>
+                    </div>
                 </div>
+                </header><!-- #masthead -->
 
-            </header><!-- #masthead -->
-
-            <div id="content" class="site-content">
+                <div id="content" class="site-content">

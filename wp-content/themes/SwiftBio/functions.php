@@ -36,7 +36,9 @@ function detectLocation(){
  */
 
 //Additional Media Library Sizes
-add_image_size( 'square_thumb', 600, 600, true );
+add_image_size( 'featured_product', 280, 310, true );
+add_image_size( 'sidebar_thumb', 470, 0, true );
+
 
 
 if ( ! function_exists( '_q_setup' ) ) :
@@ -198,16 +200,31 @@ add_filter( 'body_class', 'add_slug_body_class' );
 
 
 // Our custom post type function
-function create_post_type() {
+function create_post_types() {
 
-    register_post_type( 'projects',
+    register_post_type( 'events',
     // CPT Options
         array(
             'labels' => array(
-                'name' => __( 'Projects' ),
-                'singular_name' => __( 'Project' ),
-                'add_new_item' => __('Add New Project'),
-                'not_found' => __( 'No Projects Found'),
+                'name' => __( 'Events' ),
+                'singular_name' => __( 'Event' ),
+                'add_new_item' => __('Add New Event'),
+                'not_found' => __( 'No Events Found'),
+            ),
+            'public' => true,
+            'has_archive' => true,
+            'rewrite' => array('slug' => 'events'),
+        )
+    );
+
+    register_post_type( 'careers',
+    // CPT Options
+        array(
+            'labels' => array(
+                'name' => __( 'Careers' ),
+                'singular_name' => __( 'Career' ),
+                'add_new_item' => __('Add New Career'),
+                'not_found' => __( 'No Careers Found'),
             ),
             'public' => true,
             'has_archive' => true,
@@ -215,86 +232,7 @@ function create_post_type() {
         )
     );
 
-    $labels = array(
-        'name' => _x( 'Clients', 'taxonomy general name' ),
-        'singular_name' => _x( 'Client', 'taxonomy singular name' ),
-        'search_items' =>  __( 'Search Clients' ),
-        'all_items' => __( 'All Clients' ),
-        'edit_item' => __( 'Edit Client' ),
-        'update_item' => __( 'Update Client' ),
-        'add_new_item' => __( 'Add New Client' ),
-        'not_found' => __('No Clients Found'),
-        'menu_name' => __( 'Clients' ),
-    );
-
-    // Now register the taxonomy
-    register_taxonomy('clients',array('projects'), array(
-        'public' => true,
-        'hierarchical' => true,
-        'labels' => $labels,
-        'show_ui' => true,
-        'show_admin_column' => true,
-        'query_var' => true,
-        'description' => false,
-        'rewrite' => array( 'slug' => 'clients'),
-    ));
 }
 
 // Hooking up our function to theme setup
-add_action( 'init', 'create_post_type' );
-
-/*
-* Gets the ID of the client from the option_name
- */
-function getClientID($opt){
-    return str_replace('clients_', '', str_replace('_services_section', '', $opt));
-}
-
-/*
-* Returns a list of clients (terms) based on ID's pertaining to the section (Design, Branding or Dev)
- */
-function getClients($section){
-    global $wpdb;
-    $IDs = false;
-    $var = '%' . $section . '%';
-    $results = $wpdb->get_results($wpdb->prepare("SELECT option_name FROM $wpdb->options WHERE option_value LIKE %s AND option_name LIKE %s", $var, '%services_section%'), ARRAY_A );
-    foreach ($results as $o){
-        $IDs .= getClientID($o['option_name']) . ',';
-    }
-
-    $IDs = rtrim($IDs, ",");
-
-    $clients = get_terms( array(
-        'taxonomy' => 'clients',
-        'hide_empty' => true,
-        'include' => $IDs,
-    ));
-
-    return $clients;
-}
-
-function formatServices($services){
-    $return = false;
-    if (in_array('Branding', $services)){
-        $return .= '<span class="branding">Branding</span>';
-        if (count($services) >= 3){
-            $return .= ', ';
-        }
-    }
-
-    if (in_array('Design', $services)){
-        if (count($services) >= 2 && !in_array('Development', $services)){
-            $return .= ' & ';
-        }
-        $return .= '<span class="design">Design</span>';
-    }
-
-    if (in_array('Development', $services)){
-        if (count($services) >= 2){
-            $return .= ' & ';
-        }
-        $return .= '<span class="development">Development</span>';
-    }
-
-    return $return;
-}
+add_action( 'init', 'create_post_types' );

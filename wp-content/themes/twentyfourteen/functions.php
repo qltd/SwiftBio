@@ -25,35 +25,6 @@
  * @since Twenty Fourteen 1.0
  */
 
-
-
-// replace the add to cart shortcode to show quantity
-//add_filter( 'woocommerce_loop_add_to_cart_link', 'quantity_inputs_for_woocommerce_loop_add_to_cart_link', 10, 2 );
-
-function quantity_inputs_for_woocommerce_loop_add_to_cart_link( $html, $product ) {
-    if ( $product && $product->is_type( 'simple' ) && $product->is_purchasable() && $product->is_in_stock() && ! $product->is_sold_individually() ) {
-        $html = '<form action="' . esc_url( $product->add_to_cart_url() ) . '" class="cart" method="post" enctype="multipart/form-data">';
-        $html .= woocommerce_quantity_input( array(), $product, false );
-        $html .= '<button type="submit" class="button product_type_simple add_to_cart_button ajax_add_to_cart">' . esc_html( $product->add_to_cart_text() ) . '</button>';
-        $html .= '</form>';
-    }
-    return $html;
-}
-
-
-function detectLocation(){
-    $geoip = geoip_detect2_get_info_from_current_ip();
-    $country = $geoip->raw[ 'country' ][ 'iso_code' ];
-    if ( 'US' === $country ) {
-        return true;
-    }
-
-    return false;
-}
-
-
-
-
 /**
  * Set up the content width value based on the theme's design.
  *
@@ -89,12 +60,12 @@ function twentyfourteen_setup() {
 	/*
 	 * Make Twenty Fourteen available for translation.
 	 *
-	 * Translations can be added to the /languages/ directory.
+	 * Translations can be filed at WordPress.org. See: https://translate.wordpress.org/projects/wp-themes/twentyfourteen
 	 * If you're building a theme based on Twenty Fourteen, use a find and
 	 * replace to change 'twentyfourteen' to the name of your theme in all
 	 * template files.
 	 */
-	load_theme_textdomain( 'twentyfourteen', get_template_directory() . '/languages' );
+	load_theme_textdomain( 'twentyfourteen' );
 
 	// This theme styles the visual editor to resemble the theme style.
 	add_editor_style( array( 'css/editor-style.css', twentyfourteen_font_url(), 'genericons/genericons.css' ) );
@@ -348,9 +319,9 @@ function twentyfourteen_the_attached_image() {
 
 	// If there is more than 1 attachment in a gallery...
 	if ( count( $attachment_ids ) > 1 ) {
-		foreach ( $attachment_ids as $attachment_id ) {
+		foreach ( $attachment_ids as $idx => $attachment_id ) {
 			if ( $attachment_id == $post->ID ) {
-				$next_id = current( $attachment_ids );
+				$next_id = $attachment_ids[ ( $idx + 1 ) % count( $attachment_ids ) ];
 				break;
 			}
 		}
