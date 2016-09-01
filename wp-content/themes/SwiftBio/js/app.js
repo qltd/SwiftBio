@@ -34,8 +34,19 @@ $(document).ready(function(){
     });
 
     $('.lightbox-video').magnificPopup({
-  type:'iframe',
-});
+      type:'iframe'
+    });
+
+    $('.input-text.qty').on('keyup change', function(){
+        var qty = $(this).val();
+        if (qty > 999){
+           var qty = 999
+        }
+        var id = $(this).data('product');
+        $('a[data-product_id=' + id + ']').data('quantity', qty);
+
+    });
+
 
 
     $('#applications').on('change', function () {

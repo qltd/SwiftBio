@@ -24,6 +24,10 @@ get_header(); ?>
                     <?php the_field('related_products'); ?>
                 </div>
             <?php endif; ?>
+
+            <?php if (get_field('products')): ?>
+                <?php get_template_part('template-parts/product-table'); ?>
+            <?php endif; ?>
         </div>
 
         <div class="sidebar">

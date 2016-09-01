@@ -24,8 +24,6 @@ h2 {
 h3 {
     font-size: 2.2rem;
     font-weight: 300;
-    font-style: italic;
-    color: $purple;
 }
 
 h4 {
@@ -829,5 +827,27 @@ header {
             height: auto;
             transition: opacity 1s ease-out;
         }
+    }
+}
+
+/* Product Table */
+.product.woocommerce.add_to_cart_inline {
+    border: none !important;
+}
+
+.woocommerce-Price-amount {
+    display: none;
+}
+
+.button.product_type_simple.add_to_cart_button.ajax_add_to_cart {
+    padding: 0;
+    width: auto;
+    font-size: 1.6rem;
+    background: $purple;
+    color: $white;
+    border-radius: 0;
+
+    &:after {
+        display: none;
     }
 }
