@@ -38,7 +38,7 @@ h5 {
     font-weight: bold;
 }
 
-p, ul, ol {
+p, ul, ol, td, div {
     margin-top: 0;
     font-size: 1.8rem;
 }
@@ -67,6 +67,11 @@ a {
     &:hover {
         color: $purple;
     }
+}
+
+table, td {
+    padding: 3px 5px;
+    border: 1px solid $lightgray;
 }
 
 .row {
