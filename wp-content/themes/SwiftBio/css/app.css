@@ -411,7 +411,7 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 .social-icons i:hover { background: #942976; }
 
 /* Page Layout */
-.main { width: 100%; }
+.main { width: 100%; padding-right: 2rem; }
 
 .sidebar { width: 28rem; }
 
