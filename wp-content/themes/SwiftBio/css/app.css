@@ -182,6 +182,14 @@ a:hover { color: #942976; }
 
 table, td { padding: 3px 5px; border: 1px solid #eee; }
 
+.ml-responsive-table .ml-grid { clear: both; }
+
+.ml-responsive-table dt.ml-title { clear: none; float: left; width: 30% !important; background: #eee; }
+
+.ml-responsive-table dl dt:nth-of-type(even) { background: #eee; }
+
+.ml-responsive-table dd.ml-value { clear: none; float: left; width: 70% !important; }
+
 .row { max-width: 1183px; margin: 0 auto; display: -webkit-flex; display: -ms-flexbox; display: flex; }
 
 .row.full { max-width: 100%; }

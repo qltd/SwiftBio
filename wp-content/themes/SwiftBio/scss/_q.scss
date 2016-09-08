@@ -74,6 +74,27 @@ table, td {
     border: 1px solid $lightgray;
 }
 
+.ml-responsive-table .ml-grid {
+    clear: both;
+}
+
+.ml-responsive-table dt.ml-title {
+    clear: none;
+    float: left;
+    width: 30% !important;
+    background: $lightgray;
+}
+
+.ml-responsive-table dl dt:nth-of-type(even) {
+    background: $lightgray;
+}
+
+.ml-responsive-table dd.ml-value {
+    clear: none;
+    float: left;
+    width: 70% !important;
+}
+
 .row {
     max-width: $site-width;
     margin: 0 auto;
