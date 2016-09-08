@@ -20,7 +20,7 @@ navToggle[0].addEventListener("click", function(){ toggleNav() });
 navClose[0].addEventListener("click", function(){ toggleNav() });
 bgOverlay[0].addEventListener("click", function(){ toggleNav() });
 
-$(document).ready(function(){
+(function($){
 
     $('select').select2({
         minimumResultsForSearch: Infinity,
@@ -57,6 +57,6 @@ $(document).ready(function(){
       return false;
   });
 
-});
+})(jQuery);
 
 
