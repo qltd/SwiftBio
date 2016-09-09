@@ -99,10 +99,16 @@ table, td {
     max-width: $site-width;
     margin: 0 auto;
     display: flex;
+    padding: 0 2rem;
 
     &.full {
         max-width: 100%;
     }
+}
+
+img {
+    max-width: 100%;
+    height: auto;
 }
 
 /* Header */
@@ -169,6 +175,10 @@ header {
         height: 2.6rem;
         border: none;
         width: 38rem;
+
+        @include responsive("768px") {
+            width: 100%;
+        }
     }
 
     button {
@@ -194,8 +204,14 @@ header {
     font-size: 3rem;
     color: $darkblue;
 
+    @include responsive("768px") {
+        color: $lightgray;
+    }
+
+
     i {
         margin-left: 25px;
+        color: $darkblue;
     }
 }
 
@@ -203,19 +219,25 @@ header {
 .nav-overlay {
     background: $white;
     position: absolute;
-    top: 0;
     z-index: 99999;
-    right: -100%;
     padding: 1% 0;
     width: 40%;
-    transition: right 0.5s ease;
+    top: 0;
+    right: 0;
+    transition: transform .3s;
+    transform: translateX(100%);
 
     &.show {
-        right: 0;
+        transform: translateX(0);
     }
 
+    @include responsive("1100px") {
+        width: 50%;
+    }
+
+
     @include responsive("959px") {
-        width: 100%;
+        width: 90%;
     }
 
 
@@ -621,6 +643,15 @@ header {
     background: $lightgray;
     padding: 4rem 0 0;
 
+    @include responsive("768px") {
+        background: $white;
+
+        .row {
+            display: block;
+        }
+    }
+
+
     .logo img {
         max-width: 150px;
         margin-bottom: 2rem;
@@ -629,6 +660,10 @@ header {
     .col {
         margin-bottom: 4rem;
         margin-right: 2rem;
+
+        @include responsive("768px") {
+            width: 100%;
+        }
     }
 
     address {
@@ -678,6 +713,7 @@ header {
 
         p {
             font-size: 1.4rem;
+            line-height: 1.8;
         }
 
         a {
@@ -686,6 +722,15 @@ header {
     }
 
     nav {
+        @include responsive("768px") {
+            width: 100%;
+            float: left;
+            margin-top: 3rem;
+            background: none;
+            margin-bottom: 3rem;
+        }
+
+
         .home {
             display: none;
         }
@@ -697,17 +742,66 @@ header {
         > ul {
             float: left;
 
+            @include responsive("768px") {
+                margin: 0;
+                padding: 0;
+            }
+
+
             > li {
+                @include responsive("768px") {
+                    &.open {
+                        > ul.sub-menu {
+                            opacity: 1;
+                            height: auto;
+                            transition: opacity 1s ease-out;
+                        }
+
+                        > a:after {
+                            content: "\f056";
+                        }
+                    }
+                }
+
+
                 > a {
                     font-size: 1.8rem;
                     color: $gray;
                     text-transform: uppercase;
                     font-weight: 300;
+
+                    @include responsive("768px") {
+                        background: $lightgray;
+                        display: flex;
+                        width: 100%;
+                        font-size: 2.2rem;
+                        padding: 0rem 1rem;
+                        color: $darkblue;
+                        font-weight: 300;
+                        align-items: center;
+                        justify-content: space-between;
+
+                        &:after {
+                            font-family: FontAwesome;
+                            content: "\f055";
+                            color: $blue;
+                            font-size: 2.6rem;
+                        }
+                    }
                 }
 
                 > ul.sub-menu {
                     margin: 0;
                     padding: 0;
+
+                    @include responsive("768px") {
+                        transition: opacity 0s ease-out;
+                        opacity: 0;
+                        height: 0;
+                        overflow: hidden;
+                        padding: 0.5rem 0;
+                    }
+
 
                     ul.sub-menu a {
                         font-weight: normal;
@@ -722,11 +816,22 @@ header {
             width: 28rem;
             height: 100%;
             min-height: 400px;
+
+            @include responsive("768px") {
+                min-height: 0;
+                height: auto;
+                width: 100%;
+            }
         }
 
         .menu-item-77 {
             float: right;
             margin-bottom: 2rem;
+
+            @include responsive("768px") {
+                width: 100%;
+                margin-bottom: 0;
+            }
         }
 
         a {
@@ -765,13 +870,33 @@ header {
 }
 
 /* Page Layout */
+#body-wrap {
+    @include responsive("768px") {
+        display: block;
+    }
+}
+
 .main {
     width: 100%;
     padding-right: 2rem;
+
+    @include responsive("768px") {
+        padding-left: 2rem;
+    }
 }
 
 .sidebar {
     width: 28rem;
+
+    @include responsive("768px") {
+        width: 100%;
+        padding: 0 2rem;
+        margin-top: 2rem;
+
+        .button {
+            width: 100%;
+        }
+    }
 }
 
 /* Page */
@@ -793,7 +918,7 @@ header {
 
     .text {
         background: $lightgray;
-        padding: 2rem 2rem 0;
+        padding: 2rem 2rem;
         line-height: 0;
 
         p {

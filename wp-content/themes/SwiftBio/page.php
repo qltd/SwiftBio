@@ -10,12 +10,12 @@ get_header(); ?>
             //share icons
     </div>
 
-    <div class="row">
+    <div id="body-wrap" class="row">
 
         <div class="main">
             <?php get_template_part('template-parts/content-page'); ?>
 
-            <?php if (get_field('accordion_content')): ?>
+            <?php if (get_field('accordion_block')): ?>
                 <?php get_template_part('buckets/accordion'); ?>
             <?php endif; ?>
 

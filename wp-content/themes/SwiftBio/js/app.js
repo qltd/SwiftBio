@@ -27,7 +27,7 @@ bgOverlay[0].addEventListener("click", function(){ toggleNav() });
         placeholder: "SELECT YOUR APPLICATION"
     });
 
-    $('.expander').click(function(){
+    $('.expander, .site-footer nav>ul>li>a').click(function(){
         $(this).parent().toggleClass('open');
         $(this).find('i').toggleClass('fa-minus-circle');
         return false;

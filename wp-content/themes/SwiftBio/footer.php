@@ -16,25 +16,25 @@
             <footer id="colophon" class="site-footer" role="contentinfo">
                 <div class="row">
                         <div class="col">
-                        <a href="/" title="home" class="logo"><img src="<?php bloginfo('template_directory'); ?>/img/swift-logo.svg" alt="Swift Biosciences" /></a>
+                            <a href="/" title="home" class="logo"><img src="<?php bloginfo('template_directory'); ?>/img/swift-logo.svg" alt="Swift Biosciences" /></a>
 
-                        <address>58 Parkland Plaza, Ste, 100<br />
-                        Ann Arbor, MI 48103 USA</address>
+                            <address>58 Parkland Plaza, Ste, 100<br />
+                            Ann Arbor, MI 48103 USA</address>
 
-                        <p>
-                            Tel: 734-330-2568<br />
-                            Toll-Free: 844-867-7028<br />
-                            Fax: 734-527-6709
-                        </p>
+                            <p>
+                                Tel: 734-330-2568<br />
+                                Toll-Free: 844-867-7028<br />
+                                Fax: 734-527-6709
+                            </p>
 
-                        <a href="#" class="email-button"><i class="fa fa-envelope"></i> Email Technical Support</a>
-                        <a href="#" class="email-button"><i class="fa fa-envelope"></i> Email Orders</a>
+                            <a href="#" class="email-button"><i class="fa fa-envelope"></i> Email Technical Support</a>
+                            <a href="#" class="email-button"><i class="fa fa-envelope"></i> Email Orders</a>
 
-                        <ul class="social-icons">
-                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                            <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-                        </ul>
+                            <ul class="social-icons">
+                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                            </ul>
                         </div>
                     <nav>
                         <?php get_template_part('template-parts/primary-nav'); ?>
