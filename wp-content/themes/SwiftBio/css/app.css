@@ -488,6 +488,11 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .expand-collapse.open .content { opacity: 1; height: auto; transition: opacity 1s ease-out; }
 
+/* Product tagline */
+.product-tagline { display: -webkit-flex; display: -ms-flexbox; display: flex; background: #b9e5fb; width: 100%; margin: 2rem 0; -webkit-align-items: center; -ms-flex-align: center; align-items: center; }
+
+.product-tagline .tagline { padding: 5rem 2rem; font-size: 2.2rem; color: #942976; font-style: italic; font-weight: 300; }
+
 /* Product Table */
 .product.woocommerce.add_to_cart_inline { border: none !important; }
 

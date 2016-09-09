@@ -36,6 +36,7 @@ function detectLocation(){
  */
 
 //Additional Media Library Sizes
+add_image_size( 'product_tagline', 280, 200, true );
 add_image_size( 'featured_product', 280, 310, true );
 add_image_size( 'sidebar_thumb', 470, 0, true );
 

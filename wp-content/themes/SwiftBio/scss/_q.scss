@@ -983,6 +983,23 @@ header {
     }
 }
 
+/* Product tagline */
+.product-tagline {
+    display: flex;
+    background: $lightblue;
+    width: 100%;
+    margin: 2rem 0;
+    align-items: center;
+
+    .tagline {
+        padding: 5rem 2rem;
+        font-size: 2.2rem;
+        color: $purple;
+        font-style: italic;
+        font-weight: 300;
+    }
+}
+
 /* Product Table */
 .product.woocommerce.add_to_cart_inline {
     border: none !important;
