@@ -162,6 +162,8 @@ h1 { font-size: 2.8rem; color: #942976; font-weight: bold; }
 
 h2 { font-size: 2.8rem; color: #942976; font-weight: 300; }
 
+h2.sub-page-title { margin-top: 2rem; color: #2a569b; }
+
 h3 { font-size: 2.2rem; font-weight: 300; }
 
 h4 { font-size: 2.2rem; font-weight: 300; color: #2a569b; }
@@ -180,21 +182,12 @@ a:focus { outline: 0; }
 
 a:hover { color: #942976; }
 
-table, td { padding: 3px 5px; border: 1px solid #eee; }
+img { max-width: 100%; height: auto; }
 
-.ml-responsive-table .ml-grid { clear: both; }
-
-.ml-responsive-table dt.ml-title { clear: none; float: left; width: 30% !important; background: #eee; }
-
-.ml-responsive-table dl dt:nth-of-type(even) { background: #eee; }
-
-.ml-responsive-table dd.ml-value { clear: none; float: left; width: 70% !important; }
-
+/* Layout Rows */
 .row { max-width: 1223px; margin: 0 auto; display: -webkit-flex; display: -ms-flexbox; display: flex; padding: 0 2rem; }
 
 .row.full { max-width: 100%; }
-
-img { max-width: 100%; height: auto; }
 
 /* Header */
 header .top-bar { background: #2a569b; height: 6rem; }
@@ -435,9 +428,9 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 @media screen and (max-width: 768px) { .site-footer nav .menu-item-75, .site-footer nav .menu-item-76 { min-height: 0; height: auto; width: 100%; } }
 
-.site-footer nav .menu-item-77 { float: right; margin-bottom: 2rem; }
+.site-footer nav .menu-item-77, .site-footer nav .menu-item-78 { float: left; margin-bottom: 2rem; }
 
-@media screen and (max-width: 768px) { .site-footer nav .menu-item-77 { width: 100%; margin-bottom: 0; } }
+@media screen and (max-width: 768px) { .site-footer nav .menu-item-77, .site-footer nav .menu-item-78 { width: 100%; margin-bottom: 0; } }
 
 .site-footer nav a { display: inline-block; font-size: 1.6rem; font-weight: bold; margin-bottom: 1rem; }
 
@@ -494,12 +487,43 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 .product-tagline .tagline { padding: 5rem 2rem; font-size: 2.2rem; color: #942976; font-style: italic; font-weight: 300; }
 
 /* Product Table */
+.product-table { width: 100%; margin-bottom: 2rem; }
+
+.product-table th { background: #b9e5fb; font-size: 1.2rem; text-transform: uppercase; color: #58585a; text-align: left; padding: 3px 5px; }
+
+.product-table td { font-size: 1.4rem; padding: 3px 5px; }
+
+.product-table td .button { font-size: 1.2rem; padding: 3px; }
+
+.product-table td p { margin: 0; padding: 0 !important; }
+
+.product-table tr:nth-child(2) { background: #eee; }
+
+.product-table input[type=number] { float: left; margin-right: 4rem; }
+
 .product.woocommerce.add_to_cart_inline { border: none !important; }
 
 .woocommerce-Price-amount { display: none; }
 
-.button.product_type_simple.add_to_cart_button.ajax_add_to_cart { padding: 0; width: auto; font-size: 1.6rem; background: #942976; color: #fff; border-radius: 0; }
+.button.product_type_simple.add_to_cart_button.ajax_add_to_cart, .woocommerce a.added_to_cart { width: auto; font-size: 1.2rem !important; font-weight: bold; background: #25aae1; text-transform: uppercase; padding: 3px; line-height: 1; height: 1.8rem; color: #fff; border-radius: 0; float: right; }
 
-.button.product_type_simple.add_to_cart_button.ajax_add_to_cart:after { display: none; }
+.button.product_type_simple.add_to_cart_button.ajax_add_to_cart:after, .woocommerce a.added_to_cart:after { display: none; }
+
+.button.product_type_simple.add_to_cart_button.ajax_add_to_cart:hover, .woocommerce a.added_to_cart:hover { background: #942976; }
+
+.button.product_type_simple.add_to_cart_button.ajax_add_to_cart { float: left; }
+
+.product-lead-in { margin-top: 2rem; float: left; }
+
+/* Responsive Tables */
+.ml-responsive-table .ml-grid { float: left; border: none; margin-bottom: 2rem; background: #b9e5fb; }
+
+.ml-responsive-table .ml-grid input[type=number] { float: left; margin-right: 4rem; }
+
+.ml-responsive-table dt.ml-title { clear: none; float: left; padding-top: 9px !important; width: 25% !important; background: #b9e5fb !important; font-size: 1.2rem; text-transform: uppercase; color: #58585a; }
+
+.ml-responsive-table dd.ml-value { clear: none; float: left; width: 75% !important; padding: 5px 2rem !important; background: #fff; }
+
+.ml-responsive-table dl dd:nth-of-type(odd) { background: #eee; }
 
 /*# sourceMappingURL=app.css.map */

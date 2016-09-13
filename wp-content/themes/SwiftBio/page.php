@@ -19,14 +19,22 @@ get_header(); ?>
                 <?php get_template_part('buckets/accordion'); ?>
             <?php endif; ?>
 
+            <?php if (get_field('products')): ?>
+                <h2 class="sub-page-title">Place Order</h2>
+                <h3 class="product-lead-in"><?php the_field('product_table_lead_in_text'); ?></h3>
+                <?php get_template_part('template-parts/product-table'); ?>
+
+                <h3 class="product-lead-in"><?php the_field('additional_products_lead_in_text'); ?></h3>
+                <?php get_template_part('template-parts/additional-product-table'); ?>
+
+                <h3 class="product-lead-in"><?php the_field('optional_products_lead_in_text'); ?></h3>
+                <?php get_template_part('template-parts/optional-product-table'); ?>
+            <?php endif; ?>
+
             <?php if (get_field('related_products')): ?>
                 <div class="related-products">
                     <?php the_field('related_products'); ?>
                 </div>
-            <?php endif; ?>
-
-            <?php if (get_field('products')): ?>
-                <?php get_template_part('template-parts/product-table'); ?>
             <?php endif; ?>
         </div>
 
