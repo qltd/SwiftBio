@@ -9,7 +9,7 @@
 
 ?>
 
-<h1 class="page-title"><?php echo (get_the_archive_title() != 'Archives') ? str_replace('Archives: ', '', get_the_archive_title()) : 'News';?></h1>
+<h1 class="page-title"><?php echo get_archive_title(); ?></h1>
 
 <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
     <div class="post">

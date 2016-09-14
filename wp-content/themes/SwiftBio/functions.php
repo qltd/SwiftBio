@@ -329,3 +329,17 @@ function wpdocs_excerpt_more( $more ) {
     return ' <br /><a href="' . get_the_permalink() . '">More &raquo;</a>';
 }
 add_filter( 'excerpt_more', 'wpdocs_excerpt_more' );
+
+
+
+/* Get the title of the Archive page template */
+function get_archive_title(){
+    if (get_the_archive_title() != 'Archives') {
+        $title = str_replace('Archives: ', '', get_the_archive_title());
+    } elseif (is_search()) {
+        $title = 'Search Results';
+    } else {
+        $title = 'News';
+    }
+    return $title;
+}
