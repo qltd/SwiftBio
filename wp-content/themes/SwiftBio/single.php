@@ -8,28 +8,23 @@
  */
 
 get_header(); ?>
+    <div class="row share">
+            //share icons
+    </div>
 
-	<div id="primary" class="content-area">
-		<main id="main" class="site-main" role="main">
+    <div id="body-wrap" class="row">
 
-		<?php
-		while ( have_posts() ) : the_post();
+        <div class="main">
+            <?php get_template_part('template-parts/content-news'); ?>
 
-			get_template_part( 'template-parts/content', get_post_format() );
+            <?php if (get_field('accordion_block')): ?>
+                <?php get_template_part('buckets/accordion'); ?>
+            <?php endif; ?>
+        </div>
 
-			the_post_navigation();
+        <div class="sidebar">
+            <?php get_sidebar(); ?>
+        </div>
 
-			// If comments are open or we have at least one comment, load up the comment template.
-			if ( comments_open() || get_comments_number() ) :
-				comments_template();
-			endif;
-
-		endwhile; // End of the loop.
-		?>
-
-		</main><!-- #main -->
-	</div><!-- #primary -->
-
-<?php
-get_sidebar();
-get_footer();
+    </div>
+<?php get_footer(); ?>

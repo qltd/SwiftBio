@@ -17,9 +17,9 @@
             ?>
             <tr>
                 <td><?php echo $sku[0]; ?> </td>
-                <td style="width: 450px; padding-right: 4rem;"><?php echo $product->post_title; ?> sdfm sds dssd dssd dssdsd sd</td>
+                <td style="width: 450px; padding-right: 4rem;"><?php echo $product->post_title; ?></td>
                 <?php if (detectLocation()):  ?>
-                <td>$<?php echo $price[0]; ?>.00</td>
+                <td>$<?php echo $price[0]; ?></td>
                 <td><input type="number" data-product="<?php echo $product->ID ?>" step="1" min="1" max="999" name="quantity" value="1" title="Qty" class="input-text qty text" size="4" pattern="[0-9]*" inputmode="numeric">
                 <?php echo do_shortcode('[add_to_cart id="' . $product->ID . '"]'); ?></td>
                 <?php endif; ?>

@@ -64,6 +64,7 @@ a {
     text-decoration: none;
     transition: all 0.3s ease;
     color: $blue;
+    font-weight: bold;
 
     &:focus {
         outline: 0;
@@ -536,6 +537,7 @@ header {
 
         a {
             color: $purple;
+            font-weight: 300;
 
             &:hover {
                 color: $blue;
@@ -598,6 +600,10 @@ header {
 
         h2 {
             margin: 0 0 1rem;
+
+            a {
+                font-weight: 300;
+            }
         }
 
         h5 {
@@ -1093,5 +1099,18 @@ header {
 
     dl dd:nth-of-type(odd) {
         background: $lightgray;
+    }
+}
+
+/* News Events Blog Careers */
+.post {
+    margin-top: 2rem;
+
+    .post-title {
+        margin-bottom: 0;
+
+        a {
+            font-weight: 300;
+        }
     }
 }

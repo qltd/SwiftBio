@@ -317,3 +317,15 @@ add_action( 'edit_form_after_title', 'add_input_debug_preview' );
 function add_input_debug_preview() {
    echo '<input type="hidden" name="debug_preview" value="debug_preview">';
 }
+
+
+/**
+ * Filter the excerpt "read more" string.
+ *
+ * @param string $more "Read more" excerpt string.
+ * @return string (Maybe) modified "read more" excerpt string.
+ */
+function wpdocs_excerpt_more( $more ) {
+    return ' <br /><a href="' . get_the_permalink() . '">More &raquo;</a>';
+}
+add_filter( 'excerpt_more', 'wpdocs_excerpt_more' );
