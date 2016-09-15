@@ -310,15 +310,15 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .callouts .button { margin: 0 auto; }
 
-.button { display: block; width: 28rem; border: 1px solid #58585a; text-align: center; padding: 1rem; font-size: 2rem; font-weight: bold; color: #25aae1; text-transform: uppercase; }
+.button, input[type=submit] { background: none; display: block; width: 28rem; border: 1px solid #58585a; text-align: center; padding: 1rem; font-size: 2rem; font-weight: bold; color: #25aae1; text-transform: uppercase; }
 
-.button:after { font-family: FontAwesome; content: "\f138"; margin-left: 10px; }
+.button:after, input[type=submit]:after { font-family: FontAwesome; content: "\f138"; margin-left: 10px; }
 
-.button:hover { color: #942976; }
+.button:hover, input[type=submit]:hover { color: #942976; }
 
-.button.purple { color: #942976; }
+.button.purple, input[type=submit].purple { color: #942976; }
 
-.button.purple:hover { color: #25aae1; }
+.button.purple:hover, input[type=submit].purple:hover { color: #25aae1; }
 
 .testimonial { background: #eee; padding: 3rem 0 1rem; }
 
@@ -539,6 +539,8 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 /* Forms */
 .salesforce_w2l_lead .w2linput.text { width: 100% !important; }
+
+.salesforce_w2l_lead .w2linput.text.captcha { height: 30px !important; font-size: inherit !important; font-family: "Roboto", sans-serif !important; margin: 1rem 0 0 !important; text-align: left !important; }
 
 .salesforce_w2l_lead .select2 { width: 50% !important; margin-bottom: 1rem; }
 

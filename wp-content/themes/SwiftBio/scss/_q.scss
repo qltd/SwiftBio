@@ -459,7 +459,8 @@ header {
     }
 }
 
-.button {
+.button, input[type=submit] {
+    background: none;
     display: block;
     width: 28rem;
     border: 1px solid $gray;
@@ -1128,6 +1129,14 @@ header {
 .salesforce_w2l_lead {
     .w2linput.text {
         width: 100% !important;
+
+        &.captcha {
+            height: 30px !important;
+            font-size: inherit !important;
+            font-family: $primary-font !important;
+            margin: 1rem 0 0 !important;
+            text-align: left !important;
+        }
     }
 
     .select2 {
