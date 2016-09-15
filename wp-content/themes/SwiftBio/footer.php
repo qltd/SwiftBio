@@ -27,13 +27,13 @@
                                 Fax: 734-527-6709
                             </p>
 
-                            <a href="#" class="email-button"><i class="fa fa-envelope"></i> Email Technical Support</a>
-                            <a href="#" class="email-button"><i class="fa fa-envelope"></i> Email Orders</a>
+                            <a href="mailto:techsupport@swiftbiosciences.com" class="email-button"><i class="fa fa-envelope"></i> Email Technical Support</a>
+                            <a href="orders@swiftbiosciences.com" class="email-button"><i class="fa fa-envelope"></i> Email Orders</a>
 
                             <ul class="social-icons">
-                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                                <li><a href="https://twitter.com/SwiftBioSci" target="_blank"><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="https://www.facebook.com/Swift-Biosciences-120346024708339/" target="_blank"><i class="fa fa-facebook"></i></a></li>
+                                <li><a href="https://www.linkedin.com/company/2098428?trk=tyah&trkInfo=clickedVertical%3Acompany%2CclickedEntityId%3A2098428%2Cidx%3A2-1-2%2CtarId%3A1473958793258%2Ctas%3Aswift%20biosc" target="_blank"><i class="fa fa-linkedin"></i></a></li>
                             </ul>
                         </div>
                     <nav>
