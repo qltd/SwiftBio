@@ -338,6 +338,10 @@ function get_archive_title(){
         $title = str_replace('Archives: ', '', get_the_archive_title());
     } elseif (is_search()) {
         $title = 'Search Results';
+    } elseif (is_single()){
+        $post_type_obj = get_post_type_object( get_post_type() );
+        $title = apply_filters('post_type_archive_title', $post_type_obj->labels->name );
+        if ($title == 'Posts') { $title = 'News'; }
     } else {
         $title = 'News';
     }

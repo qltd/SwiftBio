@@ -384,7 +384,7 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 @media screen and (max-width: 768px) { .site-footer .col { width: 100%; } }
 
-.site-footer address { font-size: 1.8rem; font-weight: 300; line-height: 1.2; margin-bottom: 2rem; }
+.site-footer address { font-size: 1.8rem; font-weight: 300; line-height: 1.2; font-style: normal; margin-bottom: 2rem; }
 
 .site-footer p { font-size: 1.8rem; font-weight: 300; line-height: 1.2; margin-bottom: 2rem; }
 
@@ -483,7 +483,7 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .expand-collapse .content { transition: opacity 0s ease-out; opacity: 0; height: 0; overflow: hidden; padding: 1rem 0; }
 
-.expand-collapse.open .content { opacity: 1; height: auto; transition: opacity 1s ease-out; }
+.expand-collapse.open .content { opacity: 1; height: auto; margin: 1rem 0 0; transition: opacity 1s ease-out; }
 
 /* Product tagline */
 .product-tagline { display: -webkit-flex; display: -ms-flexbox; display: flex; background: #b9e5fb; width: 100%; margin: 2rem 0; -webkit-align-items: center; -ms-flex-align: center; align-items: center; }

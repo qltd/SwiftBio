@@ -656,6 +656,7 @@ header {
         font-size: 1.8rem;
         font-weight: 300;
         line-height: 1.2;
+        font-style: normal;
         margin-bottom: 2rem;
     }
 
@@ -971,6 +972,7 @@ header {
         .content {
             opacity: 1;
             height: auto;
+            margin: 1rem 0 0;
             transition: opacity 1s ease-out;
         }
     }
