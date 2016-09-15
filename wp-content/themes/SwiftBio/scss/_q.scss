@@ -890,6 +890,13 @@ header {
 /* Buckets */
 .bucket {
     margin-bottom: 3rem;
+
+    .phone {
+        color: $gray;
+        font-size: 1.6rem;
+        margin-bottom: 1.5rem;
+        display: block;
+    }
 }
 
 .sidebar_callout {
@@ -1111,6 +1118,22 @@ header {
 
         a {
             font-weight: 300;
+        }
+    }
+}
+
+/* Forms */
+.salesforce_w2l_lead {
+    .w2linput.text {
+        width: 100% !important;
+    }
+
+    .select2 {
+        width: 50% !important;
+        margin-bottom: 1rem;
+
+        li:before {
+            content: "";
         }
     }
 }

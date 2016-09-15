@@ -29,7 +29,7 @@ get_header(); ?>
                 'order' => 'ASC'
             ));
         ?>
-        <select id="applications">
+        <select id="applications" class="applications">
             <option></option>
             <?php foreach ($applications as $a): ?>
                 <option value="<?php echo get_permalink($a->ID); ?>"><?php echo $a->post_title; ?></option>

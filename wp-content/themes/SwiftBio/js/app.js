@@ -22,9 +22,13 @@ bgOverlay[0].addEventListener("click", function(){ toggleNav() });
 
 (function($){
 
-    $('select').select2({
+    $('select.applications').select2({
         minimumResultsForSearch: Infinity,
         placeholder: "SELECT YOUR APPLICATION"
+    });
+
+    $('form select').select2({
+        minimumResultsForSearch: Infinity,
     });
 
     $('.expander, .site-footer nav>ul>li>a').click(function(){

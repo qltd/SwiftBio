@@ -460,6 +460,8 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 /* Buckets */
 .bucket { margin-bottom: 3rem; }
 
+.bucket .phone { color: #58585a; font-size: 1.6rem; margin-bottom: 1.5rem; display: block; }
+
 .sidebar_callout h5 { background: #2a569b; font-size: 1.6rem; text-transform: uppercase; color: #fff; margin: 0; padding: 1rem 2rem; }
 
 .sidebar_callout .text { background: #eee; padding: 2rem 2rem; line-height: 0; }
@@ -534,5 +536,12 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 .post .post-title { margin-bottom: 0; }
 
 .post .post-title a { font-weight: 300; }
+
+/* Forms */
+.salesforce_w2l_lead .w2linput.text { width: 100% !important; }
+
+.salesforce_w2l_lead .select2 { width: 50% !important; margin-bottom: 1rem; }
+
+.salesforce_w2l_lead .select2 li:before { content: ""; }
 
 /*# sourceMappingURL=app.css.map */
