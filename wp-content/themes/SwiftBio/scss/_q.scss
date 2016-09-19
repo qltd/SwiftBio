@@ -459,7 +459,7 @@ header {
     }
 }
 
-.button, .woocommerce #respond input#submit, .woocommerce a.button, .woocommerce button.button, .woocommerce input.button, input[type=submit] {
+.button, .woocommerce #respond input#submit, .woocommerce a.button, .woocommerce button.button, .woocommerce input.button, input[type=submit], .woocommerce-cart .wc-proceed-to-checkout a.checkout-button, .woocommerce #payment #place_order, .woocommerce-page #payment #place_order {
     background: none;
     display: block;
     width: 28rem;
@@ -869,6 +869,10 @@ header {
     width: 100%;
     padding-right: 2rem;
 
+    &.no-pad {
+        padding-right: 0;
+    }
+
     @include responsive("768px") {
         padding-left: 2rem;
     }
@@ -1078,6 +1082,7 @@ header {
     height: 1.8rem;
     color: $white;
     border-radius: 0;
+    border: none;
     float: right;
 
     &:after {
@@ -1134,6 +1139,36 @@ header {
     dl dd:nth-of-type(odd) {
         background: $lightgray;
     }
+}
+
+/* Checkout */
+.woocommerce table.shop_table {
+    border-radius: 0;
+
+    input[name="update_cart"] {
+        float: right;
+    }
+}
+
+#add_payment_method #payment, .woocommerce-cart #payment, .woocommerce-checkout #payment {
+    background: none;
+}
+
+.woocommerce table.cart td.actions .input-text, .woocommerce-page #content table.cart td.actions .input-text, .woocommerce-page table.cart td.actions .input-text {
+    width: 40%;
+    padding: 0.8rem 1rem;
+}
+
+.woocommerce input.button.disabled, .woocommerce input.button:disabled, .woocommerce input.button:disabled[disabled] {
+    padding: 1rem;
+}
+
+.button.wc-backward, .woocommerce-error, .woocommerce-info, .woocommerce-message {
+    display: none;
+}
+
+.woocommerce-error, .woocommerce-info, .woocommerce-message {
+    padding: 1rem 2rem;
 }
 
 /* News Events Blog Careers */
