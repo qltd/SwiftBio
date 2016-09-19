@@ -459,7 +459,7 @@ header {
     }
 }
 
-.button, input[type=submit] {
+.button, .woocommerce #respond input#submit, .woocommerce a.button, .woocommerce button.button, .woocommerce input.button, input[type=submit] {
     background: none;
     display: block;
     width: 28rem;
@@ -479,6 +479,7 @@ header {
 
     &:hover {
         color: $purple;
+        background: none;
     }
 
     &.purple {
@@ -1032,6 +1033,29 @@ header {
     input[type=number] {
         float: left;
         margin-right: 4rem;
+    }
+}
+
+.product-table-footer {
+    display: flex;
+    margin-bottom: 4rem;
+
+    .col {
+        margin: 0 1rem;
+
+        &:first-child {
+            font-size: 1.2rem;
+            line-height: 2;
+            margin: 0;
+
+            a {
+                font-weight: normal;
+            }
+        }
+
+        &:last-child {
+            margin-right: 0;
+        }
     }
 }
 

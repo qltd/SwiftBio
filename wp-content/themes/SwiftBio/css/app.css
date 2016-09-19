@@ -310,15 +310,15 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .callouts .button { margin: 0 auto; }
 
-.button, input[type=submit] { background: none; display: block; width: 28rem; border: 1px solid #58585a; text-align: center; padding: 1rem; font-size: 2rem; font-weight: bold; color: #25aae1; text-transform: uppercase; }
+.button, .woocommerce #respond input#submit, .woocommerce a.button, .woocommerce button.button, .woocommerce input.button, input[type=submit] { background: none; display: block; width: 28rem; border: 1px solid #58585a; text-align: center; padding: 1rem; font-size: 2rem; font-weight: bold; color: #25aae1; text-transform: uppercase; }
 
-.button:after, input[type=submit]:after { font-family: FontAwesome; content: "\f138"; margin-left: 10px; }
+.button:after, .woocommerce #respond input#submit:after, .woocommerce a.button:after, .woocommerce button.button:after, .woocommerce input.button:after, input[type=submit]:after { font-family: FontAwesome; content: "\f138"; margin-left: 10px; }
 
-.button:hover, input[type=submit]:hover { color: #942976; }
+.button:hover, .woocommerce #respond input#submit:hover, .woocommerce a.button:hover, .woocommerce button.button:hover, .woocommerce input.button:hover, input[type=submit]:hover { color: #942976; background: none; }
 
-.button.purple, input[type=submit].purple { color: #942976; }
+.button.purple, .woocommerce #respond input#submit.purple, .woocommerce a.button.purple, .woocommerce button.button.purple, .woocommerce input.button.purple, input[type=submit].purple { color: #942976; }
 
-.button.purple:hover, input[type=submit].purple:hover { color: #25aae1; }
+.button.purple:hover, .woocommerce #respond input#submit.purple:hover, .woocommerce a.button.purple:hover, .woocommerce button.button.purple:hover, .woocommerce input.button.purple:hover, input[type=submit].purple:hover { color: #25aae1; }
 
 .testimonial { background: #eee; padding: 3rem 0 1rem; }
 
@@ -504,6 +504,16 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 .product-table tr:nth-child(2) { background: #eee; }
 
 .product-table input[type=number] { float: left; margin-right: 4rem; }
+
+.product-table-footer { display: -webkit-flex; display: -ms-flexbox; display: flex; margin-bottom: 4rem; }
+
+.product-table-footer .col { margin: 0 1rem; }
+
+.product-table-footer .col:first-child { font-size: 1.2rem; line-height: 2; margin: 0; }
+
+.product-table-footer .col:first-child a { font-weight: normal; }
+
+.product-table-footer .col:last-child { margin-right: 0; }
 
 .product.woocommerce.add_to_cart_inline { border: none !important; }
 
