@@ -445,17 +445,17 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 .social-icons i:hover { background: #942976; }
 
 /* Page Layout */
-@media screen and (max-width: 768px) { #body-wrap { display: block; } }
+@media screen and (max-width: 914px) { #body-wrap { display: block; } }
 
 .main { width: 100%; padding-right: 2rem; }
 
 .main.no-pad { padding-right: 0; }
 
-@media screen and (max-width: 768px) { .main { padding-left: 2rem; } }
+@media screen and (max-width: 914px) { .main { padding-left: 2rem; } }
 
 .sidebar { width: 28rem; }
 
-@media screen and (max-width: 768px) { .sidebar { width: 100%; padding: 0 2rem; margin-top: 2rem; }
+@media screen and (max-width: 914px) { .sidebar { width: 100%; padding: 0 2rem; margin-top: 6rem; }
   .sidebar .button { width: 100%; } }
 
 /* Page */
@@ -464,11 +464,15 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .bucket .phone { color: #58585a; font-size: 1.6rem; margin-bottom: 1.5rem; display: block; }
 
+@media screen and (max-width: 914px) { .sidebar_callout { text-align: center; } }
+
 .sidebar_callout h5 { background: #2a569b; font-size: 1.6rem; text-transform: uppercase; color: #fff; margin: 0; padding: 1rem 2rem; }
 
 .sidebar_callout .text { background: #eee; padding: 2rem 2rem; line-height: 0; }
 
 .sidebar_callout .text p { text-align: left; line-height: 1.4; font-size: 2.2rem; font-weight: 300; margin-bottom: 1rem; }
+
+@media screen and (max-width: 914px) { .sidebar_callout .text p { text-align: center; } }
 
 .sidebar_callout .text img { line-height: 0; }
 
@@ -503,13 +507,15 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .product-table td p { margin: 0; padding: 0 !important; }
 
-.product-table tr:nth-child(2) { background: #eee; }
+.product-table tr:nth-child(even) { background: #eee; }
 
 .product-table input[type=number] { float: left; margin-right: 4rem; }
 
-.product-table-footer { display: -webkit-flex; display: -ms-flexbox; display: flex; margin-bottom: 4rem; }
+.product-table-footer { display: -webkit-flex; display: -ms-flexbox; display: flex; margin-bottom: 4rem; width: 100%; }
 
-.product-table-footer .col { margin: 0 1rem; }
+.product-table-footer .col { margin: 0 1rem; width: 33%; }
+
+.product-table-footer .col .button { width: 100%; }
 
 .product-table-footer .col:first-child { font-size: 1.2rem; line-height: 2; margin: 0; }
 
@@ -548,6 +554,10 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 .woocommerce table.shop_table input[name="update_cart"] { float: right; }
 
 #add_payment_method #payment, .woocommerce-cart #payment, .woocommerce-checkout #payment { background: none; }
+
+.woocommerce form .form-row.woocommerce-validated input.input-text { border: 1px solid rgba(0, 0, 0, 0.2) !important; }
+
+.woocommerce form .form-row.woocommerce-invalid input.input-text { border: 1px solid rgba(0, 0, 0, 0.2) !important; }
 
 .woocommerce table.cart td.actions .input-text, .woocommerce-page #content table.cart td.actions .input-text, .woocommerce-page table.cart td.actions .input-text { width: 40%; padding: 0.8rem 1rem; }
 

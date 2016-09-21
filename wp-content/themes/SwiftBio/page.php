@@ -41,6 +41,8 @@ get_header(); ?>
                         <a href="<?php echo get_permalink(5); ?>" class="button">View Cart</a>
                     </div>
                 </div>
+
+                <div style="clear:both;"></div>
             <?php endif; ?>
 
             <?php if (get_field('related_products')): ?>
@@ -55,6 +57,7 @@ get_header(); ?>
                 <?php get_sidebar(); ?>
             </div>
         <?php endif; ?>
+                <div style="clear:both;"></div>
 
     </div>
 <?php get_footer(); ?>
