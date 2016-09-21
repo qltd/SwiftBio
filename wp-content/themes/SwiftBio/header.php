@@ -62,7 +62,7 @@
                 <div class="menu-bar">
                     <div class="row">
                     <a href="/" title="home" class="logo"><img src="<?php bloginfo('template_directory'); ?>/img/swift-logo.svg" alt="Swift Biosciences" /></a>
-                    <button class="nav-toggle">MENU <i class="fa fa-bars"></i></button>
+                    <button class="nav-toggle"><span>MENU</span> <i class="fa fa-bars"></i></button>
                     </div>
                 </div>
                 </header><!-- #masthead -->
