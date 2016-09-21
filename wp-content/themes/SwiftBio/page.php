@@ -24,11 +24,15 @@ get_header(); ?>
                 <h3 class="product-lead-in"><?php the_field('product_table_lead_in_text'); ?></h3>
                 <?php get_template_part('template-parts/product-table'); ?>
 
-                <h3 class="product-lead-in"><?php the_field('additional_products_lead_in_text'); ?></h3>
-                <?php get_template_part('template-parts/additional-product-table'); ?>
+                <?php if(get_field('additional_products_table')): ?>
+                    <h3 class="product-lead-in"><?php the_field('additional_products_lead_in_text'); ?></h3>
+                    <?php get_template_part('template-parts/additional-product-table'); ?>
+                <?php endif; ?>
 
-                <h3 class="product-lead-in"><?php the_field('optional_products_lead_in_text'); ?></h3>
-                <?php get_template_part('template-parts/optional-product-table'); ?>
+                <?php if(get_field('optional_products')): ?>
+                    <h3 class="product-lead-in"><?php the_field('optional_products_lead_in_text'); ?></h3>
+                    <?php get_template_part('template-parts/optional-product-table'); ?>
+                <?php endif; ?>
 
                 <div class="product-table-footer">
                     <div class="col">

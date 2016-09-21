@@ -11,6 +11,18 @@
 
 <h1 class="page-title"><?php echo get_archive_title(); ?></h1>
 
+<?php if (get_archive_title() == "Careers"){
+    $leadInID = 1133;
+} elseif (get_archive_title() == 'Events') {
+    $leadInID = 1140;
+} else {
+    $leadInID = 105;
+}
+
+?>
+
+<?php if (!is_search() && !is_single()): the_field('lead-in-content', $leadInID); endif; ?>
+
 <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
     <div class="post">
         <?php if (is_single()): ?>
