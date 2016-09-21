@@ -713,11 +713,14 @@ header {
     background: $lightgray;
     padding: 4rem 0 0;
 
-    @include responsive($mobile) {
+    @include responsive($site-width) {
         background: $white;
+    }
 
+
+    @include responsive($tablet) {
         .row {
-            display: block;
+            flex-direction: column;
         }
     }
 
@@ -731,7 +734,7 @@ header {
         margin-bottom: 4rem;
         margin-right: 2rem;
 
-        @include responsive($mobile) {
+        @include responsive($tablet) {
             width: 100%;
         }
     }
@@ -793,12 +796,16 @@ header {
     }
 
     nav {
-        @include responsive($mobile) {
+        @include responsive($site-width) {
             width: 100%;
             float: left;
-            margin-top: 3rem;
             background: none;
             margin-bottom: 3rem;
+        }
+
+
+        @include responsive($tablet) {
+            margin-top: 3rem;
         }
 
 
@@ -813,14 +820,14 @@ header {
         > ul {
             float: left;
 
-            @include responsive($mobile) {
+            @include responsive($site-width) {
                 margin: 0;
                 padding: 0;
             }
 
 
             > li {
-                @include responsive($mobile) {
+                @include responsive($site-width) {
                     &.open {
                         > ul.sub-menu {
                             opacity: 1;
@@ -841,7 +848,7 @@ header {
                     text-transform: uppercase;
                     font-weight: 300;
 
-                    @include responsive($mobile) {
+                    @include responsive($site-width) {
                         background: $lightgray;
                         display: flex;
                         width: 100%;
@@ -850,13 +857,13 @@ header {
                         color: $darkblue;
                         font-weight: 300;
                         align-items: center;
-                        justify-content: space-between;
 
                         &:after {
                             font-family: FontAwesome;
                             content: "\f055";
                             color: $blue;
                             font-size: 2.6rem;
+                            margin-left: auto;
                         }
                     }
                 }
@@ -865,7 +872,7 @@ header {
                     margin: 0;
                     padding: 0;
 
-                    @include responsive($mobile) {
+                    @include responsive($site-width) {
                         transition: opacity 0s ease-out;
                         opacity: 0;
                         height: 0;
@@ -888,7 +895,7 @@ header {
             height: 100%;
             min-height: 400px;
 
-            @include responsive($mobile) {
+            @include responsive($site-width) {
                 min-height: 0;
                 height: auto;
                 width: 100%;
@@ -899,7 +906,7 @@ header {
             float: left;
             margin-bottom: 2rem;
 
-            @include responsive($mobile) {
+            @include responsive($site-width) {
                 width: 100%;
                 margin-bottom: 0;
             }
@@ -956,7 +963,7 @@ header {
     }
 
     @include responsive($tablet) {
-        padding-left: 2rem;
+        padding: 0;
     }
 }
 
@@ -965,7 +972,7 @@ header {
 
     @include responsive($tablet) {
         width: 100%;
-        padding: 0 2rem;
+        padding: 0;
         margin-top: 6rem;
 
         .button {
@@ -1049,11 +1056,11 @@ header {
     color: $darkblue;
     font-weight: 300;
     align-items: center;
-    justify-content: space-between;
 
     i {
         color: $blue;
         font-size: 2.6rem;
+        margin-left: auto;
     }
 }
 

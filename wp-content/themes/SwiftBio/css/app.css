@@ -403,14 +403,15 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 /* Footer */
 .site-footer { margin-top: 4rem; border-top: 1rem solid #942976; background: #eee; padding: 4rem 0 0; }
 
-@media screen and (max-width: 768px) { .site-footer { background: #fff; }
-  .site-footer .row { display: block; } }
+@media screen and (max-width: 1223px) { .site-footer { background: #fff; } }
+
+@media screen and (max-width: 914px) { .site-footer .row { -webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column; } }
 
 .site-footer .logo img { max-width: 150px; margin-bottom: 2rem; }
 
 .site-footer .col { margin-bottom: 4rem; margin-right: 2rem; }
 
-@media screen and (max-width: 768px) { .site-footer .col { width: 100%; } }
+@media screen and (max-width: 914px) { .site-footer .col { width: 100%; } }
 
 .site-footer address { font-size: 1.8rem; font-weight: 300; line-height: 1.2; font-style: normal; margin-bottom: 2rem; }
 
@@ -430,7 +431,9 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .site-footer .footer-btm a { font-weight: bold; }
 
-@media screen and (max-width: 768px) { .site-footer nav { width: 100%; float: left; margin-top: 3rem; background: none; margin-bottom: 3rem; } }
+@media screen and (max-width: 1223px) { .site-footer nav { width: 100%; float: left; background: none; margin-bottom: 3rem; } }
+
+@media screen and (max-width: 914px) { .site-footer nav { margin-top: 3rem; } }
 
 .site-footer nav .home { display: none; }
 
@@ -438,29 +441,29 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .site-footer nav > ul { float: left; }
 
-@media screen and (max-width: 768px) { .site-footer nav > ul { margin: 0; padding: 0; } }
+@media screen and (max-width: 1223px) { .site-footer nav > ul { margin: 0; padding: 0; } }
 
-@media screen and (max-width: 768px) { .site-footer nav > ul > li.open > ul.sub-menu { opacity: 1; height: auto; transition: opacity 1s ease-out; }
+@media screen and (max-width: 1223px) { .site-footer nav > ul > li.open > ul.sub-menu { opacity: 1; height: auto; transition: opacity 1s ease-out; }
   .site-footer nav > ul > li.open > a:after { content: "\f056"; } }
 
 .site-footer nav > ul > li > a { font-size: 1.8rem; color: #58585a; text-transform: uppercase; font-weight: 300; }
 
-@media screen and (max-width: 768px) { .site-footer nav > ul > li > a { background: #eee; display: -webkit-flex; display: -ms-flexbox; display: flex; width: 100%; font-size: 2.2rem; padding: 0rem 1rem; color: #2a569b; font-weight: 300; -webkit-align-items: center; -ms-flex-align: center; align-items: center; -webkit-justify-content: space-between; -ms-flex-pack: justify; justify-content: space-between; }
-  .site-footer nav > ul > li > a:after { font-family: FontAwesome; content: "\f055"; color: #25aae1; font-size: 2.6rem; } }
+@media screen and (max-width: 1223px) { .site-footer nav > ul > li > a { background: #eee; display: -webkit-flex; display: -ms-flexbox; display: flex; width: 100%; font-size: 2.2rem; padding: 0rem 1rem; color: #2a569b; font-weight: 300; -webkit-align-items: center; -ms-flex-align: center; align-items: center; }
+  .site-footer nav > ul > li > a:after { font-family: FontAwesome; content: "\f055"; color: #25aae1; font-size: 2.6rem; margin-left: auto; } }
 
 .site-footer nav > ul > li > ul.sub-menu { margin: 0; padding: 0; }
 
-@media screen and (max-width: 768px) { .site-footer nav > ul > li > ul.sub-menu { transition: opacity 0s ease-out; opacity: 0; height: 0; overflow: hidden; padding: 0.5rem 0; } }
+@media screen and (max-width: 1223px) { .site-footer nav > ul > li > ul.sub-menu { transition: opacity 0s ease-out; opacity: 0; height: 0; overflow: hidden; padding: 0.5rem 0; } }
 
 .site-footer nav > ul > li > ul.sub-menu ul.sub-menu a { font-weight: normal; }
 
 .site-footer nav .menu-item-75, .site-footer nav .menu-item-76 { float: left; margin-right: 2rem; width: 28rem; height: 100%; min-height: 400px; }
 
-@media screen and (max-width: 768px) { .site-footer nav .menu-item-75, .site-footer nav .menu-item-76 { min-height: 0; height: auto; width: 100%; } }
+@media screen and (max-width: 1223px) { .site-footer nav .menu-item-75, .site-footer nav .menu-item-76 { min-height: 0; height: auto; width: 100%; } }
 
 .site-footer nav .menu-item-77, .site-footer nav .menu-item-78 { float: left; margin-bottom: 2rem; }
 
-@media screen and (max-width: 768px) { .site-footer nav .menu-item-77, .site-footer nav .menu-item-78 { width: 100%; margin-bottom: 0; } }
+@media screen and (max-width: 1223px) { .site-footer nav .menu-item-77, .site-footer nav .menu-item-78 { width: 100%; margin-bottom: 0; } }
 
 .site-footer nav a { display: inline-block; font-size: 1.6rem; font-weight: bold; margin-bottom: 1rem; }
 
@@ -479,11 +482,11 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .main.no-pad { padding-right: 0; }
 
-@media screen and (max-width: 914px) { .main { padding-left: 2rem; } }
+@media screen and (max-width: 914px) { .main { padding: 0; } }
 
 .sidebar { width: 28rem; }
 
-@media screen and (max-width: 914px) { .sidebar { width: 100%; padding: 0 2rem; margin-top: 6rem; }
+@media screen and (max-width: 914px) { .sidebar { width: 100%; padding: 0; margin-top: 6rem; }
   .sidebar .button { width: 100%; } }
 
 /* Page */
@@ -509,9 +512,9 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 .sidebar_callout.video img { margin-bottom: 1rem; }
 
 /* Accordion */
-.expander { background: #eee; display: -webkit-flex; display: -ms-flexbox; display: flex; width: 100%; font-size: 2.2rem; padding: 0rem 1rem; color: #2a569b; font-weight: 300; -webkit-align-items: center; -ms-flex-align: center; align-items: center; -webkit-justify-content: space-between; -ms-flex-pack: justify; justify-content: space-between; }
+.expander { background: #eee; display: -webkit-flex; display: -ms-flexbox; display: flex; width: 100%; font-size: 2.2rem; padding: 0rem 1rem; color: #2a569b; font-weight: 300; -webkit-align-items: center; -ms-flex-align: center; align-items: center; }
 
-.expander i { color: #25aae1; font-size: 2.6rem; }
+.expander i { color: #25aae1; font-size: 2.6rem; margin-left: auto; }
 
 .expand-collapse { margin-bottom: 0rem; }
 
