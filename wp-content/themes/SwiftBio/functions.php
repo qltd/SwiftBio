@@ -356,3 +356,22 @@ if( function_exists('acf_add_options_page') ) {
     acf_add_options_page();
 
 }
+
+
+
+// functions.php
+add_action( 'init', 'update_my_custom_type', 99 );
+/**
+ * update_my_custom_type
+ *
+ * @author  Joe Sexton <joe@webtipblog.com>
+ */
+function update_my_custom_type() {
+    global $wp_post_types;
+
+    if ( post_type_exists( 'product' ) ) {
+
+        // exclude from search results
+        $wp_post_types['product']->exclude_from_search = true;
+    }
+}

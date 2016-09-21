@@ -14,7 +14,7 @@ get_header(); ?>
         <div class="main">
             <?php get_template_part('template-parts/content-news'); ?>
 
-            <?php if (get_field('accordion_block')): ?>
+            <?php if (get_field('accordion_block') && !is_search()): ?>
                 <?php get_template_part('buckets/accordion'); ?>
             <?php endif; ?>
         </div>
