@@ -583,4 +583,11 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .salesforce_w2l_lead .select2 li:before { content: ""; }
 
+/* Pagination */
+.pagination { margin-top: 2rem; }
+
+.pagination a, .pagination span { width: 4rem; height: 4rem; line-height: 2; margin-right: 1.5rem; text-align: center; border: 1px solid #58585a; }
+
+.pagination span { color: #939598; }
+
 /*# sourceMappingURL=app.css.map */

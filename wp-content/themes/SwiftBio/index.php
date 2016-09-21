@@ -22,6 +22,11 @@ get_header(); ?>
         <div class="sidebar">
             <?php get_sidebar(); ?>
         </div>
-
     </div>
+
+    <div class="row pagination">
+        <?php if (function_exists("pagination")) {
+            pagination();
+        } ?>
+        </div>
 <?php get_footer(); ?>
