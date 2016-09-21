@@ -1093,12 +1093,27 @@ header {
     margin: 2rem 0;
     align-items: center;
 
+    @include responsive("600px") {
+        flex-wrap: wrap;
+    }
+
+
+    img {
+        @include responsive("600px") {
+            width: 100%;
+        }
+    }
+
     .tagline {
         padding: 5rem 2rem;
         font-size: 2.2rem;
         color: $purple;
         font-style: italic;
         font-weight: 300;
+
+        @include responsive("600px") {
+            width: 100%;
+        }
     }
 }
 
@@ -1137,7 +1152,7 @@ header {
 
     input[type=number] {
         float: left;
-        margin-right: 4rem;
+        margin-right: 2rem;
     }
 }
 
@@ -1145,6 +1160,12 @@ header {
     display: flex;
     margin-bottom: 4rem;
     width: 100%;
+
+    @include responsive("1080px") {
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
 
     .col {
         margin: 0 1rem;
@@ -1159,8 +1180,27 @@ header {
             line-height: 2;
             margin: 0;
 
+            @include responsive("1080px") {
+                width: 100%;
+                margin-bottom: 2rem;
+            }
+
+
             a {
                 font-weight: normal;
+            }
+        }
+
+        &:nth-child(2), &:nth-child(3) {
+            @include responsive("1080px") {
+                width: 48%;
+                margin: 0;
+            }
+
+
+            @include responsive($mobile) {
+                width: 100%;
+                margin-bottom: 2rem;
             }
         }
 
@@ -1184,13 +1224,27 @@ header {
     font-weight: bold;
     background: $blue;
     text-transform: uppercase;
-    padding: 3px;
+    display: block;
+    padding: 3px 7px;
     line-height: 1;
-    height: 1.8rem;
     color: $white;
     border-radius: 0;
     border: none;
-    float: right;
+    float: left;
+
+    @include responsive($tablet-lg) {
+        padding: 5px;
+        font-size: 1.4rem !important;
+        width: 30%;
+        margin-top: -10px;
+        text-align: center;
+    }
+
+
+    @include responsive($mobile) {
+        width: 100px;
+    }
+
 
     &:after {
         display: none;
@@ -1201,8 +1255,13 @@ header {
     }
 }
 
-.button.product_type_simple.add_to_cart_button.ajax_add_to_cart {
-    float: left;
+.woocommerce a.added_to_cart {
+    float: right;
+
+    @include responsive($mobile) {
+        float: left;
+        margin-top: 10px;
+    }
 }
 
 .product-lead-in {
