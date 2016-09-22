@@ -156,6 +156,8 @@ html { box-sizing: border-box; height: 100%; width: 100%; font-size: 62.5%; line
 /* Inline Responsive Media Query */
 body { height: 100%; background: #fff; font-family: "Roboto", sans-serif; overflow-x: hidden; }
 
+html { overflow: hidden; }
+
 h1, h2, h3, h4, h5, h6 { line-height: 1.4; margin-top: 0; }
 
 h1 { font-size: 2.8rem; color: #942976; font-weight: bold; }
@@ -185,7 +187,7 @@ a:hover { color: #942976; }
 img { max-width: 100%; height: auto; }
 
 /* Layout Rows */
-.row { max-width: 1223px; margin: 0 auto; display: -webkit-flex; display: -ms-flexbox; display: flex; padding: 0 2rem; }
+.row { max-width: 1223px; width: 100%; margin: 0 auto; display: -webkit-flex; display: -ms-flexbox; display: flex; padding: 0 2rem; }
 
 .row.full { max-width: 100%; }
 
@@ -227,21 +229,21 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 .nav-toggle i { margin-left: 25px; color: #2a569b; }
 
 /* Nav Overlay */
-.nav-overlay { background: #fff; position: absolute; z-index: 99999; padding: 1% 0; width: 40%; top: 0; right: 0; transition: -webkit-transform .3s; transition: transform .3s; transition: transform .3s, -webkit-transform .3s; -webkit-transform: translateX(100%); -ms-transform: translateX(100%); transform: translateX(100%); }
+.nav-overlay { display: none; background: #fff; position: absolute; z-index: 99999; padding: 1% 0; width: 40%; top: 0; right: 0; transition: all .3s ease; -webkit-transform: translateX(100%); -ms-transform: translateX(100%); transform: translateX(100%); }
 
-.nav-overlay.show { -webkit-transform: translateX(0); -ms-transform: translateX(0); transform: translateX(0); }
+.nav-overlay.show { display: block; -webkit-transform: translateX(0); -ms-transform: translateX(0); transform: translateX(0); }
 
 @media screen and (max-width: 1100px) { .nav-overlay { width: 50%; } }
 
 @media screen and (max-width: 959px) { .nav-overlay { width: 90%; } }
 
-.nav-overlay .nav-close { font-weight: 300; font-size: 3rem; display: inline-block; margin-bottom: 5rem; margin-right: 3rem; color: #25aae1; float: right; letter-spacing: 0; text-transform: uppercase; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-align-items: center; -ms-flex-align: center; align-items: center; }
+.nav-overlay .nav-close { font-weight: 300; font-size: 3rem; display: inline-block; margin: 3rem 3rem 5rem 0; color: #25aae1; float: right; letter-spacing: 0; text-transform: uppercase; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-align-items: center; -ms-flex-align: center; align-items: center; }
 
 .nav-overlay .nav-close i { margin-left: 3rem; font-size: 5rem; }
 
 .nav-overlay .nav-close:hover { color: #942976; }
 
-.nav-overlay nav { margin-top: 10rem; width: 100%; }
+.nav-overlay nav { margin-top: 0rem; width: 100%; }
 
 .nav-overlay nav a { width: 100%; color: #25aae1; font-size: 1.6rem; font-weight: bold; display: inline-block; padding: 5px 0 5px 4.5rem; margin-bottom: 0.5px; }
 
@@ -476,9 +478,9 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 .social-icons i:hover { background: #942976; }
 
 /* Page Layout */
-@media screen and (max-width: 914px) { #body-wrap { display: block; } }
+@media screen and (max-width: 914px) { #body-wrap { -webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column; } }
 
-.main { width: 100%; padding-right: 2rem; }
+.main { width: auto; padding-right: 2rem; }
 
 .main.no-pad { padding-right: 0; }
 

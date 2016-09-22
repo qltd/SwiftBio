@@ -5,6 +5,10 @@ body {
     overflow-x: hidden;
 }
 
+html {
+    overflow: hidden;
+}
+
 h1, h2, h3, h4, h5, h6 {
     line-height: 1.4;
     margin-top: 0;
@@ -84,6 +88,7 @@ img {
 /* Layout Rows */
 .row {
     max-width: $site-width;
+    width: 100%;
     margin: 0 auto;
     display: flex;
     padding: 0 2rem;
@@ -201,6 +206,7 @@ header {
 
 /* Nav Overlay */
 .nav-overlay {
+    display: none;
     background: $white;
     position: absolute;
     z-index: 99999;
@@ -208,10 +214,11 @@ header {
     width: 40%;
     top: 0;
     right: 0;
-    transition: transform .3s;
+    transition: all .3s ease;
     transform: translateX(100%);
 
     &.show {
+        display: block;
         transform: translateX(0);
     }
 
@@ -229,8 +236,7 @@ header {
         font-weight: 300;
         font-size: 3rem;
         display: inline-block;
-        margin-bottom: 5rem;
-        margin-right: 3rem;
+        margin: 3rem 3rem 5rem 0;
         color: $blue;
         float: right;
         letter-spacing: 0;
@@ -249,7 +255,7 @@ header {
     }
 
     nav {
-        margin-top: 10rem;
+        margin-top: 0rem;
         width: 100%;
 
         a {
@@ -950,12 +956,12 @@ header {
 /* Page Layout */
 #body-wrap {
     @include responsive($tablet) {
-        display: block;
+        flex-direction: column;
     }
 }
 
 .main {
-    width: 100%;
+    width: auto;
     padding-right: 2rem;
 
     &.no-pad {

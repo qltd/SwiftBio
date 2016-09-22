@@ -25,6 +25,7 @@
         </head>
 
         <body <?php body_class(); ?>>
+
             <div class="nav-overlay">
                 <a href="#" class="nav-close">Close <i class="fa fa-times-circle"></i></a>
                 <nav>
