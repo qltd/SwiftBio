@@ -1,5 +1,10 @@
 <?php
 
+/* Declare Woocommere Support */
+add_action( 'after_setup_theme', 'woocommerce_support' );
+function woocommerce_support() {
+    add_theme_support( 'woocommerce' );
+}
 
 // replace the add to cart shortcode to show quantity
 //add_filter( 'woocommerce_loop_add_to_cart_link', 'quantity_inputs_for_woocommerce_loop_add_to_cart_link', 10, 2 );

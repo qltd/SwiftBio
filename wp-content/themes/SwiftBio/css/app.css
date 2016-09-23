@@ -585,7 +585,7 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .product.woocommerce.add_to_cart_inline { border: none !important; }
 
-.woocommerce-Price-amount { display: none; }
+.product-table .woocommerce-Price-amount { display: none; }
 
 .button.product_type_simple.add_to_cart_button.ajax_add_to_cart, .woocommerce a.added_to_cart { width: auto; font-size: 1.2rem !important; font-weight: bold; background: #25aae1; text-transform: uppercase; display: block; padding: 3px 7px; line-height: 1; color: #fff; border-radius: 0; border: none; float: left; }
 
