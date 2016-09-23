@@ -7,7 +7,7 @@
 
 get_header(); ?>
     <div class="row share">
-            //share icons
+            <?php get_template_part('template-parts/social-sharing'); ?>
     </div>
 
     <div id="body-wrap" class="row">

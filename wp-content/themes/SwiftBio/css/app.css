@@ -482,7 +482,7 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .main { width: auto; padding-right: 2rem; }
 
-.main.no-pad { padding-right: 0; }
+.main.no-pad { padding-right: 0; width: 100%; }
 
 @media screen and (max-width: 914px) { .main { padding: 0; } }
 
@@ -491,7 +491,18 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 @media screen and (max-width: 914px) { .sidebar { width: 100%; padding: 0; margin-top: 6rem; }
   .sidebar .button { width: 100%; } }
 
-/* Page */
+.share { padding: 2rem; }
+
+.share p { text-transform: uppercase; color: #58585a; font-size: 1.3rem; float: left; padding-top: 5px; }
+
+.share a { margin-left: 1.7rem; color: #58585a; }
+
+.share a:hover { color: #25aae1; }
+
+.share .icon { margin-top: 7px; font-size: 1.2rem; line-height: 1.2; color: #fff; background: #58585a; text-align: center; border-radius: 3px; height: 15px; width: 15px; }
+
+.share .icon:hover { background: #25aae1; color: #fff; }
+
 /* Buckets */
 .bucket { margin-bottom: 3rem; }
 

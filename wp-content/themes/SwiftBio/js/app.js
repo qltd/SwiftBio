@@ -20,7 +20,23 @@ navToggle[0].addEventListener("click", function(){ toggleNav() });
 navClose[0].addEventListener("click", function(){ toggleNav() });
 bgOverlay[0].addEventListener("click", function(){ toggleNav() });
 
+
 (function($){
+
+    // Google Analytics Event on Social Sharing Links
+    $('.social-share a').on('click', function() {
+        var network = $(this).data('network');
+        var href = $(this).attr('href');
+        ga('send', 'social', {
+            'socialNetwork': network,
+            'socialAction': 'share',
+            'socialTarget': window.location,
+            'hitCallback': function(){
+              //window.open(href, '_blank')
+            }
+        });
+        console.log(network + ' tracked');
+    });
 
     $('select.applications').select2({
         minimumResultsForSearch: Infinity,

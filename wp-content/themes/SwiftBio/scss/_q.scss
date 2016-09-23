@@ -966,6 +966,7 @@ header {
 
     &.no-pad {
         padding-right: 0;
+        width: 100%;
     }
 
     @include responsive($tablet) {
@@ -987,7 +988,43 @@ header {
     }
 }
 
-/* Page */
+.share {
+    padding: 2rem;
+
+    p {
+        text-transform: uppercase;
+        color: $gray;
+        font-size: 1.3rem;
+        float: left;
+        padding-top: 5px;
+    }
+
+    a {
+        margin-left: 1.7rem;
+        color: $gray;
+
+        &:hover {
+            color: $blue;
+        }
+    }
+
+    .icon {
+        margin-top: 7px;
+        font-size: 1.2rem;
+        line-height: 1.2;
+        color: $white;
+        background: $gray;
+        text-align: center;
+        border-radius: 3px;
+        height: 15px;
+        width: 15px;
+
+        &:hover {
+            background: $blue;
+            color: $white;
+        }
+    }
+}
 
 /* Buckets */
 .bucket {
