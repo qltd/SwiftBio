@@ -156,7 +156,7 @@ html { box-sizing: border-box; height: 100%; width: 100%; font-size: 62.5%; line
 /* Inline Responsive Media Query */
 body { height: 100%; background: #fff; font-family: "Roboto", sans-serif; }
 
-h1, h2, h3, h4, h5, h6 { line-height: 1.4; margin-top: 0; }
+h1, h2, h3, h4, h5, h6 { line-height: 1.4; margin-top: 0; margin-bottom: 1rem; }
 
 h1 { font-size: 2.8rem; color: #942976; font-weight: bold; }
 
@@ -378,7 +378,7 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .features .button { margin: 0 auto; clear: both; }
 
-.event-callout { background: #eee; width: 100%; max-width: 1223px; margin: 2rem auto; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-align-items: center; -ms-flex-align: center; align-items: center; -webkit-justify-content: space-between; -ms-flex-pack: justify; justify-content: space-between; }
+.event-callout { background: #eee; width: 100%; max-width: 1223px; margin: 2rem auto; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-align-items: center; -ms-flex-align: center; align-items: center; }
 
 @media screen and (max-width: 914px) { .event-callout { -webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column; } }
 
@@ -400,7 +400,7 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .event-callout .middle h5 { font-size: 1.8rem; font-weight: bold; margin: 0; }
 
-.event-callout .right { padding: 2rem; }
+.event-callout .right { padding: 2rem; margin-left: auto; }
 
 .event-callout .right .button:first-child { margin-bottom: 2rem; }
 

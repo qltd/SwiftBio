@@ -7,6 +7,7 @@ body {
 h1, h2, h3, h4, h5, h6 {
     line-height: 1.4;
     margin-top: 0;
+    margin-bottom: 1rem;
 }
 
 h1 {
@@ -647,7 +648,6 @@ header {
     margin: 2rem auto;
     display: flex;
     align-items: center;
-    justify-content: space-between;
 
     @include responsive($tablet) {
         flex-direction: column;
@@ -708,6 +708,7 @@ header {
 
     .right {
         padding: 2rem;
+        margin-left: auto;
 
         .button:first-child {
             margin-bottom: 2rem;
