@@ -2,11 +2,6 @@ body {
     height: 100%;
     background: $white;
     font-family: $primary-font;
-    overflow-x: hidden;
-}
-
-html {
-    overflow: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -18,6 +13,14 @@ h1 {
     font-size: 2.8rem;
     color: $purple;
     font-weight: bold;
+
+    &.page-title a {
+        color: $purple;
+
+        &:hover {
+            color: $blue;
+        }
+    }
 }
 
 h2 {

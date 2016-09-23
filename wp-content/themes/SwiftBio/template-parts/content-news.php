@@ -7,20 +7,17 @@
  * @package _q
  */
 
-?>
-
-<h1 class="page-title"><?php echo get_archive_title(); ?></h1>
-
-<?php if (get_archive_title() == "Careers"){
+if ($post->post_type == "careers"){
     $leadInID = 1133;
-} elseif (get_archive_title() == 'Events') {
+} elseif ($post->post_type == 'events') {
     $leadInID = 1140;
 } else {
     $leadInID = 105;
+
 }
 
 ?>
-
+<h1 class="page-title"><a href="<?php echo get_post_type_archive_link($post->post_type); ?>"><?php echo get_archive_title(); ?></a></h1>
 <?php if (!is_search() && !is_single()): the_field('lead-in-content', $leadInID); endif; ?>
 
 <?php if (have_posts()) : while (have_posts()) : the_post(); ?>

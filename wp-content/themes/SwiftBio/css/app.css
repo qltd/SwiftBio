@@ -154,13 +154,15 @@ html { box-sizing: border-box; height: 100%; width: 100%; font-size: 62.5%; line
 .aligncenter { clear: both; display: block; margin-left: auto; margin-right: auto; }
 
 /* Inline Responsive Media Query */
-body { height: 100%; background: #fff; font-family: "Roboto", sans-serif; overflow-x: hidden; }
-
-html { overflow: hidden; }
+body { height: 100%; background: #fff; font-family: "Roboto", sans-serif; }
 
 h1, h2, h3, h4, h5, h6 { line-height: 1.4; margin-top: 0; }
 
 h1 { font-size: 2.8rem; color: #942976; font-weight: bold; }
+
+h1.page-title a { color: #942976; }
+
+h1.page-title a:hover { color: #25aae1; }
 
 h2 { font-size: 2.8rem; color: #942976; font-weight: 300; }
 
