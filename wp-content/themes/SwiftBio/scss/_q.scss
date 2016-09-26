@@ -68,6 +68,11 @@ ul {
     list-style: none;
     padding-left: 3rem;
 
+    @include responsive($mobile-sm) {
+        padding-left: 1.4rem;
+    }
+
+
     .main & li:before {
         font-family: FontAwesome;
         content: "\f0da";
@@ -1324,6 +1329,7 @@ header {
 
 .product.woocommerce.add_to_cart_inline {
     border: none !important;
+    padding: 0 !important;
 }
 
 .woocommerce-Price-amount {
@@ -1352,13 +1358,19 @@ header {
         padding: 5px;
         font-size: 1.4rem !important;
         width: 30%;
-        margin-top: -10px;
+        margin-top: 5px;
         text-align: center;
     }
 
 
     @include responsive($mobile) {
         width: 100px;
+        margin-right: 1rem;
+    }
+
+
+    @include responsive($mobile-sm) {
+        margin-right: 0;
     }
 
 
@@ -1376,7 +1388,7 @@ header {
 
     @include responsive($mobile) {
         float: left;
-        margin-top: 10px;
+        margin-top: 5px;
     }
 }
 
@@ -1398,7 +1410,8 @@ header {
             margin-right: 4rem;
 
             @include responsive($mobile-sm) {
-                margin-right: -1rem;
+                margin-right: 2rem;
+                width: 30px;
             }
         }
 
