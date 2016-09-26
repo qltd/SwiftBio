@@ -168,7 +168,7 @@ header {
         width: 38rem;
 
         @include responsive($mobile) {
-            width: 100%;
+            width: 90%;
         }
     }
 
@@ -179,6 +179,10 @@ header {
         font-size: 2rem;
         margin-left: 1.2rem;
         line-height: 1.2;
+
+        @include responsive($mobile-sm) {
+            margin-left: 0rem;
+        }
     }
 }
 
@@ -191,6 +195,7 @@ header {
     border: none;
     font-weight: bold;
     outline: none;
+    padding: 0;
     transition: all 0.3s ease;
     font-size: 3rem;
     color: $darkblue;
@@ -606,6 +611,10 @@ header {
         margin-right: 2rem;
         margin-bottom: 2rem;
         float: left;
+
+        @include responsive($mobile) {
+            width: 100%;
+        }
     }
 
     h2 {
@@ -667,6 +676,7 @@ header {
 
         @include responsive($tablet) {
             width: 100%;
+            height: 15.5rem;
         }
     }
 
@@ -709,6 +719,11 @@ header {
     .right {
         padding: 2rem;
         margin-left: auto;
+
+        @include responsive($tablet) {
+            margin-left: 0;
+        }
+
 
         .button:first-child {
             margin-bottom: 2rem;
@@ -1261,8 +1276,12 @@ header {
     border: none !important;
 }
 
-.product-table .woocommerce-Price-amount {
+.woocommerce-Price-amount {
     display: none;
+}
+
+.woocommerce-cart .woocommerce-Price-amount {
+    display: block;
 }
 
 .button.product_type_simple.add_to_cart_button.ajax_add_to_cart, .woocommerce a.added_to_cart {
@@ -1327,6 +1346,38 @@ header {
         input[type=number] {
             float: left;
             margin-right: 4rem;
+
+            @include responsive($mobile-sm) {
+                margin-right: -1rem;
+            }
+        }
+
+        .woocommerce-cart &:last-child {
+            width: 100%;
+            background: $white;
+
+            .ml-title {
+                display: none;
+            }
+
+            .ml-value {
+                padding: 0 !important;
+            }
+
+            .coupon {
+                float: left;
+                width: 100%;
+
+                label {
+                    display: none;
+                }
+
+                input {
+                    border: 1px solid $lightgray;
+                    margin-bottom: 1rem;
+                    width: 28rem;
+                }
+            }
         }
     }
 
@@ -1339,6 +1390,19 @@ header {
         font-size: 1.2rem;
         text-transform: uppercase;
         color: $gray;
+
+        &.empty {
+            display: none;
+        }
+
+        .woocommerce-cart &.col-0 {
+            background: $white !important;
+            padding-bottom: 10px !important;
+        }
+
+        @include responsive($mobile-sm) {
+            width: 32% !important;
+        }
     }
 
     dd.ml-value {
@@ -1347,6 +1411,23 @@ header {
         width: 75% !important;
         padding: 5px 2rem !important;
         background: $white;
+
+        &.empty {
+            display: none;
+        }
+
+        .woocommerce-cart &.col-0 {
+            background: $white;
+            padding-right: 0 !important;
+        }
+
+        .remove {
+            float: right;
+        }
+
+        @include responsive($mobile-sm) {
+            width: 68% !important;
+        }
     }
 
     dl dd:nth-of-type(odd) {
@@ -1355,6 +1436,19 @@ header {
 }
 
 /* Checkout */
+.woocommerce .cart-collaterals .cart_totals {
+    @include responsive($mobile) {
+        float: left;
+        margin-top: 4rem;
+    }
+}
+
+.wc-proceed-to-checkout {
+    @include responsive($mobile) {
+        float: left;
+    }
+}
+
 .woocommerce table.shop_table {
     border-radius: 0;
 
