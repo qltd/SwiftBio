@@ -42,7 +42,11 @@ get_header(); ?>
                         <a href="<?php echo get_permalink(1080); ?>" class="button">Request Sample</a>
                     </div>
                     <div class="col">
-                        <a href="<?php echo get_permalink(5); ?>" class="button">View Cart</a>
+                        <?php if (detectLocation()):  ?>
+                            <a href="<?php echo get_permalink(5); ?>" class="button">View Cart</a>
+                        <?php else: ?>
+                            <a href="<?php echo get_permalink(278); ?>" class="button">Find Distributor</a>
+                        <?php endif; ?>
                     </div>
                 </div>
 
