@@ -19,7 +19,7 @@ get_header(); ?>
                 <?php get_template_part('buckets/accordion'); ?>
             <?php endif; ?>
 
-            <?php if (get_field('products')): ?>
+            <?php if (get_field('products') && $post->post_name != 'sample-page'): ?>
                 <h2 class="sub-page-title">Place Order</h2>
                 <h3 class="product-lead-in"><?php the_field('product_table_lead_in_text'); ?></h3>
                 <?php get_template_part('template-parts/product-table'); ?>

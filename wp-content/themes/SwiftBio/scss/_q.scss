@@ -1135,14 +1135,56 @@ header {
         height: 0;
         overflow: hidden;
         padding: 1rem 0;
+
+        .expander {
+            background: none;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: $blue;
+            text-transform: none;
+
+            &:hover {
+                color: $purple;
+            }
+
+            &:before {
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                background: $purple;
+                content: " ";
+                margin-right: 0.5rem;
+            }
+
+            i {
+                display: none;
+            }
+        }
+
+        .content {
+            padding: 0 0 2rem 2rem;
+            margin-top: 0 !important;
+
+            p {
+                font-size: 1.6rem;
+            }
+        }
     }
 
     &.open {
-        .content {
+        > .content {
             opacity: 1;
             height: auto;
             margin: 1rem 0 0;
             transition: opacity 1s ease-out;
+
+            .expand-collapse.open .expander {
+                color: $darkblue;
+
+                &:hover {
+                    color: $purple;
+                }
+            }
         }
     }
 }
@@ -1501,6 +1543,8 @@ header {
 
 /* Forms */
 .salesforce_w2l_lead {
+    margin-bottom: 4rem;
+
     .w2linput.text {
         width: 100% !important;
 

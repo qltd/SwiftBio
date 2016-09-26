@@ -541,7 +541,23 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .expand-collapse .content { transition: opacity 0s ease-out; opacity: 0; height: 0; overflow: hidden; padding: 1rem 0; }
 
-.expand-collapse.open .content { opacity: 1; height: auto; margin: 1rem 0 0; transition: opacity 1s ease-out; }
+.expand-collapse .content .expander { background: none; font-size: 1.8rem; font-weight: bold; color: #25aae1; text-transform: none; }
+
+.expand-collapse .content .expander:hover { color: #942976; }
+
+.expand-collapse .content .expander:before { width: 5px; height: 5px; border-radius: 50%; background: #942976; content: " "; margin-right: 0.5rem; }
+
+.expand-collapse .content .expander i { display: none; }
+
+.expand-collapse .content .content { padding: 0 0 2rem 2rem; margin-top: 0 !important; }
+
+.expand-collapse .content .content p { font-size: 1.6rem; }
+
+.expand-collapse.open > .content { opacity: 1; height: auto; margin: 1rem 0 0; transition: opacity 1s ease-out; }
+
+.expand-collapse.open > .content .expand-collapse.open .expander { color: #2a569b; }
+
+.expand-collapse.open > .content .expand-collapse.open .expander:hover { color: #942976; }
 
 /* Product tagline */
 .product-tagline { display: -webkit-flex; display: -ms-flexbox; display: flex; background: #b9e5fb; width: 100%; margin: 2rem 0; -webkit-align-items: center; -ms-flex-align: center; align-items: center; }
@@ -681,6 +697,8 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 .post .post-title a { font-weight: 300; }
 
 /* Forms */
+.salesforce_w2l_lead { margin-bottom: 4rem; }
+
 .salesforce_w2l_lead .w2linput.text { width: 100% !important; }
 
 .salesforce_w2l_lead .w2linput.text.captcha { height: 30px !important; font-size: inherit !important; font-family: "Roboto", sans-serif !important; margin: 1rem 0 0 !important; text-align: left !important; }
