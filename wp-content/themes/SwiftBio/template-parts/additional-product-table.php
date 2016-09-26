@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th>Catalog No.</th>
-            <th>Library Kit</th>
+            <th>Description</th>
             <th>Price</th>
             <th style="width: 270px;"><?php if (detectLocation()):  ?>QTY<?php endif; ?></th>
         </tr>
