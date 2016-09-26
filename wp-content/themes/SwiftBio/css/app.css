@@ -176,6 +176,8 @@ h5 { font-size: 1.8rem; font-weight: bold; }
 
 p, ul, ol, td, div { margin-top: 0; font-size: 1.8rem; }
 
+hr { border-top: 2px solid #eee; border-bottom: 2px solid #eee; border-left: none; margin-bottom: 2rem; display: block; }
+
 ul { list-style: none; padding-left: 3rem; }
 
 .main ul li:before { font-family: FontAwesome; content: "\f0da"; color: #942976; margin-left: -1.2rem; float: left; }
