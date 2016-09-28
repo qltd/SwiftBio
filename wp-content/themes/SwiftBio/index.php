@@ -20,7 +20,9 @@ get_header(); ?>
         </div>
 
         <div class="sidebar">
-            <?php get_sidebar(); ?>
+            <?php if (!is_search()): ?>
+                <?php get_sidebar(); ?>
+            <?php endif; ?>
         </div>
     </div>
 
