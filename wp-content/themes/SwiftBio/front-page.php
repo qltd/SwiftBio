@@ -26,6 +26,7 @@ get_header(); ?>
                 'post_parent'       => 32,
                 'numberposts'    => -1,
                 'post_status' => 'publish',
+                'orderby' => 'post_title',
                 'order' => 'ASC'
             ));
         ?>
