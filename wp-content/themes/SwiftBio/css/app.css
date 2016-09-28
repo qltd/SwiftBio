@@ -398,9 +398,9 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .event-callout .date { font-size: 3.8rem; white-space: nowrap; }
 
-.event-callout .middle { width: 100%; padding: 0 2rem; max-width: 320px; }
+.event-callout .middle { width: 100%; padding: 0 2rem; }
 
-@media screen and (max-width: 914px) { .event-callout .middle { margin: 2rem 0 1rem; } }
+@media screen and (max-width: 914px) { .event-callout .middle { max-width: 320px; margin: 2rem 0 1rem; } }
 
 .event-callout .middle h2 { margin: 0 0 1rem; }
 

@@ -68,13 +68,15 @@ get_header(); ?>
             <div class="row">
                 <div class="feature product">
                     <?php
-                        $fp = get_field('featured_product');
-                        $img_url = $image = wp_get_attachment_image_src( get_post_thumbnail_id( $fp->ID ), 'featured_product' );
+                        $post = get_field('featured_product');
+                        setup_postdata( $post );
+                        $img_url = $image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'featured_product' );
                     ?>
-                    <a href="<?php echo get_permalink($fp->ID); ?>"><img src="<?php echo $img_url[0]; ?>" /></a>
-                    <h2><a href="<?php echo get_permalink($fp->ID); ?>"><?php echo $fp->post_title; ?></a></h2>
+                    <a href="<?php echo get_permalink(); ?>"><img src="<?php echo $img_url[0]; ?>" /></a>
+                    <h2><a href="<?php echo get_permalink(); ?>"><?php the_title(); ?></a></h2>
                     <p><strong><?php the_field('featured_product_sub_title'); ?></strong></p>
-                    <p><?php echo wp_trim_words($fp->post_content, 21); ?>  <a href="<?php echo get_permalink($fp->ID); ?>">more &raquo;</a></p>
+                    <p><?php echo wp_trim_words(get_the_excerpt(), 53); ?>  <a href="<?php echo get_permalink(); ?>">more &raquo;</a></p>
+                    <?php wp_reset_postdata(); ?>
 
                     <a href="<?php echo get_field('similar_products_link'); ?>" class="button">Similar Products</a>
                 </div>
