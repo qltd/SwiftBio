@@ -1611,6 +1611,14 @@ header {
     margin-left: 0;
     padding-left: 0;
 
+    @include responsive("500px") {
+        .row {
+            flex-direction: column;
+            padding: 0 1rem;
+        }
+    }
+
+
     li {
         border-bottom: 4px solid $lightgray;
         padding-bottom: 1rem;
@@ -1636,9 +1644,56 @@ header {
         max-width: 170px;
         margin-right: 5rem;
         padding: 2rem 1rem;
+
+        img {
+            max-width: 150px;
+        }
+
+        @include responsive("500px") {
+            max-width: 100%;
+            padding: 0;
+            margin-bottom: 2rem;
+
+            img {
+                max-width: 200px;
+            }
+        }
+    }
+}
+
+/* Management Team */
+.management-team {
+    padding: 0 2rem;
+    margin: 4rem 0;
+
+    li {
+        display: flex;
+        margin-bottom: 4rem;
+
+        @include responsive($mobile) {
+            flex-direction: column;
+        }
+
+
+        &:before {
+            content: " " !important;
+            margin-left: 0;
+        }
     }
 
-    img {
-        max-width: 150px;
+    .left {
+        margin-right: 2rem;
+
+        img {
+            max-width: 200px;
+        }
+    }
+
+    h4 {
+        margin-bottom: 0;
+    }
+
+    h5 {
+        margin-bottom: 1rem;
     }
 }
