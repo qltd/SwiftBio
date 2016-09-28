@@ -1605,3 +1605,40 @@ header {
         color: #939598;
     }
 }
+
+/* Distributors */
+.distributor-list {
+    margin-left: 0;
+    padding-left: 0;
+
+    li {
+        border-bottom: 4px solid $lightgray;
+        padding-bottom: 1rem;
+        margin-bottom: 3rem;
+
+        &:before {
+            content: " " !important;
+            margin-left: 0;
+        }
+
+        &:last-child {
+            border: none;
+        }
+    }
+
+    h3 {
+        color: $blue;
+        padding-left: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .left {
+        max-width: 170px;
+        margin-right: 5rem;
+        padding: 2rem 1rem;
+    }
+
+    img {
+        max-width: 150px;
+    }
+}

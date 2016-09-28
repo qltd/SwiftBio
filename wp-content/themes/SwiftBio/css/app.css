@@ -720,4 +720,19 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .pagination span { color: #939598; }
 
+/* Distributors */
+.distributor-list { margin-left: 0; padding-left: 0; }
+
+.distributor-list li { border-bottom: 4px solid #eee; padding-bottom: 1rem; margin-bottom: 3rem; }
+
+.distributor-list li:before { content: " " !important; margin-left: 0; }
+
+.distributor-list li:last-child { border: none; }
+
+.distributor-list h3 { color: #25aae1; padding-left: 1rem; margin-bottom: 2rem; }
+
+.distributor-list .left { max-width: 170px; margin-right: 5rem; padding: 2rem 1rem; }
+
+.distributor-list img { max-width: 150px; }
+
 /*# sourceMappingURL=app.css.map */
