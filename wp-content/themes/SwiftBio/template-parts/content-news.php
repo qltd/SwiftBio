@@ -33,6 +33,24 @@ if ($post->post_type == "careers"){
                 <?php else: ?>
                     <?php the_excerpt(); ?>
                 <?php endif; ?>
+
+                <?php
+                    if (get_field('start_date')) {
+                        the_field('start_date');
+                    }
+
+                    if (get_field('end_date')) {
+                        echo ' to ' . get_field('end_date');
+                    }
+
+                    if (get_field('location')) {
+                        echo '<br />' . get_field('location');
+                    }
+
+                    if (get_field('booth')) {
+                        the_field('booth');
+                    }
+                ?>
         </div>
     </div>
 <?php endwhile; endif; ?>

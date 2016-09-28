@@ -18,7 +18,7 @@
                         <div class="col">
                             <a href="/" title="home" class="logo"><img src="<?php bloginfo('template_directory'); ?>/img/swift-logo.svg" alt="Swift Biosciences" /></a>
 
-                            <address>58 Parkland Plaza, Ste, 100<br />
+                            <address>58 Parkland Plaza, Ste. 100<br />
                             Ann Arbor, MI 48103 USA</address>
 
                             <p>
