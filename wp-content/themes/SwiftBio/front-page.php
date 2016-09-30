@@ -128,7 +128,7 @@ get_header(); ?>
                     <h5><?php the_field('location', $recent_event[0]->ID); ?> <?php echo (get_field('booth', $recent_event[0]->ID)) ? '| ' . get_field('booth', $recent_event[0]->ID) : ''; ?></h5>
                 </div>
                 <div class="right">
-                    <a href="mailto:" class="button">Meet with Swift</a>
+                    <a href="mailto:<?php echo get_field('meet_with_swift_email'); ?>" class="button">Meet with Swift</a>
                     <a href="<?php echo get_permalink(1140); ?>" class="button">See All Events</a>
                 </div>
             </div> <!-- .event-callout -->
