@@ -129,7 +129,7 @@ get_header(); ?>
                 </div>
                 <div class="right">
                     <a href="mailto:" class="button">Meet with Swift</a>
-                    <a href="<?php echo get_permalink(113); ?>" class="button">See All Events</a>
+                    <a href="<?php echo get_permalink(1140); ?>" class="button">See All Events</a>
                 </div>
             </div> <!-- .event-callout -->
             <?php endif; ?>
