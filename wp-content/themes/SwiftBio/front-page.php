@@ -26,7 +26,7 @@ get_header(); ?>
                 'post_parent'       => 32,
                 'numberposts'    => -1,
                 'post_status' => 'publish',
-                'orderby' => 'post_title',
+                'orderby' => 'order',
                 'order' => 'ASC'
             ));
         ?>
@@ -76,7 +76,7 @@ get_header(); ?>
                     <a href="<?php echo get_permalink(); ?>"><img src="<?php echo $img_url[0]; ?>" /></a>
                     <h2><a href="<?php echo get_permalink(); ?>"><?php the_title(); ?></a></h2>
                     <p><strong><?php the_field('featured_product_sub_title'); ?></strong></p>
-                    <p><?php echo wp_trim_words(get_the_excerpt(), 53); ?>  <a href="<?php echo get_permalink(); ?>">more &raquo;</a></p>
+                    <p><?php echo wp_trim_words(get_field('featured_product_text'), 53); ?>  <a href="<?php echo get_permalink(); ?>">more &raquo;</a></p>
                     <?php wp_reset_postdata(); ?>
 
                     <a href="<?php echo get_field('similar_products_link'); ?>" class="button">Similar Products</a>
