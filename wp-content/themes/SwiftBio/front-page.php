@@ -26,7 +26,7 @@ get_header(); ?>
                 'post_parent'       => 32,
                 'numberposts'    => -1,
                 'post_status' => 'publish',
-                'orderby' => 'order',
+                'orderby' => 'menu_order',
                 'order' => 'ASC'
             ));
         ?>
@@ -128,7 +128,7 @@ get_header(); ?>
                     <h5><?php the_field('location', $recent_event[0]->ID); ?> <?php echo (get_field('booth', $recent_event[0]->ID)) ? '| ' . get_field('booth', $recent_event[0]->ID) : ''; ?></h5>
                 </div>
                 <div class="right">
-                    <a href="mailto:<?php echo get_field('meet_with_swift_email'); ?>" class="button">Meet with Swift</a>
+                    <a href="mailto:<?php echo get_field('meet_with_swift_email'); ?>?subject=Upcoming Event: Let's get together!&body=I'm planning on attending this event and would like to meet with Swift while I am there. Here are some days and times I am available, a location I would like to meet, and my preferred method of contact:" class="button">Meet with Swift</a>
                     <a href="<?php echo get_permalink(1140); ?>" class="button">See All Events</a>
                 </div>
             </div> <!-- .event-callout -->
