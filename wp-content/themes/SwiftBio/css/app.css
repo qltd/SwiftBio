@@ -170,9 +170,9 @@ h2.sub-page-title { margin-top: 2rem; color: #2a569b; }
 
 h3 { font-size: 2.2rem; font-weight: 300; }
 
-h4 { font-size: 2.2rem; font-weight: 300; color: #2a569b; }
+h4 { font-size: 2.2rem; font-weight: 300; color: #2a569b; margin-bottom: 0.5rem; }
 
-h5 { font-size: 1.8rem; font-weight: bold; }
+h5 { font-size: 1.8rem; font-weight: bold; margin-bottom: 0.5rem; }
 
 p { margin-bottom: 2rem; }
 
