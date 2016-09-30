@@ -42,7 +42,7 @@
                 </div>
                 <div class="footer-btm">
                     <div class="row">
-                        <p>&copy; <?php echo date('Y'); ?> Swift Biosciences Inc. All rights reserved. This product is for Research Use Only. Not for use in diagnostic procedures.  |  <a href="<?php echo get_permalink(115); ?>">Terms & Conditions</a>  |  <a href="<?php echo get_permalink(117); ?>">Trademark Usage</a>
+                        <p>&copy; <?php echo date('Y'); ?> Swift Biosciences Inc. All rights reserved. This product is for Research Use Only. Not for use in diagnostic procedures.  |  <a href="<?php echo get_permalink(115); ?>">Terms & Conditions</a>  |  <a href="<?php echo get_permalink(288); ?>">Trademark Usage</a>
                     </div>
                 </div>
             </footer><!-- #colophon -->
