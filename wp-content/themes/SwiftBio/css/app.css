@@ -759,4 +759,23 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .management-team h5 { margin-bottom: 1rem; }
 
+/* Forms */
+form h3 { margin-bottom: 0; }
+
+form dl { margin: 0 0 3rem; }
+
+form p { clear: both; margin-bottom: 3rem; display: block; overflow: hidden; }
+
+form .req { color: red; }
+
+form textarea { width: 100%; margin-bottom: 3rem; }
+
+label { display: block; margin-right: 2%; margin-bottom: 3rem; }
+
+p label { display: inline-block; width: 48%; float: left; margin-bottom: 0; }
+
+dl label { margin-bottom: 0; }
+
+label input[type=text], label select, label .select2, label textarea { display: block; width: 100%; margin-top: 2px; margin-bottom: 0; }
+
 /*# sourceMappingURL=app.css.map */
