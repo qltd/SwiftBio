@@ -20,14 +20,6 @@ navToggle[0].addEventListener("click", function(){ toggleNav() });
 navClose[0].addEventListener("click", function(){ toggleNav() });
 bgOverlay[0].addEventListener("click", function(){ toggleNav() });
 
-var response = grecaptcha.getResponse();
-
-if(response.length == 0){
-    //reCaptcha not verified
-    alert("Please verify you are not a robot!");
-}else{
-    //reCaptch verified
-}
 
 (function($){
 
