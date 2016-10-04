@@ -24,6 +24,19 @@
     <?php endif; ?>
 
     <div class="body-content">
-            <?php the_content(); ?>
+
+        <?php if (isset($_GET['success'])): ?>
+            <div id="form-message">
+            <?php if ($_GET['success'] == 'true'): ?>
+               Thank you for your inquiry. A representative from Swift Biosciences will be in contact with you shortly regarding your inquiry.
+            <?php elseif ($_GET['success'] == 'false'): ?>
+                ERROR: Please verify that you are a human.
+            <?php endif; ?>
+
+            </div>
+        <?php endif; ?>
+
+        <?php the_content(); ?>
+
     </div>
 <?php endwhile; endif; ?>

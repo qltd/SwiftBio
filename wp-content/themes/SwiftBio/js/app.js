@@ -21,7 +21,32 @@ navClose[0].addEventListener("click", function(){ toggleNav() });
 bgOverlay[0].addEventListener("click", function(){ toggleNav() });
 
 
+
 (function($){
+
+    sfForm = $("#sf-form");
+    sfForm.on("submit", function(e) {
+        e.preventDefault();
+
+        $.ajax({
+          type: "POST",
+          url: "/wp-content/themes/SwiftBio/template-parts/salesforce-recaptcha.php",
+          data: sfForm.serialize(),
+          success: function(data) {
+            console.log(data);
+            if (data == 'Not valid'){
+                $('.g-recaptcha').before('<div id="form-message">ERROR: Please verify you are human.</div>');
+            } else if (data == 'Valid'){
+                // show success message
+                sfForm.html('<div id="form-message">Thanks for your inquery.</div>');
+                $('html, body').animate({
+                    scrollTop: $("#body-wrap").offset().top
+                }, 0);
+            }
+          }
+        })
+      });
+
 
     // Google Analytics Event on Social Sharing Links
     $('.social-share a').on('click', function() {
