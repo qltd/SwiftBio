@@ -766,8 +766,6 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .sf-form p { clear: both; margin-bottom: 3rem; display: block; overflow: hidden; }
 
-.sf-form .req { color: red; }
-
 .sf-form textarea { width: 100%; margin-bottom: 3rem; }
 
 .sf-form .g-recaptcha { margin-bottom: 3rem; }
@@ -780,6 +778,10 @@ dl .sf-form label { margin-bottom: 0; }
 
 .sf-form label input[type=text], .sf-form label input[type=email], .sf-form label input[type=tel], .sf-form label select, .sf-form label .select2, .sf-form label textarea { display: block; width: 100%; margin-top: 2px; margin-bottom: 0; }
 
+.req { color: red; }
+
 #form-message { background: #b9e5fb; color: #942976; padding: 2rem; font-style: italic; margin-bottom: 2rem; }
+
+.wpcf7-recaptcha { margin-bottom: 2rem; }
 
 /*# sourceMappingURL=app.css.map */

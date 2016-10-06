@@ -1723,10 +1723,6 @@ header {
         overflow: hidden;
     }
 
-    .req {
-        color: red;
-    }
-
     textarea {
         width: 100%;
         margin-bottom: 3rem;
@@ -1761,10 +1757,18 @@ header {
     }
 }
 
+.req {
+    color: red;
+}
+
 #form-message {
     background: $lightblue;
     color: $purple;
     padding: 2rem;
     font-style: italic;
+    margin-bottom: 2rem;
+}
+
+.wpcf7-recaptcha {
     margin-bottom: 2rem;
 }
