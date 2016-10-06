@@ -29,8 +29,8 @@ get_header(); ?>
                     <?php get_template_part('template-parts/additional-product-table'); ?>
                 <?php endif; ?>
 
-                <?php if(get_field('agilent_products_table')): ?>
-                    <h3 class="product-lead-in"><?php the_field('agilent_products_lead_in_text'); ?></h3>
+                <?php if(get_field('agilent_products')): ?>
+                    <h3 class="product-lead-in"><?php the_field('agilent_product_table_lead_in_text'); ?></h3>
                     <?php get_template_part('template-parts/agilent-product-table'); ?>
                 <?php endif; ?>
 
@@ -39,7 +39,7 @@ get_header(); ?>
                     <?php get_template_part('template-parts/nimblegen-product-table'); ?>
                 <?php endif; ?>
 
-                <?php if(get_field('xgen_products_table')): ?>
+                <?php if(get_field('xgen_products')): ?>
                     <h3 class="product-lead-in"><?php the_field('xgen_products_lead_in_text'); ?></h3>
                     <?php get_template_part('template-parts/xgen-product-table'); ?>
                 <?php endif; ?>

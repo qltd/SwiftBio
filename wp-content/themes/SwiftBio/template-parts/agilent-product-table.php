@@ -10,7 +10,7 @@
     <tbody>
 
         <?php
-        while(have_rows('agilent_products_table')): the_row();
+        while(have_rows('agilent_products')): the_row();
             $product = get_sub_field('product');
             $sku = get_post_meta( $product->ID, '_sku');
             $price = get_post_meta( $product->ID, '_price');
