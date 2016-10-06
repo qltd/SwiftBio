@@ -7,10 +7,15 @@
  * @package _q
  */
 
-get_header(); ?>
 
-	<div id="primary" class="content-area">
-		<main id="main" class="site-main" role="main">
+get_header(); ?>
+    <div class="row share">
+            <?php get_template_part('template-parts/social-sharing'); ?>
+    </div>
+
+    <div id="body-wrap" class="row">
+
+        <div class="main>
 
 			<section class="error-404 not-found">
 				<header class="page-header">
@@ -18,47 +23,18 @@ get_header(); ?>
 				</header><!-- .page-header -->
 
 				<div class="page-content">
-					<p><?php esc_html_e( 'It looks like nothing was found at this location. Maybe try one of the links below or a search?', '_q' ); ?></p>
+					<p><?php esc_html_e( 'It looks like nothing was found at this location. Maybe try a search?', '_q' ); ?></p>
 
 					<?php
-						get_search_form();
-
-						the_widget( 'WP_Widget_Recent_Posts' );
-
-						// Only show the widget if site has multiple categories.
-						if ( _q_categorized_blog() ) :
-					?>
-
-					<div class="widget widget_categories">
-						<h2 class="widget-title"><?php esc_html_e( 'Most Used Categories', '_q' ); ?></h2>
-						<ul>
-						<?php
-							wp_list_categories( array(
-								'orderby'    => 'count',
-								'order'      => 'DESC',
-								'show_count' => 1,
-								'title_li'   => '',
-								'number'     => 10,
-							) );
-						?>
-						</ul>
-					</div><!-- .widget -->
-
-					<?php
-						endif;
-
-						/* translators: %1$s: smiley */
-						$archive_content = '<p>' . sprintf( esc_html__( 'Try looking in the monthly archives. %1$s', '_q' ), convert_smilies( ':)' ) ) . '</p>';
-						the_widget( 'WP_Widget_Archives', 'dropdown=1', "after_title=</h2>$archive_content" );
-
-						the_widget( 'WP_Widget_Tag_Cloud' );
-					?>
+						get_search_form(); ?>
 
 				</div><!-- .page-content -->
 			</section><!-- .error-404 -->
 
 		</main><!-- #main -->
-	</div><!-- #primary -->
+            <div class="sidebar">
+            </div>
+                <div style="clear:both;"></div>
 
-<?php
-get_footer();
+    </div>
+<?php get_footer(); ?>
