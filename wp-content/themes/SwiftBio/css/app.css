@@ -547,15 +547,15 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 .expand-collapse .content { transition: opacity 0s ease-out; opacity: 0; height: 0; overflow: hidden; padding: 1rem 0; }
 
-.expand-collapse .content .expander { background: none; font-size: 1.8rem; font-weight: bold; color: #25aae1; text-transform: none; }
+.expand-collapse .content .expander { background: none; font-size: 1.8rem; font-weight: bold; color: #25aae1; display: block; text-transform: none; }
+
+.expand-collapse .content .expander:before { font-family: FontAwesome; content: "\f0da"; color: #942976; font-size: 2.5rem; margin-left: -1.2rem; margin-right: 1rem; float: left; line-height: 1.2; }
 
 .expand-collapse .content .expander:hover { color: #942976; }
 
-.expand-collapse .content .expander:before { width: 5px; height: 5px; border-radius: 50%; background: #942976; content: " "; margin-right: 0.5rem; }
-
 .expand-collapse .content .expander i { display: none; }
 
-.expand-collapse .content .content { padding: 0 0 2rem 2rem; margin-top: 0 !important; }
+.expand-collapse .content .content { margin-top: 0 !important; }
 
 .expand-collapse .content .content p { font-size: 1.6rem; }
 
