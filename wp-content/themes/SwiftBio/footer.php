@@ -18,13 +18,12 @@
                         <div class="col">
                             <a href="/" title="home" class="logo"><img src="<?php bloginfo('template_directory'); ?>/img/swift-logo.svg" alt="Swift Biosciences" /></a>
 
-                            <address>58 Parkland Plaza, Ste. 100<br />
-                            Ann Arbor, MI 48103 USA</address>
+                            <address><?php the_field('footer_address', 'options'); ?></address>
 
                             <p>
-                                Tel: 734-330-2568<br />
-                                Toll-Free: 844-867-7028<br />
-                                Fax: 734-527-6709
+                                Tel: <?php the_field('footer_telephone_number', 'options'); ?><br />
+                                Toll-Free: <?php the_field('footer_toll_free_number', 'options'); ?><br />
+                                Fax: <?php the_field('footer_fax_number', 'options'); ?>
                             </p>
 
                             <a href="mailto:<?php the_field('tech_support_email', 'options'); ?>" class="email-button"><i class="fa fa-envelope"></i> Email Technical Support</a>
