@@ -13,7 +13,6 @@ if ($captcha_success->success==false) {
     //This user was not verified by recaptcha.
     // if ajax send a response otherwise redirect back to the page
     if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-        echo 'Not valid';
     } else {
         header('Location: ' . $referer . '?success=false');
     }
