@@ -11,7 +11,8 @@
         $url = get_sub_field('page');
     } else {
         $url = get_sub_field('pdf');
+        $target='target="_blank"';
     }
     ?>
-    <a href="<?php echo $url;?>" class="bucket button"><?php the_sub_field('button_text'); ?></a>
+    <a href="<?php echo $url;?>" class="bucket button" <?php echo $target; ?>><?php the_sub_field('button_text'); ?></a>
 </div>

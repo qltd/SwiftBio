@@ -7,6 +7,7 @@
         $target='target="_blank"';
     } elseif (get_sub_field('link_type') == 'File'){
         $url = get_sub_field('file');
+        $target='target="_blank"';
     }
     if (isset($url)):
 ?>
