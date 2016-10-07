@@ -1,5 +1,8 @@
 <?php
 $referer = str_replace('?success=true', '', str_replace('?success=false', '', $_SERVER['HTTP_REFERER']));
+$url = ($_POST['web2case'] == 1) ? 'https://www.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8' : 'https://www.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8';
+
+
 $secret = "6LdyzQYUAAAAAI1_7NB6IU1Kh4QIGMZI8sONw3M-";
 $response = $_POST["g-recaptcha-response"];
 $verify = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secret}&response={$response}");
@@ -18,7 +21,6 @@ if ($captcha_success->success==false) {
 } elseif ($captcha_success->success==true) {
     //This user is verified by recaptcha send the form to salesforce
 
-    $url = 'https://www.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8';
     $fields = array(
         'first_name' => urlencode($_POST['first_name']),
         'last_name' => urlencode($_POST['last_name']),

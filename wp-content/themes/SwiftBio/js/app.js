@@ -20,12 +20,20 @@ navToggle[0].addEventListener("click", function(){ toggleNav() });
 navClose[0].addEventListener("click", function(){ toggleNav() });
 bgOverlay[0].addEventListener("click", function(){ toggleNav() });
 
-
+/* Apply multiple Recaptcha's */
+    function CaptchaCallback() {
+        jQuery('div.g-recaptcha').each(function(){
+            var key = jQuery(this).data('sitekey');
+            grecaptcha.render(jQuery(this)[0], {'sitekey' : key});
+        });
+    };
 
 (function($){
 
-    sfForm = $("#sf-form");
-    sfForm.on("submit", function(e) {
+
+    /* Sales force Ajax submit */
+   $("#sf-form, .sf-form").on("submit", function(e) {
+        sfForm = $(this);
         e.preventDefault();
 
         $.ajax({
@@ -35,12 +43,13 @@ bgOverlay[0].addEventListener("click", function(){ toggleNav() });
           success: function(data) {
             console.log(data);
             if (data == 'Not valid'){
-                $('.g-recaptcha').before('<div id="form-message">ERROR: Please verify you are human.</div>');
+                sfForm.find('.g-recaptcha').before('<div id="form-message">ERROR: Please verify you are human.</div>');
+                grecaptcha.reset();
             } else if (data == 'Valid'){
                 // show success message
                 sfForm.html('<div id="form-message">Thanks for your inquery.</div>');
                 $('html, body').animate({
-                    scrollTop: $("#body-wrap").offset().top
+                    scrollTop: $("#form-message").offset().top
                 }, 0);
             }
           }
