@@ -42,15 +42,16 @@ bgOverlay[0].addEventListener("click", function(){ toggleNav() });
           data: sfForm.serialize(),
           success: function(data) {
             console.log(data);
-            if (data == 'Not valid'){
-                sfForm.find('.g-recaptcha').before('<div id="form-message">ERROR: Please verify you are human.</div>');
-                grecaptcha.reset();
-            } else if (data == 'Valid'){
+            if (data){
                 // show success message
                 sfForm.html('<div id="form-message">Thank you for your inquiry.  A representative from Swift Biosciences will be in contact with you shortly regarding your inquiry.</div>');
                 $('html, body').animate({
                     scrollTop: $("#form-message").offset().top
                 }, 0);
+
+            } else {
+                 sfForm.find('.g-recaptcha').before('<div id="form-message">ERROR: Please verify you are human.</div>');
+                grecaptcha.reset();
             }
           }
         })
