@@ -31,34 +31,32 @@ bgOverlay[0].addEventListener("click", function(){ toggleNav() });
 (function($){
 
     $("#sf-form, .sf-form").validate({
+        submitHandler: function(form){
+             sfForm = $(form);
 
+            $.ajax({
+              type: "POST",
+              url: "/wp-content/themes/SwiftBio/template-parts/salesforce-recaptcha.php",
+              data: sfForm.serialize(),
+              success: function(data) {
+                console.log(data);
+                if (data){
+                    // show success message
+                    sfForm.html('<div id="form-message">Thank you for your inquiry.  A representative from Swift Biosciences will be in contact with you shortly regarding your inquiry.</div>');
+                    $('html, body').animate({
+                        scrollTop: $("#form-message").offset().top
+                    }, 0);
+
+                } else {
+                     sfForm.find('.g-recaptcha').before('<div id="form-message">ERROR: Please verify you are human.</div>');
+                    grecaptcha.reset();
+                }
+              }
+            })
+        }
     });
 
-    /* Sales force Ajax submit */
-   $("#sf-form, .sf-form").on("submit", function(e) {
-        sfForm = $(this);
-        e.preventDefault();
 
-        $.ajax({
-          type: "POST",
-          url: "/wp-content/themes/SwiftBio/template-parts/salesforce-recaptcha.php",
-          data: sfForm.serialize(),
-          success: function(data) {
-            console.log(data);
-            if (data){
-                // show success message
-                sfForm.html('<div id="form-message">Thank you for your inquiry.  A representative from Swift Biosciences will be in contact with you shortly regarding your inquiry.</div>');
-                $('html, body').animate({
-                    scrollTop: $("#form-message").offset().top
-                }, 0);
-
-            } else {
-                 sfForm.find('.g-recaptcha').before('<div id="form-message">ERROR: Please verify you are human.</div>');
-                grecaptcha.reset();
-            }
-          }
-        })
-      });
 
 
     // Google Analytics Event on Social Sharing Links
