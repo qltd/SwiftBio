@@ -30,6 +30,9 @@ bgOverlay[0].addEventListener("click", function(){ toggleNav() });
 
 (function($){
 
+    $("#sf-form, .sf-form").validate({
+
+    });
 
     /* Sales force Ajax submit */
    $("#sf-form, .sf-form").on("submit", function(e) {

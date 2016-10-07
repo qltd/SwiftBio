@@ -41,7 +41,7 @@
                 </div>
                 <div class="footer-btm">
                     <div class="row">
-                        <p>&copy; <?php echo date('Y'); ?> Swift Biosciences Inc. All rights reserved. This product is for Research Use Only. Not for use in diagnostic procedures.  |  <a href="<?php echo get_permalink(115); ?>">Terms & Conditions</a>  |  <a href="<?php echo get_permalink(288); ?>">Trademark Usage</a> | <a href="<?php echo get_permalink(1722); ?>">Privacy Policy</a>
+                        <p>&copy; <?php echo date('Y'); ?> Swift Biosciences Inc. All rights reserved. This product is for Research Use Only. Not for use in diagnostic procedures.  |  <a href="<?php echo get_permalink(2099); ?>">Terms of Use</a>  |  <a href="<?php echo get_permalink(288); ?>">Trademark Usage</a> | <a href="<?php echo get_permalink(1722); ?>">Privacy Policy</a>
                     </div>
                 </div>
             </footer><!-- #colophon -->
@@ -53,6 +53,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.12.0/jquery.validate.js"></script>
     <script src="<?php echo get_stylesheet_directory_uri(); ?>/js/app.js"></script>
       <script src="https://www.google.com/recaptcha/api.js?onload=CaptchaCallback&render=explicit" async defer></script>
     <?php if (is_page(1670)): ?>
