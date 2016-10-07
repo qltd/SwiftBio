@@ -154,6 +154,8 @@ html { box-sizing: border-box; height: 100%; width: 100%; font-size: 62.5%; line
 .aligncenter { clear: both; display: block; margin-left: auto; margin-right: auto; }
 
 /* Inline Responsive Media Query */
+@media screen and (max-width: 1130px) { @-ms-viewport { width: device-width; } }
+
 body { height: 100%; background: #fff; font-family: "Roboto", sans-serif; }
 
 h1, h2, h3, h4, h5, h6 { line-height: 1.4; margin-top: 0; margin-bottom: 1rem; }
@@ -214,7 +216,7 @@ header .menu-bar { height: 7rem; background: #eee; position: relative; z-index: 
 
 header .menu-bar .row { -webkit-justify-content: space-between; -ms-flex-pack: justify; justify-content: space-between; -webkit-align-items: center; -ms-flex-align: center; align-items: center; height: 100%; }
 
-header .menu-bar .logo { width: 115px; margin-top: 2px; }
+header .menu-bar .logo img { width: 115px; max-height: 54.2px; margin-top: 2px; }
 
 .home header .menu-bar { background: rgba(255, 255, 255, 0.54); }
 
@@ -394,7 +396,7 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 
 @media screen and (max-width: 914px) { .event-callout { -webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column; } }
 
-.event-callout .left { width: 280px; background: #25aae1; height: 100%; color: #fff; text-align: center; padding: 4.1rem; text-transform: uppercase; font-weight: bold; line-height: 1.2; }
+.event-callout .left { background: #25aae1; height: 100%; color: #fff; text-align: center; padding: 4.1rem; text-transform: uppercase; font-weight: bold; line-height: 1.2; }
 
 @media screen and (max-width: 914px) { .event-callout .left { width: 100%; height: 15.5rem; } }
 
@@ -467,7 +469,7 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 .site-footer nav > ul > li > a { font-size: 1.8rem; color: #58585a; text-transform: uppercase; font-weight: 300; }
 
 @media screen and (max-width: 1223px) { .site-footer nav > ul > li > a { background: #eee; display: -webkit-flex; display: -ms-flexbox; display: flex; width: 100%; font-size: 2.2rem; padding: 0rem 1rem; color: #2a569b; font-weight: 300; -webkit-align-items: center; -ms-flex-align: center; align-items: center; }
-  .site-footer nav > ul > li > a:after { font-family: FontAwesome; content: "\f055"; color: #25aae1; font-size: 2.6rem; margin-left: auto; } }
+  .site-footer nav > ul > li > a:after { font-family: FontAwesome; content: "\f055"; color: #25aae1; float: right; font-size: 2.6rem; margin-left: auto; } }
 
 .site-footer nav > ul > li > ul.sub-menu { margin: 0; padding: 0; }
 
@@ -496,22 +498,23 @@ header .menu-bar .logo { width: 115px; margin-top: 2px; }
 /* Page Layout */
 @media screen and (max-width: 914px) { #body-wrap { -webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column; } }
 
-.main { width: auto; padding-right: 2rem; }
+.main { width: 100%; max-width: 90rem; padding-right: 2rem; }
 
-.main.no-pad { padding-right: 0; width: 100%; }
+.main.no-pad { padding-right: 0; width: 100%; max-width: 100%; }
 
 @media screen and (max-width: 914px) { .main { padding: 0; } }
 
 .sidebar { width: 28rem; }
 
-@media screen and (max-width: 914px) { .sidebar { width: 100%; padding: 0; margin-top: 6rem; }
-  .sidebar .button { width: 100%; } }
+@media screen and (max-width: 914px) { .sidebar { width: 100%; padding: 0; margin-top: 6rem; } }
+
+.sidebar .button { width: 100%; max-width: 100%; }
 
 .share { padding: 2rem; }
 
 .share p { text-transform: uppercase; color: #58585a; font-size: 1.3rem; float: left; padding-top: 5px; }
 
-.share a { margin-left: 1.7rem; color: #58585a; }
+.share a { margin-left: 1.7rem; display: inline-block; color: #58585a; }
 
 .share a:hover { color: #25aae1; }
 

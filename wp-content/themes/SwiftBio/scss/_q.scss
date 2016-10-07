@@ -1,3 +1,9 @@
+@media screen and (max-width: $tablet-lg) {
+    @-ms-viewport {
+        width: device-width;
+    }
+}
+
 body {
     height: 100%;
     background: $white;
@@ -163,8 +169,11 @@ header {
         }
 
         .logo {
-            width: 115px;
-            margin-top: 2px;
+            img {
+                width: 115px;
+                max-height: 54.2px;
+                margin-top: 2px;
+            }
         }
 
         .home & {
@@ -687,7 +696,6 @@ header {
 
 
     .left {
-        width: 280px;
         background: $blue;
         height: 100%;
         color: $white;
@@ -910,6 +918,7 @@ header {
                             font-family: FontAwesome;
                             content: "\f055";
                             color: $blue;
+                            float: right;
                             font-size: 2.6rem;
                             margin-left: auto;
                         }
@@ -1003,12 +1012,14 @@ header {
 }
 
 .main {
-    width: auto;
+    width: 100%;
+    max-width: 90rem;
     padding-right: 2rem;
 
     &.no-pad {
         padding-right: 0;
         width: 100%;
+        max-width: 100%;
     }
 
     @include responsive($tablet) {
@@ -1023,10 +1034,12 @@ header {
         width: 100%;
         padding: 0;
         margin-top: 6rem;
+    }
 
-        .button {
-            width: 100%;
-        }
+
+    .button {
+        width: 100%;
+        max-width: 100%;
     }
 }
 
@@ -1043,6 +1056,7 @@ header {
 
     a {
         margin-left: 1.7rem;
+        display: inline-block;
         color: $gray;
 
         &:hover {
