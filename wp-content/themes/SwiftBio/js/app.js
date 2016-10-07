@@ -47,7 +47,7 @@ bgOverlay[0].addEventListener("click", function(){ toggleNav() });
                 grecaptcha.reset();
             } else if (data == 'Valid'){
                 // show success message
-                sfForm.html('<div id="form-message">Thanks for your inquery.</div>');
+                sfForm.html('<div id="form-message">Thank you for your inquiry.  A representative from Swift Biosciences will be in contact with you shortly regarding your inquiry.</div>');
                 $('html, body').animate({
                     scrollTop: $("#form-message").offset().top
                 }, 0);

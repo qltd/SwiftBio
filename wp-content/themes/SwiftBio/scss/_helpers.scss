@@ -77,6 +77,11 @@ html {
 /* Inline Responsive Media Query */
 @mixin responsive($maxWidth) {
     @media screen and (max-width: #{$maxWidth}) {
+
+        @-ms-viewport {
+            width: device-width;
+        }
+
         @content;
     }
 }
