@@ -1366,7 +1366,7 @@ header {
     display: none;
 }
 
-.woocommerce-cart .woocommerce-Price-amount {
+.woocommerce-cart .woocommerce-Price-amount, .woocommerce-checkout-review-order .woocommerce-Price-amount {
     display: block;
 }
 
