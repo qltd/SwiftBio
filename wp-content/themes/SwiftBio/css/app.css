@@ -841,7 +841,7 @@ header .menu-bar .logo img { width: 115px; max-height: 54.2px; margin-top: 2px; 
 
 .sf-form textarea, #sf-form textarea { width: 100%; margin-bottom: 3rem; }
 
-.sf-form .g-recaptcha, #sf-form .g-recaptcha { margin-bottom: 3rem; -webkit-transform: scale(0.9); -ms-transform: scale(0.9); transform: scale(0.9); -webkit-transform-origin: 0 0; -ms-transform-origin: 0 0; transform-origin: 0 0; }
+.sf-form .g-recaptcha, #sf-form .g-recaptcha { margin-bottom: 3rem; -webkit-transform: scale(0.93); -ms-transform: scale(0.93); transform: scale(0.93); -webkit-transform-origin: 0 0; -ms-transform-origin: 0 0; transform-origin: 0 0; }
 
 .req, label.error { color: red; }
 
