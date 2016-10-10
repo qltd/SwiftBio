@@ -47,18 +47,15 @@
 
             // right sortable
             this.$values.children('.list').sortable({
-
                 items:                  'li',
                 forceHelperSize:        true,
                 forcePlaceholderSize:   true,
                 scroll:                 true,
-
                 update: function(){
 
                     $input.trigger('change');
 
                 }
-
             });
 
 
@@ -73,7 +70,7 @@
 
 
                 // Scrolled to bottom
-                if( $(this).scrollTop() + $(this).innerHeight() >= $(this).get(0).scrollHeight ) {
+                if( Math.ceil( $(this).scrollTop() ) + $(this).innerHeight() >= $(this).get(0).scrollHeight ) {
 
                     // get paged
                     var paged = $el.data('paged') || 1;
@@ -84,8 +81,8 @@
 
 
                     // fetch
-                    self.doFocus($field);
-                    self.fetch();
+                    self.set('$field', $field).fetch();
+
                 }
 
             });
@@ -133,6 +130,33 @@ var scroll_timer = null;
 
         },
 
+        maybe_fetch: function(){
+
+            // reference
+            var self = this,
+                $field = this.$field;
+
+
+            // abort timeout
+            if( this.o.timeout ) {
+
+                clearTimeout( this.o.timeout );
+
+            }
+
+
+            // fetch
+            var timeout = setTimeout(function(){
+
+                self.doFocus($field);
+                self.fetch();
+
+            }, 300);
+
+            this.$el.data('timeout', timeout);
+
+        },
+
         fetch: function(){
 
             // reference
@@ -172,25 +196,20 @@ var scroll_timer = null;
 
 
             // add message
-            this.$choices.children('.list').append('<p>' + acf._e('relationship', 'loading') + '...</p>');
+            this.$choices.find('ul:last').append('<p><i class="acf-loading"></i> ' + acf._e('relationship', 'loading') + '</p>');
 
 
             // get results
             var xhr = $.ajax({
-
                 url:        acf.get('ajaxurl'),
                 dataType:   'json',
                 type:       'post',
                 data:       ajax_data,
+                success:    function( json ){
 
-                success: function( json ){
-
-                    // render
-                    self.doFocus($field);
-                    self.render(json);
+                    self.set('$field', $field).render( json );
 
                 }
-
             });
 
 
@@ -206,11 +225,11 @@ var scroll_timer = null;
 
 
             // remove p tag
-            this.$choices.children('.list').children('p').remove();
+            this.$choices.find('p').remove();
 
 
             // no results?
-            if( !json || !json.length ) {
+             if( !json || !json.results || !json.results.length ) {
 
                 // add class
                 this.$el.addClass('is-empty');
@@ -231,7 +250,7 @@ var scroll_timer = null;
 
 
             // get new results
-            var $new = $( this.walker(json) );
+           var $new = $( this.walker(json.results) );
 
 
             // apply .disabled to left li's
@@ -367,7 +386,16 @@ var scroll_timer = null;
 
 
             // fetch
-            this.fetch();
+            if( e.$el.is('select') ) {
+
+                this.fetch();
+
+            // search must go through timeout
+            } else {
+
+                this.maybe_fetch();
+
+            }
 
         },
 
@@ -404,7 +432,7 @@ var scroll_timer = null;
                 '<li>',
                     '<input type="hidden" name="' + this.$input.attr('name') + '[]" value="' + e.$el.data('id') + '" />',
                     '<span data-id="' + e.$el.data('id') + '" class="acf-rel-item">' + e.$el.html(),
-                        '<a href="#" class="acf-icon small dark" data-name="remove_item"><span class="dashicons dashicons-minus"></span></a>',
+                        '<a href="#" class="acf-icon -minus small dark" data-name="remove_item"></a>',
                     '</span>',
                 '</li>'].join('');
 
