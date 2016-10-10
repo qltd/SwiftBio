@@ -471,3 +471,80 @@ function my_mce_buttons_2($buttons) {
     return $buttons;
 }
 add_filter('mce_buttons_2', 'my_mce_buttons_2');
+
+
+/* Set Images to not link by default */
+function wpb_imagelink_setup() {
+    $image_set = get_option( 'image_default_link_type' );
+
+    if ($image_set !== 'none') {
+        update_option('image_default_link_type', 'none');
+    }
+}
+add_action('admin_init', 'wpb_imagelink_setup', 10);
+
+
+
+
+
+/**
+ * Add the field to the checkout
+ **/
+add_action('woocommerce_after_order_notes', 'my_custom_checkout_field');
+
+function my_custom_checkout_field( $checkout ) {
+
+    echo '<div id="po_number"><h3>'.__('P.O. Number').'</h3>';
+
+    /**
+     * Output the field. This is for 1.4.
+     *
+     * To make it compatible with 1.3 use $checkout->checkout_form_field instead:
+
+     $checkout->checkout_form_field( 'my_field_name', array(
+        'type'          => 'text',
+        'class'         => array('my-field-class orm-row-wide'),
+        'label'         => __('Fill in this field'),
+        'placeholder'   => __('Enter a number'),
+        ));
+     **/
+    woocommerce_form_field( 'po_number', array(
+        'type'          => 'text',
+        'class'         => array('my-field-class orm-row-wide'),
+        'label'         => __('Fill in this field'),
+        'placeholder'   => __('Enter a number'),
+        ), $checkout->get_value( 'po_number' ));
+
+    echo '</div>';
+
+}
+
+
+
+/**
+ * Update the user meta with field value
+ **/
+add_action('woocommerce_checkout_update_user_meta', 'my_custom_checkout_field_update_user_meta');
+
+function my_custom_checkout_field_update_user_meta( $user_id ) {
+    if ($user_id && $_POST['po_number']) update_user_meta( $user_id, 'po_number', esc_attr($_POST['po_number']) );
+}
+
+/**
+ * Update the order meta with field value
+ **/
+add_action('woocommerce_checkout_update_order_meta', 'my_custom_checkout_field_update_order_meta');
+
+function my_custom_checkout_field_update_order_meta( $order_id ) {
+    if ($_POST['po_number']) update_post_meta( $order_id, 'P.O. Number', esc_attr($_POST['po_number']));
+}
+
+/**
+ * Add the field to order emails
+ **/
+add_filter('woocommerce_email_order_meta_keys', 'my_custom_checkout_field_order_meta_keys');
+
+function my_custom_checkout_field_order_meta_keys( $keys ) {
+    $keys[] = 'P.O. Number';
+    return $keys;
+}

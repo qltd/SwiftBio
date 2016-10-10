@@ -61,7 +61,7 @@ get_header(); ?>
                 $rand_row = $rows[ array_rand( $rows ) ]; // get a random row
                 $rand_row_quote = $rand_row['quote' ]; // get the sub field value
             ?>
-            <p><em>"<?php echo $rand_row_quote; ?>"</em></p>
+            <p><em><?php echo $rand_row_quote; ?></em></p>
         </div>
         </div> <!-- .testimonial -->
 

@@ -56,8 +56,8 @@ bgOverlay[0].addEventListener("click", function(){ toggleNav() });
         }
     });
 
-
-
+/* Open PDF's in new window */
+$('a[href$=".pdf"]').prop('target', '_blank');
 
     // Google Analytics Event on Social Sharing Links
     $('.social-share a').on('click', function() {
