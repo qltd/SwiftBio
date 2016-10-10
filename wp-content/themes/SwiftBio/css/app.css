@@ -197,6 +197,11 @@ img { max-width: 100%; height: auto; }
 
 input[type=text], input[type=email], input[type=tel], textarea { border: 1px solid #58585a; }
 
+@media screen and (max-width: 400px) { input[type=text], input[type=email], input[type=tel], textarea { width: 100%; max-width: 280px; }
+  @-ms-viewport { input[type=text], input[type=email], input[type=tel], textarea { width: device-width; } } }
+
+input[type=file] { width: 100%; max-width: 280px; }
+
 /* Layout Rows */
 .row { max-width: 1223px; width: 100%; margin: 0 auto; display: -webkit-flex; display: -ms-flexbox; display: flex; padding: 0 2rem; }
 
@@ -836,12 +841,12 @@ header .menu-bar .logo img { width: 115px; max-height: 54.2px; margin-top: 2px; 
 
 .sf-form textarea, #sf-form textarea { width: 100%; margin-bottom: 3rem; }
 
-.sf-form .g-recaptcha, #sf-form .g-recaptcha { margin-bottom: 3rem; }
+.sf-form .g-recaptcha, #sf-form .g-recaptcha { margin-bottom: 3rem; -webkit-transform: scale(0.9); -ms-transform: scale(0.9); transform: scale(0.9); -webkit-transform-origin: 0 0; -ms-transform-origin: 0 0; transform-origin: 0 0; }
 
 .req, label.error { color: red; }
 
 #form-message { background: #b9e5fb; color: #942976; padding: 2rem; font-style: italic; margin-bottom: 2rem; }
 
-.wpcf7-recaptcha { margin-bottom: 2rem; }
+.wpcf7-recaptcha { margin-bottom: 2rem; -webkit-transform: scale(0.93); -ms-transform: scale(0.93); transform: scale(0.93); -webkit-transform-origin: 0 0; -ms-transform-origin: 0 0; transform-origin: 0 0; }
 
 /*# sourceMappingURL=app.css.map */

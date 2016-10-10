@@ -110,6 +110,16 @@ img {
 
 input[type=text], input[type=email], input[type=tel], textarea {
     border: 1px solid $gray;
+
+    @include responsive($mobile-sm) {
+        width: 100%;
+        max-width: 280px;
+    }
+}
+
+input[type=file] {
+    width: 100%;
+    max-width: 280px;
 }
 
 /* Layout Rows */
@@ -1766,6 +1776,8 @@ header {
 
     .g-recaptcha {
         margin-bottom: 3rem;
+        transform: scale(0.9);
+        transform-origin: 0 0;
     }
 }
 
@@ -1783,4 +1795,6 @@ header {
 
 .wpcf7-recaptcha {
     margin-bottom: 2rem;
+    transform: scale(0.93);
+    transform-origin: 0 0;
 }
