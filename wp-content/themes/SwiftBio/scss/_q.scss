@@ -1360,14 +1360,10 @@ header {
 .product.woocommerce.add_to_cart_inline {
     border: none !important;
     padding: 0 !important;
-}
 
-.woocommerce-Price-amount {
-    display: none;
-}
-
-.woocommerce-cart .woocommerce-Price-amount, .woocommerce-checkout-review-order .woocommerce-Price-amount {
-    display: block;
+    .woocommerce-Price-amount {
+        display: none;
+    }
 }
 
 .button.product_type_simple.add_to_cart_button.ajax_add_to_cart, .woocommerce a.added_to_cart {
