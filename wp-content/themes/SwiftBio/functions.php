@@ -494,7 +494,7 @@ add_action('woocommerce_after_order_notes', 'my_custom_checkout_field');
 
 function my_custom_checkout_field( $checkout ) {
 
-    echo '<div id="po_number"><h3>'.__('P.O. Number').'</h3>';
+    echo '<div id="po_number">';
 
     /**
      * Output the field. This is for 1.4.
@@ -511,8 +511,8 @@ function my_custom_checkout_field( $checkout ) {
     woocommerce_form_field( 'po_number', array(
         'type'          => 'text',
         'class'         => array('my-field-class orm-row-wide'),
-        'label'         => __('Fill in this field'),
-        'placeholder'   => __('Enter a number'),
+        'label'         => __('PO Number'),
+        'placeholder'   => __(''),
         ), $checkout->get_value( 'po_number' ));
 
     echo '</div>';

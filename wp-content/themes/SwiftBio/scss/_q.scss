@@ -1562,6 +1562,10 @@ header {
     border: 1px solid rgba(0, 0, 0, 0.2) !important;
 }
 
+.woocommerce form .validate-state {
+    color: #000;
+}
+
 .woocommerce table.cart td.actions .input-text, .woocommerce-page #content table.cart td.actions .input-text, .woocommerce-page table.cart td.actions .input-text {
     width: 40%;
     padding: 0.8rem 1rem;
