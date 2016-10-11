@@ -71,7 +71,7 @@ get_header(); ?>
                     <?php
                         $post = get_field('featured_product');
                         setup_postdata( $post );
-                        $img_url = $image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'featured_product' );
+                        $img_url = $image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'large' );
                     ?>
                     <a href="<?php echo get_permalink(); ?>"><img src="<?php echo $img_url[0]; ?>" /></a>
                     <h2><a href="<?php echo get_permalink(); ?>"><?php the_title(); ?></a></h2>
