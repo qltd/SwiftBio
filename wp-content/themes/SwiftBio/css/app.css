@@ -418,16 +418,16 @@ header .menu-bar .logo img { width: 115px; max-height: 54.2px; margin-top: 2px; 
 @media screen and (max-width: 914px) { .event-callout { -webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column; }
   @-ms-viewport { .event-callout { width: device-width; } } }
 
-.event-callout .left { background: #25aae1; height: 100%; color: #fff; text-align: center; padding: 4.1rem; text-transform: uppercase; font-weight: bold; line-height: 1.2; }
+.event-callout .left { background: #25aae1; height: 100%; width: auto; min-width: 280px; color: #fff; text-align: center; padding: 4.1rem 0; text-transform: uppercase; font-weight: bold; line-height: 1.2; }
 
 @media screen and (max-width: 914px) { .event-callout .left { width: 100%; height: 15.5rem; }
   @-ms-viewport { .event-callout .left { width: device-width; } } }
 
 .event-callout .day, .event-callout .year { display: block; width: 100%; font-size: 1.6rem; }
 
-.event-callout .date { font-size: 3.8rem; white-space: nowrap; }
+.event-callout .date { font-size: 3.8rem; white-space: nowrap; margin-left: 2rem; margin-right: 2rem; }
 
-.event-callout .middle { width: 100%; padding: 0 2rem; }
+.event-callout .middle { width: auto; padding: 0 2rem; }
 
 @media screen and (max-width: 914px) { .event-callout .middle { max-width: 320px; margin: 2rem 0 1rem; }
   @-ms-viewport { .event-callout .middle { width: device-width; } } }
@@ -438,9 +438,9 @@ header .menu-bar .logo img { width: 115px; max-height: 54.2px; margin-top: 2px; 
 
 .event-callout .middle h5 { font-size: 1.8rem; font-weight: bold; margin: 0; }
 
-.event-callout .right { padding: 2rem; margin-left: auto; }
+.event-callout .right { margin-left: auto; width: auto; min-width: 300px; }
 
-@media screen and (max-width: 914px) { .event-callout .right { margin-left: 0; }
+@media screen and (max-width: 914px) { .event-callout .right { margin-left: 0; margin-bottom: 4rem; }
   @-ms-viewport { .event-callout .right { width: device-width; } } }
 
 .event-callout .right .button:first-child { margin-bottom: 2rem; }
@@ -458,7 +458,10 @@ header .menu-bar .logo img { width: 115px; max-height: 54.2px; margin-top: 2px; 
 
 .site-footer .col { margin-bottom: 4rem; margin-right: 2rem; }
 
-@media screen and (max-width: 914px) { .site-footer .col { width: 100%; }
+@media screen and (max-width: 1223px) { .site-footer .col { width: 100%; max-width: 320px; }
+  @-ms-viewport { .site-footer .col { width: device-width; } } }
+
+@media screen and (max-width: 914px) { .site-footer .col { max-width: 100%; }
   @-ms-viewport { .site-footer .col { width: device-width; } } }
 
 .site-footer address { font-size: 1.8rem; font-weight: 300; line-height: 1.2; font-style: normal; margin-bottom: 2rem; }

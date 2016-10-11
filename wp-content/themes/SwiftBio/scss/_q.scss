@@ -702,9 +702,11 @@ header {
     .left {
         background: $blue;
         height: 100%;
+        width: auto;
+        min-width: 280px;
         color: $white;
         text-align: center;
-        padding: 4.1rem;
+        padding: 4.1rem 0;
         text-transform: uppercase;
         font-weight: bold;
         line-height: 1.2;
@@ -724,10 +726,12 @@ header {
     .date {
         font-size: 3.8rem;
         white-space: nowrap;
+        margin-left: 2rem;
+        margin-right: 2rem;
     }
 
     .middle {
-        width: 100%;
+        width: auto;
         padding: 0 2rem;
 
         @include responsive($tablet) {
@@ -752,11 +756,13 @@ header {
     }
 
     .right {
-        padding: 2rem;
         margin-left: auto;
+        width: auto;
+        min-width: 300px;
 
         @include responsive($tablet) {
             margin-left: 0;
+            margin-bottom: 4rem;
         }
 
 
@@ -794,8 +800,14 @@ header {
         margin-bottom: 4rem;
         margin-right: 2rem;
 
-        @include responsive($tablet) {
+        @include responsive($site-width) {
             width: 100%;
+            max-width: 320px;
+        }
+
+
+        @include responsive($tablet) {
+            max-width: 100%;
         }
     }
 

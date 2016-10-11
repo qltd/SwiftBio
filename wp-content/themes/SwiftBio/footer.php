@@ -26,7 +26,7 @@
                                 Fax: <?php the_field('footer_fax_number', 'options'); ?>
                             </p>
 
-                            <a href="mailto:<?php the_field('tech_support_email', 'options'); ?>" class="email-button"><i class="fa fa-envelope"></i> Email Technical Support</a>
+                            <a href="mailto:<?php the_field('tech_support_email', 'options'); ?>" class="email-button"><i class="fa fa-envelope"></i> Email Tech Support</a>
                             <a href="mailto:<?php the_field('order_support_email', 'options'); ?>" class="email-button"><i class="fa fa-envelope"></i> Email Orders</a>
 
                             <ul class="social-icons">
