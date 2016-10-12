@@ -484,64 +484,14 @@ add_action('admin_init', 'wpb_imagelink_setup', 10);
 
 
 
-/**
- * Add the field to the checkout
- **/
-add_action('woocommerce_after_order_notes', 'my_custom_checkout_field');
+function woocommerce_custom_redirects() {
 
-function my_custom_checkout_field( $checkout ) {
+    // Case1: Non logged user on checkout page (cart empty or not empty)
+    if ( !is_user_logged_in() && is_checkout() )
+        wp_redirect( get_permalink( get_option('woocommerce_myaccount_page_id') ) );
 
-    echo '<div id="po_number">';
-
-    /**
-     * Output the field. This is for 1.4.
-     *
-     * To make it compatible with 1.3 use $checkout->checkout_form_field instead:
-
-     $checkout->checkout_form_field( 'my_field_name', array(
-        'type'          => 'text',
-        'class'         => array('my-field-class orm-row-wide'),
-        'label'         => __('Fill in this field'),
-        'placeholder'   => __('Enter a number'),
-        ));
-     **/
-    woocommerce_form_field( 'po_number', array(
-        'type'          => 'text',
-        'class'         => array('my-field-class orm-row-wide'),
-        'label'         => __('PO Number'),
-        'placeholder'   => __(''),
-        ), $checkout->get_value( 'po_number' ));
-
-    echo '</div>';
-
+    // Case2: Logged user on my account page with something in cart
+    if( is_user_logged_in() && !WC()->cart->is_empty() && is_account_page() )
+        wp_redirect( get_permalink( get_option('woocommerce_checkout_page_id') ) );
 }
-
-
-
-/**
- * Update the user meta with field value
- **/
-add_action('woocommerce_checkout_update_user_meta', 'my_custom_checkout_field_update_user_meta');
-
-function my_custom_checkout_field_update_user_meta( $user_id ) {
-    if ($user_id && $_POST['po_number']) update_user_meta( $user_id, 'po_number', esc_attr($_POST['po_number']) );
-}
-
-/**
- * Update the order meta with field value
- **/
-add_action('woocommerce_checkout_update_order_meta', 'my_custom_checkout_field_update_order_meta');
-
-function my_custom_checkout_field_update_order_meta( $order_id ) {
-    if ($_POST['po_number']) update_post_meta( $order_id, 'P.O. Number', esc_attr($_POST['po_number']));
-}
-
-/**
- * Add the field to order emails
- **/
-add_filter('woocommerce_email_order_meta_keys', 'my_custom_checkout_field_order_meta_keys');
-
-function my_custom_checkout_field_order_meta_keys( $keys ) {
-    $keys[] = 'P.O. Number';
-    return $keys;
-}
+add_action('template_redirect', 'woocommerce_custom_redirects');
