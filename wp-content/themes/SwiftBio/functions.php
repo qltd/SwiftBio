@@ -244,9 +244,6 @@ function create_post_types() {
 add_action( 'init', 'create_post_types' );
 
 
-
-
-
 add_filter('acf/location/rule_types', 'acf_location_rules_page_grandparent');
 function acf_location_rules_page_grandparent($choices) {
     $choices['Page']['page_grandparent'] = 'Page Grandparent';
