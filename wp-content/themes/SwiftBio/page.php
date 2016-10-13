@@ -13,6 +13,7 @@ get_header(); ?>
     <div id="body-wrap" class="row">
 
         <div class="main <?php if ($post->ID == 5 || $post->ID == 6): //if cart page go full width ?>no-pad<?php endif;?>">
+
             <?php get_template_part('template-parts/content-page'); ?>
 
             <?php if (get_field('accordion_block')): ?>

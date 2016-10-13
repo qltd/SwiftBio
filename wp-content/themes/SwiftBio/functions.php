@@ -494,3 +494,13 @@ function woocommerce_custom_redirects() {
         wp_redirect( get_permalink( get_option('woocommerce_checkout_page_id') ) );
 }
 add_action('template_redirect', 'woocommerce_custom_redirects');
+
+
+// hide coupon field on checkout page
+function hide_coupon_field_on_checkout( $enabled ) {
+    if ( is_checkout() ) {
+        $enabled = false;
+    }
+    return $enabled;
+}
+add_filter( 'woocommerce_coupons_enabled', 'hide_coupon_field_on_checkout' );
