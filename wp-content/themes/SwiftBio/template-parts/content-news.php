@@ -13,22 +13,23 @@ if ($post->post_type == "careers"){
     $leadInID = 1140;
 
     /* Get the Events in order of Start Date but only if they in the future */
-    $today = date('Ymd');
-    $args = array(
-            'post_type' => 'events',
-            'meta_key'  => 'start_date',
-            'orderby'   => 'meta_value',
-            'order' => 'ASC',
-             'meta_query' => array(
-                array(
-                    'key'       => 'end_date',
-                    'compare'   => '>=',
-                    'value'     => $today,
-                )
-            ),
-        );
-    $wp_query= new WP_Query( $args );
-
+    if (!is_single()){
+        $today = date('Ymd');
+        $args = array(
+                'post_type' => 'events',
+                'meta_key'  => 'start_date',
+                'orderby'   => 'meta_value',
+                'order' => 'ASC',
+                 'meta_query' => array(
+                    array(
+                        'key'       => 'end_date',
+                        'compare'   => '>=',
+                        'value'     => $today,
+                    )
+                ),
+            );
+        $wp_query= new WP_Query( $args );
+    }
 } else {
     $leadInID = 105;
 
