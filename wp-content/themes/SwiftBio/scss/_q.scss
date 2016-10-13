@@ -1576,7 +1576,7 @@ header {
 }
 
 .woocommerce form .form-row.validate-state label {
-    color: #000;
+    color: #000 !important;
 }
 
 .woocommerce table.cart td.actions .input-text, .woocommerce-page #content table.cart td.actions .input-text, .woocommerce-page table.cart td.actions .input-text {
