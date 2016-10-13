@@ -507,7 +507,8 @@ add_filter( 'woocommerce_coupons_enabled', 'hide_coupon_field_on_checkout' );
 
 
 /* Redirect to Login After password reset */
-add_filter( 'lostpassword_redirect', 'my_redirect_home' );
-function my_redirect_home( $lostpassword_redirect ) {
-    return get_permalink(7);
+function woocommerce_new_pass_redirect( $user ) {
+  wp_redirect( get_permalink(woocommerce_get_page_id('myaccount')));
+  exit;
 }
+add_action( 'woocommerce_customer_reset_password', 'woocommerce_new_pass_redirect' );
