@@ -490,8 +490,8 @@ function woocommerce_custom_redirects() {
     //     wp_redirect( get_permalink( get_option('woocommerce_myaccount_page_id') ) );
 
     // Case2: Logged user on my account page with something in cart
-    if( is_user_logged_in() && !WC()->cart->is_empty() && is_account_page() )
-        wp_redirect( get_permalink( get_option('woocommerce_checkout_page_id') ) );
+    // if( is_user_logged_in() && !WC()->cart->is_empty() && is_account_page() )
+    //     wp_redirect( get_permalink( get_option('woocommerce_checkout_page_id') ) );
 }
 add_action('template_redirect', 'woocommerce_custom_redirects');
 
@@ -504,3 +504,10 @@ function hide_coupon_field_on_checkout( $enabled ) {
     return $enabled;
 }
 add_filter( 'woocommerce_coupons_enabled', 'hide_coupon_field_on_checkout' );
+
+
+/* Redirect to Login After password reset */
+add_filter( 'lostpassword_redirect', 'my_redirect_home' );
+function my_redirect_home( $lostpassword_redirect ) {
+    return get_permalink(7);
+}

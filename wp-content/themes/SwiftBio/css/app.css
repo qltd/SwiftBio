@@ -760,7 +760,7 @@ header .menu-bar .logo img { width: 115px; max-height: 54.2px; margin-top: 2px; 
 
 .woocommerce input.button.disabled, .woocommerce input.button:disabled, .woocommerce input.button:disabled[disabled] { padding: 1rem; }
 
-.button.wc-backward, .woocommerce-error, .woocommerce-message, .woocommerce-info:before { display: none; }
+.button.wc-backward, .woocommerce-error, .woocommerce-message, .woocommerce-info:before, .woocommerce-MyAccount-navigation-link--downloads { display: none; }
 
 .woocommerce-error, .woocommerce-info, .woocommerce-message { padding: 1rem 2rem; }
 
