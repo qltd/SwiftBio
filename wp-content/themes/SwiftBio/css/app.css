@@ -754,7 +754,7 @@ header .menu-bar .logo img { width: 115px; max-height: 54.2px; margin-top: 2px; 
 
 .woocommerce form .form-row.woocommerce-invalid input.input-text { border: 1px solid rgba(0, 0, 0, 0.2) !important; }
 
-.woocommerce form .validate-state { color: #000; }
+.woocommerce form .form-row.validate-state label { color: #000 !important; }
 
 .woocommerce table.cart td.actions .input-text, .woocommerce-page #content table.cart td.actions .input-text, .woocommerce-page table.cart td.actions .input-text { width: 40%; padding: 0.8rem 1rem; }
 
