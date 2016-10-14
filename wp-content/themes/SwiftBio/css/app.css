@@ -154,7 +154,7 @@ html { box-sizing: border-box; height: 100%; width: 100%; font-size: 62.5%; line
 .aligncenter { clear: both; display: block; margin-left: auto; margin-right: auto; }
 
 /* Inline Responsive Media Query */
-body { height: 100%; background: #fff; font-family: "Roboto", sans-serif; }
+body { background: #fff; font-family: "Roboto", sans-serif; }
 
 h1, h2, h3, h4, h5, h6 { line-height: 1.4; margin-top: 0; margin-bottom: 1rem; }
 
@@ -499,7 +499,8 @@ header .menu-bar .logo img { width: 115px; max-height: 54.2px; margin-top: 2px; 
 @media screen and (max-width: 1223px) { .site-footer nav > ul { margin: 0; padding: 0; }
   @-ms-viewport { .site-footer nav > ul { width: device-width; } } }
 
-@media screen and (max-width: 1223px) { @-ms-viewport { .site-footer nav > ul > li { width: device-width; } }
+@media screen and (max-width: 1223px) { .site-footer nav > ul > li { cursor: pointer; }
+  @-ms-viewport { .site-footer nav > ul > li { width: device-width; } }
   .site-footer nav > ul > li.open > ul.sub-menu { opacity: 1; height: auto; transition: opacity 1s ease-out; }
   .site-footer nav > ul > li.open > a:after { content: "\f056"; } }
 
@@ -594,9 +595,9 @@ header .menu-bar .logo img { width: 115px; max-height: 54.2px; margin-top: 2px; 
 
 .expander i { color: #25aae1; font-size: 2.6rem; margin-left: auto; }
 
-.expand-collapse { margin-bottom: 0rem; }
+.expand-collapse { margin-bottom: 2rem; }
 
-.expand-collapse .content { transition: opacity 0s ease-out; opacity: 0; height: 0; overflow: hidden; padding: 1rem 0; }
+.expand-collapse .content { transition: opacity 0s ease-out; opacity: 0; display: none; height: 0; overflow: hidden; padding: 1rem 0; }
 
 .expand-collapse .content .expander { background: none; font-size: 1.8rem; font-weight: bold; color: #25aae1; display: block; text-transform: none; }
 
@@ -610,7 +611,7 @@ header .menu-bar .logo img { width: 115px; max-height: 54.2px; margin-top: 2px; 
 
 .expand-collapse .content .content p { font-size: 1.6rem; }
 
-.expand-collapse.open > .content { opacity: 1; height: auto; margin: 1rem 0 0; transition: opacity 1s ease-out; }
+.expand-collapse.open > .content { opacity: 1; display: block; height: auto; margin: 1rem 0 0; transition: opacity 1s ease-out; }
 
 .expand-collapse.open > .content .expand-collapse.open .expander { color: #2a569b; }
 
@@ -762,6 +763,8 @@ header .menu-bar .logo img { width: 115px; max-height: 54.2px; margin-top: 2px; 
 
 .button.wc-backward, .woocommerce-error, .woocommerce-message, .woocommerce-info:before, .woocommerce-MyAccount-navigation-link--downloads { display: none; }
 
+.checkout .woocommerce-error { display: block; }
+
 .woocommerce-error, .woocommerce-info, .woocommerce-message { padding: 1rem 2rem; }
 
 /* News Events Blog Careers */
@@ -838,7 +841,7 @@ header .menu-bar .logo img { width: 115px; max-height: 54.2px; margin-top: 2px; 
 
 .sf-form label, #sf-form label { display: block; margin-right: 2%; margin-bottom: 3rem; }
 
-.sf-form label input[type=text], .sf-form label input[type=email], .sf-form label input[type=tel], .sf-form label select, .sf-form label .select2, .sf-form label textarea, #sf-form label input[type=text], #sf-form label input[type=email], #sf-form label input[type=tel], #sf-form label select, #sf-form label .select2, #sf-form label textarea { display: block; width: 100%; margin-top: 2px; margin-bottom: 0; }
+.sf-form label input[type=text], .sf-form label input[type=email], .sf-form label input[type=tel], .sf-form label select, .sf-form label .select2, .sf-form label textarea, #sf-form label input[type=text], #sf-form label input[type=email], #sf-form label input[type=tel], #sf-form label select, #sf-form label .select2, #sf-form label textarea { display: block; width: 100% !important; margin-top: 2px; margin-bottom: 0; }
 
 .sf-form p, #sf-form p { clear: both; margin-bottom: 3rem; display: block; overflow: hidden; }
 

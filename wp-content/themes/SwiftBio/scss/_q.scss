@@ -1,5 +1,4 @@
 body {
-    height: 100%;
     background: $white;
     font-family: $primary-font;
 }
@@ -905,6 +904,8 @@ header {
 
             > li {
                 @include responsive($site-width) {
+                    cursor: pointer;
+
                     &.open {
                         > ul.sub-menu {
                             opacity: 1;
@@ -1185,11 +1186,12 @@ header {
 }
 
 .expand-collapse {
-    margin-bottom: 0rem;
+    margin-bottom: 2rem;
 
     .content {
         transition: opacity 0s ease-out;
         opacity: 0;
+        display: none;
         height: 0;
         overflow: hidden;
         padding: 1rem 0;
@@ -1234,6 +1236,7 @@ header {
     &.open {
         > .content {
             opacity: 1;
+            display: block;
             height: auto;
             margin: 1rem 0 0;
             transition: opacity 1s ease-out;
@@ -1592,6 +1595,10 @@ header {
     display: none;
 }
 
+.checkout .woocommerce-error {
+    display: block;
+}
+
 .woocommerce-error, .woocommerce-info, .woocommerce-message {
     padding: 1rem 2rem;
 }
@@ -1766,7 +1773,7 @@ header {
 
         input[type=text], input[type=email], input[type=tel], select, .select2, textarea {
             display: block;
-            width: 100%;
+            width: 100% !important;
             margin-top: 2px;
             margin-bottom: 0;
         }

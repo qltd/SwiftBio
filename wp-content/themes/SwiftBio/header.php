@@ -61,7 +61,7 @@
                             </form>
                         </div>
 
-                        <a href="<?php echo get_permalink(5); ?>"><i class="fa fa-shopping-cart"></i></a>
+                        <?php if (detectLocation()): ?><a href="<?php echo get_permalink(5); ?>"><i class="fa fa-shopping-cart"></i></a><?php endif; ?>
 
                         <?php if (is_user_logged_in()): ?>
                         <a href="<?php echo get_permalink(7); ?>">Account</a>
