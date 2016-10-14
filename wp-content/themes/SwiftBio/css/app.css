@@ -597,6 +597,8 @@ header .menu-bar .logo img { width: 115px; max-height: 54.2px; margin-top: 2px; 
 
 .expand-collapse { margin-bottom: 2rem; }
 
+.expand-collapse:focus { outline: none; }
+
 .expand-collapse .content { transition: opacity 0s ease-out; opacity: 0; display: none; height: 0; overflow: hidden; padding: 1rem 0; }
 
 .expand-collapse .content .expander { background: none; font-size: 1.8rem; font-weight: bold; color: #25aae1; display: block; text-transform: none; }

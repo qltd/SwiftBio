@@ -83,9 +83,25 @@ $('a[href$=".pdf"]').prop('target', '_blank');
         minimumResultsForSearch: Infinity,
     });
 
+    if(location.hash) {
+
+        $(location.hash).addClass('open');
+        var p = $(location.hash).parents('.expand-collapse');
+        $(p).addClass('open');
+        setTimeout(function() {
+        $('html, body').animate({
+            scrollTop: $(location.hash).offset().top
+        }, 1000);
+    }, 1000)
+    }
+
     $('.expander, .site-footer nav>ul>li>a').click(function(){
         $(this).parent().toggleClass('open');
         $(this).find('i').toggleClass('fa-minus-circle');
+        // if ($(this).parent('.main').lenth){
+        //     location.hash = $(this).parent().attr('id');
+        // }
+         location.hash = $(this).parent().attr('id');
         return false;
     });
 

@@ -1188,6 +1188,10 @@ header {
 .expand-collapse {
     margin-bottom: 2rem;
 
+    &:focus {
+        outline: none;
+    }
+
     .content {
         transition: opacity 0s ease-out;
         opacity: 0;
