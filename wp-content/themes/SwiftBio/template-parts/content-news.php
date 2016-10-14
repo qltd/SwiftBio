@@ -36,13 +36,7 @@ if ($post->post_type == "careers"){
 }
 ?>
 
-<h1 class="page-title">
-    <?php if (get_field('external_link')): ?>
-        <a href="<?php echo get_field('external_link'); ?>" target="_blank"><?php echo get_archive_title(); ?></a>
-    <?php else: ?>
-        <a href="<?php echo get_post_type_archive_link($post->post_type); ?>"><?php echo get_archive_title(); ?></a>
-    <?php endif; ?>
-</h1>
+<h1 class="page-title"><a href="<?php echo get_post_type_archive_link($post->post_type); ?>"><?php echo get_archive_title(); ?></a></h1>
 
 <?php if (!is_search() && !is_single()): the_field('lead-in-content', $leadInID); endif; ?>
 
@@ -51,7 +45,13 @@ if ($post->post_type == "careers"){
         <?php if (is_single()): ?>
             <h2 class="post-title"><?php the_title(); ?></h2>
         <?php else: ?>
-            <h1 class="post-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h1>
+            <h1 class="post-title">
+                <?php if (get_field('external_link')): ?>
+                    <a href="<?php echo get_field('external_link'); ?>" target="_blank"><?php the_title(); ?></a>
+                <?php else: ?>
+                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                <?php endif; ?>
+            </h1>
         <?php endif; ?>
         <div class="body-content">
                 <?php if (is_single()): ?>
