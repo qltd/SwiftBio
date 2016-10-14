@@ -34,9 +34,16 @@ if ($post->post_type == "careers"){
     $leadInID = 105;
 
 }
-
 ?>
-<h1 class="page-title"><a href="<?php echo get_post_type_archive_link($post->post_type); ?>"><?php echo get_archive_title(); ?></a></h1>
+
+<h1 class="page-title">
+    <?php if (get_field('external_link')): ?>
+        <a href="<?php echo get_field('external_link'); ?>" target="_blank"><?php echo get_archive_title(); ?></a>
+    <?php else: ?>
+        <a href="<?php echo get_post_type_archive_link($post->post_type); ?>"><?php echo get_archive_title(); ?></a>
+    <?php endif; ?>
+</h1>
+
 <?php if (!is_search() && !is_single()): the_field('lead-in-content', $leadInID); endif; ?>
 
 <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
