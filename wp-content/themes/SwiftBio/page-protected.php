@@ -68,7 +68,7 @@ get_header(); ?>
                         </p>
                                 <br class="clear">
                                 <input type="hidden" name="redirect_to" value="<?php the_permalink(); ?>">
-                                <input type="hidden" name="lead_source" value="<?php the_title(); ?>">
+                                <input type="hidden" name="lead_source" value="<?php echo (get_field('lead_source')) ? get_field('lead_source') : get_the_title(); ?>">
                                 <input type="hidden" name="pp-reg" value="1" />
                                 <p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="Register"><span class="acf-spinner"></span></p>
 
@@ -92,7 +92,7 @@ get_header(); ?>
                     <input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="Log In">
                     <input type="hidden" name="redirect_to" value="<?php the_permalink(); ?>">
                     <input type="hidden" name="testcookie" value="1">
-                    <input type="hidden" name="lead_source" value="<?php the_title(); ?>">
+                    <input type="hidden" name="lead_source" value="<?php echo (get_field('lead_source')) ? get_field('lead_source') : get_the_title(); ?>">
                     <input type="hidden" name="pp-lg" value="1" />
                 </p>
             </form>
