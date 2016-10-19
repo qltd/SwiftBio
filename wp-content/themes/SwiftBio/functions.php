@@ -512,3 +512,106 @@ function woocommerce_new_pass_redirect( $user ) {
   exit;
 }
 add_action( 'woocommerce_customer_reset_password', 'woocommerce_new_pass_redirect' );
+
+
+/* Remove Admin Bar for all users except Admin */
+add_action('after_setup_theme', 'remove_admin_bar');
+function remove_admin_bar() {
+if (!current_user_can('administrator') && !is_admin()) {
+  show_admin_bar(false);
+}
+}
+
+
+
+
+function register_download_to_salesforce($user_id){
+    $url =  'https://www.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8';
+
+    //if a registration
+    if (!empty($_POST['pp-reg']) && $_POST['pp-reg'] == 1){
+        $first_name = urlencode($_POST['first_name']);
+        $last_name = urlencode($_POST['first_name']);
+        $email = urlencode($_POST['first_name']);
+        $company = urlencode($_POST['company']);
+        $phone = urlencode($_POST['phone']);
+        $lead = urlencode($_POST['lead_source']);
+
+    // else if it's a login
+    } else {
+        $user = get_user_meta($user_id);
+        $first_name = $user['first_name'][0];
+        $last_name = $user['last_name'][0];
+        $email = get_userdata($user_id)->data->user_email;
+        $company = $user['billing_company'][0];
+        $phone = $user['billing_phone'][0];
+        $lead = urlencode($_POST['lead_source']);
+    }
+
+    $fields = array(
+        'first_name' => $first_name,
+        'last_name' => $last_name,
+        'email' => $email,
+        'company' => $company,
+        'phone' => $phone,
+        'lead_source' => $lead
+    );
+
+    //url-ify the data for the POST
+    foreach($fields as $key=>$value) {
+        $fields_string .= $key.'='.$value.'&';
+    }
+    rtrim($fields_string, '&');
+
+    //open connectio
+    $ch = curl_init();
+
+    //set the url, number of POST vars, POST data
+    curl_setopt($ch,CURLOPT_URL, $url);
+    curl_setopt($ch,CURLOPT_POST, count($fields));
+    curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
+
+    //execute post
+    $result = curl_exec($ch);
+
+    //close connection
+    curl_close($ch);
+}
+
+
+/* Check login on password protected templates */
+function check_template_login( $user_login, $user ) {
+    if (!empty($_POST['pp-lg']) && $_POST['pp-lg'] == 1){
+        $user_id = $user->ID;
+        register_download_to_salesforce($user_id);
+    }
+}
+add_action('wp_login', 'check_template_login', 10, 2);
+
+/* Add additional fields to Registration Form for Downloads and automatically login the user after registration */
+function swift_user_register( $user_id ) {
+    // only on the password protected template registration form
+    if (!empty($_POST['pp-reg']) && $_POST['pp-reg'] == 1){
+        if (!empty( $_POST['first_name'])){
+            update_user_meta( $user_id, 'first_name', $_POST['first_name'] );
+        }
+        if (!empty( $_POST['last_name'])) {
+            update_user_meta( $user_id, 'last_name', $_POST['last_name'] );
+        }
+        if (!empty( $_POST['company'])) {
+            update_user_meta( $user_id, 'billing_company', $_POST['company'] );
+        }
+        if (!empty( $_POST['phone'])) {
+            update_user_meta( $user_id, 'billing_phone', $_POST['phone'] );
+        }
+        if ($_POST['pwd'] !== ''){
+            wp_set_password($_POST['pwd'], $user_id);
+        }
+        wp_set_current_user( $user_id );
+        wp_set_auth_cookie( $user_id, false, is_ssl() );
+
+        register_download_to_salesforce($user_id);
+    }
+}
+add_action( 'user_register', 'swift_user_register' );
+

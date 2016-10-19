@@ -859,4 +859,15 @@ header .menu-bar .logo img { width: 115px; max-height: 54.2px; margin-top: 2px; 
 
 .wpcf7-recaptcha { margin-bottom: 2rem; -webkit-transform: scale(0.93); -ms-transform: scale(0.93); transform: scale(0.93); -webkit-transform-origin: 0 0; -ms-transform-origin: 0 0; transform-origin: 0 0; }
 
+.user-row { padding-top: 2rem; }
+
+.user-row .register-form, .user-row .login-form { float: left; width: 46%; margin-right: 4%; }
+
+.user-row .register-form input, .user-row .login-form input { width: 28rem; }
+
+.user-row .register-form label.error, .user-row .login-form label.error { display: block; }
+
+@media screen and (max-width: 914px) { .user-row .register-form, .user-row .login-form { width: 100%; margin-right: 0; }
+  @-ms-viewport { .user-row .register-form, .user-row .login-form { width: device-width; } } }
+
 /*# sourceMappingURL=app.css.map */

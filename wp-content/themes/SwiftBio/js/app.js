@@ -30,6 +30,10 @@ bgOverlay[0].addEventListener("click", function(){ toggleNav() });
 
 (function($){
 
+    $('#registerform').validate();
+
+    $('#loginform').validate();
+
     $("#sf-form, .sf-form").validate({
         submitHandler: function(form){
              sfForm = $(form);
@@ -39,7 +43,6 @@ bgOverlay[0].addEventListener("click", function(){ toggleNav() });
               url: "/wp-content/themes/SwiftBio/template-parts/salesforce-recaptcha.php",
               data: sfForm.serialize(),
               success: function(data) {
-                console.log(data);
                 if (data){
                     // show success message
                     sfForm.html('<div id="form-message">Thank you for your inquiry.  A representative from Swift Biosciences will be in contact with you shortly regarding your inquiry.</div>');

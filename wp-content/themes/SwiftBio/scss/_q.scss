@@ -1826,3 +1826,26 @@ header {
     transform: scale(0.93);
     transform-origin: 0 0;
 }
+
+.user-row {
+    padding-top: 2rem;
+
+    .register-form, .login-form {
+        float: left;
+        width: 46%;
+        margin-right: 4%;
+
+        input {
+            width: 28rem;
+        }
+
+        label.error {
+            display: block;
+        }
+
+        @include responsive($tablet) {
+            width: 100%;
+            margin-right: 0;
+        }
+    }
+}
