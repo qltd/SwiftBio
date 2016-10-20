@@ -89,13 +89,13 @@ $('a[href$=".pdf"]').prop('target', '_blank');
     if(location.hash) {
 
         $(location.hash).addClass('open');
-        var p = $(location.hash).parents('.expand-collapse');
-        $(p).addClass('open');
+        var parent = $(location.hash).parents('.expand-collapse');
+        $(parent).addClass('open');
+        $(location.hash).find('i').toggleClass('fa-minus-circle');
+        $('body').scrollTop($(location.hash).offset().top);
         setTimeout(function() {
-        $('html, body').animate({
-            scrollTop: $(location.hash).offset().top
-        }, 1000);
-    }, 1000)
+            $('body').scrollTop($(location.hash).offset().top);
+        }, 1500)
     }
 
     $('.expander, .site-footer nav>ul>li>a').click(function(){
@@ -112,6 +112,13 @@ $('a[href$=".pdf"]').prop('target', '_blank');
       type:'iframe'
     });
 
+    if ($(window).width() <= 1129){
+        setTimeout(function() {
+            $('div.woocommerce > form input[name="update_cart"]').prop("disabled",false);
+        }, 1500)
+    }
+
+    //prevent quantities higher than 999
     $('.input-text.qty').on('keyup change', function(){
         var qty = $(this).val();
         if (qty > 999){
@@ -119,7 +126,7 @@ $('a[href$=".pdf"]').prop('target', '_blank');
         }
         var id = $(this).data('product');
         $('a[data-product_id=' + id + ']').data('quantity', qty);
-
+        $('div.woocommerce > form input[name="update_cart"]').prop("disabled",false);
     });
 
 
