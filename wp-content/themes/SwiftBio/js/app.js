@@ -82,9 +82,7 @@ $('a[href$=".pdf"]').prop('target', '_blank');
         placeholder: "SELECT YOUR APPLICATION"
     });
 
-    $('form select').select2({
-        minimumResultsForSearch: Infinity,
-    });
+    $('div:not(.woocommerce) > form select').select2();
 
     if(location.hash) {
 
