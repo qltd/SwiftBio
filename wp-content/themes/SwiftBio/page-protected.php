@@ -36,7 +36,7 @@ get_header(); ?>
 <div class="user-row">
                 <div class="register-form">
                     <h3>Register</h3>
-                    <form name="registerform" id="registerform" action="http://swiftbiosci.dev/wp-login.php?action=register" method="post" novalidate="novalidate">
+                    <form name="registerform" id="registerform" action="/wp-login.php?action=register" method="post" novalidate="novalidate">
                        <p>
                             <label for="first_name">First Name <span class="req">*</span><br />
                             <input type="text" name="first_name" id="first_name" class="input" value="" size="20" required /></label>
@@ -78,7 +78,7 @@ get_header(); ?>
 
 <div class="login-form">
     <h3>Login</h3>
-    <form name="loginform" id="loginform" action="http://swiftbiosci.dev/wp-login.php" method="post" _lpchecked="1">
+    <form name="loginform" id="loginform" action="/wp-login.php" method="post" _lpchecked="1">
         <p>
             <label for="user_login">Username or Email <span class="req">*</span><br>
                 <input type="text" name="log" id="user_login" class="input" value="" size="20" required></label>
