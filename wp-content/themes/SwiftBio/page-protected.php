@@ -31,7 +31,7 @@ get_header(); ?>
                     <?php the_field('password_protected_alternate_content'); ?>
                 <?php endif; ?>
 
-                    You must be logged in to view this content. Register using the form below or log in if you already have an account.
+                    <h3>You must be logged in to view this content. Register using the form below or log in if you already have an account.</h3>
 
 <div class="user-row">
                 <div class="register-form">
