@@ -74,7 +74,6 @@ $('a[href$=".pdf"]').prop('target', '_blank');
               //window.open(href, '_blank')
             }
         });
-        console.log(network + ' tracked');
     });
 
     $('select.applications').select2({
@@ -136,6 +135,14 @@ $('a[href$=".pdf"]').prop('target', '_blank');
       }
       return false;
   });
+
+    // /* Add PO Upload field to checkout */
+    // $('#po_number_field').after('<div id="po_upload"><p class="form-row"><label>Upload your purchase order (if available)</label><input type="file" name="po_upload" class="po_upload" accept="application/pdf" /></p></div>');
+    // $(document).on("change", function(){
+    //     if ($('#po_upload').length === 0) {
+    //         $('#po_number_field').after('<div id="po_upload"><p class="form-row"><label>Upload your purchase order (if available)</label><input type="file" name="po_upload" class="po_upload" accept="application/pdf" /></p></div>');
+    //     }
+    // });
 
 })(jQuery);
 

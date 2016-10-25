@@ -615,3 +615,69 @@ function swift_user_register( $user_id ) {
 }
 add_action( 'user_register', 'swift_user_register' );
 
+
+
+add_action('woocommerce_checkout_process', 'validate_checkout_upload_fields');
+function validate_checkout_upload_fields() {
+    // Check if set, if its not set add an error.
+     if ($_FILES['po_upload']['error'] === 0) {
+        //check file size limit < 1mb
+        if($_FILES['po_upload']['size'] > 100000){
+            wc_add_notice( __( 'File size too big.' ), 'error' );
+        } else {
+            wc_add_notice( __( $_FILES['po_upload']['error']  .' File size ok.' ), 'error' );
+        }
+
+        //check type
+        if($_FILES['po_upload']['type'] != 'application/pdf'){
+            wc_add_notice( __( 'File type not allowed.' ), 'error' );
+        }
+    }
+
+}
+
+// function so_27023433_disable_checkout_script(){
+//     wp_dequeue_script( 'wc-checkout' );
+// }
+// add_action( 'wp_enqueue_scripts', 'so_27023433_disable_checkout_script' );
+
+
+//add_action( 'woocommerce_checkout_update_order_meta', 'checkout_upload_fields' );
+function my_custom_checkout_field_update_order_meta( $order_id ) {
+
+    $filename = $_FILES['po_upload']['name'];
+    $file_basename = substr($filename, 0, strripos($filename, '.')); // get file extention
+    $file_ext = substr($filename, strripos($filename, '.')); // get file name
+    $uploads = wp_upload_dir();
+    $target = $uploads['path'] . '/swift_uploads/';
+
+    if ($_FILES['po_upload']['error'] == 0) {
+         //validation should have cleared so lets move it
+        $newfilename = md5($file_basename . date('Y-m-d H:i:s')) . $file_ext;
+        if (move_uploaded_file($filename["tmp_name"], $target . $newfilename)) {
+            // update the meta
+            //update_post_meta( $order_id, 'PO Upload', $uploads['baseurl'] . '/' . $newfilename);
+
+            // show on order page
+
+            // add to order email to swift not user
+        }
+
+        if (file_exists($target . $newfilename)){
+            echo 'found';
+        }
+
+
+    }
+
+    die();
+}
+
+
+add_action('woocommerce_checkout_before_terms_and_conditions', 'checkout_upload_field');
+function checkout_upload_field($checkout){
+
+    echo '<div id="po_number_upload_field"><h3>' . __('P.O. Number Upload') . '</h3>';
+    echo '<input type="file" name="po_upload" id="po_upload" class="po_upload form-row-wide" />';
+    echo '</div>';
+}
