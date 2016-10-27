@@ -20,6 +20,9 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+global $post;
+$other = false;
+$account = false;
 ?>
 <tr class="shipping">
 	<th><?php echo wp_kses_post( $package_name ); ?></th>
@@ -29,15 +32,48 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<option value=""><?php echo "Select Shipping Method"; ?></option>
                                             <?php foreach ( $available_methods as $method ) : ?>
                                                 <option value="<?php echo esc_attr( $method->id ); ?>" <?php selected( $method->id, $chosen_method ); ?>><?php echo wp_kses_post( wc_cart_totals_shipping_method_label( $method ) ); ?></option>
-                                                <?php if ($chosen_method == 'flat_rate:5') $other = true; ?>
+                                                <?php
+                                                    if ($chosen_method == 'flat_rate:5') {
+                                                        $other = true;
+                                                    } elseif ($chosen_method != 'flat_rate:1') {
+                                                        $account = true;
+                                                    }
+                                                ?>
                                             <?php endforeach; ?>
                         	</select>
-                            <?php if ($other == true): ?>
-                              <div class="shipping-other">
-                                    <label>List Shipping Company Here:</label><br />
-                                    <input type="text" name="shipping_other" value="" />
-                                </div>
+
+                            <?php if ($post->ID == 6): ?>
+                                <?php  parse_str($_POST['post_data'], $shipping); ?>
+
+                                <?php if ($other == true): ?>
+                                    <?php
+                                        if ($shipping['shipping_other'] != ''){
+                                            $so = $shipping['shipping_other'];
+                                        } else {
+                                            $so = $_SESSION['shipping_other'];
+                                        }
+                                    ?>
+                                  <div class="shipping-other">
+                                        <label>Shipping Company: <span class="req">*</span></label><br />
+                                        <input type="text" class="input-text" name="shipping_other" value="<?php echo $so; ?>" />
+                                    </div>
+                                <?php endif; ?>
+
+                                <?php if ($account == true || $other == true): ?>
+                                    <?php
+                                        if ($shipping['shipping_account'] != ''){
+                                            $sa = $shipping['shipping_account'];
+                                        } else {
+                                            $sa = $_SESSION['shipping_account'];
+                                        }
+                                    ?>
+                                    <div class="shipping-account">
+                                        <label>Shipping Account Number: <span class="req">*</span></label><br />
+                                        <input type="text" class="input-text" name="shipping_account" value="<?php echo $sa; ?>"  />
+                                    </div>
+                                <?php endif; ?>
                             <?php endif; ?>
+
 		<?php elseif ( 1 === count( $available_methods ) ) :  ?>
 			<?php
 				$method = current( $available_methods );

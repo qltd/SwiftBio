@@ -6,6 +6,11 @@ function woocommerce_support() {
     add_theme_support( 'woocommerce' );
 }
 
+
+ if (!session_id()){
+        session_start();
+}
+
 // replace the add to cart shortcode to show quantity
 //add_filter( 'woocommerce_loop_add_to_cart_link', 'quantity_inputs_for_woocommerce_loop_add_to_cart_link', 10, 2 );
 
@@ -588,6 +593,8 @@ function check_template_login( $user_login, $user ) {
 }
 add_action('wp_login', 'check_template_login', 10, 2);
 
+
+
 /* Add additional fields to Registration Form for Downloads and automatically login the user after registration */
 function swift_user_register( $user_id ) {
     // only on the password protected template registration form
@@ -616,6 +623,51 @@ function swift_user_register( $user_id ) {
 add_action( 'user_register', 'swift_user_register' );
 
 
+/* Validate Shipping Fields */
+add_action('woocommerce_checkout_process', 'validate_checkout_custom_fields');
+function validate_checkout_custom_fields() {
+    if (!$_POST['shipping_other'] && $_POST['shipping_method'][0] == 'flat_rate:5'){
+        wc_add_notice( __('Must Enter Shipping Company Name'), 'error' );
+    } else {
+        $_SESSION['shipping_other'] = $_POST['shipping_other'];
+    }
+    if (!$_POST['shipping_account'] && $_POST['shipping_method'][0] != 'flat_rate:1'){
+        wc_add_notice( __('Must Enter Shipping Account Number'), 'error' );
+    } else {
+        $_SESSION['shipping_account'] = $_POST['shipping_account'];
+    }
+}
+
+
+/* Save the checkout custom fields in db */
+add_action( 'woocommerce_checkout_update_order_meta', 'save_checkout_custom_fields' );
+function save_checkout_custom_fields( $order_id ) {
+    if (!empty($_POST['shipping_other'])){
+        update_post_meta( $order_id, 'Shipping Company Other', sanitize_text_field( $_POST['shipping_other'] ) );
+    }
+    if (!empty($_POST['shipping_account'])) {
+        update_post_meta( $order_id, 'Shipping Account Number', sanitize_text_field( $_POST['shipping_account'] ) );
+    }
+}
+
+
+/**
+ * Display custom field value on the order edit page
+ */
+add_action( 'woocommerce_admin_order_data_after_billing_address', 'display_checkout_custom_fields', 10, 1 );
+function display_checkout_custom_fields($order){
+    echo '<p><strong>'.__('Shipping Company Other').':</strong> ' . get_post_meta( $order->id, 'Shipping Company Other', true ) . '</p>';
+    echo '<p><strong>'.__('Shipping Account Number').':</strong> ' . get_post_meta( $order->id, 'Shipping Account Number', true ) . '</p>';
+}
+
+/* Add checkout custom fields to notification emails */
+add_filter('woocommerce_email_order_meta_keys', 'add_checkout_custom_fields_to_emails');
+function add_checkout_custom_fields_to_emails( $keys ) {
+     $keys[] = 'Shipping Company Other';
+     $keys[] = 'Shipping Account Number';
+     return $keys;
+}
+
 
 /* Remove the password meter */
 add_action( 'wp_print_scripts', 'DisableStrongPW', 100 );
@@ -625,3 +677,5 @@ function DisableStrongPW() {
         wp_dequeue_script( 'wc-password-strength-meter' );
     }
 }
+
+
