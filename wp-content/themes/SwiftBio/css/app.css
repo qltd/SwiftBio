@@ -870,4 +870,10 @@ header .menu-bar .logo img { width: 115px; max-height: 54.2px; margin-top: 2px; 
 @media screen and (max-width: 914px) { .user-row .register-form, .user-row .login-form { width: 100%; margin-right: 0; }
   @-ms-viewport { .user-row .register-form, .user-row .login-form { width: device-width; } } }
 
+.shipping-other { margin-top: 1rem; }
+
+.shipping-other label { font-size: 1.4rem; }
+
+.page-template-page-protected h1 { display: none; }
+
 /*# sourceMappingURL=app.css.map */

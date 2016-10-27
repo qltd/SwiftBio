@@ -31,7 +31,6 @@ bgOverlay[0].addEventListener("click", function(){ toggleNav() });
 (function($){
 
     $('#registerform').validate();
-
     $('#loginform').validate();
 
     $("#sf-form, .sf-form").validate({
@@ -82,6 +81,7 @@ $('a[href$=".pdf"]').prop('target', '_blank');
     });
 
     $('div:not(.woocommerce) > form select').select2();
+
 
     if(location.hash) {
 
@@ -136,13 +136,6 @@ $('a[href$=".pdf"]').prop('target', '_blank');
       return false;
   });
 
-    // /* Add PO Upload field to checkout */
-    // $('#po_number_field').after('<div id="po_upload"><p class="form-row"><label>Upload your purchase order (if available)</label><input type="file" name="po_upload" class="po_upload" accept="application/pdf" /></p></div>');
-    // $(document).on("change", function(){
-    //     if ($('#po_upload').length === 0) {
-    //         $('#po_number_field').after('<div id="po_upload"><p class="form-row"><label>Upload your purchase order (if available)</label><input type="file" name="po_upload" class="po_upload" accept="application/pdf" /></p></div>');
-    //     }
-    // });
 
 })(jQuery);
 
