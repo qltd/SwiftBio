@@ -614,3 +614,14 @@ function swift_user_register( $user_id ) {
     }
 }
 add_action( 'user_register', 'swift_user_register' );
+
+
+
+/* Remove the password meter */
+add_action( 'wp_print_scripts', 'DisableStrongPW', 100 );
+
+function DisableStrongPW() {
+    if ( wp_script_is( 'wc-password-strength-meter', 'enqueued' ) ) {
+        wp_dequeue_script( 'wc-password-strength-meter' );
+    }
+}
