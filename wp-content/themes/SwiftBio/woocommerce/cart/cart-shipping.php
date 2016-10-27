@@ -31,14 +31,14 @@ $account = false;
 			<select name="shipping_method[<?php echo $index; ?>]" data-index="<?php echo $index; ?>" id="shipping_method_<?php echo $index; ?>" class="shipping_method select-me">
 				<option value=""><?php echo "Select Shipping Method"; ?></option>
                                             <?php foreach ( $available_methods as $method ) : ?>
-                                                <option value="<?php echo esc_attr( $method->id ); ?>" <?php selected( $method->id, $chosen_method ); ?>><?php echo wp_kses_post( wc_cart_totals_shipping_method_label( $method ) ); ?></option>
+                                                <option value="<?php echo esc_attr( $method->id ); ?>" <?php selected( $method->id, $chosen_method ); ?>><?php echo wp_kses_post( wc_cart_totals_shipping_method_label( $method ) ); ?>
                                                 <?php
-                                                    if ($chosen_method == 'flat_rate:5') {
+                                                    if ($chosen_method == $method->id && $method->label == 'Other') {
                                                         $other = true;
-                                                    } elseif ($chosen_method != 'flat_rate:1') {
+                                                    } elseif ($chosen_method == $method->id && $method->label != 'Flat Rate') {
                                                         $account = true;
                                                     }
-                                                ?>
+                                                ?></option>
                                             <?php endforeach; ?>
                         	</select>
 
