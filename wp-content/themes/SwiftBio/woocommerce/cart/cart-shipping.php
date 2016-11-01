@@ -38,6 +38,12 @@ $account = false;
                                                     } elseif ($chosen_method == $method->id && $method->label != 'Flat Rate') {
                                                         $account = true;
                                                     }
+
+                                                    if ($method->label == 'Flat Rate'){
+                                                        echo ' Shipping & Handling';
+                                                    } else {
+                                                        echo ' Handling';
+                                                    }
                                                 ?></option>
                                             <?php endforeach; ?>
                         	</select>
@@ -68,7 +74,8 @@ $account = false;
                                         }
                                     ?>
                                     <div class="shipping-account">
-                                        <p><small>By entering your shipping account number you will be charged a $20 handling fee and the actual shipping charges will be billed directly to your shipping account.</small></p>
+                                        <p><small>$20 Handling fee applies.<br />
+Shipping charges will be billed to your company directly from your carrier.</small></p>
                                         <label>Shipping Account Number: <span class="req">*</span></label><br />
                                         <input type="text" class="input-text" name="shipping_account" value="<?php echo $sa; ?>"  />
                                     </div>
