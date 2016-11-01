@@ -564,6 +564,7 @@ function register_download_to_salesforce($user_id, $lead_source = false){
         'company' => $company,
         'phone' => $phone,
         'lead_source' => $lead,
+        '00NE0000000Lrpa' => $lead,
         '00NE00000069Ark' => urlencode(1),
         'oid' => urlencode('00DE0000000KWb6')
     );
@@ -596,6 +597,13 @@ function register_download_to_salesforce($user_id, $lead_source = false){
 
 }
 
+/* Change shipping text in woocommerce */
+add_filter('gettext', 'translate_reply');
+add_filter('ngettext', 'translate_reply');
+function translate_reply($translated) {
+    $translated = str_ireplace('Shipping', 'Shipping and/or handling', $translated);
+    return $translated;
+}
 
 
 /* Check login on password protected templates */

@@ -26,7 +26,7 @@ $account = false;
 ?>
 <tr class="shipping">
 	<th><?php echo wp_kses_post( $package_name ); ?></th>
-	<td data-title="<?php echo esc_attr( $package_name ); ?>">
+	<td data-title="<?php echo esc_attr( $package_name ); ?>" style="max-width: 450px;">
 		<?php if ( 1 < count( $available_methods ) ) : ?>
 			<select name="shipping_method[<?php echo $index; ?>]" data-index="<?php echo $index; ?>" id="shipping_method_<?php echo $index; ?>" class="shipping_method select-me">
 				<option value=""><?php echo "Select Shipping Method"; ?></option>
@@ -68,6 +68,7 @@ $account = false;
                                         }
                                     ?>
                                     <div class="shipping-account">
+                                        <p><small>By entering your shipping account number you will be charged a $20 handling fee and the actual shipping charges will be billed directly to your shipping account.</small></p>
                                         <label>Shipping Account Number: <span class="req">*</span></label><br />
                                         <input type="text" class="input-text" name="shipping_account" value="<?php echo $sa; ?>"  />
                                     </div>
