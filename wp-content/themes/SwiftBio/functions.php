@@ -653,7 +653,7 @@ function validate_checkout_custom_fields() {
     } else {
         $_SESSION['shipping_other'] = $_POST['shipping_other'];
     }
-    if (!$_POST['shipping_account'] && $_POST['shipping_method'][0] != 'flat_rate:1'){
+    if (!$_POST['shipping_account'] && $_POST['shipping_method'][0] != 'flat_rate:2'){
         wc_add_notice( __('Must Enter Shipping Account Number'), 'error' );
     } else {
         $_SESSION['shipping_account'] = $_POST['shipping_account'];
