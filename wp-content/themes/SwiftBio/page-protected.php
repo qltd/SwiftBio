@@ -15,10 +15,18 @@ get_header(); ?>
 
         <div class="main">
             <?php if (is_user_logged_in()): ?>
+
                 <?php
-                    // is there a session/cookie that exists?
-                    // if not then send the salesforce user data
-                    // then create a new session/cookie
+                    $lead_source = (get_field('lead_source')) ? get_field('lead_source') : get_the_title();
+                    $user_id = get_current_user_id();
+                    $date = strtotime(get_user_meta($user_id, $lead_source, true));
+                    $now = strtotime("-24 hours");
+
+                    /* Check if the user has been here in the last 24 hours */
+                    if ($date == '' || ($date != '' && $date <= $now)) {
+                        register_download_to_salesforce($user_id, $lead_source);
+                        set_salesforce_form_datetime($user_id, $lead_source);
+                    }
                 ?>
                 <?php get_template_part('template-parts/content-page'); ?>
 
@@ -68,6 +76,8 @@ get_header(); ?>
                         </p>
                                 <br class="clear">
                                 <input type="hidden" name="redirect_to" value="<?php the_permalink(); ?>">
+                                <input type="hidden" name="oid" value="00DE0000000KWb6">
+                                <input id="00NE00000069Ark" name="00NE00000069Ark" type="hidden" value="1" />
                                 <input type="hidden" name="lead_source" value="<?php echo (get_field('lead_source')) ? get_field('lead_source') : get_the_title(); ?>">
                                 <input type="hidden" name="pp-reg" value="1" />
                                 <p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="Register"><span class="acf-spinner"></span></p>
@@ -92,8 +102,7 @@ get_header(); ?>
                     <input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="Log In">
                     <a href="<?php echo wp_lostpassword_url( get_permalink() ); ?>" title="Lost Password">Lost Password? </a>
                     <input type="hidden" name="redirect_to" value="<?php the_permalink(); ?>">
-                    <input type="hidden" name="testcookie" value="1">
-                    <input type="hidden" name="lead_source" value="<?php echo (get_field('lead_source')) ? get_field('lead_source') : get_the_title(); ?>">
+                    <input type="hidden" name="lead_source" value="<?php echo $lead_source; ?>">
                     <input type="hidden" name="pp-lg" value="1" />
                 </p>
             </form>
@@ -107,6 +116,7 @@ get_header(); ?>
 
         <div class="sidebar">
             <?php get_sidebar(); ?>
+            <a href="<?php echo wp_logout_url( get_permalink() ); ?>">Logout</a>
         </div>
         <div style="clear:both;"></div>
 

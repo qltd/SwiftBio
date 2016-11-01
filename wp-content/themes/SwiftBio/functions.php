@@ -522,15 +522,19 @@ add_action( 'woocommerce_customer_reset_password', 'woocommerce_new_pass_redirec
 /* Remove Admin Bar for all users except Admin */
 add_action('after_setup_theme', 'remove_admin_bar');
 function remove_admin_bar() {
-if (!current_user_can('administrator') && !is_admin()) {
-  show_admin_bar(false);
+    if (!current_user_can('administrator') && !is_admin()) {
+      show_admin_bar(false);
+    }
 }
+
+
+function set_salesforce_form_datetime($user_id, $lead_source){
+    $date = date("Y-m-d H:i:s");
+    update_user_meta($user_id, $lead_source, $date);
 }
 
 
-
-
-function register_download_to_salesforce($user_id){
+function register_download_to_salesforce($user_id, $lead_source = false){
     $url =  'https://www.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8';
 
     //if a registration
@@ -550,7 +554,7 @@ function register_download_to_salesforce($user_id){
         $email = get_userdata($user_id)->data->user_email;
         $company = $user['billing_company'][0];
         $phone = $user['billing_phone'][0];
-        $lead = urlencode($_POST['lead_source']);
+        $lead = ($lead_source != false) ? $lead_source : urlencode($_POST['lead_source']);
     }
 
     $fields = array(
@@ -559,14 +563,22 @@ function register_download_to_salesforce($user_id){
         'email' => $email,
         'company' => $company,
         'phone' => $phone,
-        'lead_source' => $lead
+        'lead_source' => $lead,
+        '00NE00000069Ark' => urlencode(1),
+        'oid' => urlencode('00DE0000000KWb6')
     );
 
     //url-ify the data for the POST
+    $fields_string = false;
     foreach($fields as $key=>$value) {
         $fields_string .= $key.'='.$value.'&';
     }
     rtrim($fields_string, '&');
+
+    // $response = wp_remote_post($url, array(
+    //     'body' => $fields
+    // ));
+
 
     //open connectio
     $ch = curl_init();
@@ -581,7 +593,9 @@ function register_download_to_salesforce($user_id){
 
     //close connection
     curl_close($ch);
+
 }
+
 
 
 /* Check login on password protected templates */
@@ -669,6 +683,39 @@ function add_checkout_custom_fields_to_emails( $keys ) {
 }
 
 
+
+
+/* Add Tax exempt checkbox */
+add_action( 'woocommerce_after_order_notes', 'tax_exempt_checkbox');
+function tax_exempt_checkbox( $checkout ) {
+
+  echo '<div id="qd-tax-exempt"><br /><h3>'.__('Tax Exempt').'</h3>';
+
+  woocommerce_form_field( 'shipping_method_tax_exempt', array(
+      'type'          => 'checkbox',
+      'class'         => array('form-row-wide'),
+      'label'         => __('Yes, my organization is tax exempt.'),
+      'required'  => false,
+      ), $checkout->get_value( 'shipping_method_tax_exempt' ));
+
+  echo '<p>Please email your tax exempt certificate to <a href="mailto:Accounting@swiftbiosci.com">Accounting@swiftbiosci.com</a>.</div>';
+}
+
+add_action( 'woocommerce_checkout_update_order_review', 'taxexempt_checkout_update_order_review');
+function taxexempt_checkout_update_order_review( $post_data ) {
+  global $woocommerce;
+
+  $woocommerce->customer->set_is_vat_exempt(FALSE);
+
+  parse_str($post_data);
+
+  if ( isset($shipping_method_tax_exempt) && $shipping_method_tax_exempt == '1')
+    $woocommerce->customer->set_is_vat_exempt(true);
+}
+
+
+
+
 /* Remove the password meter */
 add_action( 'wp_print_scripts', 'DisableStrongPW', 100 );
 
@@ -679,3 +726,17 @@ function DisableStrongPW() {
 }
 
 
+
+/* Allow new file types to be uploaded in WP */
+function wp_allowed_file_types($mime_types){
+    $mime_types['bai'] = 'application/zip';
+    $mime_types['bed'] = 'application/zip';
+    $mime_types['bam'] = 'application/zip';
+    $mime_types['vcf'] = 'application/zip';
+    $mime_types['gz'] = 'application/zip';
+    $mime_types['fq'] = 'application/zip';
+    $mime_types['fa'] = 'application/zip';
+    $mime_types['sh'] = 'application/zip';
+    return $mime_types;
+}
+add_filter('upload_mimes', 'wp_allowed_file_types', 1, 1);

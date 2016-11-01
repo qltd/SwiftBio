@@ -48,7 +48,6 @@ bgOverlay[0].addEventListener("click", function(){ toggleNav() });
                     $('html, body').animate({
                         scrollTop: $("#form-message").offset().top
                     }, 0);
-
                 } else {
                      sfForm.find('.g-recaptcha').before('<div id="form-message">ERROR: Please verify you are human.</div>');
                     grecaptcha.reset();
