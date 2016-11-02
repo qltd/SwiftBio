@@ -105,16 +105,23 @@ get_header(); ?>
             </div> <!-- .features -->
 
             <?php
+                $today = date('Ymd');
                 $args = array(
                         'numberposts' => 1,
-                        'orderby' => 'post_date',
-                        'order' => 'DESC',
                         'post_type' => 'events',
-                        'post_status' => 'publish',
-                        'suppress_filters' => true
+                        'meta_key'  => 'start_date',
+                        'orderby'   => 'meta_value',
+                        'order' => 'ASC',
+                         'meta_query' => array(
+                            array(
+                                'key'       => 'end_date',
+                                'compare'   => '>=',
+                                'value'     => $today,
+                            )
+                        ),
                     );
-
-                    $recent_event = wp_get_recent_posts( $args, object );
+                $wp_query = new WP_Query( $args );
+                $recent_event = $wp_query->posts;
             ?>
             <?php if (!empty($recent_event)): ?>
             <div class="event-callout">
