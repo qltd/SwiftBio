@@ -5,7 +5,7 @@ Tags: contact form,database,contact form database,save contact form,form databas
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Requires at least: 3.2.1
-Tested up to: 4.6
+Tested up to: 4.6.1
 Stable tag: 2.10.24
 
 Saves submitted form data to the database. Export the data to a file or use shortcodes to display it.
@@ -88,6 +88,12 @@ You can always deactivate the plugin without loosing data.
 1. Admin Panel view of submitted form data
 
 == Changelog ==
+
+= 2.10.25 =
+* Bug Fix: Update to match latest version of wp-jalali plugin for generating Jalali-formatted dates
+* Bug Fix: related to key size for mcrypt_decrypt seen on some hosts
+* Improvement: Gravity Forms integration now observes teh "Admin Field Label" as an override for the field name.
+* Improvement: Updated Excel & ODS exporter to Spout-2.7.0 from Spout-2.4.2
 
 = 2.10.24 =
 * Change: the new SplitField transform is changed: can be used to split a single field into multiple fields based on a delimiter in field values.

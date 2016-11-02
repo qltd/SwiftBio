@@ -116,7 +116,6 @@ get_header(); ?>
 
         <div class="sidebar">
             <?php get_sidebar(); ?>
-            <a href="<?php echo wp_logout_url( get_permalink() ); ?>">Logout</a>
         </div>
         <div style="clear:both;"></div>
 
