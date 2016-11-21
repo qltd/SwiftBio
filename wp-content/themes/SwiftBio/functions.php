@@ -540,8 +540,8 @@ function register_download_to_salesforce($user_id, $lead_source = false){
     //if a registration
     if (!empty($_POST['pp-reg']) && $_POST['pp-reg'] == 1){
         $first_name = urlencode($_POST['first_name']);
-        $last_name = urlencode($_POST['first_name']);
-        $email = urlencode($_POST['first_name']);
+        $last_name = urlencode($_POST['last_name']);
+        $email = urlencode($_POST['email']);
         $company = urlencode($_POST['company']);
         $phone = urlencode($_POST['phone']);
         $lead = urlencode($_POST['lead_source']);
