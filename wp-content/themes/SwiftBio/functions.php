@@ -748,3 +748,18 @@ function wp_allowed_file_types($mime_types){
     return $mime_types;
 }
 add_filter('upload_mimes', 'wp_allowed_file_types', 1, 1);
+
+
+
+function loginLogo() { ?>
+    <style type="text/css">
+        #login h1 a, .login h1 a {
+            background-image: url(<?php echo get_stylesheet_directory_uri(); ?>/img/SB_login_logo150px.png);
+            padding-bottom: 30px;
+            background-size: 150px;
+            height: 40px;
+            width: 150px;
+        }
+    </style>
+<?php }
+add_action( 'login_enqueue_scripts', 'loginLogo' );
