@@ -750,7 +750,7 @@ function wp_allowed_file_types($mime_types){
 add_filter('upload_mimes', 'wp_allowed_file_types', 1, 1);
 
 
-
+/* Change login page logo */
 function loginLogo() { ?>
     <style type="text/css">
         #login h1 a, .login h1 a {
@@ -763,3 +763,9 @@ function loginLogo() { ?>
     </style>
 <?php }
 add_action( 'login_enqueue_scripts', 'loginLogo' );
+
+/* Change Login Page Logo URL */
+function custom_loginlogo_url($url) {
+    return 'http://swiftbiosci.com';
+}
+add_filter( 'login_headerurl', 'custom_loginlogo_url' );
