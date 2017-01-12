@@ -597,23 +597,15 @@ function register_download_to_salesforce($user_id, $lead_source = false){
 
 }
 
-/* Change shipping text in woocommerce */
-add_filter('gettext', 'translate_reply');
-add_filter('ngettext', 'translate_reply');
-function translate_reply($translated) {
-    $translated = str_ireplace('Shipping', 'Shipping and/or handling', $translated);
-    return $translated;
-}
-
 
 /* Check login on password protected templates */
-function check_template_login( $user_login, $user ) {
-    if (!empty($_POST['pp-lg']) && $_POST['pp-lg'] == 1){
-        $user_id = $user->ID;
-        register_download_to_salesforce($user_id);
-    }
-}
-add_action('wp_login', 'check_template_login', 10, 2);
+// function check_template_login( $user_login, $user ) {
+//     if (!empty($_POST['pp-lg']) && $_POST['pp-lg'] == 1){
+//         $user_id = $user->ID;
+//         //register_download_to_salesforce($user_id);
+//     }
+// }
+// add_action('wp_login', 'check_template_login', 10, 2);
 
 
 
@@ -643,6 +635,16 @@ function swift_user_register( $user_id ) {
     }
 }
 add_action( 'user_register', 'swift_user_register' );
+
+
+
+/* Change shipping text in woocommerce */
+add_filter('gettext', 'translate_reply');
+add_filter('ngettext', 'translate_reply');
+function translate_reply($translated) {
+    $translated = str_ireplace('Shipping', 'Shipping and/or handling', $translated);
+    return $translated;
+}
 
 
 /* Validate Shipping Fields */
