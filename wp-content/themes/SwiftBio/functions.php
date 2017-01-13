@@ -592,7 +592,7 @@ function register_download_to_salesforce($user_id, $lead_source = false){
     //execute post
     $result = curl_exec($ch);
 
-    close connection
+    //close connection
     curl_close($ch);
 
 }
