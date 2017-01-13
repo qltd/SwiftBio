@@ -569,6 +569,7 @@ function register_download_to_salesforce($user_id, $lead_source = false){
         'oid' => urlencode('00DE0000000KWb6')
     );
 
+
     //url-ify the data for the POST
     $fields_string = false;
     foreach($fields as $key=>$value) {
@@ -580,8 +581,7 @@ function register_download_to_salesforce($user_id, $lead_source = false){
     //     'body' => $fields
     // ));
 
-
-    //open connectio
+    //open connection
     $ch = curl_init();
 
     //set the url, number of POST vars, POST data
@@ -592,7 +592,7 @@ function register_download_to_salesforce($user_id, $lead_source = false){
     //execute post
     $result = curl_exec($ch);
 
-    //close connection
+    close connection
     curl_close($ch);
 
 }
@@ -630,8 +630,6 @@ function swift_user_register( $user_id ) {
         }
         wp_set_current_user( $user_id );
         wp_set_auth_cookie( $user_id, false, is_ssl() );
-
-        register_download_to_salesforce($user_id);
     }
 }
 add_action( 'user_register', 'swift_user_register' );
