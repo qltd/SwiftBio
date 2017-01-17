@@ -47,15 +47,18 @@
 
             // right sortable
             this.$values.children('.list').sortable({
+
                 items:                  'li',
                 forceHelperSize:        true,
                 forcePlaceholderSize:   true,
                 scroll:                 true,
+
                 update: function(){
 
                     $input.trigger('change');
 
                 }
+
             });
 
 
@@ -196,8 +199,8 @@ var scroll_timer = null;
 
 
             // add message
+            //this.$choices.children('.list').append('<p>' + acf._e('relationship', 'loading') + '...</p>');
             this.$choices.find('ul:last').append('<p><i class="acf-loading"></i> ' + acf._e('relationship', 'loading') + '</p>');
-
 
             // get results
             var xhr = $.ajax({
@@ -229,7 +232,7 @@ var scroll_timer = null;
 
 
             // no results?
-             if( !json || !json.results || !json.results.length ) {
+            if( !json || !json.results || !json.results.length ) {
 
                 // add class
                 this.$el.addClass('is-empty');
@@ -250,7 +253,7 @@ var scroll_timer = null;
 
 
             // get new results
-           var $new = $( this.walker(json.results) );
+            var $new = $( this.walker(json.results) );
 
 
             // apply .disabled to left li's
@@ -262,6 +265,8 @@ var scroll_timer = null;
 
 
             // underline search match
+            // consider removing due to bug where matched strings within HTML attributes caused incorrect results
+            // Looks like Select2 v4 has moved away from highlighting results, so perhaps we should too
             if( this.o.s ) {
 
                 var s = this.o.s;
@@ -432,7 +437,7 @@ var scroll_timer = null;
                 '<li>',
                     '<input type="hidden" name="' + this.$input.attr('name') + '[]" value="' + e.$el.data('id') + '" />',
                     '<span data-id="' + e.$el.data('id') + '" class="acf-rel-item">' + e.$el.html(),
-                        '<a href="#" class="acf-icon -minus small dark" data-name="remove_item"></a>',
+                        '<a href="#" class="acf-icon small dark" data-name="remove_item"><span class="dashicons dashicons-minus"></span></a>',
                     '</span>',
                 '</li>'].join('');
 

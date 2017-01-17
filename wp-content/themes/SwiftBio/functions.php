@@ -197,7 +197,6 @@ require get_template_directory() . '/inc/customizer.php';
 require get_template_directory() . '/inc/jetpack.php';
 
 
-
 //Page Slug Body Class
 function add_slug_body_class( $classes ) {
     global $post;

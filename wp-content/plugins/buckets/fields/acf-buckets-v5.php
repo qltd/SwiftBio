@@ -39,13 +39,12 @@ class acf_field_buckets extends acf_field {
             'post_type'         => array('buckets'),
             'max'               => 0,
             'filters'           => array('search'),
-            'elements'          => array(),
-            'return_format'     => 'ID'
+            'return_format'     => 'ID' //object
         );
         $this->l10n = array(
             'max'       => __("Maximum values reached ( {max} values )",'acf'),
             'loading'   => __('Loading','acf'),
-            'empty'     => __('No Buckets found','acf'),
+            'empty'     => __('No matches found','acf'),
         );
 
 
@@ -56,6 +55,207 @@ class acf_field_buckets extends acf_field {
 
         // do not delete!
         parent::__construct();
+
+    }
+
+
+    /*
+    *  get_choices
+    *
+    *  This function will return an array of data formatted for use in a select2 AJAX response
+    *
+    *  @type    function
+    *  @date    15/10/2014
+    *  @since   5.0.9
+    *
+    *  @param   $options (array)
+    *  @return  (array)
+    */
+
+    function get_choices( $options = array() ) {
+
+        // defaults
+        $options = acf_parse_args($options, array(
+            'post_id'           => 0,
+            's'                 => '',
+            'post_type'         => '',
+            'taxonomy'          => '',
+            'lang'              => false,
+            'field_key'         => '',
+            'paged'             => 1
+        ));
+
+
+        // vars
+        $r = array();
+        $args = array();
+
+
+        // paged
+        $args['posts_per_page'] = 20;
+        $args['paged'] = $options['paged'];
+
+
+        // load field
+        $field = acf_get_field( $options['field_key'] );
+
+        if( !$field ) {
+
+            return false;
+
+        }
+
+
+        // WPML
+        if( $options['lang'] ) {
+
+            global $sitepress;
+
+            if( !empty($sitepress) ) {
+
+                $sitepress->switch_lang( $options['lang'] );
+
+            }
+        }
+
+
+        // update $args
+        if( !empty($options['post_type']) ) {
+
+            $args['post_type'] = acf_get_array( $options['post_type'] );
+
+        } elseif( !empty($field['post_type']) ) {
+
+            $args['post_type'] = acf_get_array( $field['post_type'] );
+
+        } else {
+
+            $args['post_type'] = acf_get_post_types();
+        }
+
+
+        // update taxonomy
+        $taxonomies = array();
+
+        if( !empty($options['taxonomy']) ) {
+
+            $term = acf_decode_taxonomy_term($options['taxonomy']);
+
+            // append to $args
+            $args['tax_query'] = array(
+
+                array(
+                    'taxonomy'  => $term['taxonomy'],
+                    'field'     => 'slug',
+                    'terms'     => $term['term'],
+                )
+
+            );
+
+
+        } elseif( !empty($field['taxonomy']) ) {
+
+            $taxonomies = acf_decode_taxonomy_terms( $field['taxonomy'] );
+
+            // append to $args
+            $args['tax_query'] = array();
+
+
+            // now create the tax queries
+            foreach( $taxonomies as $taxonomy => $terms ) {
+
+                $args['tax_query'][] = array(
+                    'taxonomy'  => $taxonomy,
+                    'field'     => 'slug',
+                    'terms'     => $terms,
+                );
+
+            }
+
+        }
+
+
+        // search
+        if( $options['s'] ) {
+
+            $args['s'] = $options['s'];
+
+        }
+
+
+        // filters
+        $args = apply_filters('acf/fields/relationship/query', $args, $field, $options['post_id']);
+        $args = apply_filters('acf/fields/relationship/query/name=' . $field['name'], $args, $field, $options['post_id'] );
+        $args = apply_filters('acf/fields/relationship/query/key=' . $field['key'], $args, $field, $options['post_id'] );
+
+
+        // get posts grouped by post type
+        $groups = acf_get_posts( $args );
+
+        if( !empty($groups) ) {
+
+            foreach( array_keys($groups) as $group_title ) {
+
+                // vars
+                $posts = acf_extract_var( $groups, $group_title );
+                $titles = array();
+
+
+                // data
+                $data = array(
+                    'text'      => $group_title,
+                    'children'  => array()
+                );
+
+
+                foreach( array_keys($posts) as $post_id ) {
+
+                    // override data
+                    $posts[ $post_id ] = $this->get_post_title( $posts[ $post_id ], $field, $options['post_id'] );
+
+                };
+
+
+                // order by search
+                if( !empty($args['s']) ) {
+
+                    $posts = acf_order_by_search( $posts, $args['s'] );
+
+                }
+
+
+                // append to $data
+                foreach( array_keys($posts) as $post_id ) {
+
+                    $data['children'][] = array(
+                        'id'    => $post_id,
+                        'text'  => $posts[ $post_id ]
+                    );
+
+                }
+
+
+                // append to $r
+                $r[] = $data;
+
+            }
+
+
+            // optgroup or single
+            $post_types = acf_get_array( $args['post_type'] );
+
+            // add as optgroup or results
+            if( count($post_types) == 1 ) {
+
+                $r = $r[0]['children'];
+
+            }
+
+        }
+
+
+        // return
+        return $r;
 
     }
 
@@ -76,246 +276,33 @@ class acf_field_buckets extends acf_field {
     function ajax_query() {
 
         // validate
-        if( !acf_verify_ajax() ) die();
+        if( empty($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'acf_nonce') ) {
+
+            die();
+
+        }
 
 
-        // get choices
-        $response = $this->get_ajax_query( $_POST );
+        // get posts
+        $posts = $this->get_choices( $_POST );
 
 
-        // return
-        acf_send_ajax_results($response);
+        // validate
+        if( !$posts ) {
+
+            die();
+
+        }
+
+
+        // return JSON
+        echo json_encode( $posts );
+        die();
 
     }
 
 
     /*
-    *  get_ajax_query
-    *
-    *  This function will return an array of data formatted for use in a select2 AJAX response
-    *
-    *  @type    function
-    *  @date    15/10/2014
-    *  @since   5.0.9
-    *
-    *  @param   $options (array)
-    *  @return  (array)
-    */
-
-    function get_ajax_query( $options = array() ) {
-
-        // defaults
-        $options = acf_parse_args($options, array(
-            'post_id'       => 0,
-            's'             => '',
-            'field_key'     => '',
-            'paged'         => 1,
-            'post_type'     => '',
-            'taxonomy'      => ''
-        ));
-
-
-        // load field
-        $field = acf_get_field( $options['field_key'] );
-        if( !$field ) return false;
-
-
-        // vars
-        $results = array();
-        $args = array();
-        $s = false;
-        $is_search = false;
-
-
-        // paged
-        $args['posts_per_page'] = 20;
-        $args['paged'] = $options['paged'];
-
-
-        // search
-        if( $options['s'] !== '' ) {
-
-            // strip slashes (search may be integer)
-            $s = wp_unslash( strval($options['s']) );
-
-
-            // update vars
-            $args['s'] = $s;
-            $is_search = true;
-
-        }
-
-
-        // post_type
-        if( !empty($options['post_type']) ) {
-
-            $args['post_type'] = acf_get_array( $options['post_type'] );
-
-        } elseif( !empty($field['post_type']) ) {
-
-            $args['post_type'] = acf_get_array( $field['post_type'] );
-
-        } else {
-
-            $args['post_type'] = acf_get_post_types();
-
-        }
-
-
-        // taxonomy
-        if( !empty($options['taxonomy']) ) {
-
-            // vars
-            $term = acf_decode_taxonomy_term($options['taxonomy']);
-
-
-            // tax query
-            $args['tax_query'] = array();
-
-
-            // append
-            $args['tax_query'][] = array(
-                'taxonomy'  => $term['taxonomy'],
-                'field'     => 'slug',
-                'terms'     => $term['term'],
-            );
-
-
-        } elseif( !empty($field['taxonomy']) ) {
-
-            // vars
-            $terms = acf_decode_taxonomy_terms( $field['taxonomy'] );
-
-
-            // append to $args
-            $args['tax_query'] = array();
-
-
-            // now create the tax queries
-            foreach( $terms as $k => $v ) {
-
-                $args['tax_query'][] = array(
-                    'taxonomy'  => $k,
-                    'field'     => 'slug',
-                    'terms'     => $v,
-                );
-
-            }
-
-        }
-
-
-        // filters
-        $args = apply_filters('acf/fields/relationship/query', $args, $field, $options['post_id']);
-        $args = apply_filters('acf/fields/relationship/query/name=' . $field['name'], $args, $field, $options['post_id'] );
-        $args = apply_filters('acf/fields/relationship/query/key=' . $field['key'], $args, $field, $options['post_id'] );
-
-
-        // get posts grouped by post type
-        $groups = acf_get_grouped_posts( $args );
-
-
-        // bail early if no posts
-        if( empty($groups) ) return false;
-
-
-        // loop
-        foreach( array_keys($groups) as $group_title ) {
-
-            // vars
-            $posts = acf_extract_var( $groups, $group_title );
-
-
-            // data
-            $data = array(
-                'text'      => $group_title,
-                'children'  => array()
-            );
-
-
-            // convert post objects to post titles
-            foreach( array_keys($posts) as $post_id ) {
-
-                $posts[ $post_id ] = $this->get_post_title( $posts[ $post_id ], $field, $options['post_id'] );
-
-            }
-
-
-            // order posts by search
-            if( $is_search && empty($args['orderby']) ) {
-
-                $posts = acf_order_by_search( $posts, $args['s'] );
-
-            }
-
-
-            // append to $data
-            foreach( array_keys($posts) as $post_id ) {
-
-                $data['children'][] = $this->get_post_result( $post_id, $posts[ $post_id ]);
-
-            }
-
-
-            // append to $results
-            $results[] = $data;
-
-        }
-
-
-        // add as optgroup or results
-        if( count($args['post_type']) == 1 ) {
-
-            $results = $results[0]['children'];
-
-        }
-
-
-        // vars
-        $response = array(
-            'results'   => $results,
-            'limit'     => $args['posts_per_page']
-        );
-
-
-        // return
-        return $response;
-
-    }
-
-
-    /*
-    *  get_post_result
-    *
-    *  This function will return an array containing id, text and maybe description data
-    *
-    *  @type    function
-    *  @date    7/07/2016
-    *  @since   5.4.0
-    *
-    *  @param   $id (mixed)
-    *  @param   $text (string)
-    *  @return  (array)
-    */
-
-    function get_post_result( $id, $text ) {
-
-        // vars
-        $result = array(
-            'id'    => $id,
-            'text'  => $text
-        );
-
-
-        // return
-        return $result;
-
-    }
-
-
-
-
-   /*
     *  get_post_title
     *
     *  This function returns the HTML for a result
@@ -330,34 +317,50 @@ class acf_field_buckets extends acf_field {
     *  @return  (string)
     */
 
-    function get_post_title( $post, $field, $post_id = 0, $is_search = 0 ) {
+    function get_post_title( $post, $field, $post_id = 0 ) {
 
         // get post_id
-        if( !$post_id ) $post_id = acf_get_form_data('post_id');
+        if( !$post_id ) {
 
+            $form_data = acf_get_setting('form_data');
 
-        // vars
-        $title = acf_get_post_title( $post, $is_search );
+            if( !empty($form_data['post_id']) ) {
 
+                $post_id = $form_data['post_id'];
 
-        // featured_image
-        if( acf_in_array('featured_image', $field['elements']) ) {
+            } else {
 
-            // vars
-            $class = 'thumbnail';
-            $thumbnail = acf_get_post_thumbnail($post->ID, array(17, 17));
-
-
-            // icon
-            if( $thumbnail['type'] == 'icon' ) {
-
-                $class .= ' -' . $thumbnail['type'];
+                $post_id = get_the_ID();
 
             }
 
+        }
 
-            // append
-            $title = '<div class="' . $class . '">' . $thumbnail['html'] . '</div>' . $title;
+
+        // vars
+        $title = acf_get_post_title( $post );
+
+
+        // elements
+        if( !empty($field['elements']) ) {
+
+            if( in_array('featured_image', $field['elements']) ) {
+
+                $image = '';
+
+                if( $post->post_type == 'attachment' ) {
+
+                    $image = wp_get_attachment_image( $post->ID, array(17, 17) );
+
+                } else {
+
+                    $image = get_the_post_thumbnail( $post->ID, array(17, 17) );
+
+                }
+
+
+                $title = '<div class="thumbnail">' . $image . '</div>' . $title;
+            }
 
         }
 
@@ -370,9 +373,64 @@ class acf_field_buckets extends acf_field {
 
         // return
         return $title;
-
     }
 
+
+    /*
+    *  get_posts
+    *
+    *  This function will return an array of posts for a given field value
+    *
+    *  @type    function
+    *  @date    13/06/2014
+    *  @since   5.0.0
+    *
+    *  @param   $value (array)
+    *  @return  $value
+    */
+
+    function get_posts( $value ) {
+
+        // force value to array
+        $value = acf_get_array( $value );
+
+
+        // convert to int
+        $value = array_map('intval', $value);
+
+
+        // load posts in 1 query to save multiple DB calls from following code
+        if( count($value) > 1 ) {
+
+            get_posts(array(
+                'posts_per_page'    => -1,
+                'post_type'         => acf_get_post_types(),
+                'post_status'       => 'any',
+                'post__in'          => $value,
+            ));
+
+        }
+
+
+        // vars
+        $posts = array();
+
+
+        // update value to include $post
+        foreach( $value as $post_id ) {
+
+            if( $post = get_post( $post_id ) ) {
+
+                $posts[] = $post;
+
+            }
+
+        }
+
+
+        // return
+        return $posts;
+    }
 
 
     /*
@@ -464,10 +522,8 @@ class acf_field_buckets extends acf_field {
 
                 <?php if( !empty($field['value']) ):
 
-                   // get posts
-                    $posts = acf_get_posts(array(
-                        'post__in' => $field['value'],
-                    ));
+                    // get posts
+                    $posts = $this->get_posts( $field['value'] );
 
                     // set choices
                     if( !empty($posts) ):
@@ -478,13 +534,13 @@ class acf_field_buckets extends acf_field {
                             $post = acf_extract_var( $posts, $i );
 
 
-?><li>
-    <input type="hidden" name="<?php echo $field['name']; ?>[]" value="<?php echo $post->ID; ?>" />
-    <span data-id="<?php echo $post->ID; ?>" class="acf-rel-item">
-        <?php echo $this->get_post_title( $post, $field ); ?>
-        <a href="#" class="acf-icon small dark" data-name="remove_item"><span class="dashicons dashicons-minus"></span></i></a>
-    </span>
-</li><?php
+                            ?><li>
+                                <input type="hidden" name="<?php echo $field['name']; ?>[]" value="<?php echo $post->ID; ?>" />
+                                <span data-id="<?php echo $post->ID; ?>" class="acf-rel-item">
+                                    <?php echo $this->get_post_title( $post, $field ); ?>
+                                    <a href="#" class="acf-icon small dark" data-name="remove_item"><span class="dashicons dashicons-minus"></span></i></a>
+                                </span>
+                            </li><?php
 
                         endforeach;
 
@@ -520,8 +576,11 @@ class acf_field_buckets extends acf_field {
     function render_field_settings( $field ) {
 
         // max
-        $field['max'] = empty($field['max']) ? '' : $field['max'];
+        if( $field['max'] < 1 ) {
 
+            $field['max'] = '';
+
+        }
 
 
         acf_render_field_setting( $field, array(
@@ -532,18 +591,18 @@ class acf_field_buckets extends acf_field {
         ));
 
 
-        // return_format
-        acf_render_field_setting( $field, array(
-            'label'         => __('Return Format','acf'),
-            'instructions'  => '',
-            'type'          => 'radio',
-            'name'          => 'return_format',
-            'choices'       => array(
-                'object'        => __("Post Object",'acf'),
-                'id'            => __("Post ID",'acf'),
-            ),
-            'layout'    =>  'horizontal',
-        ));
+        // // return_format
+        // acf_render_field_setting( $field, array(
+        //     'label'         => __('Return Format','acf'),
+        //     'instructions'  => '',
+        //     'type'          => 'radio',
+        //     'name'          => 'return_format',
+        //     'choices'       => array(
+        //         'object'        => __("Post Object",'acf'),
+        //         'id'            => __("Post ID",'acf'),
+        //     ),
+        //     'layout'    =>  'horizontal',
+        // ));
 
 
     }
@@ -589,8 +648,6 @@ class acf_field_buckets extends acf_field {
         return $buckets;
 
     }
-
-
 
 
     /*

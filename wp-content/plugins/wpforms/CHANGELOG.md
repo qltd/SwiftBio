@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file, formatted via [this recommendation](http://keepachangelog.com/).
 
+## [1.3.1.2] - 2016-12-12
+### Fixed
+- Plugin name to correctly indicate Lite for Lite release
+
+## [1.3.1.1] - 2016-12-12
+### Fixed
+- Error with 1.3.1 Lite release
+
 ## [1.3.1] - 2016-12-08
 ### Added
 - Dropdown Items payment field
