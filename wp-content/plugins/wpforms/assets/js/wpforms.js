@@ -96,7 +96,7 @@
 
 				// Validate email addresses
 				$.validator.methods.email = function( value, element ) {
-					return this.optional( element ) || /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}$/.test( value );
+					return this.optional( element ) || /^[a-z0-9.!#$%&'*+\/=?^_`{|}~-]+@((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}$/i.test( value );
 				}
 
 				// Validate confirmations
@@ -179,14 +179,19 @@
 				$('.wpforms-datepicker').each(function() {
 					var element = $(this),
 						form    = element.closest('.wpforms-form'),
-						formID  = form.data('formid');
+						formID  = form.data('formid'),
+						fieldID = element.closest('.wpforms-field').data('field-id');
 
-					if (typeof window['wpforms_'+formID] != "undefined" && window['wpforms_'+formID].hasOwnProperty('datepicker') ) {
+					if (typeof window['wpforms_'+formID+'_'+fieldID] != 'undefined' && window['wpforms_'+formID+'_'+fieldID].hasOwnProperty('datepicker')) {
+						properties = window['wpforms_'+formID+'_'+fieldID].datepicker;
+					} else if (typeof window['wpforms_'+formID] != 'undefined' && window['wpforms_'+formID].hasOwnProperty('datepicker')) {
 						properties = window['wpforms_'+formID].datepicker;
-					} else if ( typeof wpforms_datepicker != "undefined") {
+					} else if (typeof wpforms_datepicker != 'undefined') {
 						properties = wpforms_datepicker;
 					} else {
-						properties = {}
+						properties = {
+							disableMobile: true
+						}
 					}
 					element.flatpickr(properties)
 				});
@@ -205,9 +210,12 @@
 				$('.wpforms-timepicker').each(function() {
 					var element = $(this),
 						form    = element.closest('.wpforms-form'),
-						formID  = form.data('formid');
+						formID  = form.data('formid'),
+						fieldID = element.closest('.wpforms-field').data('field-id');
 
-					if (typeof window['wpforms_'+formID] != "undefined" && window['wpforms_'+formID].hasOwnProperty('timepicker') ) {
+					if (typeof window['wpforms_'+formID+'_'+fieldID] != 'undefined' && window['wpforms_'+formID+'_'+fieldID].hasOwnProperty('timepicker')) {
+						properties = window['wpforms_'+formID+'_'+fieldID].timepicker;
+					} else if (typeof window['wpforms_'+formID] != "undefined" && window['wpforms_'+formID].hasOwnProperty('timepicker') ) {
 						properties = window['wpforms_'+formID].timepicker;
 					} else if ( typeof wpforms_timepicker != "undefined") {
 						properties = wpforms_timepicker;
@@ -355,6 +363,7 @@
 					$('html, body').animate({
 						scrollTop: $form.offset().top-75
 					}, 1000);
+					$this.trigger('wpformsPageChange', [ page2, $form ] );
 				}
 			} else if ( action == 'prev' ) {
 				// Move to prev page
@@ -367,6 +376,7 @@
 				$('html, body').animate({
 					scrollTop: $form.offset().top-75
 				}, 1000);
+				$this.trigger('wpformsPageChange', [ page2, $form ] );
 			}
 
 			if ( $indicator ) {

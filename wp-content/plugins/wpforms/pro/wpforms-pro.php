@@ -48,8 +48,8 @@ class WPForms_Pro {
 			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/entries/class-entries.php';
 			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/class-addons.php';
 			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/class-updater.php';
-			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/class-updater.php';
 			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/class-license.php';
+			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/class-review.php';
 		}
 	}
 
@@ -285,7 +285,7 @@ class WPForms_Pro {
 						'tooltip'    => __( 'Enter the email address to receive form entry notifications. For multiple notifications, separate email addresses with a comma.', 'wpforms' ),
 						'smarttags'  => array(
 							'type'   => 'fields',
-							'fields' => 'name,email,text',
+							'fields' => 'email',
 						),
 						'parent'     => 'settings',
 						'subsection' => $id,
@@ -318,8 +318,7 @@ class WPForms_Pro {
 					array(
 						'default'    => __( 'New Entry: ' , 'wpforms' ) . $settings->form->post_title,
 						'smarttags'  => array(
-							'type'   => 'fields',
-							'fields' => 'name,email,text',
+							'type'   => 'all'
 						),
 						'parent'     => 'settings',
 						'subsection' => $id
@@ -335,7 +334,7 @@ class WPForms_Pro {
 						'default'    => sanitize_text_field( get_option( 'blogname' ) ),
 						'smarttags'  => array(
 							'type'   => 'fields',
-							'fields' => 'name,email,text',
+							'fields' => 'name,text',
 						),
 						'parent'     => 'settings',
 						'subsection' => $id
@@ -351,7 +350,7 @@ class WPForms_Pro {
 						'default'    => '{admin_email}',
 						'smarttags'  => array(
 							'type'   => 'fields',
-							'fields' => 'name,email,text',
+							'fields' => 'email',
 						),
 						'parent'     => 'settings',
 						'subsection' => $id
@@ -366,7 +365,7 @@ class WPForms_Pro {
 					array(
 						'smarttags'  => array(
 							'type'   => 'fields',
-							'fields' => 'name,email,text',
+							'fields' => 'email',
 						),
 						'parent'     => 'settings',
 						'subsection' => $id

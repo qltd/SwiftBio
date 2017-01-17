@@ -108,7 +108,7 @@ class WPForms_Field_File_Upload extends WPForms_Field {
 		);
 
 		// Customize value format for HTML emails
-		add_filter( 'wpforms_html_field_value', array( $this, 'html_email_value' ), 10, 3 );
+		add_filter( 'wpforms_html_field_value', array( $this, 'html_email_value' ), 10, 4 );
 	}
 
 	/**
@@ -509,6 +509,7 @@ class WPForms_Field_File_Upload extends WPForms_Field {
 
 			// Include necessary code from core
 			if ( ! function_exists( 'wp_handle_sideload' ) ){
+				require_once( ABSPATH . 'wp-admin/includes/media.php' );
 				require_once( ABSPATH . 'wp-admin/includes/file.php' );
 				require_once( ABSPATH . 'wp-admin/includes/image.php' );
 			}
@@ -589,7 +590,7 @@ class WPForms_Field_File_Upload extends WPForms_Field {
 	 * @param array $form_data
 	 * @return string
 	 */
-	public function html_email_value( $val, $field, $form_data ) {
+	public function html_email_value( $val, $field, $form_data = '', $context = '' ) {
 
 		if ( !empty( $field['value'] ) && 'file-upload' == $field['type'] ) {
 

@@ -1,6 +1,27 @@
 # Change Log
 All notable changes to this project will be documented in this file, formatted via [this recommendation](http://keepachangelog.com/).
 
+## [1.3.2] - 2017-01-17
+### Added
+- CSS class support for hidden fields, for easier targeting
+- WP.org review request
+- New form class, `.inline-fields`, to apply single line form layout
+- Allow date and time pickers properties to be specified on a per form/field basis
+
+### Changed
+- All Smart Tags now available for Email Subject field in form notifications
+- License checks rely on options, instead of transients, for more reliability
+- Enable date picker on mobile devices
+
+### Fixed
+- Email addresses reporting as invalid of the domain contained capitalization
+- Error uploading MP3 files when File upload was using the media library
+- Author related Smart Tags not working in form notification fields
+- Typo on settings page related to Carbon Copy
+- Incorrect messaging/layout on plugins addon page for Basic license users
+- Date Time field date picker causing validation issues for mobile users
+- PHP 7.1 warning messages inside the form builder
+
 ## [1.3.1.2] - 2016-12-12
 ### Fixed
 - Plugin name to correctly indicate Lite for Lite release

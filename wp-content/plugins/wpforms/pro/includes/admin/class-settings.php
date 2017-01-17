@@ -349,7 +349,7 @@ class WPForms_Settings {
 							</th>
 							<td>
 								<input type="checkbox" name="email-carbon-copy" id="wpforms-settings-general-email-carbon-copy" value="1" <?php checked( '1', $this->get( 'email-carbon-copy' ) ); ?>>
-								<label for="wpforms-settings-general-email-carbon-copy"><?php _e( 'Check this is you would like to enable the ability to CC: email addresses in the form notification settings.', 'wpforms' ); ?></label>
+								<label for="wpforms-settings-general-email-carbon-copy"><?php _e( 'Check this if you would like to enable the ability to CC: email addresses in the form notification settings.', 'wpforms' ); ?></label>
 							</td>
 						</tr>
 						<tr>
@@ -618,7 +618,7 @@ class WPForms_Settings {
 						$form['id'] = $new_id;
 						$new = array(
 							'ID'           => $new_id,
-							'post_content' => wp_slash( json_encode( $form ) ),
+							'post_content' => wpforms_encode( $form ),
 						);
 						wp_update_post( $new );
 					}

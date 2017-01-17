@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Base - basic bare bones styling 
+   Base - basic bare bones styling
    ========================================================================== */
 
 .wpforms-clear:before {
@@ -10,7 +10,7 @@
 .wpforms-clear:after {
 	clear: both;
 	content: " ";
-	display: table;	
+	display: table;
 }
 
 .wpforms-container ul,
@@ -121,7 +121,7 @@
 .wpforms-container .wpforms-field-row:after {
 	clear: both;
 	content: " ";
-	display: table;	
+	display: table;
 }
 
 
@@ -148,55 +148,55 @@
 	margin-left: 4%;
 	clear: none;
 }
- 
+
 .wpforms-container .wpforms-one-half,
 .wpforms-container .wpforms-three-sixths,
 .wpforms-container .wpforms-two-fourths {
 	width: 48%;
 }
- 
+
 .wpforms-container .wpforms-one-third,
 .wpforms-container .wpforms-two-sixths {
 	width: 30.6666666667%;
 }
- 
+
 .wpforms-container .wpforms-four-sixths,
 .wpforms-container .wpforms-two-thirds {
 	width: 65.3333333333%;
 }
- 
+
 .wpforms-container .wpforms-one-fourth {
 	width: 22%;
 }
- 
+
 .wpforms-container .wpforms-three-fourths {
 	width: 74%;
 }
- 
+
 .wpforms-container .wpforms-one-fifth {
 	width: 16.8%;
 }
- 
+
 .wpforms-container .wpforms-two-fifths {
 	width: 37.6%;
 }
- 
+
 .wpforms-container .wpforms-three-fifths {
 	width: 58.4%;
 }
- 
+
 .wpforms-container .wpforms-four-fifths {
 	width: 79.2%;
 }
- 
+
 .wpforms-container .wpforms-one-sixth {
 	width: 13.3333333333%;
 }
- 
+
 .wpforms-container .wpforms-five-sixths {
 	width: 82.6666666667%;
 }
- 
+
 .wpforms-container .wpforms-first {
 	clear: both !important;
 	margin-left: 0 !important;
@@ -232,7 +232,7 @@
 	padding-right: 26px;
 }
 
-/* Private */
+/* Legacy, for BC */
 .wpforms-container .wpforms-first-half {
 	float: left;
 	width: 48%;
@@ -263,6 +263,42 @@
 	float: right !important;
 	margin-right: 0 !important;
 	clear: none;
+}
+
+
+/* Preset Layouts
+----------------------------------------------------------------------------- */
+
+/* Single line */
+.wpforms-container.inline-fields {
+	overflow: hidden;
+}
+
+.wpforms-container.inline-fields .wpforms-field-container  {
+	display: table;
+	width: calc(100% - 160px);
+	float: left;
+}
+
+.wpforms-container.inline-fields .wpforms-field  {
+	display: table-cell;
+	padding-right: 2%;
+}
+
+.wpforms-container.inline-fields .wpforms-submit-container {
+	float: right;
+	width: 160px;
+}
+
+.wpforms-container.inline-fields .wpforms-submit {
+	display: block;
+	width: 100%;
+}
+
+.wpforms-container.inline-fields input.wpforms-field-medium,
+.wpforms-container.inline-fields select.wpforms-field-medium,
+.wpforms-container.inline-fields .wpforms-field-row.wpforms-field-medium {
+	max-width: 100%;
 }
 
 
@@ -562,5 +598,15 @@
 	}
 	.wpforms-container .wpforms-page-indicator.connector .wpforms-page-indicator-page-number {
 		display: none;
+	}
+
+	/* Preset layout - single line */
+	.wpforms-container.inline-fields .wpforms-field-container,
+	.wpforms-container.inline-fields .wpforms-field {
+		display: block;
+		width: 100%;
+	}
+	.wpforms-container.inline-fields .wpforms-submit-container {
+		width: 100%;
 	}
 }

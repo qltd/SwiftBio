@@ -126,7 +126,7 @@ class WPForms_Addons {
 					echo '<p>' . __( 'In order to get access to Addons, you need to verify your license key for WPForms.', 'wpforms' ) . '</p>';
 				echo '</div>';
 
-			else:
+			else :
 
 				echo '<p class="intro">' . __( 'Improve your forms with our premium addons. Missing an addon that you think you should be able to see? Click the Refresh Addons button above.', 'wpforms' ) . '</p>';
 
@@ -140,12 +140,9 @@ class WPForms_Addons {
 
 				if ( 'basic' == $type ) :
 
-					echo '<div class="wpforms-addons-basic-message">';
-						echo '<h5>' . __( 'No Addons Available for WPForms Basic License', 'wpforms' ) . '</h5>';
-						echo '<p>' . __( 'WPForms Basic license does not come with premium extensions at this point. Please upgrade your account to unlock the features below.', 'wpforms' ) . '</p>';
-					echo '</div>';
+					$this->addon_grid( $this->addons, $type, array( 'basic' )  );
 
-					$this->addon_grid( $this->addons, $type, array( 'basic', 'plus', 'pro' ), true );
+					$this->addon_grid( $this->addons, $type, array( 'plus', 'pro' ), true );
 
 				elseif( 'plus' == $type ) :
 

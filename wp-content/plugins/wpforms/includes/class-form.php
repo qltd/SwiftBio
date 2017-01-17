@@ -70,7 +70,7 @@ class WPForms_Form_Handler {
 			'href'   => admin_url( 'admin.php?page=wpforms-builder' ),
 			'parent' => 'new-content',
 		);
-		$wp_admin_bar->add_node( $args );	
+		$wp_admin_bar->add_node( $args );
 	}
 
 	/**
@@ -89,28 +89,31 @@ class WPForms_Form_Handler {
 		}
 
 		if ( !empty( $id ) ) {
+
 			// @todo add $id array support
 			// If ID is provided, we get a single form
 			$forms = get_post( absint( $id ) );
 
-			if ( !empty( $args['content_only'] ) && !empty( $forms ) ) {
+			if ( !empty( $args['content_only'] ) && !empty( $forms ) && 'wpforms' == $forms->post_type ) {
 	 			$forms = wpforms_decode( $forms->post_content );
 			}
 
 		} else {
+
 			// No ID provided, get multiple forms
-			$forms = get_posts(
-				wp_parse_args(
-				$args,
-				array(
-					'post_type'     => 'wpforms',
-					'orderby'       => 'id',
-					'order'         => 'ASC', // old->new
-					'no_found_rows' => true,
-					'nopaging'      => true,
-					// 'cache_results' => false,
-				))
+			$defaults = array(
+				'post_type'     => 'wpforms',
+				'orderby'       => 'id',
+				'order'         => 'ASC',
+				'no_found_rows' => true,
+				'nopaging'      => true,
 			);
+
+			$args = wp_parse_args( $args, $defaults );
+
+			$args['post_type'] = 'wpforms';
+
+			$forms = get_posts( $args );
 		}
 
 		if ( empty( $forms ) ) {
@@ -190,7 +193,7 @@ class WPForms_Form_Handler {
 				'post_title'  => esc_html( $title ),
 				'post_status' => 'publish',
 				'post_type'   => 'wpforms',
-				'post_content' => wp_slash( json_encode( $form_content ) ),
+				'post_content' => wpforms_encode( $form_content ),
 			)
 		);
 		$form_id = wp_insert_post( $form );
@@ -267,7 +270,7 @@ class WPForms_Form_Handler {
 			'ID'           => $form_id,
 			'post_title'   => esc_html( $title ),
 			'post_excerpt' => $desc,
-			'post_content' => wp_slash( json_encode( $data ) ),
+			'post_content' => wpforms_encode( $data ),
 		);
 		$form    = apply_filters( 'wpforms_save_form_args', $form, $data, $args );
 		$form_id = wp_update_post( $form );
@@ -315,7 +318,7 @@ class WPForms_Form_Handler {
 			// Create the duplicate form
 			$new_form = array(
 				'post_author'    => $form->post_author,
-				'post_content'   => wp_slash( json_encode( $new_form_data ) ),
+				'post_content'   => wpforms_encode( $new_form_data ),
 				'post_excerpt'   => $form->post_excerpt,
 				'post_status'    => $form->post_status,
 				'post_title'     => $new_form_data['settings']['form_title'],
@@ -329,7 +332,7 @@ class WPForms_Form_Handler {
 
 			// Set new form title
 			$new_form_data['settings']['form_title'] .= ' (ID #' . absint( $new_form_id ) . ')';
-			
+
 			// Set new form ID
 			$new_form_data['id'] = absint( $new_form_id );
 

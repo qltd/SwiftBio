@@ -413,7 +413,7 @@ class WPForms_Frontend {
 
 				$field_atts = apply_filters( 'wpforms_field_atts', $field_atts, $field, $form_data );
 
-				echo '<div class="' . implode( ' ', $field_atts['field_class'] ) . '" id="' . implode( ' ', $field_atts['field_id'] ) . '" style="' .  esc_html( $field_atts['field_style'] ) . '">';
+				echo '<div class="' . implode( ' ', $field_atts['field_class'] ) . '" id="' . implode( ' ', $field_atts['field_id'] ) . '" data-field-id="' .absint( $field['id'] ) . '" style="' .  esc_html( $field_atts['field_style'] ) . '">';
 
 					// Display label if we have one
 					if ( !empty( $field['label'] ) ) {
@@ -631,6 +631,8 @@ class WPForms_Frontend {
 
 				echo '<input type="hidden" name="wpforms[id]" value="' . $form->ID . '">';
 
+				echo '<input type="hidden" name="wpforms[author]" value="' . absint( get_the_author_meta( 'ID' ) ) . '">';
+
 				printf(
 					'<button type="submit" name="wpforms[submit]" class="wpforms-submit %s" id="wpforms-submit-%d" value="wpforms-submit" %s>%s</button>',
 					implode( ' ', $submit_classes ),
@@ -698,7 +700,7 @@ class WPForms_Frontend {
 			'wpforms-flatpickr',
 			WPFORMS_PLUGIN_URL . 'assets/css/flatpickr.min.css',
 			array(),
-			'2.0.5'
+			'2.3.4'
 		);
 		endif;
 

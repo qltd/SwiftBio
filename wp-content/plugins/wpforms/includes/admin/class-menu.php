@@ -20,9 +20,6 @@ class WPForms_Admin_Menu {
 		// Let's make some menus
 		add_action( 'admin_menu',            array( $this, 'register_menus' ), 9    );
 		add_action( 'admin_enqueue_scripts', array( $this, 'menu_icon'      )       );
-
-		// Footer text
-		add_filter( 'admin_footer_text',     array( $this, 'admin_footer'   ), 1, 2 );
 	}
 
 	/**
@@ -116,24 +113,6 @@ class WPForms_Admin_Menu {
 			null,
 			WPFORMS_VERSION
 		);
-	}
-
-	/**
-	 * When user is on a WPForms related admin page, display footer text
-	 * that graciously asks them to rate us.
-	 *
-	 * @since 1.2.1
-	 * @param string $text
-	 * @return string
-	 */
-	public function admin_footer( $text ) {
-
-		global $current_screen;
-		if ( !empty( $current_screen->id ) && strpos( $current_screen->id, 'wpforms' ) !== false ) {
-			$url  = 'http://wordpress.org/support/view/plugin-reviews/wpforms-lite?filter=5';
-			$text = sprintf( __( 'Please rate <strong>WPForms</strong> <a href="%s" target="_blank" rel="noopener">&#9733;&#9733;&#9733;&#9733;&#9733;</a> on <a href="%s" target="_blank">WordPress.org</a> to help us spread the word. Thank you from the WPForms team!', 'wpforms' ), $url, $url );
-		}
-		return $text;
 	}
 }
 $wpforms_admin_menu = new WPForms_Admin_Menu;

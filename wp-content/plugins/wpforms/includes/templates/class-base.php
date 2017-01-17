@@ -130,7 +130,7 @@ abstract class WPForms_Template {
 
 		if ( !empty( $data ) && !empty( $data['template'] ) ) {
 			if ( $data['template'] == $this->slug ) {
-				$args['post_content'] = wp_slash( json_encode( $this->data ) );
+				$args['post_content'] = wpforms_encode( $this->data );
 			}
 		}
 		return $args;
@@ -151,7 +151,7 @@ abstract class WPForms_Template {
 			if ( $args['template'] == $this->slug ) {
 				$new = $this->data;
 				$new['settings'] = !empty( $form['post_content']['settings'] ) ? $form['post_content']['settings'] : array();
-				$form['post_content'] = wp_slash( json_encode( $new ) );
+				$form['post_content'] = wpforms_encode( $new );
 			}
 		}
 		return $form;
@@ -187,7 +187,7 @@ abstract class WPForms_Template {
 			'modal'         => $this->modal,
 			'modal_display' => $display,
 		);
-	
+
 		return $template;
 	}
 

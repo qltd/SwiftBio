@@ -161,18 +161,29 @@ class WPForms_Smart_Tags {
 						break;
 
 					case 'author_id':
-						$id      = get_the_author_meta( 'ID' );
+						$id = get_the_author_meta( 'ID' );
+						if ( empty( $id ) && !empty( $_POST['wpforms']['author'] ) ) {
+							$id = get_the_author_meta( 'ID', absint( $_POST['wpforms']['author'] ) );
+						}
+						$id      = absint( $id );
 						$content = str_replace( '{'.$tag.'}', $id, $content );
 						break;
 
 					case 'author_display':
-						$name    = get_the_author();
+						$name = get_the_author();
+						if ( empty( $name ) && !empty( $_POST['wpforms']['author'] ) ) {
+							$name = get_the_author_meta( 'display_name', absint( $_POST['wpforms']['author'] ) );
+						}
 						$name    = !empty( $name ) ? sanitize_text_field( $name ) : '';
 						$content = str_replace( '{'.$tag.'}', $name, $content );
 						break;
 
 					case 'author_email':
-						$email   = sanitize_email( get_the_author_meta( 'user_email' ) );
+						$email = get_the_author_meta( 'user_email' );
+						if ( empty( $email ) && !empty( $_POST['wpforms']['author'] ) ) {
+							$email = get_the_author_meta( 'user_email', absint( $_POST['wpforms']['author'] ) );
+						}
+						$email   = sanitize_email( $email );
 						$content = str_replace( '{'.$tag.'}', $email, $content );
 						break;
 

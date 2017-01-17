@@ -32,18 +32,18 @@ class WPForms_Builder_Panel_Providers extends WPForms_Builder_Panel {
 	 */
 	public function enqueues() {
 
-		wp_enqueue_style( 
-			'wpforms-builder-providers', 
-			WPFORMS_PLUGIN_URL . 'pro/assets/css/admin-builder-providers.css', 
-			null, 
+		wp_enqueue_style(
+			'wpforms-builder-providers',
+			WPFORMS_PLUGIN_URL . 'pro/assets/css/admin-builder-providers.css',
+			null,
 			WPFORMS_VERSION
 		);
 
-		wp_enqueue_script( 
-			'wpforms-builder-providers', 
+		wp_enqueue_script(
+			'wpforms-builder-providers',
 			WPFORMS_PLUGIN_URL . 'pro/assets/js/admin-builder-providers.js',
-			array( 'jquery' ), 
-			WPFORMS_VERSION, 
+			array( 'jquery' ),
+			WPFORMS_VERSION,
 			false
 		);
 
@@ -68,7 +68,7 @@ class WPForms_Builder_Panel_Providers extends WPForms_Builder_Panel {
 	 * @since 1.0.0
 	 */
 	public function panel_sidebar() {
-		
+
 		// Sidebar contents are not valid unless we have a form
 		if ( !$this->form ) {
 			return;
@@ -87,7 +87,7 @@ class WPForms_Builder_Panel_Providers extends WPForms_Builder_Panel {
 	public function panel_content() {
 
 		// An array of all the active provider add-ons
-		$providers_active = apply_filters( 'wpforms_providers_available', '' );
+		$providers_active = apply_filters( 'wpforms_providers_available', array() );
 
 		if ( !$this->form ) {
 
@@ -114,7 +114,7 @@ class WPForms_Builder_Panel_Providers extends WPForms_Builder_Panel {
 				echo '<p>' . __( 'Select your email marketing service provider or CRM from the options on the left. If you don\'t see your email marketing service listed, then let us know and we\'ll do our best to get it added as fast as possible', 'wpforms' ) . '</p>';
 			echo '</div>';
 		}
-		
+
 		do_action( 'wpforms_providers_panel_content', $this->form );
 	}
 }

@@ -36,11 +36,12 @@ class WPForms_Field_Hidden extends WPForms_Field {
 		//--------------------------------------------------------------------//
 		// Basic field options
 		//--------------------------------------------------------------------//
-		
+
 		$this->field_option( 'basic-options', $field, array( 'markup' => 'open' ) );
 		$this->field_option( 'label',         $field );
 		$this->field_option( 'default_value', $field );
 		$this->field_element( 'text',  $field, array( 'type' => 'hidden', 'slug' => 'label_disable', 'value' => '1' ) );
+		$this->field_option( 'css',           $field );
 		$this->field_option( 'basic-options', $field, array( 'markup' => 'close' ) );
 	}
 
@@ -80,7 +81,7 @@ class WPForms_Field_Hidden extends WPForms_Field {
 		}
 
 		// Primary hidden field
-		printf( 
+		printf(
 			'<input type="hidden" name="wpforms[fields][%d]" id="%s" class="%s" value="%s" %s>',
 			$field['id'],
 			$field_id,

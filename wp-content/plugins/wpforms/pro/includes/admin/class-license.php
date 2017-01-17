@@ -125,22 +125,20 @@ class WPForms_License {
 			return;
 		}
 
-		// Perform a request to validate the key.
-		if ( false === ( $validate = get_transient( '_wpforms_validate_license' ) ) ) {
-			// Only run every 12 hours.
-			$timestamp = get_option( 'wpforms_license_updates' );
-			if ( ! $timestamp ) {
-				$timestamp = strtotime( '+12 hours' );
-				update_option( 'wpforms_license_updates', $timestamp );
-				$this->validate_key( $key );
+		// Perform a request to validate the key  - Only run every 12 hours.
+		$timestamp = get_option( 'wpforms_license_updates' );
+
+		if ( ! $timestamp ) {
+			$timestamp = strtotime( '+12 hours' );
+			update_option( 'wpforms_license_updates', $timestamp );
+			$this->validate_key( $key );
+		} else {
+			$current_timestamp = time();
+			if ( $current_timestamp < $timestamp ) {
+				return;
 			} else {
-				$current_timestamp = time();
-				if ( $current_timestamp < $timestamp ) {
-					return;
-				} else {
-					update_option( 'wpforms_license_updates', strtotime( '+12 hours' ) );
-					$this->validate_key( $key );
-				}
+				update_option( 'wpforms_license_updates', strtotime( '+12 hours' ) );
+				$this->validate_key( $key );
 			}
 		}
 	}
@@ -163,13 +161,11 @@ class WPForms_License {
 				$this->errors[] = __( 'There was an error connecting to the remote key API. Please try again later.', 'wpforms' );
 			}
 
-			set_transient( '_wpforms_validate_license', false, 10 * MINUTE_IN_SECONDS );
 			return;
 		}
 
 		// If a key or author error is returned, the license no longer exists or the user has been deleted, so reset license.
 		if ( isset( $validate->key ) || isset( $validate->author ) ) {
-			set_transient( '_wpforms_validate_license', false, DAY_IN_SECONDS );
 			$option                = get_option( 'wpforms_license' );
 			$option['is_expired']  = false;
 			$option['is_disabled'] = false;
@@ -180,7 +176,6 @@ class WPForms_License {
 
 		// If the license has expired, set the transient and expired flag and return.
 		if ( isset( $validate->expired ) ) {
-			set_transient( '_wpforms_validate_license', false, DAY_IN_SECONDS );
 			$option                = get_option( 'wpforms_license' );
 			$option['is_expired']  = true;
 			$option['is_disabled'] = false;
@@ -191,7 +186,6 @@ class WPForms_License {
 
 		// If the license is disabled, set the transient and disabled flag and return.
 		if ( isset( $validate->disabled ) ) {
-			set_transient( '_wpforms_validate_license', false, DAY_IN_SECONDS );
 			$option                = get_option( 'wpforms_license' );
 			$option['is_expired']  = false;
 			$option['is_disabled'] = true;
@@ -206,7 +200,6 @@ class WPForms_License {
 		}
 
 		// Otherwise, our check has returned successfully. Set the transient and update our license type and flags.
-		set_transient( '_wpforms_validate_license', true, DAY_IN_SECONDS );
 		$option                = get_option( 'wpforms_license' );
 		$option['type']        = isset( $validate->type ) ? $validate->type : $option['type'];
 		$option['is_expired']  = false;

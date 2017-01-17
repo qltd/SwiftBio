@@ -40,6 +40,21 @@ function wpforms_decode( $data ) {
 }
 
 /**
+ * Performs json_encode and wp_slash.
+ *
+ * @since 1.3.1.3
+ * @param array $data
+ * @return string
+ */
+function wpforms_encode( $data = false ) {
+
+	if( empty( $data ) )
+		return false;
+
+	return wp_slash( json_encode( $data ) );
+}
+
+/**
  * Check if a string is a valid URL.
  *
  * @since 1.0.0

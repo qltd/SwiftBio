@@ -391,7 +391,7 @@ class WPForms_Entries {
 			);
 
 		} else {
-			$this->form_id = !empty( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : absint( $this->forms[0]->ID );
+			$this->form_id = !empty( $_GET['form_id'] ) ? absint( $_GET['form_id'] ) : apply_filters( 'wpforms_entry_list_default_form_id', absint( $this->forms[0]->ID ) );
 			$this->form    = wpforms()->form->get( $this->form_id );
 		}
 	}
