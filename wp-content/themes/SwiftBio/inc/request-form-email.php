@@ -1,4 +1,3 @@
-poi
 <?php
 
 // load WP
@@ -15,8 +14,7 @@ foreach($fields as $key => $value) {
     }
 }
 
-
-
+// HTML EMAIL TEMPLATE  $message
 ob_start();
 ?>
 <!DOCTYPE html>
@@ -188,9 +186,9 @@ ob_start();
 $message = ob_get_clean();
 
 
-$to = 'matt@qltd.com';
-$subject = 'Request a Sample Submission';
-$headers = array('Content-Type: text/html; charset=UTF-8','From: Swift Biosciences <info@swiftbiosci.com');
+$to = 'techsupport@swiftbiosci.com';
+$subject = 'Request Form Submission';
+$headers = array('Content-Type: text/html; charset=UTF-8','From: ' . $fields['first_name'] . ' ' . $fields['last_name'] . ' <' . $fields['email'] . '>');
 
 wp_mail( $to, $subject, $message, $headers );
 
