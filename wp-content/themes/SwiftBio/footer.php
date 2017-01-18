@@ -55,9 +55,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.12.0/jquery.validate.js"></script>
     <script src="<?php echo get_stylesheet_directory_uri(); ?>/js/app.js"></script>
-    <?php if (!is_post_type_archive('careers') && !is_page('1080')): ?>
+    <?php /* if (!is_post_type_archive('careers') && !is_page('1080')): ?>
         <script src="https://www.google.com/recaptcha/api.js?onload=CaptchaCallback&render=explicit" async defer></script>
-    <?php endif; ?>
+    <?php endif; */ ?>
     <?php if (is_page(1670)): ?>
         <script>
             setTimeout(function(){window.location.href='/'},5000);
