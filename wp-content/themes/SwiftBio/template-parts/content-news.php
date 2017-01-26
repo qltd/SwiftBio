@@ -54,12 +54,6 @@ if ($post->post_type == "careers"){
             </h1>
         <?php endif; ?>
         <div class="body-content">
-                <?php if (is_single()): ?>
-                    <?php the_content(); ?>
-                <?php else: ?>
-                    <?php the_excerpt(); ?>
-                <?php endif; ?>
-
                 <?php
                     if (get_field('start_date')) {
                         the_field('start_date');
@@ -77,6 +71,12 @@ if ($post->post_type == "careers"){
                         echo ' ' . get_field('booth');
                     }
                 ?>
+
+                <?php if (is_single()): ?>
+                    <?php the_content(); ?>
+                <?php else: ?>
+                    <?php the_excerpt(); ?>
+                <?php endif; ?>
         </div>
     </div>
 <?php endwhile; endif; ?>

@@ -224,6 +224,7 @@ function create_post_types() {
             'public' => true,
             'has_archive' => true,
             'rewrite' => array('slug' => 'events'),
+            'supports' => array('title','editor','revisions','excerpt'),
         )
     );
 
@@ -239,6 +240,7 @@ function create_post_types() {
             'public' => true,
             'has_archive' => true,
             'rewrite' => array('slug' => 'careers'),
+            'supports' => array('title','editor','revisions','excerpt'),
         )
     );
 
