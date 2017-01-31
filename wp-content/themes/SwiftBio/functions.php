@@ -221,6 +221,7 @@ function create_post_types() {
                 'add_new_item' => __('Add New Event'),
                 'not_found' => __( 'No Events Found'),
             ),
+
             'public' => true,
             'has_archive' => true,
             'rewrite' => array('slug' => 'events'),
