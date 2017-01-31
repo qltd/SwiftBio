@@ -1,7 +1,7 @@
 <?php
     $link = get_permalink();
     $title = str_replace('&#038;', '&', get_the_title());
-    $description = the_excerpt();
+    $description = get_the_excerpt();
 ?>
 <p>Share this page:</p>
 <a href="mailto:?subject=I wanted you to see this site&amp;body=<?php echo rawurlencode($title) . ': ' . rawurlencode($link); ?>" data-network="email"><i class="fa fa-envelope-o"></i></a>

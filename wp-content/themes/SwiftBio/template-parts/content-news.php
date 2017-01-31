@@ -46,11 +46,7 @@ if ($post->post_type == "careers"){
             <h2 class="post-title"><?php the_title(); ?></h2>
         <?php else: ?>
             <h1 class="post-title">
-                <?php if (get_field('external_link')): ?>
-                    <a href="<?php echo get_field('external_link'); ?>" target="_blank"><?php the_title(); ?></a>
-                <?php else: ?>
-                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                <?php endif; ?>
+                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
             </h1>
         <?php endif; ?>
         <div class="body-content">
@@ -72,11 +68,13 @@ if ($post->post_type == "careers"){
                     }
                 ?>
 
+                <div class="post-text">
                 <?php if (is_single()): ?>
                     <?php the_content(); ?>
                 <?php else: ?>
-                    <?php the_excerpt(); ?> <a href="<?php the_permalink(); ?>">More &raquo;</a>
+                    <?php the_excerpt(); ?>
                 <?php endif; ?>
+                </div>
         </div>
     </div>
 <?php endwhile; endif; ?>
