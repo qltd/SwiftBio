@@ -30,7 +30,6 @@ if ($captcha_success->success==false) {
 
 } elseif ($captcha_success->success==true) {
     //This user is verified by recaptcha send the form to salesforce
-    //
     $fields = array(
         'first_name' => $_POST['first_name'],
         'last_name' => $_POST['last_name'],
@@ -100,18 +99,24 @@ if ($captcha_success->success==false) {
         'member_status' => $_POST['member_status'],
     );
 
-
-    // send a notification email to Swift for the Request Forms
-    if ($_POST['oid'] == '00DE0000000KWb6' && $_POST['00NE00000069Ark'] == '1'){
+        // send a notification email to Swift for the Request Forms
+    if ($fields['oid'] == '00DE0000000KWb6' && $fields['00NE00000069Ark'] == '1'){
         require_once("../inc/request-form-email.php");
     }
 
-
     //url-ify the data for the POST
     foreach($fields as $key=>$value) {
-        $fields_string .= $key . '=' . encode_array($value).'&';
+        if (is_array($value)){
+            $fields_string .= $key . '=' . encode_array(implode(', ', $value)).'&';
+        } else {
+            if (!empty($value)){
+                $fields_string .= $key . '=' . encode_array($value).'&';
+            }
+        }
     }
-    rtrim($fields_string, '&');
+    $fields_string = rtrim($fields_string, '&');
+
+    update_option('curl_string', $fields_string);
 
     //open connection
     $ch = curl_init();
@@ -120,9 +125,16 @@ if ($captcha_success->success==false) {
     curl_setopt($ch,CURLOPT_URL, $url);
     curl_setopt($ch,CURLOPT_POST, count($fields));
     curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
+    //Set some settings that make it all work
+    // curl_setopt($ch, CURLOPT_HEADER, FALSE);
+    // curl_setopt($ch, CURLOPT_RETURNTRANSFER, FALSE);
+    // curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
 
     //execute post
     $result = curl_exec($ch);
+
+    update_option('curl_result', $result);
+    update_option('curl_error', curl_errno($ch));
 
     //close connection
     curl_close($ch);

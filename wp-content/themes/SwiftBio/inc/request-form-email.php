@@ -185,11 +185,12 @@ ob_start();
 <?php
 $message = ob_get_clean();
 
-
 $to = 'techsupport@swiftbiosci.com';
 $subject = 'Request Form Submission';
 $headers = array('Content-Type: text/html; charset=UTF-8','From: ' . $fields['first_name'] . ' ' . $fields['last_name'] . ' <' . $fields['email'] . '>');
 
-wp_mail( $to, $subject, $message, $headers );
+if (!empty($fields)){
+    wp_mail( $to, $subject, $message, $headers );
+}
 
-return $return;
+
