@@ -31,7 +31,7 @@ class WPForms_Builder_Panel_Payments extends WPForms_Builder_Panel {
 	 * @since 1.0.0
 	 */
 	public function panel_sidebar() {
-		
+
 		// Sidebar contents are not valid unless we have a form
 		if ( !$this->form ) {
 			return;
@@ -50,7 +50,7 @@ class WPForms_Builder_Panel_Payments extends WPForms_Builder_Panel {
 	public function panel_content() {
 
 		// An array of all the active provider add-ons
-		$payments_active = apply_filters( 'wpforms_payments_available', '' );
+		$payments_active = apply_filters( 'wpforms_payments_available', array() );
 
 		if ( !$this->form ) {
 
@@ -77,7 +77,7 @@ class WPForms_Builder_Panel_Payments extends WPForms_Builder_Panel {
 				echo '<p>' . __( 'Select your email payment provider provider from the options on the left. If you don\'t see your payment service listed, then let us know and we\'ll do our best to get it added as fast as possible', 'wpforms' ) . '</p>';
 			echo '</div>';
 		}
-		
+
 		do_action( 'wpforms_payments_panel_content', $this->form );
 	}
 }

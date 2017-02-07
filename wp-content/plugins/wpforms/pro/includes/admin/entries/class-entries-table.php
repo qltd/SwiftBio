@@ -68,10 +68,11 @@ class WPForms_Entries_Table extends WP_List_Table {
 	 */
 	public function get_counts() {
 
-		$this->counts = array();
+		$this->counts            = array();
 		$this->counts['total']   = wpforms()->entry->get_entries( array( 'form_id' => $this->form_id ), true );
 		$this->counts['unread']  = wpforms()->entry->get_entries( array( 'form_id' => $this->form_id, 'viewed' => '0' ), true );
 		$this->counts['starred'] = wpforms()->entry->get_entries( array( 'form_id' => $this->form_id, 'starred' => '1' ), true );
+		$this->counts            = apply_filters( 'wpforms_entries_table_counts', $this->counts, $this->form_data );
 	}
 
 	/**
@@ -94,14 +95,15 @@ class WPForms_Entries_Table extends WP_List_Table {
 		$total   = '&nbsp;<span class="count">(<span class="total-num">' . $this->counts['total'] . '</span>)</span>';
 		$unread  = '&nbsp;<span class="count">(<span class="unread-num">' . $this->counts['unread'] . '</span>)</span>';
 		$starred = '&nbsp;<span class="count">(<span class="starred-num">' . $this->counts['starred']  . '</span>)</span>';
+		$all     = ( empty( $_GET['status'] ) && ( $current === 'all' || $current == '' ) ) ? 'class="current"' : '';
 
 		$views = array(
-			'all'		=> sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'type', $base ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'wpforms' ) . $total ),
+			'all'		=> sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'type', $base ) ), $all, __( 'All', 'wpforms' ) . $total ),
 			'unread'	=> sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'type', 'unread', $base ) ), $current === 'unread' ? ' class="current"' : '', __( 'Unread', 'wpforms' ) . $unread ),
 			'starred'	=> sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'type', 'starred', $base ) ), $current === 'starred' ? ' class="current"' : '', __( 'Starred', 'wpforms' ) . $starred ),
 		);
 
-		return $views;
+		return apply_filters( 'wpforms_entries_table_views', $views, $this->form_data, $this->counts );
 	}
 
 	/**
@@ -122,14 +124,19 @@ class WPForms_Entries_Table extends WP_List_Table {
 
 		// Additional columns for forms that contain payments
 		if ( $has_payments ) {
-			$columns['payment_status'] = __( 'Status', 'wpforms' );
-			$columns['payment_total']  = __( 'Total', 'wpforms' );
+			$columns['payment_total'] = __( 'Total', 'wpforms' );
+		}
+
+		// Show the status column if the form contains payments or if the
+		// filter is triggered by an addon
+		if ( $has_payments || apply_filters( 'wpforms_entries_table_column_status', false, $this->form_data ) ) {
+			$columns['status']  = __( 'Status', 'wpforms' );
 		}
 
 		$columns['date']       = __( 'Date', 'wpforms' );
 		$columns['actions']    = __( 'Actions', 'wpforms' );
 
-		return apply_filters( 'wpforms_entries_table_columns', $columns );
+		return apply_filters( 'wpforms_entries_table_columns', $columns, $this->form_data );
 	}
 
 	/**
@@ -140,12 +147,14 @@ class WPForms_Entries_Table extends WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 
-		return array(
+		$sortable = array(
 			'id'             => array( 'title', false ),
 			'date'           => array( 'date', false ),
-			'payment_status' => array( 'payment_status', false ),
+			'status'         => array( 'status', false ),
 			'payment_total'  => array( 'payment_total', false ),
 		);
+
+		return apply_filters( 'wpforms_entries_table_sortable', $sortable, $this->form_data );
 	}
 
 	/**
@@ -245,15 +254,22 @@ class WPForms_Entries_Table extends WP_List_Table {
 				$value = date_i18n( get_option( 'date_format' ), strtotime( $entry->date ) + ( get_option( 'gmt_offset' ) * 3600 ) );
 				break;
 
-			case 'payment_status':
+			case 'status':
 				if ( 'payment' == $entry->type ) {
+					// For payments, display dollar icon to easily indicate this
+					// status is related to a payment
 					if ( !empty( $entry->status ) ) {
 						$value = ucwords( sanitize_text_field( $entry->status ) );
 					} else {
 						$value = __( 'Unknown', 'wpforms' );
 					}
+					$value .= ' <img src="' . WPFORMS_PLUGIN_URL . '/assets/images/icon-dollar.png" alt="Payment"> ';
 				} else {
-					$value = '-';
+					if ( !empty( $entry->status ) ) {
+						$value = ucwords( sanitize_text_field( $entry->status ) );
+					} else {
+						$value = __( 'Completed', 'wpforms' );
+					}
 				}
 				break;
 
@@ -424,9 +440,6 @@ class WPForms_Entries_Table extends WP_List_Table {
 			}
 			printf( '<div class="updated"><p>%s</p></div>', _n( 'Entry successfully deleted.', 'Entries successfully deleted.', count( $ids ), 'wpforms' ) );
 		}
-
-		// Update counts
-		//$this->get_counts();
 	}
 
 	/**
@@ -467,8 +480,8 @@ class WPForms_Entries_Table extends WP_List_Table {
 		// Get entries
 		$total_items = $this->counts['total'];
 		$page        = $this->get_pagenum();
-		$order       = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-		$orderby     = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'entry_id';
+		$order       = isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : 'DESC';
+		$orderby     = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'entry_id';
 		$per_page    = $this->get_items_per_page( 'wpforms_entries_per_page', $this->per_page );
 		$data_args   = array(
 			'form_id' => $this->form_id,
@@ -486,8 +499,13 @@ class WPForms_Entries_Table extends WP_List_Table {
 			$data_args['viewed'] = '0';
 			$total_items = $this->counts['unread'];
 		}
+		if ( !empty( $_GET['status'] ) ) {
+			$data_args['status'] = sanitize_text_field( $_GET['status'] );
+			$total_items = $this->counts['abandoned'];
+		}
 
-		$data = wpforms()->entry->get_entries( $data_args );
+		$data_args = apply_filters( 'wpforms_entry_table_args', $data_args );
+		$data      = wpforms()->entry->get_entries( $data_args );
 
 		// Maybe sort by payment total
 		if ( 'payment_total' == $orderby ) {

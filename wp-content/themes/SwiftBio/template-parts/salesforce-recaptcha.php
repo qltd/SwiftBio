@@ -99,14 +99,14 @@ if ($captcha_success->success==false) {
         'member_status' => $_POST['member_status'],
     );
 
-        // send a notification email to Swift for the Request Forms
+    // send a notification email to Swift for the Request Forms
     if ($fields['oid'] == '00DE0000000KWb6' && $fields['00NE00000069Ark'] == '1'){
         require_once("../inc/request-form-email.php");
     }
 
     //url-ify the data for the POST
     foreach($fields as $key=>$value) {
-        if (is_array($value)){
+        if (is_array($value) && !empty($value)){
             $fields_string .= $key . '=' . encode_array(implode(', ', $value)).'&';
         } else {
             if (!empty($value)){

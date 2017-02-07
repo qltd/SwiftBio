@@ -149,13 +149,14 @@ class WPForms_Entries {
 				add_action( 'wpforms_entries_init',          array( $this, 'entry_details_process_notifications' ), 15, 1 );
 
 				// Entry content and metaboxes
-				add_action( 'wpforms_admin_page',            array( $this, 'entry_details'         )        );
-				add_action( 'wpforms_entry_details_content', array( $this, 'entry_details_fields'  ), 10, 2 );
-				add_action( 'wpforms_entry_details_content', array( $this, 'entry_details_notes'   ), 10, 2 );
-				add_action( 'wpforms_entry_details_content', array( $this, 'entry_details_debug'   ), 50, 2 );
-				add_action( 'wpforms_entry_details_sidebar', array( $this, 'entry_details_meta'    ), 10, 2 );
-				add_action( 'wpforms_entry_details_sidebar', array( $this, 'entry_details_payment' ), 15, 2 );
-				add_action( 'wpforms_entry_details_sidebar', array( $this, 'entry_details_actions' ), 20, 2 );
+				add_action( 'wpforms_admin_page',            array( $this, 'entry_details'             )        );
+				add_action( 'wpforms_entry_details_content', array( $this, 'entry_details_fields'      ), 10, 2 );
+				add_action( 'wpforms_entry_details_content', array( $this, 'entry_details_notes'       ), 10, 2 );
+				add_action( 'wpforms_entry_details_content', array( $this, 'entry_details_debug'       ), 50, 2 );
+				add_action( 'wpforms_entry_details_sidebar', array( $this, 'entry_details_meta'        ), 10, 2 );
+				add_action( 'wpforms_entry_details_sidebar', array( $this, 'entry_details_payment'     ), 15, 2 );
+				add_action( 'wpforms_entry_details_sidebar', array( $this, 'entry_details_actions'     ), 20, 2 );
+				add_action( 'wpforms_entry_details_sidebar', array( $this, 'entry_details_related' ), 20, 2 );
 			}
 
 			// Provide hook for add-ons
@@ -759,6 +760,22 @@ class WPForms_Entries {
 		$entry->entry_count      = wpforms()->entry->get_entries( array( 'form_id' =>  $form_data['id'] ), true );
 		$entry->entry_notes      = wpforms()->entry_meta->get_meta( array( 'entry_id' => $entry->entry_id, 'type' => 'note' ) );
 
+		// Check for other entries by this user
+		if ( !empty( $entry->user_id ) || !empty( $entry->user_uuid ) ) {
+			$args = array(
+				'form_id'   => $form_data['id'],
+				'user_id'   => !empty( $entry->user_id ) ? $entry->user_id : '',
+				'user_uuid' => !empty( $entry->user_uuid ) ? $entry->user_uuid : '',
+			);
+			$related = wpforms()->entry->get_entries( $args );
+			foreach( $related as $key => $r ) {
+				if ( $r->entry_id == $entry->entry_id ) {
+					unset( $related[$key] );
+				}
+			}
+			$entry->entry_related = $related;
+		}
+
 		// Make public
 		$this->entry = $entry;
 		$this->form  = $form;
@@ -1084,14 +1101,14 @@ class WPForms_Entries {
 
 					<p class="wpforms-entry-date">
 						<span class="dashicons dashicons-calendar"></span>
-						<?php _e( 'Submitted on:', 'wpforms' ); ?>
+						<?php _e( 'Submitted:', 'wpforms' ); ?>
 						<strong><?php echo date_i18n( __( 'M j, Y @ g:ia' ), strtotime( $entry->date ) + ( get_option( 'gmt_offset' ) * 3600 ) ); ?> </strong>
 					</p>
 
 					<?php if ( '0000-00-00 00:00:00' != $entry->date_modified ) : ?>
 					<p class="wpforms-entry-modified">
 						<span class="dashicons dashicons-calendar-alt"></span>
-						<?php _e( 'Modified on:', 'wpforms' ); ?>
+						<?php _e( 'Modified :', 'wpforms' ); ?>
 						<strong><?php echo date_i18n( __( 'M j, Y @ H:i' ), strtotime( $entry->date_modified ) + ( get_option( 'gmt_offset' ) * 3600 ) ); ?> </strong>
 					</p>
 					<?php endif; ?>
@@ -1114,6 +1131,14 @@ class WPForms_Entries {
 						<span class="dashicons dashicons-location"></span>
 						<?php _e( 'User IP:', 'wpforms' ); ?>
 						<strong><?php echo esc_html( $entry->ip_address ); ?></strong>
+					</p>
+					<?php endif; ?>
+
+					<?php if ( apply_filters( 'wpforms_entry_details_sidebar_details_status', false, $entry, $form_data ) ) : ?>
+					<p class="wpforms-entry-status">
+						<span class="dashicons dashicons-category"></span>
+						<?php _e( 'Status:', 'wpforms' ); ?>
+						<strong><?php echo !empty( $entry->status ) ? ucwords( sanitize_text_field( $entry->status ) ) : __( 'Completed', 'wpforms' ); ?></strong>
 					</p>
 					<?php endif; ?>
 
@@ -1297,6 +1322,39 @@ class WPForms_Entries {
 			),
 			'wpforms_entry_details_unread'
 		);
+
+		$action_links = array();
+
+		$action_links['print'] = array(
+			'url'    => $print_url,
+			'target' => 'blank',
+			'icon'   => 'dashicons-media-text',
+			'label'  => __( 'Print', 'wpforms' ),
+		);
+		$action_links['export'] = array(
+			'url'    => $export_url,
+			'icon'   => 'dashicons-migrate',
+			'label'  => __( 'Export (CSV)', 'wpforms' ),
+		);
+		$action_links['notifications'] = array(
+			'url'    => $notifications_url,
+			'icon'   => 'dashicons-email-alt',
+			'label'  => __( 'Resend Notifications', 'wpforms' ),
+		);
+		if ( $entry->viewed == '1') {
+			$action_links['read'] = array(
+				'url'    => $unread_url,
+				'icon'   => 'dashicons-hidden',
+				'label'  => __( 'Mark Unread', 'wpforms' ),
+			);
+		}
+		$action_links['star'] = array(
+			'url'    => $star_url,
+			'icon'   => $star_icon,
+			'label'  => $star_text,
+		);
+
+		$action_links = apply_filters( 'wpforms_entry_details_sidebar_actions_link', $action_links, $entry, $form_data );
 		?>
 
 		<!-- Entry Actions metabox -->
@@ -1308,50 +1366,75 @@ class WPForms_Entries {
 
 				<div class="wpforms-entry-actions-meta">
 
-					<p class="wpforms-entry-print">
-						<a href="<?php echo esc_url( $print_url ); ?>" target="_blank" rel="noopener">
-							<span class="dashicons dashicons-media-text"></span>
-							<?php _e( 'Print', 'wpforms' ); ?>
-						</a>
-					</p>
+					<?php
+					foreach( $action_links as $slug => $link ) {
+						$window = !empty( $link['target'] ) ? 'target="_blank" rel="noopener noreferrer"' : '';
+						printf ('<p class="wpforms-entry-%s">',  esc_attr( $slug ) );
+							printf( '<a href="%s" %s>', esc_url( $link['url'] ), $window );
+								printf( '<span class="dashicons %s"></span>', esc_attr( $link['icon'] ) );
+								echo esc_html( $link['label'] );
+							echo '</a>';
+						echo '</p>';
+					}
 
-					<p class="wpforms-entry-export">
-						<a href="<?php echo esc_url( $export_url ); ?>">
-							<span class="dashicons dashicons-migrate"></span>
-							<?php _e( 'Export (CSV)', 'wpforms' ); ?>
-						</a>
-					</p>
-
-					<p class="wpforms-entry-notifications">
-						<a href="<?php echo esc_url( $notifications_url ); ?>">
-							<span class="dashicons dashicons-email-alt"></span>
-							<?php _e( 'Resend Notifications', 'wpforms' ); ?>
-						</a>
-					</p>
-
-					<?php if ( $entry->viewed == '1') : ?>
-					<p class="wpforms-entry-read">
-						<a href="<?php echo $unread_url; ?>">
-							<span class="dashicons dashicons-hidden"></span>
-							<?php _e( 'Mark Unread', 'wpforms' ); ?>
-						</a>
-					</p>
-					<?php endif; ?>
-
-					<p class="wpforms-entry-star">
-						<a href="<?php echo $star_url; ?>">
-							<span class="dashicons <?php echo $star_icon; ?>"></span>
-							<?php echo $star_text; ?>
-						</a>
-					</p>
-
-					<?php do_action( 'wpforms_entry_details_sidebar_actions', $entry, $form_data ); ?>
+					do_action( 'wpforms_entry_details_sidebar_actions', $entry, $form_data );
+					?>
 
 				</div>
 
 			</div>
 
 		</div>
+		<?php
+	}
+
+	/**
+	 * Entry Related Entries metabox.
+	 *
+	 * @since 1.3.3
+	 * @param object $entry
+	 * @param array $form_data
+	 */
+	public function entry_details_related( $entry, $form_data ) {
+
+		// Only display if we have related entries
+		if ( empty( $entry->entry_related ) ) {
+			return;
+		}
+		?>
+
+		<!-- Entry Actions metabox -->
+		<div id="wpforms-entry-related" class="postbox">
+
+			<h2 class="hndle"><span><?php _e( 'Related Entries', 'wpforms' ); ?></span></h2>
+
+			<div class="inside">
+
+				<p><?php _e( 'The user who created this entry also submitted the entries below.', 'wpforms' ); ?></p>
+
+				<ul>
+				<?php
+				foreach( $entry->entry_related as $related ) {
+					$url = add_query_arg(
+						array(
+							'page'     => 'wpforms-entries',
+							'view'     => 'details',
+							'entry_id' => absint( $related->entry_id ),
+						),
+						admin_url( 'admin.php' )
+					);
+					echo '<li>';
+						echo '<a href="' . esc_url( $url ) . '">' . date_i18n( __( 'M j, Y @ g:ia' ), strtotime( $related->date ) + ( get_option( 'gmt_offset' ) * 3600 ) ) . '</a> ';
+						echo $related->status == 'abandoned' ? __( '(Abandoned)' ) : '';
+					echo '</li>';
+				}
+				?>
+				</ul>
+
+			</div>
+
+		</div>
+
 		<?php
 	}
 }

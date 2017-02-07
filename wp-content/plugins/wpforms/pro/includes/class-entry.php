@@ -45,6 +45,7 @@ class WPForms_Entry_Handler extends WPForms_DB {
 			'date_modified' => '%s',
 			'ip_address'    => '%s',
 			'user_agent'    => '%s',
+			'user_uuid'     => '%s',
 		);
 	}
 
@@ -77,7 +78,7 @@ class WPForms_Entry_Handler extends WPForms_DB {
 
 	/**
 	 * Get next entry.
-	 * 
+	 *
 	 * @since 1.1.5
 	 * @param int $row_id
 	 * @param int $form_id
@@ -104,7 +105,7 @@ class WPForms_Entry_Handler extends WPForms_DB {
 
 	/**
 	 * Get previous entry.
-	 * 
+	 *
 	 * @since 1.1.5
 	 * @param int $row_id
 	 * @param int $form_id
@@ -131,7 +132,7 @@ class WPForms_Entry_Handler extends WPForms_DB {
 
 	/**
 	 * Mark all entries read for a form.
-	 * 
+	 *
 	 * @since 1.1.6
 	 * @param int $form_id
 	 * @return bool
@@ -153,7 +154,7 @@ class WPForms_Entry_Handler extends WPForms_DB {
 
 	/**
 	 * Get previous entries count.
-	 * 
+	 *
 	 * @since 1.1.5
 	 * @param int $row_id
 	 * @param int $form_id
@@ -200,6 +201,7 @@ class WPForms_Entry_Handler extends WPForms_DB {
 			'type'          => '',
 			'viewed'        => '',
 			'starred'       => '',
+			'user_uuid'     => '',
 			//'date'          => '', @todo
 			//'date_modified' => '', @todo
 			'ip_address'    => '',
@@ -217,7 +219,7 @@ class WPForms_Entry_Handler extends WPForms_DB {
 		$where = '';
 
 		// Allowed int arg items
-		$keys = array( 'entry_id', 'form_id', 'post_id', 'user_id' );
+		$keys = array( 'entry_id', 'form_id', 'post_id', 'user_id', 'viewed', 'starred' );
 		foreach ( $keys as $key ) {
 
 			if ( ! empty( $args[$key] ) ) {
@@ -232,7 +234,7 @@ class WPForms_Entry_Handler extends WPForms_DB {
 		}
 
 		// Allowed string arg items
-		$keys = array( 'status', 'type', 'viewed', 'starred' );
+		$keys = array( 'status', 'type', 'user_uuid' );
 		foreach( $keys as $key ) {
 
 			if ( $args[$key] != '' ) {
@@ -282,7 +284,7 @@ class WPForms_Entry_Handler extends WPForms_DB {
 		return $results;
 	}
 
-	/** 
+	/**
 	 * Create custom entry database table.
 	 *
 	 * @since 1.0.0
@@ -317,10 +319,11 @@ class WPForms_Entry_Handler extends WPForms_DB {
 			date_modified datetime NOT NULL,
 			ip_address varchar(128) NOT NULL,
 			user_agent varchar(256) NOT NULL,
+			user_uuid varchar(36) NOT NULL,
 			PRIMARY KEY  (entry_id),
 			KEY form_id (form_id)
 		) {$charset_collate};";
 
-		$db = dbDelta( $sql );	
+		$db = dbDelta( $sql );
 	}
 }

@@ -24,7 +24,6 @@ if (!function_exists('liquidizer_table_activation')) {
 			echo 'You have no permission to activate this plugin';
 			exit();
 		} else { 
-		
 			$liquidizer_lite_options = array(
 			'liquidizer_lite_wp_table' => '1',
 			'liquidizer_lite_wp_which_table_element' => 'table',

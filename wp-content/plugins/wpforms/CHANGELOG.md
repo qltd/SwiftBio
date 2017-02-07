@@ -1,6 +1,21 @@
 # Change Log
 All notable changes to this project will be documented in this file, formatted via [this recommendation](http://keepachangelog.com/).
 
+## [1.3.3] - 2017-02-01
+### Added
+- Default value support in the email field
+- Related Entries metabox on single entry page
+- Various new hooks and filters for improved extendibility
+
+### Changed
+- Payment status is now displayed in status column, indicated with money icon
+- Multi-page scroll can be customized via JS overrides, `wpform_pageScroll`
+
+### Fixed
+- Possible errors if web host had `set_time_limit()` disabled
+- File upload failing in edge cases due to library not being loaded
+- PHP 7.1 warning message inside the form builder when using payments
+
 ## [1.3.2] - 2017-01-17
 ### Added
 - CSS class support for hidden fields, for easier targeting

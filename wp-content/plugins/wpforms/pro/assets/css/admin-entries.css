@@ -10,7 +10,7 @@
 #wpforms-entries .wpforms-clear:after {
 	clear: both;
 	content: " ";
-	display: table;	
+	display: table;
 }
 
 /* List / Table view
@@ -100,8 +100,15 @@
 	width: 150px;
 }
 
-#wpforms-entries .wp-list-table .column-payment_status {
-	width: 100px;
+#wpforms-entries .wp-list-table .column-status {
+	width: 120px;
+}
+
+#wpforms-entries .wp-list-table .column-status img {
+	display: inline-block;
+	height: 12px;
+	width: auto;
+	margin: 0 0 0 3px;
 }
 
 #wpforms-entries .wp-list-table .column-payment_total {

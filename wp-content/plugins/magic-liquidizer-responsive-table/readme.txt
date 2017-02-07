@@ -1,10 +1,10 @@
 === Magic Liquidizer Responsive Table ===
 Contributors: esstat17
-Donate link: http://www.innovedesigns.com/wordpress/magic-liquidizer-responsive-table-rwd-you-must-have-wp-plugin/
+Donate link: http://www.innovedesigns.com/
 Tags: responsive, table, fluid, mobile screens
 Requires at least: 3.0.1
-Tested up to: 4.4
-Stable tag: 1.0.8
+Tested up to: 4.7
+Stable tag: 1.0.9
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -12,11 +12,11 @@ A simple and lightweight Wordpress plugin that converts HTML &lt;table&gt; into 
 
 == Description ==
 
-A simple and lightweight Wordpress plugin that converts HTML TABLE to become responsive. It's a Responsive Web Design (RWD) that you must have for your responsive web development. HTML `tables` can cause overflow or overlaps in small screens or when dragging your browser to minimizing it for mobile screens simulation especially when the table contains large contents such as texts and images. So this is your solution!
+A simple and lightweight Wordpress plugin that transforms your normal HTML table into mobile responsive table. It's a must have Responsive Web Design (RWD) tool for developing your website. Page tables may overlap in small screens or when dragging your browser to minimizing it for mobile screens simulation especially when the table contains large contents such as texts and images. So this is your solution!
 
-`Magic Liquidizer Responsive Table plugin` - is just one of many features of <a href="http://www.innovedesigns.com/wordpress/plugin/magic-liquidizer-instant-responsive-web-design-plugin-for-wordpress/">Magic Liquidizer</a> for a complete Responsive Web Design solution such as images, texts, forms, tables, navigation menu, and other HTML elements.
+Magic Liquidizer Responsive Table plugin - is just one of many features of <a href="http://www.innovedesigns.com/wordpress/plugin/magic-liquidizer-instant-responsive-web-design-plugin-for-wordpress/">Magic Liquidizer</a> for a complete Responsive Web Design solution such as images, texts, forms, tables, navigation menu, and other HTML elements.
 
-Basically the demonstration link below is where Magic Liquidizer plugin installed, minus anything else, just observe the Responsive Table function. See <a href="http://demo.innovedesigns.com/wordpress/?page_id=24">DEMO</a>.
+The demonstration link below is where Magic Liquidizer plugin used, minus anything else, just observe the Responsive Table function. See it in action by following this <a href="http://www.innovedesigns.com/wordpress/magic-liquidizer-responsive-table-rwd-you-must-have-wp-plugin/">DEMO</a>. 
 
 If you like this plugin, good ratings is much appreciated.
 
@@ -40,7 +40,7 @@ You can find via Wordpress Dashboard > Magic Liquidizer Lite > Table.
 You can use Chrome Inspector or Firefox Firebug Extension to inspect element. But basically `table` value signifies that all &lt;table&gt; .. &lt;/table&gt; will make responsive. Please watch this video tutorial on <a href="http://youtu.be/wIxxrbAV7AY">YouTube</a>
 
 = How to make tables in two columns =
-It's very simple, just add these CSS lines to your stylesheet
+It's very simple, just add these CSS lines into your stylesheet
 `
 .ml-responsive-table dt.ml-title {
      clear: none;
@@ -60,6 +60,11 @@ It's very simple, just add these CSS lines to your stylesheet
 3. This screenshot was taken from our DEMO page AFTER installation. Client-side screenshot. screenshot-3.png
 
 == Changelog ==
+
+= 2.0.0 - 02/02/2017 =
+* [Improved] JS to support most of HTML Table Format
+* [Improved] Styling or CSS fixes
+* [Fixed] Uninstall fixes
 
 = 1.0.8 - 05/30/2016 =
 * [Modified] Utilizing add_action() called `wp_footer` instead of `wp_print_footer_scripts`
@@ -105,6 +110,12 @@ It's very simple, just add these CSS lines to your stylesheet
 * Initial Released Date
 
 == Upgrade Notice ==
+
+= 2.0.0 - 02/02/2017 =
+* [Improved] JS to support most of HTML Table Format
+* [Improved] Styling or CSS fixes
+* [Fixed] Uninstall fixes
+
 = 1.0.8 - 05/30/2016 =
 * [Modified] Utilizing add_action() called `wp_footer` instead of `wp_print_footer_scripts`
 * [Fixed] Preventing the script to kick in Wp Login Page /wp-admin

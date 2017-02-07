@@ -508,11 +508,9 @@ class WPForms_Field_File_Upload extends WPForms_Field {
 		if ( !empty( $field['media_library'] ) && '1' === $field['media_library'] ) {
 
 			// Include necessary code from core
-			if ( ! function_exists( 'wp_handle_sideload' ) ){
-				require_once( ABSPATH . 'wp-admin/includes/media.php' );
-				require_once( ABSPATH . 'wp-admin/includes/file.php' );
-				require_once( ABSPATH . 'wp-admin/includes/image.php' );
-			}
+			require_once( ABSPATH . 'wp-admin/includes/media.php' );
+			require_once( ABSPATH . 'wp-admin/includes/file.php' );
+			require_once( ABSPATH . 'wp-admin/includes/image.php' );
 
 			// Copy our file into WordPress uploads
 			$file_args = array(

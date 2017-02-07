@@ -4,7 +4,7 @@ Plugin Name: Magic Liquidizer Responsive Table
 Plugin URI: http://www.innovedesigns.com/wordpress/magic-liquidizer-responsive-table-rwd-you-must-have-wp-plugin/
 Author: Elvin D.
 Description: A simple and lightweight plugin that makes HTML &lt;table&gt; tag become responsive. After activation, go to Dashboard > Magic Liquidizer Lite > Table.
-Version: 1.0.8
+Version: 2.0.0
 Tags: responsive, table, fluid, mobile screens
 Author URI: http://innovedesigns.com/author/esstat17
 Text Domain: ml-txt
@@ -317,12 +317,12 @@ if (class_exists('magic_liquidizer_wp_class_lite') && !class_exists('MagicLiquid
  		}
  		
  		public function magic_liquidizer_table_style() {  	
-			wp_register_style( 'magic-liquidizer-table-style', plugins_url('idcss/ml-responsive-table.css', __FILE__),array(), '1.0.6', 'all');
+			wp_register_style( 'magic-liquidizer-table-style', plugins_url('idcss/ml-responsive-table.css', __FILE__),array(), '2.0.0', 'all');
   			wp_enqueue_style( 'magic-liquidizer-table-style' );
 		}
 	
  		public function magic_liquidizer_table_scripts() {    	 	 
-    		wp_register_script( 'magic-liquidizer-table', plugins_url('idjs/ml.responsive.table.min.js', __FILE__), array('jquery'), '1.0.6', false);    	
+    		wp_register_script( 'magic-liquidizer-table', plugins_url('idjs/ml.responsive.table.min.js', __FILE__), array('jquery'), '2.0.0', false);    	
     		wp_enqueue_script( 'magic-liquidizer-table');	    	
     	}
     	
@@ -344,13 +344,14 @@ if (class_exists('magic_liquidizer_wp_class_lite') && !class_exists('MagicLiquid
 	new MagicLiquidizerResponsiveTableClass();
 
 }
- 		
+
+require_once (dirname(__FILE__) . '/includes/activation.php');
+// require_once (dirname(__FILE__) .'/includes/deactivation.php');
+require_once (dirname(__FILE__) .'/includes/uninstall.php');	
+
 
 register_activation_hook(__FILE__, 'liquidizer_table_activation');
 // register_deactivation_hook(__FILE__, 'liquidizer_table_deactivation');
 register_uninstall_hook(__FILE__, 'liquidizer_table_uninstall');
 
-require_once (dirname(__FILE__) . '/includes/activation.php');
-// require_once (dirname(__FILE__) .'/includes/deactivation.php');
-require_once (dirname(__FILE__) .'/includes/uninstall.php');	
 

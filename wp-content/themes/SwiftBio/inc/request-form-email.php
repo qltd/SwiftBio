@@ -7,7 +7,7 @@ require_once("../../../../wp-load.php");
 // format the arrays into comma separated lists
 $formatted = false;
 foreach($fields as $key => $value) {
-    if (is_array($value)){
+    if (is_array($value) && !empty($value)){
         $formatted .= '<tr><td>' . $key . '</td><td>' . implode(', ', $value) . '</td></tr>';
     } else {
          $formatted .= '<tr><td>' . $key . '</td><td>' . $value . '</td></tr>';

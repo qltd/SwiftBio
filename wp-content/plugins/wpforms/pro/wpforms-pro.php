@@ -43,6 +43,7 @@ class WPForms_Pro {
 		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/payments/functions.php';
 
 		if ( is_admin() ) {
+			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/class-upgrades.php';
 			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/ajax-actions.php';
 			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/class-settings.php';
 			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/entries/class-entries.php';
@@ -157,6 +158,7 @@ class WPForms_Pro {
 		$user_id    = is_user_logged_in() ? get_current_user_id() : 0;
 		$user_ip    = wpforms_get_ip();
 		$user_agent = !empty( $_SERVER['HTTP_USER_AGENT'] ) ? substr( $_SERVER['HTTP_USER_AGENT'], 0, 256 ) : '';
+		$user_uuid  = !empty( $_COOKIE['_wpfuuid'] ) ? $_COOKIE['_wpfuuid'] : '';
 
 		// Essential data
 		$data = array(
@@ -165,6 +167,7 @@ class WPForms_Pro {
 			'fields'     => json_encode( $fields ),
 			'ip_address' => sanitize_text_field( $user_ip ),
 			'user_agent' => sanitize_text_field( $user_agent ),
+			'user_uuid'  => sanitize_text_field( $user_uuid ),
 		);
 
 		wpforms()->process->entry_id = wpforms()->entry->add( $data );
@@ -408,6 +411,9 @@ class WPForms_Pro {
 				} else {
 					echo '<p class="note" style="padding:0 20px;">' . sprintf( __( 'Install the <a href="%s">Conditional Logic add-on</a> to enable conditional logic for Email Notifications.', 'wpforms' ), admin_url( 'admin.php?page=wpforms-addons' ) ) . '</p>';
 				}
+
+				// Hook for addons
+				do_action( 'wpforms_form_settings_notifications_single_after', $settings, $id );
 
 			echo '</div>';
 		}

@@ -44,8 +44,12 @@ class WPForms_Upgrades {
 		if ( version_compare( $version, '1.1.6', '<' ) ) {
 			$this->v116_upgrade();
 		}
-		
-		// If upgrade has occured, update version options in database 
+
+		if ( version_compare( $version, '1.3.3', '<' ) ) {
+			$this->v133_upgrade();
+		}
+
+		// If upgrade has occured, update version options in database
 		if ( $this->upgraded ) {
 			update_option( 'wpforms_version_upgraded_from', $version );
 			update_option( 'wpforms_version', WPFORMS_VERSION );
@@ -60,6 +64,20 @@ class WPForms_Upgrades {
 	private function v116_upgrade() {
 
 		wpforms()->entry_meta->create_table();
+
+		$this->upgraded = true;
+	}
+
+	/**
+	 * Perform database upgrades for version 1.3.3
+	 *
+	 * @since 1.1.3
+	 */
+	private function v133_upgrade() {
+
+		global $wpdb;
+
+		$wpdb->query("ALTER TABLE {$wpdb->prefix}wpforms_entries ADD user_uuid VARCHAR(36)");
 
 		$this->upgraded = true;
 	}
