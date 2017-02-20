@@ -14,6 +14,7 @@ function encode_array($value){
     }
     return $return;
 }
+require_once("../../../../wp-load.php");
 
 $referer = (isset($_SERVER['HTTP_REFERER'])) ? str_replace('?success=true', '', str_replace('?success=false', '', $_SERVER['HTTP_REFERER'])) : 'https://' . $_SERVER['SERVER_NAME'];
 $url = (isset($_POST['web2case']) && $_POST['web2case'] == 1) ? 'https://salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8' : 'https://salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8';
