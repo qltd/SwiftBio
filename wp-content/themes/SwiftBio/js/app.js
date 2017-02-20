@@ -32,8 +32,13 @@ bgOverlay[0].addEventListener("click", function(){ toggleNav() });
 
     $('#registerform').validate();
     $('#loginform').validate();
+    console.log(window.location.href.indexOf("success"));
+    if (window.location.href.indexOf("success")){
+        $("input[name=retURL]").val(window.location);
+    } else {
+        $("input[name=retURL]").val(window.location + '?success=true');
+    }
 
-    $("input[name=retURL]").val(window.location + '?success=true');
     $("#sf-form, .sf-form").validate();
 
 /* Open PDF's in new window */
