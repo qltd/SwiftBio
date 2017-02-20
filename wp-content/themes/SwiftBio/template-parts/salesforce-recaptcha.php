@@ -70,7 +70,7 @@ if ($captcha_success == false) {
     }
     $fields_string = rtrim($fields_string, '&');
 
-    //update_option('curl_string', $fields_string);
+    update_post_meta('1', 'curl_string', $fields_string);
 
     //open connection
     $ch = curl_init();

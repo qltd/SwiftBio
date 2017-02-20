@@ -33,14 +33,29 @@ bgOverlay[0].addEventListener("click", function(){ toggleNav() });
     $('#registerform').validate();
     $('#loginform').validate();
 
-    console.log(window.location.href.indexOf("success"));
-    if (window.location.href.indexOf("success") > -1){
-        $("input[name=retURL]").val(window.location);
-    } else {
-        $("input[name=retURL]").val(window.location + '?success=true');
-    }
+    $("#sf-form, .sf-form").validate({
+        submitHandler: function(form){
+             sfForm = $(form);
 
-    $("#sf-form, .sf-form").validate();
+            $.ajax({
+              type: "POST",
+              url: "/wp-content/themes/SwiftBio/template-parts/salesforce-recaptcha.php",
+              data: sfForm.serialize(),
+              success: function(data) {
+                if (data){
+                    // show success message
+                    sfForm.html('<div id="form-message">Thank you for your inquiry.  A representative from Swift Biosciences will be in contact with you shortly regarding your inquiry.</div>');
+                    $('html, body').animate({
+                        scrollTop: $("#form-message").offset().top
+                    }, 0);
+                } else {
+                     sfForm.find('.g-recaptcha').before('<div id="form-message">ERROR: Please verify you are human.</div>');
+                    grecaptcha.reset();
+                }
+              }
+            })
+        }
+    });
 
 /* Open PDF's in new window */
 $('a[href$=".pdf"]').prop('target', '_blank');
