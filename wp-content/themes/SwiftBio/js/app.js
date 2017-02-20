@@ -32,8 +32,9 @@ bgOverlay[0].addEventListener("click", function(){ toggleNav() });
 
     $('#registerform').validate();
     $('#loginform').validate();
+
     console.log(window.location.href.indexOf("success"));
-    if (window.location.href.indexOf("success") == -1){
+    if (window.location.href.indexOf("success") > -1){
         $("input[name=retURL]").val(window.location);
     } else {
         $("input[name=retURL]").val(window.location + '?success=true');
