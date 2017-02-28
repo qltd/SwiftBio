@@ -58,12 +58,21 @@
     <?php /* if (!is_post_type_archive('careers') && !is_page('1080')): ?>
         <script src="https://www.google.com/recaptcha/api.js?onload=CaptchaCallback&render=explicit" async defer></script>
     <?php endif; */ ?>
-    <?php if (is_page(1670)): ?>
-        <script>
-            setTimeout(function(){window.location.href='/'},5000);
-        </script>
-    <?php endif; ?>
     <?php wp_footer(); ?>
+<script>
+ function convTracker(conv_id, conv_label) {
+       var image = new Image(1, 1);
+       image.src = "//www.googleadservices.com/pagead/conversion/" + conv_id + "/?label=" + conv_label + "&script=0";
+   }
+window.addEventListener('load',function(){
+jQuery('[href="mailto:TechSupport@swiftbiosci.com"]').click(function(){
+convTracker(991539610, "4rIkCJ_-7G4QmuPm2AM");
+});
+jQuery('[href="mailto:Orders@swiftbiosci.com"]').click(function(){
+convTracker(991539610, "BefeCOCL2W4QmuPm2AM");
+});
+})
 
+</script>
     </body>
 </html>
