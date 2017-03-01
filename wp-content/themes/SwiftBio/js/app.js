@@ -21,12 +21,16 @@ navClose[0].addEventListener("click", function(){ toggleNav() });
 bgOverlay[0].addEventListener("click", function(){ toggleNav() });
 
 /* Apply multiple Recaptcha's */
-    function CaptchaCallback() {
-        jQuery('div.g-recaptcha').each(function(){
-            var key = jQuery(this).data('sitekey');
-            grecaptcha.render(jQuery(this)[0], {'sitekey' : key});
-        });
-    };
+function CaptchaCallback() {
+    jQuery('div.g-recaptcha').each(function(){
+        var key = jQuery(this).data('sitekey');
+        grecaptcha.render(jQuery(this)[0], {'sitekey' : key});
+    });
+};
+
+    // function recaptchaCallback() {
+    //   $('#hiddenRecaptcha').valid();
+    // };
 
 (function($){
 
@@ -39,7 +43,28 @@ bgOverlay[0].addEventListener("click", function(){ toggleNav() });
         $("input[name=retURL]").val(window.location + '?success=true');
     }
 
-    $("#sf-form, .sf-form").validate();
+    $("#sf-form, .sf-form").each(function(){
+        $(this).validate({
+            ignore: ".ignore",
+            messages: {
+               "hiddenRecaptcha": {
+                    required: "Verify you are human."
+               }
+            },
+            rules: {
+                "hiddenRecaptcha": {
+                     required: function() {
+                         if(grecaptcha.getResponse() == '') {
+                             return true;
+                         } else {
+                             return false;
+                         }
+                     }
+                }
+            }
+        });
+    });
+
 
 /* Open PDF's in new window */
 $('a[href$=".pdf"]').prop('target', '_blank');
