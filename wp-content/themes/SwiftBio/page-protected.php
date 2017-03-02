@@ -62,17 +62,17 @@ get_header(); ?>
                             <input type="text" name="phone" id="phone" class="input" value="" size="20" required /></label>
                         </p>
                         <p>
-                            <label for="user_login">Username <span class="req">*</span><br>
-                            <input type="text" name="user_login" id="user_login" class="input" value="" size="20" required /></label>
+                            <label for="user_login">Username <span class="req">*</span></label><br>
+                            <input type="text" name="user_login" id="user_login" class="input" value="" size="20" required />
                         </p>
                         <p>
-                            <label for="user_email">Email <span class="req">*</span><br>
-                            <input type="email" name="user_email" id="user_email" class="input" value="" size="20" required /></label>
+                            <label for="user_email">Email <span class="req">*</span></label><br>
+                            <input type="email" name="user_email" id="user_email" class="input" value="" size="20" required />
                         </p>
 
                         <p>
-                            <label for="user_pass">Password <span class="req">*</span><br>
-                                <input type="password" name="pwd" id="user_pass" class="input" value="" size="20" required /></label>
+                            <label for="user_pass">Password <span class="req">*</span></label><br>
+                                <input type="password" name="pwd" id="user_pass" class="input" value="" size="20" required />
                         </p>
                                 <br class="clear">
                                 <input type="hidden" name="redirect_to" value="<?php the_permalink(); ?>">
@@ -90,12 +90,12 @@ get_header(); ?>
     <h3>Login</h3>
     <form name="loginform" id="loginform" action="/wp-login.php" method="post" _lpchecked="1">
         <p>
-            <label for="user_login">Username or Email <span class="req">*</span><br>
-                <input type="text" name="log" id="user_login" class="input" value="" size="20" required></label>
+            <label for="user_login">Username or Email <span class="req">*</span></label><br>
+                <input type="text" name="log" id="user_login" class="input" value="" size="20" required>
             </p>
             <p>
-                <label for="user_pass">Password <span class="req">*</span><br>
-                    <input type="password" name="pwd" id="user_pass" class="input" value="" size="20" required></label>
+                <label for="user_pass">Password <span class="req">*</span></label><br>
+                    <input type="password" name="pwd" id="user_pass" class="input" value="" size="20" required>
                 </p>
                 <br class="clear">
                 <p class="submit">

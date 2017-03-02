@@ -528,14 +528,14 @@ img {
   max-width: 100%;
   height: auto; }
 
-input[type=text], input[type=email], input[type=tel], textarea {
+input[type=text], input[type=email], input[type=tel], input[type=password], textarea {
   border: 1px solid #58585a; }
   @media screen and (max-width: 400px) {
-    input[type=text], input[type=email], input[type=tel], textarea {
+    input[type=text], input[type=email], input[type=tel], input[type=password], textarea {
       width: 100%;
       max-width: 280px; }
     @-ms-viewport {
-      input[type=text], input[type=email], input[type=tel], textarea {
+      input[type=text], input[type=email], input[type=tel], input[type=password], textarea {
         width: device-width; } } }
 
 input[type=file] {
