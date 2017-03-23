@@ -98,7 +98,7 @@ get_header(); ?>
                     <?php if (have_posts()) : while (have_posts()) : the_post(); $recent_post->the_post(); ?>
                     <h2><a href="<?php echo get_permalink(); ?>"><?php the_title(); ?></a></h2>
                     <p><strong>Posted <?php the_date('F j, Y'); ?></strong></p>
-                    <p><?php the_excerpt(); ?> <a href="<?php echo get_permalink(); ?>">more &raquo;</a></p>
+                    <p><?php echo(get_the_excerpt()); ?> <a href="<?php echo get_permalink(); ?>">more &raquo;</a></p>
 
                     <a href="<?php echo get_permalink(105); ?>" class="button">All News</a>
                     <?php endwhile; endif; wp_reset_postdata(); ?>
