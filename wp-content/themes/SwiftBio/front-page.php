@@ -93,13 +93,15 @@ get_header(); ?>
                             'suppress_filters' => true
                         );
 
-                        $recent_post = wp_get_recent_posts( $args, object );
+                        $recent_post = new WP_Query( $args );
                     ?>
-                    <h2><a href="<?php echo get_permalink($recent_post[0]->ID); ?>"><?php echo $recent_post[0]->post_title; ?></a></h2>
-                    <p><strong>Posted <?php echo date('F j, Y', strtotime($recent_post[0]->post_date)); ?></strong></p>
-                    <p><?php echo wp_trim_words($recent_post[0]->post_content, 50); ?> <a href="<?php echo get_permalink($recent_post[0]->ID); ?>">more &raquo;</a></p>
+                    <?php if (have_posts()) : while (have_posts()) : the_post(); $recent_post->the_post(); ?>
+                    <h2><a href="<?php echo get_permalink(); ?>"><?php the_title(); ?></a></h2>
+                    <p><strong>Posted <?php the_date('F j, Y'); ?></strong></p>
+                    <p><?php the_excerpt(); ?> </p>
 
                     <a href="<?php echo get_permalink(105); ?>" class="button">All News</a>
+                    <?php endwhile; endif; wp_reset_postdata(); ?>
                 </div>
             </div>
             </div> <!-- .features -->

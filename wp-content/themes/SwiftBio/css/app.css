@@ -1003,7 +1003,8 @@ header .menu-bar {
   .features p {
     font-size: 1.8rem; }
     .features p a {
-      white-space: nowrap; }
+      white-space: nowrap;
+      text-transform: lowercase; }
   .features .button {
     margin: 0 auto;
     clear: both; }
