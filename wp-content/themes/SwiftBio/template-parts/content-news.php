@@ -72,7 +72,7 @@ if ($post->post_type == "careers"){
                 <?php if (is_single()): ?>
                     <?php the_content(); ?>
                 <?php else: ?>
-                    <?php the_excerpt(); ?>
+                    <?php the_excerpt(); echo '<a href="' . get_the_permalink() . '">More &raquo;</a>'; ?>
                 <?php endif; ?>
                 </div>
         </div>
