@@ -1791,6 +1791,10 @@ header .menu-bar {
   .post .post-text {
     margin-top: 1.2rem; }
 
+.read-more {
+  margin-top: -20px;
+  display: block; }
+
 /* Forms */
 .salesforce_w2l_lead {
   margin-bottom: 4rem; }
