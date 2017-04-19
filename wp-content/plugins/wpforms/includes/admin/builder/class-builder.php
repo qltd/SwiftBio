@@ -147,6 +147,10 @@ class WPForms_Builder {
 	 */
 	public function enqueues() {
 
+		// Remove conflicting scripts
+		wp_deregister_script( 'serialize-object' );
+		wp_deregister_script( 'wpclef-ajax-settings' );
+
 		do_action( 'wpforms_builder_enqueues_before', $this->view );
 
 		// CSS
@@ -366,7 +370,7 @@ class WPForms_Builder {
 
 					<div class="wpforms-left">
 
-						<img src="<?php echo WPFORMS_PLUGIN_URL; ?>/assets/images/logo-builder.png" alt="Sullie WPForms mascot">
+						<img src="<?php echo WPFORMS_PLUGIN_URL; ?>assets/images/logo-builder.png" alt="Sullie WPForms mascot">
 
 					</div>
 

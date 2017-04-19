@@ -248,9 +248,9 @@ class WPForms_WP_Emails {
 	public function build_email( $message ) {
 
 		if ( false === $this->html ) {
-			$message = $this->process_tag( $message, true, true );
+			$message = $this->process_tag( $message, false, true );
 			$message = str_replace( '{all_fields}', $this->wpforms_html_field_value( false ), $message );
-			return apply_filters( 'wpforms_email_message', wp_strip_all_tags( $message ), $this );
+			return apply_filters( 'wpforms_email_message', $message, $this );
 		}
 
 		ob_start();

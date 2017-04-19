@@ -811,7 +811,7 @@ class WPForms_Entries {
 		$fields    = wpforms_decode( $this->entry->fields );
 		$form_data = wpforms_decode( $this->form->post_content );
 
-		wpforms()->process->entry_email( $fields, array(), $form_data );
+		wpforms()->process->entry_email( $fields, array(), $form_data, $this->entry->entry_id );
 
 		$this->alerts[] = array(
 			'type'    => 'success',

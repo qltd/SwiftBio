@@ -1964,7 +1964,7 @@
 			$(document).on('click', '#wpforms-embed', function(e) {
 				e.preventDefault();
 				var content = wpforms_builder.embed_modal;
-					content += '<input type=\'text\' value=\'[wpforms id="' + s.formID + '"]\' disabled id=\'wpforms-embed-shortcode\'>';
+					content += '<input type=\'text\' value=\'[wpforms id="' + s.formID + '"]\' readonly id=\'wpforms-embed-shortcode\'>';
 					content += wpforms_builder.embed_modal_2;
 					content += '<br><br><iframe width="600" height="338" src="https://www.youtube-nocookie.com/embed/IxGVz3AjEe0?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
 				$.alert({
@@ -2090,7 +2090,7 @@
 					$dest = $(this).parent().parent().find('.key-destination');
 					name  = $dest.data('name');
 					if (value) {
-						$dest.attr('name', name.replace('{source}', value.replace(/[^0-9a-z_-]/gi, '')));
+						$dest.attr('name', name.replace('{source}', value.replace(/[^0-9a-zA-Z_-]/gi, '')));
 					}
 			})
 

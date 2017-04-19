@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: WooCommerce Purchase Order Payment Gateway
- * Plugin URI: http://woothemes.com/products/woocommerce-gateway-purchase-order/
+ * Plugin URI: https://woocommerce.com/products/woocommerce-gateway-purchase-order/
  * Description: Receive payments via purchase order with Woocommerce.
- * Version: 1.1.3
- * Author: WooThemes
- * Author URI: http://woothemes.com/
+ * Version: 1.1.4
+ * Author: WooCommerce
+ * Author URI: https://woocommerce.com
  * Requires at least: 4.1.0
  * Tested up to: 4.1.0
  *
@@ -47,7 +47,7 @@ function woocommerce_gateway_purchase_order_init () {
 	load_plugin_textdomain( 'woocommerce-gateway-purchase-order', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 
 	// Additional admin screen logic.
-	require_once( 'classes/class-woocommerce-gateway-purchase-order-admin.php' );
+	require_once( 'includes/class-woocommerce-gateway-purchase-order-admin.php' );
 	Woocommerce_Gateway_Purchase_Order_Admin();
 } // End woocommerce_gateway_purchase_order_init()
 add_action( 'plugins_loaded', 'woocommerce_gateway_purchase_order_init', 0 );
@@ -60,7 +60,7 @@ add_action( 'plugins_loaded', 'woocommerce_gateway_purchase_order_init', 0 );
  * @return array          The modified array of registered payment gateways.
  */
 function woocommerce_gateway_purchase_order_register_gateway ( $methods ) {
-	require_once( 'classes/class-woocommerce-gateway-purchase-order.php' );
+	require_once( 'includes/class-woocommerce-gateway-purchase-order.php' );
 
 	$methods[] = 'Woocommerce_Gateway_Purchase_Order';
 	return $methods;

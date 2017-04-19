@@ -77,8 +77,8 @@ class WPForms_Review {
 			<p><?php _e( 'Hey, I noticed you collected over 50 entries from WPForms - that’s awesome! Could you please do me a BIG favor and give it a 5-star rating on WordPress to help us spread the word and boost our motivation?', 'wpforms' ); ?></p>
 			<p><strong><?php _e( '~ Syed Balkhi<br>Co-Founder of WPForms', 'wpforms' ); ?></strong></p>
 			<p>
-				<a href="https://wordpress.org/support/plugin/wpforms-lite/reviews/?filter=5#new-post" class="wpforms-dismiss-review-notice wpforms-review-out" target="_blank" rel="noopener"><?php _e( 'Ok, you deserve it', 'wpforms' ); ?></a> &#8226;
-				<a href="#" class="wpforms-dismiss-review-notice" target="_blank" rel="noopener"><?php _e( 'Nope, maybe later', 'wpforms' ); ?></a> &#8226;
+				<a href="https://wordpress.org/support/plugin/wpforms-lite/reviews/?filter=5#new-post" class="wpforms-dismiss-review-notice wpforms-review-out" target="_blank" rel="noopener"><?php _e( 'Ok, you deserve it', 'wpforms' ); ?></a><br>
+				<a href="#" class="wpforms-dismiss-review-notice" target="_blank" rel="noopener"><?php _e( 'Nope, maybe later', 'wpforms' ); ?></a><br>
 				<a href="#" class="wpforms-dismiss-review-notice" target="_blank" rel="noopener"><?php _e( 'I already did', 'wpforms' ); ?></a>
 			</p>
 		</div>

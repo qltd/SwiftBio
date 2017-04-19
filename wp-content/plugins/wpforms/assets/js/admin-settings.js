@@ -35,8 +35,9 @@
 		 */
 		ready: function() {
 
-			s.tabs     = $('#wpforms-tabs');
-			s.tabs_nav = $('#wpforms-tabs-nav');
+			s.tabs            = $('#wpforms-tabs');
+			s.tabs_nav        = $('#wpforms-tabs-nav');
+			s.integrationFocus = WPFormsSettings.getQueryString('wpforms-integration');
 
 			// If we have a hash and it begins with "wpforms-tab", set the proper tab to be opened.
 			if ( s.tabs_hash && s.tabs_hash.indexOf('wpforms-tab-') >= 0 ) {
@@ -44,9 +45,18 @@
 				s.tabs_nav.find('a[href="' + s.tabs_hash_sani + '"]').addClass('wpforms-active nav-tab-active');
 				s.tabs.find(s.tabs_hash_sani).addClass('wpforms-active').show();
 			}
+
+			// After settings are loaded, fade in the settings
 			$('.wpforms-circle-loader').fadeOut('fast', function() {
 				$('#wpforms-tabs').fadeIn('fast');
 				$('.wpforms-circle-loader').remove();
+
+				// Scroll to the integration if focused on one
+				if ( s.integrationFocus ) {
+					$('body').animate({
+						scrollTop: $('#wpforms-integration-'+s.integrationFocus).offset().top
+					}, 1000);
+				}
 			});
 
 			// Load color pickers
@@ -63,7 +73,7 @@
 			// Change tabs on click.
 			$(document).on('click', '#wpforms-tabs-nav a', function(e){
 				e.preventDefault();
-	
+
 				var $this = $(this);
 				if ( $this.hasClass('wpforms-active') ) {
 					return;
@@ -74,13 +84,14 @@
 					s.tabs.find(current).removeClass('wpforms-active').hide();
 					s.tabs.find($this.attr('href')).addClass('wpforms-active').show();
 				}
-			});		
+			});
 
 			// Integrations tab accounts toggle
 			$(document).on('click', '.wpforms-settings-provider-header', function(e) {
 				e.preventDefault();
 				$(this).parent().find('.wpforms-settings-provider-accounts').slideToggle();
-			});	
+				$(this).parent().find('.wpforms-settings-provider-logo i').toggleClass('fa-chevron-right fa-chevron-down');
+			});
 
 			$(document).on('click', '.wpforms-settings-provider-accounts-toggle a', function(e) {
 				e.preventDefault();
@@ -98,7 +109,7 @@
 				if ( r != true ) {
 					return false;
 				}
-				
+
 				var data = {
 					action  : 'wpforms_settings_provider_disconnect',
 					provider: $this.data('provider'),
@@ -186,7 +197,18 @@
 				// Now that everything has been set, let's open up the frame.
 				s.media_frame.open();
 			})
-		}
+		},
+
+		/**
+		 * Get query string in a URL.
+		 *
+		 * @since 1.3.6
+		 */
+		getQueryString: function(name) {
+
+			var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+			return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+		},
 	}
 
 	WPFormsSettings.init();

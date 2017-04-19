@@ -682,6 +682,11 @@ var acf;
 			// filter out fields
 			if( !all ) {
 				
+				// remove clone fields
+				$fields = $fields.not('.acf-clone .acf-field');
+				
+				
+				// filter
 				$fields = acf.apply_filters('get_fields', $fields);
 								
 			}
@@ -1831,45 +1836,229 @@ var acf;
 		
 		str_sanitize: function( string ) {
 			
-			// vars
-			var string2 = '',
-				replace = {
-				'æ': 'a',
-				'å': 'a',
-				'á': 'a',
-				'ä': 'a',
-				'č': 'c',
-				'ď': 'd',
-				'è': 'e',
-				'é': 'e',
-				'ě': 'e',
-				'ë': 'e',
-				'í': 'i',
-				'ĺ': 'l',
-				'ľ': 'l',
-				'ň': 'n',
-				'ø': 'o',
-				'ó': 'o',
-				'ô': 'o',
-				'ő': 'o',
-				'ö': 'o',
-				'ŕ': 'r',
-				'š': 's',
-				'ť': 't',
-				'ú': 'u',
-				'ů': 'u',
-				'ű': 'u',
-				'ü': 'u',
-				'ý': 'y',
-				'ř': 'r',
-				'ž': 'z',
-				' ': '_',
+			// chars (https://jsperf.com/replace-foreign-characters)
+			var map = {
+	            "À": "A",
+	            "Á": "A",
+	            "Â": "A",
+	            "Ã": "A",
+	            "Ä": "A",
+	            "Å": "A",
+	            "Æ": "AE",
+	            "Ç": "C",
+	            "È": "E",
+	            "É": "E",
+	            "Ê": "E",
+	            "Ë": "E",
+	            "Ì": "I",
+	            "Í": "I",
+	            "Î": "I",
+	            "Ï": "I",
+	            "Ð": "D",
+	            "Ñ": "N",
+	            "Ò": "O",
+	            "Ó": "O",
+	            "Ô": "O",
+	            "Õ": "O",
+	            "Ö": "O",
+	            "Ø": "O",
+	            "Ù": "U",
+	            "Ú": "U",
+	            "Û": "U",
+	            "Ü": "U",
+	            "Ý": "Y",
+	            "ß": "s",
+	            "à": "a",
+	            "á": "a",
+	            "â": "a",
+	            "ã": "a",
+	            "ä": "a",
+	            "å": "a",
+	            "æ": "ae",
+	            "ç": "c",
+	            "è": "e",
+	            "é": "e",
+	            "ê": "e",
+	            "ë": "e",
+	            "ì": "i",
+	            "í": "i",
+	            "î": "i",
+	            "ï": "i",
+	            "ñ": "n",
+	            "ò": "o",
+	            "ó": "o",
+	            "ô": "o",
+	            "õ": "o",
+	            "ö": "o",
+	            "ø": "o",
+	            "ù": "u",
+	            "ú": "u",
+	            "û": "u",
+	            "ü": "u",
+	            "ý": "y",
+	            "ÿ": "y",
+	            "Ā": "A",
+	            "ā": "a",
+	            "Ă": "A",
+	            "ă": "a",
+	            "Ą": "A",
+	            "ą": "a",
+	            "Ć": "C",
+	            "ć": "c",
+	            "Ĉ": "C",
+	            "ĉ": "c",
+	            "Ċ": "C",
+	            "ċ": "c",
+	            "Č": "C",
+	            "č": "c",
+	            "Ď": "D",
+	            "ď": "d",
+	            "Đ": "D",
+	            "đ": "d",
+	            "Ē": "E",
+	            "ē": "e",
+	            "Ĕ": "E",
+	            "ĕ": "e",
+	            "Ė": "E",
+	            "ė": "e",
+	            "Ę": "E",
+	            "ę": "e",
+	            "Ě": "E",
+	            "ě": "e",
+	            "Ĝ": "G",
+	            "ĝ": "g",
+	            "Ğ": "G",
+	            "ğ": "g",
+	            "Ġ": "G",
+	            "ġ": "g",
+	            "Ģ": "G",
+	            "ģ": "g",
+	            "Ĥ": "H",
+	            "ĥ": "h",
+	            "Ħ": "H",
+	            "ħ": "h",
+	            "Ĩ": "I",
+	            "ĩ": "i",
+	            "Ī": "I",
+	            "ī": "i",
+	            "Ĭ": "I",
+	            "ĭ": "i",
+	            "Į": "I",
+	            "į": "i",
+	            "İ": "I",
+	            "ı": "i",
+	            "Ĳ": "IJ",
+	            "ĳ": "ij",
+	            "Ĵ": "J",
+	            "ĵ": "j",
+	            "Ķ": "K",
+	            "ķ": "k",
+	            "Ĺ": "L",
+	            "ĺ": "l",
+	            "Ļ": "L",
+	            "ļ": "l",
+	            "Ľ": "L",
+	            "ľ": "l",
+	            "Ŀ": "L",
+	            "ŀ": "l",
+	            "Ł": "l",
+	            "ł": "l",
+	            "Ń": "N",
+	            "ń": "n",
+	            "Ņ": "N",
+	            "ņ": "n",
+	            "Ň": "N",
+	            "ň": "n",
+	            "ŉ": "n",
+	            "Ō": "O",
+	            "ō": "o",
+	            "Ŏ": "O",
+	            "ŏ": "o",
+	            "Ő": "O",
+	            "ő": "o",
+	            "Œ": "OE",
+	            "œ": "oe",
+	            "Ŕ": "R",
+	            "ŕ": "r",
+	            "Ŗ": "R",
+	            "ŗ": "r",
+	            "Ř": "R",
+	            "ř": "r",
+	            "Ś": "S",
+	            "ś": "s",
+	            "Ŝ": "S",
+	            "ŝ": "s",
+	            "Ş": "S",
+	            "ş": "s",
+	            "Š": "S",
+	            "š": "s",
+	            "Ţ": "T",
+	            "ţ": "t",
+	            "Ť": "T",
+	            "ť": "t",
+	            "Ŧ": "T",
+	            "ŧ": "t",
+	            "Ũ": "U",
+	            "ũ": "u",
+	            "Ū": "U",
+	            "ū": "u",
+	            "Ŭ": "U",
+	            "ŭ": "u",
+	            "Ů": "U",
+	            "ů": "u",
+	            "Ű": "U",
+	            "ű": "u",
+	            "Ų": "U",
+	            "ų": "u",
+	            "Ŵ": "W",
+	            "ŵ": "w",
+	            "Ŷ": "Y",
+	            "ŷ": "y",
+	            "Ÿ": "Y",
+	            "Ź": "Z",
+	            "ź": "z",
+	            "Ż": "Z",
+	            "ż": "z",
+	            "Ž": "Z",
+	            "ž": "z",
+	            "ſ": "s",
+	            "ƒ": "f",
+	            "Ơ": "O",
+	            "ơ": "o",
+	            "Ư": "U",
+	            "ư": "u",
+	            "Ǎ": "A",
+	            "ǎ": "a",
+	            "Ǐ": "I",
+	            "ǐ": "i",
+	            "Ǒ": "O",
+	            "ǒ": "o",
+	            "Ǔ": "U",
+	            "ǔ": "u",
+	            "Ǖ": "U",
+	            "ǖ": "u",
+	            "Ǘ": "U",
+	            "ǘ": "u",
+	            "Ǚ": "U",
+	            "ǚ": "u",
+	            "Ǜ": "U",
+	            "ǜ": "u",
+	            "Ǻ": "A",
+	            "ǻ": "a",
+	            "Ǽ": "AE",
+	            "ǽ": "ae",
+	            "Ǿ": "O",
+	            "ǿ": "o",
+	            
+	            // extra
+	            ' ': '_',
 				'\'': '',
 				'?': '',
 				'/': '',
 				'\\': '',
 				'.': '',
 				',': '',
+				'`': '',
 				'>': '',
 				'<': '',
 				'"': '',
@@ -1880,37 +2069,24 @@ var acf;
 				'}': '',
 				'(': '',
 				')': ''
-			};
+	        };
+			
+		    
+		    // vars
+		    var regexp = /\W/g,
+		        mapping = function (c) { return (typeof map[c] !== 'undefined') ? map[c] : c; };
 			
 			
-			// lowercase
+			// replace
+			string = string.replace(regexp, mapping);
+			
+			
+			// lower case
 			string = string.toLowerCase();
 			
-			
-			// loop through characters
-			for( i = 0; i < string.length; i++ ) {
-				
-				// character
-				var c = string.charAt(i);
-				
-				
-				// override c with replacement
-				if( typeof replace[c] !== 'undefined' ) {
-					
-					c = replace[c];
-						
-				}
-				
-				
-				// append
-				string2 += c;
-					
-			}
-			
-			
 			// return
-			return string2;
-				
+			return string;
+						
 		},
 		
 		
@@ -2755,116 +2931,286 @@ var acf;
 		active: 0,
 		
 		actions: {
-			'refresh': 	'refresh'
+			'prepare 99': 	'prepare',
+			'refresh': 		'refresh'
 		},
 		
-		refresh: function( $el ){
+		prepare: function(){
 			
-			//console.log('acf.layout.refresh', $el);
+			// vars
+			this.active = 1;
+			
+			
+			// render
+			this.refresh();
+			
+		},
+		
+		refresh: function( $el ){ 
+			
+			// bail early if not yet active
+			if( !this.active ) return;
+			
 			
 			// defaults
-			$el = $el || false;
+			$el = $el || $('body');
 			
 			
-			// if is '.acf-fields'
-			if( $el && $el.is('.acf-fields') ) {
+			// reference
+			var self = this;
+			
+			
+			// render
+			this.render_tables( $el );
+			this.render_groups( $el );
+			
+		},
+		
+		render_tables: function( $el ){ 
+			
+			// reference
+			var self = this;
+			
+			
+			// vars
+			var $tables = $el.find('.acf-table:visible');
+			
+			
+			// appent self if is tr
+			if( $el.is('tr') ) {
 				
-				$el = $el.parent();
+				$tables = $el.parent().parent();
 				
 			}
 			
 			
-			// loop over visible fields
-			$('.acf-fields:visible', $el).each(function(){
+			// loop
+			$tables.each(function(){
 				
-				// vars
-				var $els = $(),
-					top = 0,
-					height = 0,
-					cell = -1;
-				
-				
-				// get fields
-				var $fields = $(this).children('.acf-field[data-width]:visible');
-				
-				
-				// bail early if no fields
-				if( !$fields.exists() ) {
-					
-					return;
-					
-				}
-				
-				
-				// reset fields
-				$fields.removeClass('acf-r0 acf-c0').css({'min-height': 0});
-				
-				
-				$fields.each(function( i ){
-					
-					// vars
-					var $el = $(this),
-						this_top = $el.position().top;
-					
-					
-					// set top
-					if( i == 0 ) {
-						
-						top = this_top;
-						
-					}
-					
-					
-					// detect new row
-					if( this_top != top ) {
-						
-						// set previous heights
-						$els.css({'min-height': (height+1)+'px'});
-						
-						// reset
-						$els = $();
-						top = $el.position().top; // don't use variable as this value may have changed due to min-height css
-						height = 0;
-						cell = -1;
-						
-					}
-					
-											
-					// increase
-					cell++;
-				
-					// set height
-					height = ($el.outerHeight() > height) ? $el.outerHeight() : height;
-					
-					// append
-					$els = $els.add( $el );
-					
-					// add classes
-					if( this_top == 0 ) {
-						
-						$el.addClass('acf-r0');
-						
-					} else if( cell == 0 ) {
-						
-						$el.addClass('acf-c0');
-						
-					}
-					
-				});
-				
-				
-				// clean up
-				if( $els.exists() ) {
-					
-					$els.css({'min-height': (height+1)+'px'});
-					
-				}
-				
+				self.render_table( $(this) );
 				
 			});
 			
-			//console.timeEnd('acf.width.render');
-
+		},
+		
+		render_table: function( $table ){
+			
+			// vars
+			var $ths = $table.find('> thead th.acf-th'),
+				colspan = 1,
+				available_width = 100;
+			
+			
+			// bail early if no $ths
+			if( !$ths.exists() ) return;
+			
+			
+			// vars
+			var $trs = $table.find('> tbody > tr'),
+				$tds = $trs.find('> td.acf-field');
+			
+			
+			// remove clones if has visible rows
+			if( $trs.hasClass('acf-clone') && $trs.length > 1 ) {
+				
+				$tds = $trs.not('.acf-clone').find('> td.acf-field');
+				
+			}
+			
+			
+			// render th/td visibility
+			$ths.each(function(){
+				
+				// vars
+				var $th = $(this),
+					key = $th.attr('data-key'),
+					$td = $tds.filter('[data-key="'+key+'"]');
+				
+				// clear class
+				$td.removeClass('appear-empty');
+				$th.removeClass('hidden-by-conditional-logic');
+				
+				
+				// no td
+				if( !$td.exists() ) {
+					
+					// do nothing
+				
+				// if all td are hidden
+				} else if( $td.not('.hidden-by-conditional-logic').length == 0 ) {
+					
+					$th.addClass('hidden-by-conditional-logic');
+				
+				// if 1 or more td are visible
+				} else {
+					
+					$td.filter('.hidden-by-conditional-logic').addClass('appear-empty');
+					
+				}
+				
+			});
+			
+			
+			
+			// clear widths
+			$ths.css('width', 'auto');
+			
+			
+			// update $ths
+			$ths = $ths.not('.hidden-by-conditional-logic');
+			
+			
+			// set colspan
+			colspan = $ths.length;
+			
+			
+			// set custom widths first
+			$ths.filter('[data-width]').each(function(){
+				
+				// vars
+				var width = parseInt( $(this).attr('data-width') );
+				
+				
+				// remove from available
+				available_width -= width;
+				
+				
+				// set width
+				$(this).css('width', width + '%');
+				
+			});
+			
+			
+			// update $ths
+			$ths = $ths.not('[data-width]');
+			
+			
+			// set custom widths first
+			$ths.each(function(){
+				
+				// cal width
+				var width = available_width / $ths.length;
+				
+				
+				// set width
+				$(this).css('width', width + '%');
+				
+			});
+			
+			
+			// update colspan
+			$table.find('.acf-row .acf-field.-collapsed-target').removeAttr('colspan');
+			$table.find('.acf-row.-collapsed .acf-field.-collapsed-target').attr('colspan', colspan);
+			
+		},
+		
+		render_groups: function( $el ){
+			
+			// reference
+			var self = this;
+			
+			
+			// vars
+			var $groups = $el.find('.acf-fields:visible');
+			
+			
+			// appent self if is '.acf-fields'
+			if( $el && $el.is('.acf-fields') ) {
+				
+				$groups = $groups.add( $el );
+				
+			}
+			
+			
+			// loop
+			$groups.each(function(){
+				
+				self.render_group( $(this) );
+				
+			});
+			
+		},
+		
+		render_group: function( $el ){
+			
+			// vars
+			var $els = $(),
+				top = 0,
+				height = 0,
+				cell = -1;
+			
+			
+			// get fields
+			var $fields = $el.children('.acf-field[data-width]:visible');
+			
+			
+			// bail early if no fields
+			if( !$fields.exists() ) return;
+			
+			
+			// reset fields
+			$fields.removeClass('acf-r0 acf-c0').css({'min-height': 0});
+			
+			
+			// loop
+			$fields.each(function( i ){
+				
+				// vars
+				var $el = $(this),
+					this_top = $el.position().top;
+				
+				
+				// set top
+				if( i == 0 ) top = this_top;
+				
+				
+				// detect new row
+				if( this_top != top ) {
+					
+					// set previous heights
+					$els.css({'min-height': (height+1)+'px'});
+					
+					// reset
+					$els = $();
+					top = $el.position().top; // don't use variable as this value may have changed due to min-height css
+					height = 0;
+					cell = -1;
+					
+				}
+				
+								
+				// increase
+				cell++;
+				
+				
+				// set height
+				height = ($el.outerHeight() > height) ? $el.outerHeight() : height;
+				
+				
+				// append
+				$els = $els.add( $el );
+				
+				
+				// add classes
+				if( this_top == 0 ) {
+					
+					$el.addClass('acf-r0');
+					
+				} else if( cell == 0 ) {
+					
+					$el.addClass('acf-c0');
+					
+				}
+				
+			});
+			
+			
+			// clean up
+			if( $els.exists() ) {
+				
+				$els.css({'min-height': (height+1)+'px'});
+				
+			}
 			
 		}
 		
@@ -3324,6 +3670,28 @@ var acf;
 		
 	}, 999);
 */
+
+
+	/*
+	*  indexOf
+	*
+	*  This function will provide compatibility for ie8
+	*
+	*  @type	function
+	*  @date	5/3/17
+	*  @since	5.5.10
+	*
+	*  @param	n/a
+	*  @return	n/a
+	*/
+	
+	if( !Array.prototype.indexOf ) {
+		
+	    Array.prototype.indexOf = function(val) {
+	        return $.inArray(val, this);
+	    };
+	    
+	}
 	
 })(jQuery);
 
@@ -4123,13 +4491,13 @@ var acf;
 			
 			
 			// calculate visibility
-			for( var i in groups ) {
+			for( var i = 0; i < groups.length; i++ ) {
 				
 				// vars
 				var group = groups[i],
 					match_group	= true;
 				
-				for( var k in group ) {
+				for( var k = 0; k < group.length; k++ ) {
 					
 					// vars
 					var rule = group[k];
@@ -4590,6 +4958,10 @@ var acf;
 			// add date picker
 			acf.datepicker.init( this.$input, args );
 			
+			
+			// action for 3rd party customization
+			acf.do_action('date_picker_init', this.$input, args, this.$field);
+			
 		},
 		
 		initialize2: function(){
@@ -4629,6 +5001,10 @@ var acf;
 			
 			// now change the format back to how it should be.
 			this.$input.datepicker( 'option', 'dateFormat', dateFormat );
+			
+			
+			// action for 3rd party customization
+			acf.do_action('date_picker_init', this.$input, args, this.$field);
 			
 		},
 		
@@ -4811,6 +5187,10 @@ var acf;
 			
 			// add date time picker
 			acf.datetimepicker.init( this.$input, args );
+			
+			
+			// action for 3rd party customization
+			acf.do_action('date_time_picker_init', this.$input, args, this.$field);
 			
 		},
 		
@@ -5208,17 +5588,27 @@ var acf;
 		get_file_info: function( $file_input, $hidden_input ){
 			
 			// vars
-			var attachment = {};
+			var val = $file_input.val(),
+				attachment = {};
+			
+			
+			// bail early if no value
+			if( !val ) {
+				
+				$hidden_input.val('');
+				return;
+				
+			}
 			
 			
 			// url
-			attachment.url = $file_input.val();
+			attachment.url = val;
 			
 			
 			// modern browsers
 			var files = $file_input[0].files;
 			
-			if( files ){
+			if( files.length ){
 				
 				// vars
 				var file = files[0];
@@ -5256,7 +5646,7 @@ var acf;
 				}
 				
 			}
-				
+			
 			
 			// set hidden input value
 			$hidden_input.val( jQuery.param(attachment) );
@@ -5594,6 +5984,10 @@ var acf;
 				self.update( lat, lng ).sync();
 			
 			});
+			
+			
+			// action for 3rd party customization
+			acf.do_action('google_map_init', this.map, this.map.marker, this.$field);
 			
 			
 	        // add to maps
@@ -7431,62 +7825,63 @@ var acf;
 			// extend
 			wp.media.view.AttachmentCompat = AttachmentCompat.extend({
 				
+				add_acf_expand_button: function(){
+					
+					// vars
+					var $el = this.$el.closest('.media-modal');
+					
+					
+					// does button already exist?
+					if( $el.find('.media-frame-router .acf-expand-details').exists() ) return;
+					
+					
+					// create button
+					var $a = $([
+						'<a href="#" class="acf-expand-details">',
+							'<span class="is-closed"><span class="acf-icon -left small grey"></span>' + acf._e('expand_details') +  '</span>',
+							'<span class="is-open"><span class="acf-icon -right small grey"></span>' + acf._e('collapse_details') +  '</span>',
+						'</a>'
+					].join('')); 
+					
+					
+					// add events
+					$a.on('click', function( e ){
+						
+						e.preventDefault();
+						
+						if( $el.hasClass('acf-expanded') ) {
+						
+							$el.removeClass('acf-expanded');
+							
+						} else {
+							
+							$el.addClass('acf-expanded');
+							
+						}
+						
+					});
+					
+					
+					// append
+					$el.find('.media-frame-router').append( $a );
+					
+				},
+				
 				render: function() {
-					
-					// reference
-					var self = this;
-					
 					
 					// validate
 					if( this.ignore_render ) return this;
 					
 					
-					// add button
+					// reference
+					var self = this;
+					
+					
+					// add expand button
 					setTimeout(function(){
 						
-						// vars
-						var $media_model = self.$el.closest('.media-modal');
+						self.add_acf_expand_button();
 						
-						
-						// does button already exist?
-						if( $media_model.find('.media-frame-router .acf-expand-details').exists() ) {
-						
-							return;	
-							
-						}
-						
-						
-						// create button
-						var $a = $([
-							'<a href="#" class="acf-expand-details">',
-								'<span class="is-closed"><span class="acf-icon -left small grey"></span>' + acf._e('expand_details') +  '</span>',
-								'<span class="is-open"><span class="acf-icon -right small grey"></span>' + acf._e('collapse_details') +  '</span>',
-							'</a>'
-						].join('')); 
-						
-						
-						// add events
-						$a.on('click', function( e ){
-							
-							e.preventDefault();
-							
-							if( $media_model.hasClass('acf-expanded') ) {
-							
-								$media_model.removeClass('acf-expanded');
-								
-							} else {
-								
-								$media_model.addClass('acf-expanded');
-								
-							}
-							
-						});
-						
-						
-						// append
-						$media_model.find('.media-frame-router').append( $a );
-							
-					
 					}, 0);
 					
 					
@@ -7619,7 +8014,7 @@ var acf;
 	        // bail early if no value
 	        if( !new_url ) {
 		        
-		        this.clear( $el );
+		        this.clear();
 		        return;
 		        
 	        }
@@ -7671,8 +8066,7 @@ var acf;
 			var ajax_data = acf.prepare_for_ajax({
 				'action'	: 'acf/fields/oembed/search',
 				's'			: s,
-				'width'		: this.$el.data('width'),
-				'height'	: this.$el.data('height')
+				'field_key'	: this.$field.data('key')
 			});
 			
 			
@@ -7685,7 +8079,7 @@ var acf;
 				url: acf.get('ajaxurl'),
 				data: ajax_data,
 				type: 'post',
-				dataType: 'html',
+				dataType: 'json',
 				context: this,
 				success: this.search_success
 			});
@@ -7696,7 +8090,7 @@ var acf;
 			
 		},
 		
-		search_success: function( html ){
+		search_success: function( json ){
 			
 			// vars
 			var s = this.$search.val();
@@ -7707,7 +8101,7 @@ var acf;
 			
 			
 			// error
-			if( !html ) {
+			if( !json || !json.html ) {
 				
 				this.$el.removeClass('has-value').addClass('has-error');
 				return;
@@ -7722,7 +8116,7 @@ var acf;
 			// update vars
 			this.$input.val( s );
 			this.$title.html( s );
-			this.$embed.html( html );
+			this.$embed.html( json.html );
 			
 		},
 				
@@ -8583,13 +8977,18 @@ var acf;
 		*  @return	(mixed)
 		*/
 		
-		init: function( $select, args ){
+		init: function( $select, args, $field ){
 			
 			// bail early if no version found
 			if( !this.version ) return;
 			
 			
 			// defaults
+			args = args || {};
+			$field = $field || null;
+			
+			
+			// merge
 			args = $.extend({
 				allow_null:		false,
 				placeholder:	'',
@@ -8602,12 +9001,12 @@ var acf;
 			// v3
 			if( this.version == 3 ) {
 				
-				return this.init_v3( $select, args );
+				return this.init_v3( $select, args, $field );
 			
 			// v4
 			} else if( this.version == 4 ) {
 				
-				return this.init_v4( $select, args );
+				return this.init_v4( $select, args, $field );
 				
 			}
 			
@@ -8777,7 +9176,7 @@ var acf;
 		*  @return	$post_id (int)
 		*/
 		
-		get_ajax_data: function( args, params ){
+		get_ajax_data: function( args, params, $el, $field ){
 			
 			// vars
 			var data = acf.prepare_for_ajax({
@@ -8789,7 +9188,7 @@ var acf;
 			
 			
 			// filter
-			data = acf.apply_filters( 'select2_ajax_data', data, args, params );
+			data = acf.apply_filters( 'select2_ajax_data', data, args, $el, $field );
 			
 			
 			// return
@@ -8918,7 +9317,7 @@ var acf;
 		*  @return	args (object)
 		*/
 		
-		init_v3: function( $select, args ){
+		init_v3: function( $select, args, $field ){
 					
 			// vars
 			var $input = $select.siblings('input');
@@ -9037,7 +9436,7 @@ var acf;
 						
 						
 						// return
-						return acf.select2.get_ajax_data(args, params);
+						return acf.select2.get_ajax_data(args, params, $input, $field);
 						
 					},
 					results: function( data, page ){
@@ -9074,7 +9473,7 @@ var acf;
 			
 			
 			// filter for 3rd party customization
-			select2_args = acf.apply_filters( 'select2_args', select2_args, $select, args );
+			select2_args = acf.apply_filters( 'select2_args', select2_args, $select, args, $field );
 			
 			
 			// add select2
@@ -9132,6 +9531,10 @@ var acf;
 				
 			});
 			
+			
+			// action for 3rd party customization
+			acf.do_action('select2_init', $input, select2_args, args, $field);
+			
 		},
 		
 		
@@ -9184,7 +9587,7 @@ var acf;
 		},
 		
 		
-		init_v4: function( $select, args ){
+		init_v4: function( $select, args, $field ){
 					
 			// vars
 			var $input = $select.siblings('input');
@@ -9278,7 +9681,7 @@ var acf;
 					data: function( params ) {
 						
 						// return
-						return acf.select2.get_ajax_data(args, params);
+						return acf.select2.get_ajax_data(args, params, $select, $field);
 						
 					},
 					processResults: function( data, params ){
@@ -9346,16 +9749,23 @@ var acf;
 
 			
 			// filter for 3rd party customization
-			select2_args = acf.apply_filters( 'select2_args', select2_args, $select, args );
+			select2_args = acf.apply_filters( 'select2_args', select2_args, $select, args, $field );
 			
 			
 			// add select2
-			//console.log( '%o %o ', $select, select2_args );
 			var $container = $select.select2( select2_args );
+			
+			
+			// clear value (allows null to be saved)
+			$input.val('');
 			
 			
 			// add class
 			$container.addClass('-acf');
+			
+			
+			// action for 3rd party customization
+			acf.do_action('select2_init', $select, select2_args, args, $field);
 			
 		},
 		
@@ -9511,7 +9921,7 @@ var acf;
 			}
 			
 			
-			acf.select2.init( this.$select, this.o );
+			acf.select2.init( this.$select, this.o, this.$field );
 			
 		},
 		
@@ -10087,7 +10497,7 @@ var acf;
 			
 			
 			// add date picker
-			this.$input.addClass('active').timepicker( args );
+			this.$input.timepicker( args );
 			
 			
 			// wrap the datepicker (only if it hasn't already been wrapped)
@@ -10096,6 +10506,10 @@ var acf;
 				$('body > #ui-datepicker-div').wrap('<div class="acf-ui-datepicker" />');
 				
 			}
+			
+			
+			// action for 3rd party customization
+			acf.do_action('time_picker_init', this.$input, args, this.$field);
 			
 		},
 		
@@ -11846,7 +12260,16 @@ var acf;
 			// initialize
 			try {
 				
+				// init
 				tinymce.init( mceInit );
+				
+				
+				// vars
+				var ed = tinyMCE.get( mceInit.id );
+				
+				
+				// action for 3rd party customization
+				acf.do_action('wysiwyg_tinymce_init', ed, ed.id, mceInit, this.$field);
 				
 			} catch(e){}
 			
@@ -11868,10 +12291,17 @@ var acf;
 			
 			// initialize
 			try {
-			
+				
+				// init
 				var qtag = quicktags( qtInit );
 				
+				
+				// buttons
 				this._buttonsInit( qtag );
+				
+				
+				// action for 3rd party customization
+				acf.do_action('wysiwyg_quicktags_init', qtag, qtag.id, qtInit, this.$field);
 				
 			} catch(e){}
 			
@@ -11995,7 +12425,7 @@ ed.on('ResizeEditor', function(e) {
 			
 			
 			// hook for 3rd party customization
-			mceInit = acf.apply_filters('wysiwyg_tinymce_settings', mceInit, mceInit.id);
+			mceInit = acf.apply_filters('wysiwyg_tinymce_settings', mceInit, mceInit.id, this.$field);
 			
 			
 			// return
@@ -12014,7 +12444,7 @@ ed.on('ResizeEditor', function(e) {
 			
 			
 			// hook for 3rd party customization
-			qtInit = acf.apply_filters('wysiwyg_quicktags_settings', qtInit, qtInit.id);
+			qtInit = acf.apply_filters('wysiwyg_quicktags_settings', qtInit, qtInit.id, this.$field);
 			
 			
 			// return
@@ -12058,12 +12488,16 @@ ed.on('ResizeEditor', function(e) {
 		
 		enable: function(){
 			
-			// bail early if html mode
-			if( this.$el.hasClass('tmce-active') && acf.isset(window,'switchEditors') ) {
+			try {
 				
-				switchEditors.go( this.o.id, 'tmce');
-				
-			}
+				// bail early if html mode
+				if( this.$el.hasClass('tmce-active') ) {
+					
+					switchEditors.go( this.o.id, 'tmce');
+					
+				}
+								
+			} catch(e) {}
 			
 		},
 		

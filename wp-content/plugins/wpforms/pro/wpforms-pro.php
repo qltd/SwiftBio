@@ -38,7 +38,6 @@ class WPForms_Pro {
 		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/class-db.php';
 		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/class-entry.php';
 		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/class-entry-meta.php';
-		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/class-provider.php';
 		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/payments/class-payment.php';
 		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/payments/functions.php';
 

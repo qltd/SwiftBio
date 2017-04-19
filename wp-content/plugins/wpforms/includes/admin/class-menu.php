@@ -84,6 +84,16 @@ class WPForms_Admin_Menu {
 			array( $this, 'admin_page' )
 		);
 
+		// Hidden placeholder paged used for misc content.
+		add_submenu_page(
+			'wpforms-settings',
+			__( 'WPForms', 'wpforms' ),
+			__( 'Info', 'wpforms' ),
+			$menu_cap,
+			'wpforms-page',
+			array( $this, 'admin_page' )
+		);
+
 		// Addons submenu page
 		add_submenu_page(
 			'wpforms-overview',

@@ -196,18 +196,39 @@ function geoip_detect2_shortcode_country_select($attr) {
 
 	$countryInfo = new YellowTree\GeoipDetect\Geonames\CountryInformation();
 	$countries = $countryInfo->getAllCountries($locales);
+
+	/**
+	 * Filter: geoip_detect2_shortcode_country_select_countries
+	 * Change the list of countries that should show up in the select box.
+	 * You can add, remove, reorder countries at will.
+	 * If you want to add a blank value (for seperators or so), use a key name that starts with 'blank_' 
+	 * and then something at will in case you need several of them.
+	 *
+	 * @param array $countries	List of localized country names
+	 * @param array $attr		Parameters that were passed to the shortcode
+	 * @return array
+	 */
+	$countries = apply_filters('geoip_detect2_shortcode_country_select_countries', $countries, $attr);
 	
 	$html = '<select ' . $select_attrs_html . '>';
 	if (!empty($attr['include_blank']) && $attr['include_blank'] !== 'false') 
 		$html .= '<option value="">---</option>';
 	foreach ($countries as $code => $label) {
-		$html .= '<option' . ($code == $selected ? ' selected="selected"' : '') . '>' . esc_html($label) . '</option>';	
+		if (substr($code, 0, 6) == 'blank_')
+		{
+			$html .= '<option value="">' . esc_html($label) . '</option>';	
+		}
+		else
+		{
+			$html .= '<option' . ($code == $selected ? ' selected="selected"' : '') . '>' . esc_html($label) . '</option>';	
+		}
 	}
 	$html .= '</select>';
 	
 	return $html;
 }
 add_shortcode('geoip_detect2_countries_select', 'geoip_detect2_shortcode_country_select');
+add_shortcode('geoip_detect2_countries', 'geoip_detect2_shortcode_country_select');
 
 /**
  *
@@ -260,7 +281,13 @@ function geoip_detect2_shortcode_country_select_wpcf7($tag) {
 
 add_action( 'wpcf7_init', 'geoip_detect2_add_shortcodes' );
 function geoip_detect2_add_shortcodes() {
-	wpcf7_add_shortcode(array('geoip_detect2_countries', 'geoip_detect2_countries*'), 'geoip_detect2_shortcode_country_select_wpcf7', true);
+	if (function_exists('wpcf7_add_form_tag')) {
+		// >=CF 4.6 
+		wpcf7_add_form_tag(array('geoip_detect2_countries', 'geoip_detect2_countries*'), 'geoip_detect2_shortcode_country_select_wpcf7', true);
+	} else if (function_exists('wpcf7_add_shortcode')) {
+		// < CF 4.6
+		wpcf7_add_shortcode(array('geoip_detect2_countries', 'geoip_detect2_countries*'), 'geoip_detect2_shortcode_country_select_wpcf7', true);		
+	}
 }
 
 
@@ -278,6 +305,8 @@ function geoip_detect2_shortcode_user_info_wpcf7($output, $name, $isHtml) {
         $lines[] = sprintf(__('State or region: %s', 'geoip-detect'), $info->mostSpecificSubdivision->name);
     if ($info->city->name)
         $lines[] = sprintf(__('City: %s', 'geoip-detect'), $info->city->name);
+	$lines[] = '';
+	$lines[] = sprintf(__('Data from: %s', 'geoip-detect'), geoip_detect2_get_current_source_description());
 
     $lineBreak = $isHtml ? "<br>" : "\n";
     return implode($lineBreak, $lines);

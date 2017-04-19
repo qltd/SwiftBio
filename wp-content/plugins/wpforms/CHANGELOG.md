@@ -1,6 +1,34 @@
 # Change Log
 All notable changes to this project will be documented in this file, formatted via [this recommendation](http://keepachangelog.com/).
 
+## [1.3.6] - 2017-03-09
+### Added
+- Constant Contact integration
+
+### Changed
+- Don't strip tags from plain text emails
+
+### Fixed
+- Address field variable name typo
+- Form builder javascript conflict with Clef plugin
+- Form builder logo URL double slash
+- Form builder embed code field not being selectable
+
+## [1.3.5] - 2017-02-22
+### Fixed
+- Some browers allowing unexpected characters inside number input fields
+- Error when resending email notifications through Single Entry page
+- Issue with Dropdown field placeholder text
+- Select few plugins loading conflicting scripts in form builder
+
+## [1.3.4] - 2017-02-09
+### Added
+- reCAPTCHA improvements; reCAPTCHA now required if turned on
+
+### Fixed
+- Date/Time Smart Tag not using WordPress time zone settings
+- Name field defaults not processing Smart Tags
+
 ## [1.3.3] - 2017-02-01
 ### Added
 - Default value support in the email field
@@ -19,7 +47,6 @@ All notable changes to this project will be documented in this file, formatted v
 ## [1.3.2] - 2017-01-17
 ### Added
 - CSS class support for hidden fields, for easier targeting
-- WP.org review request
 - New form class, `.inline-fields`, to apply single line form layout
 - Allow date and time pickers properties to be specified on a per form/field basis
 

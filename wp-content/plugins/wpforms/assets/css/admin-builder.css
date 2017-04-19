@@ -51,7 +51,7 @@ body {
 }
 
 #wpforms-builder .wpforms-alert {
-	padding: 10px;
+	padding: 16px;
 	margin-bottom: 18px;
 	border: 1px solid transparent;
 }
@@ -61,13 +61,12 @@ body {
 	color: inherit;
 }
 
-#wpforms-builder .wpforms-alert > p,
-#wpforms-builder .wpforms-alert > ul {
-	margin-bottom: 0;
+#wpforms-builder .wpforms-alert  p{
+	margin: 0 0 15px 0;
 }
 
-#wpforms-builder .wpforms-alert > p + p {
-	margin-top: 5px;
+#wpforms-builder .wpforms-alert p:last-of-type {
+	margin: 0;
 }
 
 #wpforms-builder .wpforms-alert-nomargin {

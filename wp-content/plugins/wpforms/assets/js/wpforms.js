@@ -431,6 +431,19 @@
 		//--------------------------------------------------------------------//
 
 		/**
+		 * Google reCAPTCHA callback.
+		 *
+		 * @since 1.3.4
+		 */
+		recaptchaCallback: function( el ) {
+
+			var $this   = $(el),
+				$hidden = $this.parent().find('.wpforms-recaptcha-hidden');
+
+			$hidden.val('1').valid();
+		},
+
+		/**
 		 * Payments: Calculate total.
 		 *
 		 * @since 1.2.3

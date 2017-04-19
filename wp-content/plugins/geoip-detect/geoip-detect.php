@@ -5,7 +5,7 @@ Plugin URI:      http://www.yellowtree.de
 Description:     Retrieving Geo-Information using the Maxmind GeoIP (Lite) Database.
 Author:          Yellow Tree (Benjamin Pick)
 Author URI:      http://www.yellowtree.de
-Version:         2.6.0
+Version:         2.7.0
 License:         GPLv3 or later
 License URI:     http://www.gnu.org/licenses/gpl-3.0.html
 Text Domain:     geoip-detect
@@ -16,7 +16,7 @@ Requires WP:     3.5
 Requires PHP:    5.3.1
 */
 
-define('GEOIP_DETECT_VERSION', '2.6.0');
+define('GEOIP_DETECT_VERSION', '2.7.0');
 
 /*
 Copyright 2013-2016 Yellow Tree, Siegen, Germany
@@ -65,14 +65,15 @@ require_once(GEOIP_PLUGIN_DIR . '/deprecated.php');
 require_once(GEOIP_PLUGIN_DIR . '/filter.php');
 require_once(GEOIP_PLUGIN_DIR . '/shortcode.php');
 
-require_once('data-sources/registry.php');
-require_once('data-sources/abstract.php');
+require_once(GEOIP_PLUGIN_DIR . '/data-sources/registry.php');
+require_once(GEOIP_PLUGIN_DIR . '/data-sources/abstract.php');
 
-include_once('data-sources/hostinfo.php');
-include_once('data-sources/manual.php');
-include_once('data-sources/auto.php');
-include_once('data-sources/precision.php');
-include_once('data-sources/header.php');
+// These data-source files are optional
+include_once(GEOIP_PLUGIN_DIR . '/data-sources/hostinfo.php');
+include_once(GEOIP_PLUGIN_DIR . '/data-sources/manual.php');
+include_once(GEOIP_PLUGIN_DIR . '/data-sources/auto.php');
+include_once(GEOIP_PLUGIN_DIR . '/data-sources/precision.php');
+include_once(GEOIP_PLUGIN_DIR . '/data-sources/header.php');
 
 // You can define these constants in your theme/plugin if you like.
 /**
@@ -85,10 +86,16 @@ include_once('data-sources/header.php');
  */
 //define('GEOIP_DETECT_IP_CACHE_TIME', 2 * HOUR_IN_SECONDS);
 /**
+ * How long the external IP of the server is cached, if no IP was found.
+ * Default: the same as GEOIP_DETECT_IP_CACHE_TIME
+ */
+//define('GEOIP_DETECT_IP_EMPTY_CACHE_TIME', 2 * HOUR_IN_SECONDS);
+/**
  * How long the data of the IP is cached. This applies to the Web-APIs (Maxmind Precision and HostIP.info)
  * Only successful lookups will be cached.
  */
 //define('GEOIP_DETECT_READER_CACHE_TIME', 7 * DAY_IN_SECONDS);
-		
+
+
 
 require_once(GEOIP_PLUGIN_DIR . '/admin-ui.php');
