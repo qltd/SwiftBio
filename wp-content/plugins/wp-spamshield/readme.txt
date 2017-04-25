@@ -300,6 +300,13 @@ If you have any further questions, please submit them on the main [WP-SpamShield
 
 == Changelog ==
 
+= 1.9.9.9.8 =
+*released 04/21/17*
+
+* Made various code enhancements and improvements.
+* Compatibility fix for a new issue starting in WooCommerce 3.0 that affected new user registration on the My Account page. In WooCommerce 3.0, some changes were made to the functionality of the WooCommerce registration form. This prevented the new user registrations from validating properly when WP-SpamShield was active. This release fixes the issue while maintaining backwards compatibility with previous versions of WooCommerce.
+* Maintenance: Updated the spam filters.
+
 = 1.9.9.9.7 =
 *released 04/17/17*
 
@@ -1016,7 +1023,7 @@ If you have any further questions, please submit them on the main [WP-SpamShield
 For a complete list of changes to the plugin, view the [Changelog](https://www.redsandmarketing.com/plugins/wp-spamshield/changelog/).
 
 == Upgrade Notice ==
-= 1.9.9.9.7 =
+= 1.9.9.9.8 =
 
-* Made various code enhancements/improvements, added new spam filters, and improved/updated the spam filters. Please see Changelog for details.
+* Made various code enhancements/improvements, fixed a WooCommerce 3.0+ compatibility bug, and updated the spam filters. Please see Changelog for details.
 

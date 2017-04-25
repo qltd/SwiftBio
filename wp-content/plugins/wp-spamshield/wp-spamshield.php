@@ -3,7 +3,7 @@
 Plugin Name:	WP-SpamShield
 Plugin URI:		https://www.redsandmarketing.com/plugins/wp-spamshield/
 Description:	An extremely powerful and user-friendly all-in-one anti-spam plugin that <strong>eliminates comment spam, trackback spam, contact form spam, and registration spam</strong>. No CAPTCHA's, challenge questions, or other inconvenience to website visitors. Enjoy running a WordPress site without spam! Includes a spam-blocking contact form feature.
-Version:		1.9.9.9.7
+Version:		1.9.9.9.8
 Author:			Scott Allen
 Author URI:		https://www.redsandmarketing.com/
 License:		GPL2+
@@ -45,7 +45,7 @@ if( !defined( 'WPSS_DEBUG' ) ) { define( 'WPSS_DEBUG', FALSE ); }
 /* Prevents unintentional error display if WP_DEBUG not enabled. */
 if( TRUE !== WPSS_DEBUG && TRUE !== WP_DEBUG ) { @ini_set( 'display_errors', 0 ); @error_reporting( 0 ); }
 
-define( 'WPSS_VERSION',					'1.9.9.9.7'				);
+define( 'WPSS_VERSION',					'1.9.9.9.8'				);
 define( 'WPSS_WP_VERSION',				$GLOBALS['wp_version']	);
 define( 'WPSS_REQUIRED_WP_VERSION',		'4.0'					);
 define( 'WPSS_REQUIRED_PHP_VERSION',	'5.3'					);
@@ -432,16 +432,16 @@ function rs_wpss_substr_count( $haystack, $needle, $offset = 0, $length = NULL )
 	return $needle_instances;
 }
 
-function rs_wpss_preg_quote( $string ) {
+function rs_wpss_preg_quote( $str ) {
 	/* Prep for use in Regex, this plugin uses '~' as a delimiter exclusively, can be changed */
-	$regex_string = preg_quote( $string, '~' );
-	$regex_string = preg_replace( "~\s+~", "\s+", $regex_string );
-	return $regex_string;
+	$rgx_str = preg_quote( $str, '~' );
+	$rgx_str = preg_replace( "~\s+~", "\s+", $rgx_str );
+	return $rgx_str;
 }
 
-function rs_wpss_md5( $string ) {
+function rs_wpss_md5( $str ) {
 	/* Use this function instead of hash for compatibility. BUT hash is faster than md5 for multiple iterations, so use it whenever possible. */
-	return function_exists( 'hash' ) ? hash( 'md5', $string ) : md5( $string );
+	return function_exists( 'hash' ) ? hash( 'md5', $str ) : md5( $str );
 }
 
 function rs_wpss_get_wpss_eid( $args ) {
@@ -1366,17 +1366,25 @@ function rs_wpss_doc_txt() {
 }
 
 function rs_wpss_is_lang_en_us( $strict = TRUE ) {
-	/* Test if site is set to use English (US) - the default - or another language/localization */
-	global $wpss_locale, $lang_en_us;
-	$wpss_locale = get_locale();
-	if( $strict !== TRUE ) {
-		/* Not strict - English, but localized translations may be in use */
-		if( !empty( $wpss_locale ) && !WP_SpamShield::preg_match( "~^(en(_[a-z]{2})?)?$~i", $wpss_locale ) ) { $lang_en_us = FALSE; } else { $lang_en_us = TRUE; }
-	} else {
-		/* Strict - English (US), no translation being used */
-		if( !empty( $wpss_locale ) && !WP_SpamShield::preg_match( "~^(en(_us)?)?$~i", $wpss_locale ) ) { $lang_en_us = FALSE; } else { $lang_en_us = TRUE; }
-	}
-	return $lang_en_us;
+	/**
+	 *	Test if site is set to use English (US) - the default - or another language/localization
+	 *	Strict		- English (US), no translation being used
+	 *	Not strict	- English, but localized translations may be in use
+	 */
+	global $wpss_locale, $wpss_lang_en_us;
+	$wpss_locale		= ( !empty( $wpss_locale ) && is_string( $wpss_locale ) ) ? $wpss_locale : get_locale();
+	$rgx_ptn			= ( TRUE === $strict ) ? "^(en(_us)?)?$" : "^(en(_[a-z]{2})?)?$";
+	$wpss_lang_en_us	= ( WP_SpamShield::preg_match( "~".$rgx_ptn."~i", $wpss_locale ) );
+	return $wpss_lang_en_us;
+}
+
+function rs_wpss_is_lang_t7() {
+	/* Added 1.9.9.9.8 */
+	global $wpss_locale, $wpss_lang_t7;
+	$wpss_locale		= ( !empty( $wpss_locale ) && is_string( $wpss_locale ) ) ? $wpss_locale : get_locale();
+	$rgx_ptn			= "^((en|de|es|fr|it|pt|nl)(_[a-z]{2})?)?$";
+	$wpss_lang_t7		= ( WP_SpamShield::preg_match( "~".$rgx_ptn."~i", $wpss_locale ) );
+	return $wpss_lang_t7;
 }
 
 function rs_wpss_wf_geoiploc( $ip = NULL, $disp = FALSE ) {
@@ -1464,6 +1472,8 @@ function rs_wpss_wc_login_init() {
 function rs_wpss_wc_registration_init() {
 	global $wpss_is_wc_registration_page,$wpss_wc_reg_form_active;
 	$wpss_is_wc_registration_page = $wpss_wc_reg_form_active = TRUE;
+	remove_action( 'register_form', 'rs_wpss_register_form_append', 1 );
+	add_action( 'woocommerce_register_form', 'rs_wpss_register_form_append', 1 );
 }
 
 function rs_wpss_is_login_page() {
@@ -1580,11 +1590,11 @@ function rs_wpss_is_admin_sproc( $admin = FALSE ) {
  *	@since			...
  */
 function rs_wpss_is_doing_rest() {
-	if( defined('REST_REQUEST') && REST_REQUEST ) { return TRUE; }
-	if( !function_exists( 'get_rest_url' ) || !WP_SpamShield::is_wp_ver('4.4') ) { return FALSE; }
-	$url = WPSS_THIS_URL;
-	if( get_rest_url() === $url ) { return TRUE; }
-    return FALSE;
+	return (
+		( defined( 'REST_REQUEST' ) && REST_REQUEST )
+		||
+		( WP_SpamShield::is_wp_ver( '4.4' ) && function_exists( 'get_rest_url' ) && get_rest_url() === WPSS_THIS_URL )
+	);
 }
 
 /**
@@ -1602,7 +1612,7 @@ function rs_wpss_is_doing_ajax() {
 /**
  *	Detect if AJAX request needs anti-spam check
  *	@dependencies	...
- *	@since			1.9.9.9.6
+ *	@since			1.9.9.9.7
  */
 function rs_wpss_ajax_check_request() {
 	global $wpss_ajax_check_request;
@@ -1624,7 +1634,7 @@ function rs_wpss_ajax_check_request() {
 /**
  *	Check if request is AJAX heartbeat
  *	@dependencies	...
- *	@since			1.9.9.9.6
+ *	@since			1.9.9.9.7
  */
 function rs_wpss_is_heartbeat() {
 	return ( isset( $_POST['action'], $_POST['screen_id'], $_POST['_nonce'] ) && 'heartbeat' === $_POST['action'] && rs_wpss_is_doing_ajax() && rs_wpss_is_ajax_request() );
@@ -1633,7 +1643,7 @@ function rs_wpss_is_heartbeat() {
 /**
  *	Check if WooCommerce is doing AJAX
  *	@dependencies	rs_wpss_is_ajax_request(), WPSS_Compatibility::is_woocom_enabled()
- *	@since			1.9.9.9.6
+ *	@since			1.9.9.9.7
  */
 function rs_wpss_is_wc_doing_ajax() {
 	return (
@@ -1646,7 +1656,7 @@ function rs_wpss_is_wc_doing_ajax() {
 /**
  *	Check if WooCommerce AJAX endpoint
  *	@dependencies	WPSS_Compatibility::is_woocom_enabled(), ...
- *	@since			1.9.9.9.6
+ *	@since			1.9.9.9.7
  */
 function rs_wpss_is_wc_ajax_endpoint() {
 	return ( !empty( $_GET['wc-ajax'] ) && WPSS_Compatibility::is_woocom_enabled() );
@@ -1660,7 +1670,7 @@ function rs_wpss_is_ajax_request() {
 /**
  *	Check if WooCommerce AJAX request
  *	@dependencies	rs_wpss_is_wc_ajax_endpoint(), rs_wpss_is_wc_doing_ajax()
- *	@since			1.9.9.9.6
+ *	@since			1.9.9.9.7
  */
 function rs_wpss_is_wc_ajax_request() {
 	global $wpss_is_wc_ajax_request;
@@ -6382,7 +6392,7 @@ function rs_wpss_update_bw_list_keys( $list, $keys ) {
 
 /* Spam Registration Protection - BEGIN */
 
-function rs_wpss_wc_before_register( ) {
+function rs_wpss_wc_before_register() {
 	$wc_reg_enabled = get_option( 'woocommerce_enable_myaccount_registration' );
 	if( 'yes' !== $wc_reg_enabled && TRUE != $wc_reg_enabled ) { return; }
 	global $wpss_wc_reg_form_active; $wpss_wc_reg_form_active = TRUE;
@@ -7138,7 +7148,7 @@ class WP_SpamShield {
 			}
 		}
 		/* Actions & Filters - 3rd Party Plugins */
-		if( defined( 'WC_VERSION' ) || defined( 'WOOCOMMERCE_VERSION' ) ) {
+		if( defined( 'WC_VERSION' ) || defined( 'WOOCOMMERCE_VERSION' ) || class_exists( 'WooCommerce' ) ) {
 			add_action( 'woocommerce_before_customer_login_form', 'rs_wpss_wc_login_init', -100 );
 			add_action( 'woocommerce_before_customer_login_form', 'rs_wpss_wc_before_register', 10 );
 			add_action( 'woocommerce_register_form_start', 'rs_wpss_wc_registration_init', -100 );
@@ -9275,7 +9285,7 @@ class WPSS_Filters extends WP_SpamShield {
 			"~info(tech|soft)".WPSS_RGX_TLD."$~i",
 			/* SEO/Internet Marketing/Lead Spammers */
 			"~(agency|best|buy|cheap|discover|exclusive|feed|get|give|local|marketing|more|pay\-?per|reputation\-?management|se[mo]|web)[0-9a-z\.\-]*(lead|prospect)s?~i",
-			"~(^(1\-?)?(se[mo]|india)(\-|[a-z0-9]*(india|delhi)|local|rank|services?|web)|((india|delhi)[a-z0-9]*|local|rank|services?|web|\-)(se[mo]|india)[\.\-$])~i",
+			"~(^(1\-?)?(se[mo]|india)(\-|[a-z0-9]*(india|delhi|mumbai|chennai)|local|rank|services?|web)|((india|delhi|mumbai|chennai)[a-z0-9]*|local|rank|services?|web|\-)(se[mo]|india)[\.\-$])~i",
 			/* Disposable Email */
 			"~((\d+day|\d+hour|abyss|alias|anon(ym?(ous)?)?|(anti|de|no)?spam|catch|clean|destruct(ing)?|devnull|discard|dispose?a?(ble)?|drop|dumpy?|easy|explode|fake[drs]?|(get)?air|grandm?as?|guer+il+a|hide|inat[eo]r|incog(nito)?|instant|[lf]ast|minute[ndrs]?|proxs?(y|ie)|recon|smash|tempo?(ra((ry|rio)?|ire|l|nea)?)?|throwaway|\w{0,3}trash(can)?|yop)[\-\.]?([eoiy]?[\-\.]?mail|amil|(in)?box|address)|([eoiy]?[\-\.]?mail|amil|(in)?box|address)[\-\.]?(\d+day|\d+hour|abyss|alias|anon(ym?(ous)?)?|(anti|de|no)?spam|catch|clean|destruct(ing)?|devnull|discard|dispose?a?(ble)?|drop|dumpy?|easy|explode|fake[drs]?|(get)?air|grandm?as?|guer+il+a|hide|inat[eo]r|incog(nito)?|instant|[lf]ast|minute[ndrs]?|proxs?(y|ie)|recon|smash|tempo?(ra((ry|rio)?|ire|l|nea)?)?|throwaway|\w{0,3}trash(can)?|yop))~i",
 			/* Misc */
@@ -9287,9 +9297,10 @@ class WPSS_Filters extends WP_SpamShield {
 		);
 		/**
 		 *	Block punycode domains if site locale/lang is en_xx (English)
-		 *	Spam/Security risk - they mask nature of website (like URL shorteners) - actively used in spam & attacks
+		 *	Spam/Security risk - Actively used in spam / phishing / hacks.
+		 *	Punycode domains mask nature of website (like URL shorteners), or imitate another site (homograph attacks).
 		 */
-		if( rs_wpss_is_lang_en_us() && 0 !== strpos( WPSS_SITE_DOMAIN, 'xn--' ) && FALSE === strpos( WPSS_SITE_DOMAIN, '.xn--' ) ) {
+		if( ( rs_wpss_is_lang_en_us() || rs_wpss_is_lang_t7() ) && 0 !== strpos( WPSS_SITE_DOMAIN, 'xn--' ) && FALSE === strpos( WPSS_SITE_DOMAIN, '.xn--' ) ) {
 			$regex_phrases_other_checks[] = "~(^xn\-\-[a-z0-9_\-]+".WPSS_RGX_TLD."|\.xn\-\-[a-z0-9]+)$~i";
 		}
 		foreach( $regex_phrases_other_checks as $i => $regex_check_phrase ) {
@@ -9592,7 +9603,7 @@ class WPSS_Filters extends WP_SpamShield {
 	 *	@since			1.9.9.8.8
 	 */
 	static public function lang_mismatch( $haystack ) {
-		return ( rs_wpss_is_lang_en_us() && rs_wpss_strlen( $haystack ) >= 50 && !WP_SpamShield::preg_match( "~[a-z0-9]+~iu", $haystack ) );
+		return ( ( rs_wpss_is_lang_en_us() || rs_wpss_is_lang_t7() ) && rs_wpss_strlen( $haystack ) >= 50 && !WP_SpamShield::preg_match( "~[a-z0-9]+~iu", $haystack ) );
 	}
 
 	/**
@@ -9603,7 +9614,7 @@ class WPSS_Filters extends WP_SpamShield {
 	 *	@since			1.9.9.8.8
 	 */
 	static public function lang_mismatch_pct( $haystack, $pct = 40 ) {
-		if( !rs_wpss_is_lang_en_us() ) { return FALSE; }
+		if( ( !rs_wpss_is_lang_en_us() && !rs_wpss_is_lang_t7() ) ) { return FALSE; }
 		$pct = ( !is_numeric( $pct ) ) ? 40 : (int) $pct;
 		if( $pct < 10 ) { $pct = 10; } elseif( $pct > 90 ) { $pct = 90; }
 		$pct_dec		= ( $pct / 100 );
@@ -10004,7 +10015,11 @@ class WPSS_Filters extends WP_SpamShield {
 			if( WP_SpamShield::preg_match( "~\b(chrome|firefox|internet\s*explorer|iphone|lynx|midori|mozilla|netscape|safari|trident|waterfox|webkit)\b~i", $user_agent_lc ) ) { $_SERVER['WPSS_SEC_THREAT'] = TRUE; $wpss_skiddie_ua = TRUE; return TRUE; }
 		}
 
-		if( ( $type === 'comment' || $type === 'contact' || $type === 'register' ) && !rs_wpss_is_doing_rest() && !rs_wpss_is_xmlrpc() ) {
+		if( (
+			$type === 'comment' || $type === 'contact' || $type === 'register' || $type === 'guestbook form' 
+			||
+			$type === 'contact form 7' || $type === 'gravity forms' || $type === 'jetpack form'  || $type === 'ninja forms'  || $type === 'mailchimp form' 
+		) && !rs_wpss_is_doing_rest() && !rs_wpss_is_xmlrpc() ) {
 			$user_agent_word_count = rs_wpss_count_words( $user_agent_lc );
 			if( !empty( $user_agent_word_count ) && $user_agent_word_count < 3 ) { $_SERVER['WPSS_SEC_THREAT'] = TRUE; $wpss_skiddie_ua = TRUE; return TRUE; }
 		}

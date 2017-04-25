@@ -1,7 +1,7 @@
 <?php
 /**
  *  WP-SpamShield Dynamic JS File
- *  Version: 1.9.9.9.6
+ *  Version: 1.9.9.9.7
  */
 
 /* Security Check - BEGIN */

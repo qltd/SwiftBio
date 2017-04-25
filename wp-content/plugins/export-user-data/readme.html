@@ -1,0 +1,216 @@
+<h1 id="export-user-data">Export User Data</h1>
+<p><strong>Contributors:</strong> qlstudio
+<strong>Tags:</strong> user, users, xprofile, usermeta csv, excel, batch, export, save, download
+<strong>Requires at least:</strong> 3.2
+<strong>Tested up to:</strong> 4.4.2
+<strong>Stable tag:</strong> 1.3.1
+<strong>License:</strong> GPLv2</p>
+<p>Export users data, metadata and buddypress xprofile data to a csv or Excel file</p>
+<h2 id="description">Description</h2>
+<p>A plugin that exports all user data, meta data and BuddyPress xProfile data.</p>
+<p>Includes an option to export the users by role, registration date range, usermeta option and two export formats.</p>
+<h3 id="features">Features</h3>
+<ul>
+<li>Exports all users fields</li>
+<li>Exports users meta</li>
+<li>Exports users by role</li>
+<li>Exports users by date range</li>
+<li>Export user BuddyPress xProfile data</li>
+</ul>
+<p>For feature request and bug reports, <a href="https://qstudio.us/support/categories/export-user-data">please use the Q Support Website</a>.</p>
+<p>Please do not use the Wordpress.org forum to report bugs, as we no longer monitor or respond to questions there.</p>
+<h2 id="installation">Installation</h2>
+<p>For an automatic installation through WordPress:</p>
+<ol>
+<li>Go to the &#39;Add New&#39; plugins screen in your WordPress admin area</li>
+<li>Search for &#39;Export User Data&#39;</li>
+<li>Click &#39;Install Now&#39; and activate the plugin</li>
+<li>Go the &#39;Export User Data&#39; menu, under &#39;Users&#39;</li>
+</ol>
+<p>For a manual installation via FTP:</p>
+<ol>
+<li>Upload the <code>export-user-data</code> directory to the <code>/wp-content/plugins/</code> directory</li>
+<li>Activate the plugin through the &#39;Plugins&#39; screen in your WordPress admin area</li>
+<li>Go the &#39;Export User Data&#39; menu, under &#39;Users&#39;</li>
+</ol>
+<p>To upload the plugin through WordPress, instead of FTP:</p>
+<ol>
+<li>Upload the downloaded zip file on the &#39;Add New&#39; plugins screen (see the &#39;Upload&#39; tab) in your WordPress admin area and activate.</li>
+<li>Go the &#39;Export User Data&#39; menu, under &#39;Users&#39;</li>
+</ol>
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+<h3 id="how-to-use-">How to use?</h3>
+<p>Click on the &#39;Export User Data&#39; link in the &#39;Users&#39; menu, choose the role and the date range or don&#39;t select anything if you want to export all users, then click &#39;Export&#39;. That&#39;s all!</p>
+<h2 id="screenshots">Screenshots</h2>
+<h3 id="1-user-export-screen">1. User export screen</h3>
+<p><img src="http://s.w.org/plugins/export-user-data/screenshot-1.png?r=859689" alt="ScreenShot"></p>
+<h2 id="changelog">Changelog</h2>
+<p><strong><em> 1.3.1 </em></strong></p>
+<ul>
+<li>Moved all internal action hooks to admin_init to allow for internal function loading</li>
+</ul>
+<p><strong><em> 1.3.0 </em></strong></p>
+<ul>
+<li>Added extra data sanitization before outputting to file - thanks to Hely Shah <a href="&#109;&#x61;&#105;&#108;&#116;&#111;&#58;&#104;&#101;&#108;&#x79;&#x68;&#115;&#x68;&#x61;&#x68;&#x40;&#x67;&#109;&#x61;&#x69;&#x6c;&#46;&#x63;&#x6f;&#109;">&#104;&#101;&#108;&#x79;&#x68;&#115;&#x68;&#x61;&#x68;&#x40;&#x67;&#109;&#x61;&#x69;&#x6c;&#46;&#x63;&#x6f;&#109;</a> for te heads-up</li>
+</ul>
+<p><strong><em> 1.2.8 </em></strong></p>
+<ul>
+<li>New: Added load_buddypress() methods to test for buddypress and load up if missing</li>
+<li>New: move action hooks and priority to load later</li>
+<li>New: Plugin no longer uses singleton model to instatiate - instead called from action hook to public function</li>
+<li>New: added log() to debug.log file to help debugging issues</li>
+<li>Update: jQuery datepickers pull start_of_week value from WordPress</li>
+<li>Tested on 4.4.2</li>
+</ul>
+<p><strong><em> 1.2.7 </em></strong></p>
+<ul>
+<li>Added: Spanish translation - thanks Elías Gómez Sainz ( elias@estudions.es )</li>
+</ul>
+<p><strong><em> 1.2.6 </em></strong></p>
+<ul>
+<li>Update: WP 4.4.1</li>
+</ul>
+<h3 id="1-2-3">1.2.3</h3>
+<ul>
+<li>Fix: to remove minor security loop hole</li>
+<li>New: Added option to remove standard wp_users data from export</li>
+<li>Fix: removed roles and groups columns from export when options hidden</li>
+</ul>
+<h3 id="1-2-2">1.2.2</h3>
+<ul>
+<li>Minor FIxes</li>
+</ul>
+<h3 id="1-2-1">1.2.1</h3>
+<ul>
+<li>Checked on WP 4.3.1</li>
+<li>Moved text-domain to string in preperation for addition to translate.wordpress.org</li>
+<li>Added Log() method to allow for debugging to WP Error Log</li>
+<li>Added Greek translation - Thanks @Leonidas Mi</li>
+<li>Added option to limit export by last_updated date of specific xprofile field - Thanks to @cwjordan</li>
+</ul>
+<h3 id="1-2-0">1.2.0</h3>
+<ul>
+<li>Data stored in recursive and serialized arrays is now exported in a flat string format with safe delimiters ( ||, ||| - etc. )</li>
+</ul>
+<h3 id="1-1-1">1.1.1</h3>
+<ul>
+<li>Removed accidently included .git files</li>
+</ul>
+<h3 id="1-1-0">1.1.0</h3>
+<ul>
+<li>Version change to sync SVN on wordpress.org</li>
+</ul>
+<h3 id="1-0-4">1.0.4</h3>
+<ul>
+<li>Added unserialize function with @ fallback</li>
+<li>Removed anonymous function to allow support for PHP &lt; 5.2</li>
+</ul>
+<h3 id="1-0-3">1.0.3</h3>
+<ul>
+<li>Tested as working on WordPress 4.1.0.</li>
+</ul>
+<h3 id="1-0-2">1.0.2</h3>
+<ul>
+<li>Removed get_user_meta method, as not effective.</li>
+<li>Added registration date from and to pickers - to replace monthly <select> lists.</li>
+</ul>
+<h3 id="1-0-1">1.0.1</h3>
+<ul>
+<li>Added recursive_implode() method to flatten data stored in arrays ( exported with keys and values divided by &quot;|&quot; )</li>
+</ul>
+<h3 id="1-0-0">1.0.0</h3>
+<ul>
+<li>Reduced all get_user_meta queries to a single call to improve performance</li>
+<li>Serialized data is now returned in it&#39;s pure stored format - not imploded or unserialized to avoid data structure loss</li>
+</ul>
+<h3 id="0-9-9">0.9.9</h3>
+<ul>
+<li>get_uermeta renamed get_user_meta to be more consistent with WP</li>
+<li>get_user_meta tidied up and tested on larger exports</li>
+<li>added option to export user BP Groups</li>
+<li>added option to export all user WP Roles</li>
+</ul>
+<h3 id="0-9-8">0.9.8</h3>
+<ul>
+<li>added get_usermeta() to check if meta keys are unique and return an array if not</li>
+<li>removed known_arrays() filter to allow for array data to be returned correctly - too hacky</li>
+</ul>
+<h3 id="0-9-7">0.9.7</h3>
+<ul>
+<li>Added known_arrays() filter to allow for array data to be returned correctly</li>
+</ul>
+<h3 id="0-9-6">0.9.6</h3>
+<ul>
+<li>Save, load and delete stored export settings - thanks to @cwjordan</li>
+<li>Overcome memory outages on large exports - thanks to @grexican</li>
+<li>Tested on WP 4.0.0 &amp; BP 2.1.0</li>
+</ul>
+<h3 id="0-9-5">0.9.5</h3>
+<ul>
+<li>BP Serialized data fixes - thanks to @nicmare &amp; @grexican</li>
+<li>Tested on WP 3.9.2 &amp; BP 2.0.2</li>
+</ul>
+<h3 id="0-9-4">0.9.4</h3>
+<ul>
+<li>BP X Profile Export Fix ( &gt; version 2.0 )</li>
+</ul>
+<h3 id="0-9-3">0.9.3</h3>
+<ul>
+<li>fix for hidden admin bar</li>
+</ul>
+<h3 id="0-9-2">0.9.2</h3>
+<ul>
+<li>removed $key assignment casting to integer</li>
+</ul>
+<h3 id="0-9-1">0.9.1</h3>
+<ul>
+<li>Tested with WP 3.9</li>
+<li>Fix for BuddyPress 2.0 bug</li>
+</ul>
+<h3 id="0-9-0">0.9.0</h3>
+<ul>
+<li>Moved plugin class to singleton model</li>
+<li>Improved language handling</li>
+<li>French translation - thanks @bastho - <a href="http://wordpress.org/support/profile/bastho">http://wordpress.org/support/profile/bastho</a></li>
+</ul>
+<h3 id="0-8-3">0.8.3</h3>
+<ul>
+<li>clarified export limit options</li>
+</ul>
+<h3 id="0-8-2">0.8.2</h3>
+<ul>
+<li>corrected buddypress export option - broken in 0.8.1</li>
+<li>changed get_users arguments, in attempt to reduce memory usage</li>
+</ul>
+<h3 id="0-8-1">0.8.1</h3>
+<ul>
+<li>Added experimental range limiter for exports</li>
+<li>Extra input data sanitizing</li>
+</ul>
+<h3 id="0-8">0.8</h3>
+<ul>
+<li>moved plugin instatiation to the WP hook: init</li>
+<li>moved bp calls outside export loop</li>
+<li>added extra isset calls on values in export loop to clean up error log not sets</li>
+</ul>
+<h3 id="0-7-8">0.7.8</h3>
+<ul>
+<li>added xml template for Excel exports - thanks to phil@fixitlab.com :)</li>
+</ul>
+<h3 id="0-7-2">0.7.2</h3>
+<ul>
+<li>fixes to allow exports without selecting extra user date from usermeta or x-profile</li>
+</ul>
+<h3 id="0-6-3">0.6.3</h3>
+<ul>
+<li>added multiselect to pick usermeta and xprofile fields</li>
+</ul>
+<h3 id="0-5">0.5</h3>
+<ul>
+<li>First public release.</li>
+</ul>
+<h2 id="upgrade-notice">Upgrade Notice</h2>
+<h3 id="0-6-3">0.6.3</h3>
+<p>Latest.</p>
+<h3 id="0-5">0.5</h3>
+<p>First release.</p>

@@ -10,7 +10,7 @@ if( !defined( 'ABSPATH' ) || !defined( 'WPSS_VERSION' ) ) {
 }
 
 if ( !defined( 'WPSS_COMPAT_MODE' ) ) {
-	define( 'WPSS_COMPAT_MODE', TRUE );
+	define( 'WPSS_COMPAT_MODE', FALSE );
 }
 if ( !defined( 'WPSS_TEMP_BL_DISABLE' ) ) {
 	define( 'WPSS_TEMP_BL_DISABLE', FALSE );

@@ -1,7 +1,7 @@
 <?php
 /**
  *  WP-SpamShield Compatibility
- *  File Version 1.9.9.9.6
+ *  File Version 1.9.9.9.8
  */
 
 /* Make sure file remains secure if called directly */
@@ -116,16 +116,17 @@ final class WPSS_Compatibility extends WP_SpamShield {
 		if( self::is_plugin_active( 'gwolle-gb/gwolle-gb.php' ) ) {
 			$spamshield_options = WP_SpamShield::get_option();
 			if( empty( $spamshield_options['disable_misc_form_shield'] ) ) {
-				add_filter( 'gwolle_gb_button', array( 'WPSS_Compatibility', 'deconflict_gwgb_01' ), -100, 1 );
+				self::deconflict_gwgb_01();
+				add_filter( 'gwolle_gb_button', array( __CLASS__, 'deconflict_gwgb_02' ), -100, 1 );
 				if( 'POST' === $_SERVER['REQUEST_METHOD'] && !empty( $_POST ) ) {
 					if( is_admin() ) {
 						if( !empty( $_GET['page'] ) && 'gwolle-gb/settings.php' === $_GET['page'] ) {
-							$pref = ''; $keys_unset	= array( 'antispam-answer', 'antispam-question', 'form_ajax', 'form_antispam_enabled', 'form_recaptcha_enabled', 'honeypot', );
+							$pref = ''; $keys_unset	= array( 'antispam-answer', 'antispam-question', 'form_ajax', 'form_antispam_enabled', 'form_recaptcha_enabled', 'honeypot', 'gwolle_gb_nonce', );
 							foreach( $keys_unset as $i => $k ) { unset( $_POST[$pref.$k] ); }
-							add_action( 'shutdown', array( 'WPSS_Compatibility', 'deconflict_gwgb_01' ), -100 );
+							add_action( 'shutdown', array( __CLASS__, 'deconflict_gwgb_02' ), -100 );
 						}
 					} elseif( !rs_wpss_is_user_logged_in() ) {
-						add_filter( 'gwolle_gb_write_add_after', array( 'WPSS_Compatibility', 'deconflict_gwgb_02' ), 10, 1 );
+						add_filter( 'gwolle_gb_write_add_after', array( __CLASS__, 'deconflict_gwgb_03' ), 10, 1 );
 						if( !empty( $_POST['gwolle_gb_function'] ) && 'add_entry' === $_POST['gwolle_gb_function'] ) {
 							$pref = 'gwolle_gb_'; $keys_unset = array( 'antispam_answer', 'captcha_code', 'captcha_prefix', );
 							foreach( $keys_unset as $i => $k ) { unset( $_POST[$pref.$k] ); }
@@ -149,8 +150,8 @@ final class WPSS_Compatibility extends WP_SpamShield {
 
 		/* New User Approve Plugin ( https://wordpress.org/plugins/new-user-approve/ ) */
 		if( class_exists( 'pw_new_user_approve' ) ) {
-			add_action( 'register_post', array( 'WPSS_Compatibility', 'deconflict_nua_01' ), -10 );
-			add_action( 'registration_errors', array( 'WPSS_Compatibility', 'deconflict_nua_02' ), -10 );
+			add_action( 'register_post', array( __CLASS__, 'deconflict_nua_01' ), -10 );
+			add_action( 'registration_errors', array( __CLASS__, 'deconflict_nua_02' ), -10 );
 		}
 
 		/* Affiliates Plugin ( https://wordpress.org/plugins/affiliates/ ) */
@@ -170,7 +171,7 @@ final class WPSS_Compatibility extends WP_SpamShield {
 	static public function deconflict_nua_01() {
 		if( class_exists( 'pw_new_user_approve' ) && method_exists( 'pw_new_user_approve', 'create_new_user' ) && has_filter( 'register_post', array( pw_new_user_approve::instance(), 'create_new_user' ) ) ) {
 			remove_action( 'register_post', array( pw_new_user_approve::instance(), 'create_new_user' ), 10 );
-			add_action( 'registration_errors', array( 'WPSS_Compatibility', 'deconflict_nua_01_01' ), 9998, 3 );
+			add_action( 'registration_errors', array( __CLASS__, 'deconflict_nua_01_01' ), 9998, 3 );
 		}
 	}
 
@@ -187,7 +188,7 @@ final class WPSS_Compatibility extends WP_SpamShield {
 		if( class_exists( 'pw_new_user_approve' ) && method_exists( 'pw_new_user_approve', 'show_user_pending_message' ) && has_filter( 'registration_errors', array( pw_new_user_approve::instance(), 'show_user_pending_message' ) ) ) {
 			remove_filter( 'registration_errors', array( pw_new_user_approve::instance(), 'show_user_pending_message' ), 10 );
 			if( function_exists( 'login_header' ) && function_exists( 'login_footer' ) ) {
-				add_filter( 'registration_errors', array('WPSS_Compatibility','deconflict_nua_02_01'), 9999 );
+				add_filter( 'registration_errors', array( __CLASS__, 'deconflict_nua_02_01' ), 9999 );
 			}
 		}
 	}
@@ -215,25 +216,49 @@ final class WPSS_Compatibility extends WP_SpamShield {
 		update_option( 'PO_plugin_order', array() );
 	}
 
-	static public function deconflict_gwgb_01( $var = NULL ) {
+	static public function deconflict_gwgb_01() {
 		$pref = 'gwolle_gb-';
-		$mod_form = array( 'form_name_enabled' => 'true', 'form_name_mandatory' => 'true', 'form_email_enabled' => 'true', 'form_email_mandatory' => 'true', 'form_homepage_enabled' => 'true', 'form_homepage_mandatory' => 'true', 'form_message_enabled' => 'true', 'form_message_mandatory' => 'true', 'form_antispam_enabled' => 'false', 'form_recaptcha_enabled' => 'false', );
+		$mod_options = array( 'akismet-active' => 'false', 'antispam-answer' => '', 'antispam-question' => '', 'form_ajax' => 'false', 'honeypot' => 'false', 'moderate-entries' => 'true', 'nonce' => 'false', 'form' => array(), );
+		foreach( $mod_options as $k => $v ) {
+			if( 'form' === $k ) {
+				$c = array( __CLASS__, 'deconflict_gwgb_04' );
+			} else {
+				$c = ( '' === $v || NULL === $v ) ? '__return_empty_string' : '__return_'.$v;
+				add_filter( 'pre_option_'.$pref.$k, $c, 100, 1 );
+			}
+			add_filter( 'option_'.$pref.$k, $c, 100, 1 );
+			add_filter( 'pre_update_option_'.$pref.$k, $c, 100, 1 );
+		}
+	}
+
+	static public function deconflict_gwgb_02( $var = NULL ) {
+		$pref = 'gwolle_gb-';
 		$form = get_option( $pref.'form', array() );
-		$form = ( !empty( $form ) && is_string( $form ) ) ? maybe_unserialize( $form ) : $form;
-		$form = ( !empty( $form ) && is_array( $form ) ) ? $form : array();
-		foreach( $mod_form as $k => $v ) { $form[$k] = $v; }
+		$form = self::deconflict_gwgb_04( $form );
 		$mod_options = array( 'akismet-active' => 'false', 'antispam-answer' => '', 'antispam-question' => '', 'form_ajax' => 'false', 'honeypot' => 'false', 'moderate-entries' => 'true', 'nonce' => 'false', 'form' => serialize( $form ), );
 		foreach( $mod_options as $k => $v ) { update_option( $pref.$k, $v ); }
 		if( !empty( $var ) ) { return $var; }
 	}
 
-	static public function deconflict_gwgb_02( $form_append = NULL ) {
+	static public function deconflict_gwgb_03( $form_append = NULL ) {
 		if( rs_wpss_is_user_admin() || rs_wpss_is_admin_sproc() || self::is_builder_active() ) { return $form_append; }
 		$spamshield_options = WP_SpamShield::get_option();
-		if( !empty( $spamshield_options['disable_gf_shield'] ) ) { return $form_append; }
+		if( !empty( $spamshield_options['disable_misc_form_shield'] ) ) { return $form_append; }
 		$wpss_string = WP_SpamShield::insert_footer_js( TRUE );
 		$form_append = "\n".$wpss_string."\n"."\n";
 		return $form_append;
+	}
+
+	static public function deconflict_gwgb_04( $form = array() ) {
+		$mod_form = array( 'form_name_enabled' => 'true', 'form_name_mandatory' => 'true', 'form_email_enabled' => 'true', 'form_email_mandatory' => 'true', 'form_message_enabled' => 'true', 'form_message_mandatory' => 'true', 'form_antispam_enabled' => 'false', 'form_recaptcha_enabled' => 'false', );
+		$form = ( !empty( $form ) && is_string( $form ) ) ? maybe_unserialize( $form ) : $form;
+		$form = ( !empty( $form ) && is_array( $form ) ) ? $form : array();
+		if( !empty( $form ) && is_array( $form ) ) {
+			foreach( $mod_form as $k => $v ) {
+				if( !isset( $form[$k] ) || $form[$k] !== $v ) { $form[$k] = $v; }
+			}
+		}
+		return $form;
 	}
 
 	/**
@@ -555,7 +580,7 @@ final class WPSS_Compatibility extends WP_SpamShield {
 	/**
 	 *	Litespeed detection
 	 *	@dependencies	WPSS_PHP::extension_loaded(),
-	 *	@since			1.9.9.9.6
+	 *	@since			1.9.9.9.7
 	 */
 	static public function is_litespeed() {
 		global $is_litespeed;
@@ -567,7 +592,7 @@ final class WPSS_Compatibility extends WP_SpamShield {
 	/**
 	 *	LSCache detection (Litespeed Cache)
 	 *	@dependencies	WPSS_Compatibility::is_litespeed(),
-	 *	@since			1.9.9.9.6
+	 *	@since			1.9.9.9.7
 	 */
 	static public function is_lscache_active() {
 		global $wpss_lscache_active;
