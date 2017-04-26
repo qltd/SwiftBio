@@ -9,6 +9,7 @@
     </div>
     <?php if (get_sub_field('link_type') == 'Page') {
         $url = get_sub_field('page');
+        $target = false;
     } else {
         $url = get_sub_field('pdf');
         $target='target="_blank"';
