@@ -74,7 +74,7 @@ get_header(); ?>
                             <label for="user_pass">Password <span class="req">*</span></label><br>
                                 <input type="password" name="pwd" id="user_pass" class="input" value="" size="20" required />
                         </p>
-                                <div class="g-recaptcha"></div>
+                                <div class="g-recaptcha" data-sitekey="6LdyzQYUAAAAANCv193_9QHCw9P5579KXOwTH9EM"></div>
                                 <br class="clear">
                                 <input type="hidden" name="redirect_to" value="<?php the_permalink(); ?>">
                                 <input type="hidden" name="oid" value="00DE0000000KWb6">
