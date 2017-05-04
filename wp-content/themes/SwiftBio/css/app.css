@@ -547,7 +547,6 @@ input[type=file] {
   max-width: 1223px;
   width: 100%;
   margin: 0 auto;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   padding: 0 2rem; }
@@ -559,10 +558,8 @@ header .top-bar {
   background: #2a569b;
   height: 6rem; }
   header .top-bar .row {
-    -webkit-justify-content: flex-end;
     -ms-flex-pack: end;
     justify-content: flex-end;
-    -webkit-align-items: center;
     -ms-flex-align: center;
     align-items: center;
     height: 100%; }
@@ -581,10 +578,8 @@ header .menu-bar {
   position: relative;
   z-index: 2; }
   header .menu-bar .row {
-    -webkit-justify-content: space-between;
     -ms-flex-pack: justify;
     justify-content: space-between;
-    -webkit-align-items: center;
     -ms-flex-align: center;
     align-items: center;
     height: 100%; }
@@ -595,17 +590,14 @@ header .menu-bar {
   .home header .menu-bar {
     background: rgba(255, 255, 255, 0.54); }
     .home header .menu-bar .row {
-      -webkit-justify-content: flex-end;
       -ms-flex-pack: end;
       justify-content: flex-end; }
     .home header .menu-bar .logo {
       display: none; }
 
 #search {
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center; }
   #search input {
@@ -665,12 +657,10 @@ header .menu-bar {
   top: 0;
   right: 0;
   transition: all .3s ease;
-  -webkit-transform: translateX(100%);
   -ms-transform: translateX(100%);
   transform: translateX(100%); }
   .nav-overlay.show {
     display: block;
-    -webkit-transform: translateX(0);
     -ms-transform: translateX(0);
     transform: translateX(0); }
   @media screen and (max-width: 1100px) {
@@ -694,10 +684,8 @@ header .menu-bar {
     float: right;
     letter-spacing: 0;
     text-transform: uppercase;
-    display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
-    -webkit-align-items: center;
     -ms-flex-align: center;
     align-items: center; }
     .nav-overlay .nav-close i {
@@ -857,7 +845,6 @@ header .menu-bar {
   padding: 4rem 0; }
   @media screen and (max-width: 768px) {
     .callouts .row {
-      -webkit-flex-direction: column;
       -ms-flex-direction: column;
       flex-direction: column; }
     @-ms-viewport {
@@ -868,7 +855,6 @@ header .menu-bar {
     @media screen and (max-width: 768px) {
       .callouts .callout {
         width: 100%;
-        -webkit-flex: 3;
         -ms-flex: 3;
         flex: 3;
         padding: 0;
@@ -952,7 +938,6 @@ header .menu-bar {
   padding: 3rem 0; }
   @media screen and (max-width: 914px) {
     .features .row {
-      -webkit-flex-direction: column;
       -ms-flex-direction: column;
       flex-direction: column; }
     @-ms-viewport {
@@ -1014,15 +999,12 @@ header .menu-bar {
   width: 100%;
   max-width: 1223px;
   margin: 2rem auto;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center; }
   @media screen and (max-width: 914px) {
     .event-callout {
-      -webkit-flex-direction: column;
       -ms-flex-direction: column;
       flex-direction: column; }
     @-ms-viewport {
@@ -1104,7 +1086,6 @@ header .menu-bar {
       .site-footer {
         width: device-width; } }
     .site-footer .row {
-      -webkit-flex-direction: column;
       -ms-flex-direction: column;
       flex-direction: column; } }
   .site-footer .logo img {
@@ -1212,7 +1193,6 @@ header .menu-bar {
       @media screen and (max-width: 1223px) {
         .site-footer nav > ul > li > a {
           background: #eee;
-          display: -webkit-flex;
           display: -ms-flexbox;
           display: flex;
           width: 100%;
@@ -1220,7 +1200,6 @@ header .menu-bar {
           padding: 0rem 1rem;
           color: #2a569b;
           font-weight: 300;
-          -webkit-align-items: center;
           -ms-flex-align: center;
           align-items: center; }
         @-ms-viewport {
@@ -1300,7 +1279,6 @@ header .menu-bar {
 /* Page Layout */
 @media screen and (max-width: 914px) {
   #body-wrap {
-    -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column; }
   @-ms-viewport {
@@ -1416,7 +1394,6 @@ header .menu-bar {
 /* Accordion */
 .expander {
   background: #eee;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   width: 100%;
@@ -1424,7 +1401,6 @@ header .menu-bar {
   padding: 0rem 1rem;
   color: #2a569b;
   font-weight: 300;
-  -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center; }
   .expander i {
@@ -1480,18 +1456,15 @@ header .menu-bar {
 
 /* Product tagline */
 .product-tagline {
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   background: #b9e5fb;
   width: 100%;
   margin: 2rem 0;
-  -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center; }
   @media screen and (max-width: 600px) {
     .product-tagline {
-      -webkit-flex-wrap: wrap;
       -ms-flex-wrap: wrap;
       flex-wrap: wrap; }
     @-ms-viewport {
@@ -1543,17 +1516,14 @@ header .menu-bar {
     margin-right: 2rem; }
 
 .product-table-footer {
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   margin-bottom: 4rem;
   width: 100%; }
   @media screen and (max-width: 1080px) {
     .product-table-footer {
-      -webkit-flex-wrap: wrap;
       -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-      -webkit-justify-content: space-between;
       -ms-flex-pack: justify;
       justify-content: space-between; }
     @-ms-viewport {
@@ -1834,7 +1804,6 @@ header .menu-bar {
       .distributor-list {
         width: device-width; } }
     .distributor-list .row {
-      -webkit-flex-direction: column;
       -ms-flex-direction: column;
       flex-direction: column;
       padding: 0 1rem; } }
@@ -1873,13 +1842,11 @@ header .menu-bar {
   padding: 0 2rem;
   margin: 4rem 0; }
   .management-team li {
-    display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
     margin-bottom: 4rem; }
     @media screen and (max-width: 768px) {
       .management-team li {
-        -webkit-flex-direction: column;
         -ms-flex-direction: column;
         flex-direction: column; }
       @-ms-viewport {
@@ -1933,10 +1900,8 @@ header .menu-bar {
 
 .sf-form .g-recaptcha, #sf-form .g-recaptcha {
   margin-bottom: 3rem;
-  -webkit-transform: scale(0.93);
   -ms-transform: scale(0.93);
   transform: scale(0.93);
-  -webkit-transform-origin: 0 0;
   -ms-transform-origin: 0 0;
   transform-origin: 0 0; }
 
@@ -1952,10 +1917,8 @@ header .menu-bar {
 
 .wpcf7-recaptcha {
   margin-bottom: 2rem;
-  -webkit-transform: scale(0.93);
   -ms-transform: scale(0.93);
   transform: scale(0.93);
-  -webkit-transform-origin: 0 0;
   -ms-transform-origin: 0 0;
   transform-origin: 0 0; }
 
