@@ -79,7 +79,8 @@ get_header(); ?>
                                 <input type="hidden" name="redirect_to" value="<?php the_permalink(); ?>">
                                 <input type="hidden" name="oid" value="00DE0000000KWb6">
                                 <input id="00NE00000069Ark" name="00NE00000069Ark" type="hidden" value="1" />
-                                <input type="hidden" name="lead_source" value="<?php echo (get_field('lead_source')) ? get_field('lead_source') : get_the_title(); ?>">
+                                <input type="hidden" id="lead_source" name="lead_source" value="Web" />
+                                <input  id="00NE0000000Lrpa" maxlength="20" name="00NE0000000Lrpa" size="20" type="hidden" value="<?php echo (get_field('lead_source')) ? get_field('lead_source') : get_the_title(); ?>" /> <!-- specific source -->
                                 <input type="hidden" name="pp-reg" value="1" />
                                 <p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="Register"><span class="acf-spinner"></span></p>
 
