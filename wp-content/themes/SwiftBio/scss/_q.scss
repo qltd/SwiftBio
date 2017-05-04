@@ -1793,6 +1793,13 @@ header {
         }
     }
 
+    select, .select2 {
+        display: block;
+        width: 50% !important;
+        margin-top: 2px;
+        margin-bottom: 0;
+    }
+
     p {
         clear: both;
         margin-bottom: 3rem;

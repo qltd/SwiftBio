@@ -1883,6 +1883,12 @@ header .menu-bar {
     margin-top: 2px;
     margin-bottom: 0; }
 
+.sf-form select, .sf-form .select2, #sf-form select, #sf-form .select2 {
+  display: block;
+  width: 50% !important;
+  margin-top: 2px;
+  margin-bottom: 0; }
+
 .sf-form p, #sf-form p {
   clear: both;
   margin-bottom: 3rem;
