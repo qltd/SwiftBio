@@ -17,7 +17,6 @@ get_header(); ?>
             <?php if (is_user_logged_in()): ?>
 
                 <?php
-                    $lead_source = (get_field('lead_source')) ? get_field('lead_source') : get_the_title();
                     $user_id = get_current_user_id();
                     $date = strtotime(get_user_meta($user_id, $lead_source, true));
                     $now = strtotime("-24 hours");
@@ -104,7 +103,6 @@ get_header(); ?>
                     <input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="Log In">
                     <a href="<?php echo wp_lostpassword_url( get_permalink() ); ?>" title="Lost Password">Lost Password? </a>
                     <input type="hidden" name="redirect_to" value="<?php the_permalink(); ?>">
-                    <input type="hidden" name="lead_source" value="<?php echo $lead_source; ?>">
                     <input type="hidden" name="pp-lg" value="1" />
                 </p>
             </form>
