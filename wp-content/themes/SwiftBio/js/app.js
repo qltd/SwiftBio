@@ -21,27 +21,29 @@ navClose[0].addEventListener("click", function(){ toggleNav() });
 bgOverlay[0].addEventListener("click", function(){ toggleNav() });
 
 /* Apply multiple Recaptcha's */
-function CaptchaCallback() {
-    jQuery('div.g-recaptcha').each(function(){
-        var key = jQuery(this).data('sitekey');
-        grecaptcha.render(jQuery(this)[0], {'sitekey' : key});
-    });
-};
+// function CaptchaCallback() {
+//     jQuery('div.g-recaptcha').each(function(){
+//         var key = jQuery(this).data('sitekey');
+//         grecaptcha.render(jQuery(this)[0], {'sitekey' : key});
+//     });
+// };
 
-    // function recaptchaCallback() {
-    //   $('#hiddenRecaptcha').valid();
-    // };
+//     function recaptchaCallback() {
+//       $('#hiddenRecaptcha').valid();
+//     };
 
 (function($){
 
     $('#registerform').validate();
     $('#loginform').validate();
 
-    if (window.location.href.indexOf("success") > -1){
+    if ($('body')).hasClass('page-product-support' || window.location.href.indexOf("success") > -1){
         $("input[name=retURL]").val(window.location);
     } else {
         $("input[name=retURL]").val(window.location + '?success=true');
     }
+
+
 
     $("#sf-form, .sf-form").each(function(){
         $(this).validate({

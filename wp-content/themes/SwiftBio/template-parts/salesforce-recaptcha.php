@@ -71,7 +71,7 @@ if ($captcha_success == false) {
     }
     $fields_string = rtrim($fields_string, '&');
 
-    update_post_meta('1', 'curl_string', $fields_string);
+    //update_post_meta('1', 'curl_string', $fields_string);
 
     //open connection
     $ch = curl_init();
@@ -87,13 +87,13 @@ if ($captcha_success == false) {
     //execute post
     $result = curl_exec($ch);
     if ($result !== false) {
-        echo $return;
+        //echo $return;
         $valid = true;
     }
 
     if($errno = curl_errno($ch)) {
         $error_message = curl_strerror($errno);
-        echo "cURL error ({$errno}):\n {$error_message}";
+        //echo "cURL error ({$errno}):\n {$error_message}";
     }
 
     //close connection

@@ -546,7 +546,7 @@ function register_download_to_salesforce($user_id, $lead_source = false){
         $email = urlencode($_POST['email']);
         $company = urlencode($_POST['company']);
         $phone = urlencode($_POST['phone']);
-        $lead = urlencode($_POST['lead_source']);
+        $lead = urlencode($_POST['00NE0000000Lrpa']);
 
     // else if it's a login
     } else {
@@ -556,7 +556,7 @@ function register_download_to_salesforce($user_id, $lead_source = false){
         $email = get_userdata($user_id)->data->user_email;
         $company = $user['billing_company'][0];
         $phone = $user['billing_phone'][0];
-        $lead = ($lead_source != false) ? $lead_source : urlencode($_POST['lead_source']);
+        $lead = ($lead_source != false) ? $lead_source : urlencode($_POST['00NE0000000Lrpa']);
     }
 
     $fields = array(

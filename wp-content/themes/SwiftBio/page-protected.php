@@ -17,6 +17,7 @@ get_header(); ?>
             <?php if (is_user_logged_in()): ?>
 
                 <?php
+                    $lead_source = (get_field('lead_source')) ? get_field('lead_source') : get_the_title();
                     $user_id = get_current_user_id();
                     $date = strtotime(get_user_meta($user_id, $lead_source, true));
                     $now = strtotime("-24 hours");
@@ -80,7 +81,7 @@ get_header(); ?>
                                 <input id="00NE00000069Ark" name="00NE00000069Ark" type="hidden" value="1" />
 
                                 <input type="hidden" id="lead_source" name="lead_source" value="Web" />
-                                <input  id="00NE0000000Lrpa" maxlength="20" name="00NE0000000Lrpa" size="20" type="hidden" value="<?php echo (get_field('lead_source')) ? get_field('lead_source') : get_the_title(); ?>" /> <!-- specific source -->
+                                <input  id="00NE0000000Lrpa" maxlength="30" name="00NE0000000Lrpa" size="30" type="hidden" value="<?php echo $lead_source; ?>" /> <!-- specific source -->
 
                                 <input type="hidden" name="pp-reg" value="1" />
                                 <p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="Register"><span class="acf-spinner"></span></p>
