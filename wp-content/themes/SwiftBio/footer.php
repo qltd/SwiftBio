@@ -51,14 +51,17 @@
     </div> <!-- #container -->
 
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.12.0/jquery.validate.js"></script>
-    <script src="<?php echo get_stylesheet_directory_uri(); ?>/js/app.js"></script>
+
     <?php /* if (!is_post_type_archive('careers') && !is_page('1080')): ?>
         <script src="https://www.google.com/recaptcha/api.js?onload=CaptchaCallback&render=explicit" async defer></script>
     <?php endif; */ ?>
     <?php wp_footer(); ?>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+    <script src="<?php echo get_stylesheet_directory_uri(); ?>/js/app.js"></script>
+
+
 <script>
  function convTracker(conv_id, conv_label) {
        var image = new Image(1, 1);

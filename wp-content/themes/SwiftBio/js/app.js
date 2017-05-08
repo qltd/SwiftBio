@@ -28,33 +28,52 @@ bgOverlay[0].addEventListener("click", function(){ toggleNav() });
 //     });
 // };
 
-//     function recaptchaCallback() {
-//       $('#hiddenRecaptcha').valid();
-//     };
+    function recaptchaCallback() {
+      $('#hiddenRecaptcha').valid();
+    };
 
 (function($){
 
     $('#registerform').validate();
     $('#loginform').validate();
 
-    if ($('body').hasClass('page-product-support') || window.location.href.indexOf("success") > -1){
-        $("input[name=retURL]").val(window.location);
+    if (window.location.href.indexOf("success") > -1){
+        $("input[name=retURL]").each(function(){
+           $(this).val(window.location);
+        });
+    } else if ($('body').hasClass('page-product-support')){
+        $("input[name=retURL]").each(function(){
+            $(this).val(document.location.protocol +"//"+ document.location.hostname + document.location.pathname + '?success=true');
+        });
     } else {
-        $("input[name=retURL]").val(window.location + '?success=true');
+        $("input[name=retURL]").each(function(){
+            $(this).val(window.location + '?success=true');
+        });
     }
 
 
-
-    $("#sf-form, .sf-form").each(function(){
+    $("#sf-form, #shipping-form, #library-form, #data-analysis-form").each(function(){
         $(this).validate({
             ignore: ".ignore",
             messages: {
                "hiddenRecaptcha": {
-                    required: "Verify you are human."
+                    required: "Verify you are a human."
+               },
+               "g-recaptcha-hidden": {
+                    required: "Verify you are a human."
                }
             },
             rules: {
                 "hiddenRecaptcha": {
+                     required: function() {
+                         if(grecaptcha.getResponse() == '') {
+                             return true;
+                         } else {
+                             return false;
+                         }
+                     }
+                },
+                "g-recaptcha-hidden": {
                      required: function() {
                          if(grecaptcha.getResponse() == '') {
                              return true;
