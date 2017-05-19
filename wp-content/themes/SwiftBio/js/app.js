@@ -190,6 +190,23 @@ $('a[href$=".pdf"]').prop('target', '_blank');
       return false;
   });
 
+$('.parent-check input').click(function(){
+    var child = $(this).parent().next('.child-check');
+    child.toggleClass('active');
+    child.find('input').removeAttr('checked');
+});
+
+$(".child-check input:checkbox").click(function(){
+    // uncheck all siblings
+    $(this).closest('.child-check').find('input:checkbox').not($(this)).removeAttr('checked');
+});
+
+$('#00N44000005ysA8').change(function(){
+    if ($(this).val() == 'Other'){
+        $('.other-text').toggle();
+    }
+});
+
 
 })(jQuery);
 

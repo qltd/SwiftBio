@@ -1954,4 +1954,15 @@ header .menu-bar {
 .page-template-page-protected h1 {
   display: none; }
 
+/* Checkbox accordion */
+.child-check {
+  display: none;
+  padding-left: 2rem; }
+  .child-check.active {
+    display: block; }
+
+.other-text {
+  display: none;
+  margin-top: 15px; }
+
 /*# sourceMappingURL=app.css.map */
