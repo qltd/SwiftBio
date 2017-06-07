@@ -76,7 +76,7 @@ $show_customer_details = is_user_logged_in() && $order->get_user_id() === get_cu
 					?>
 					<tr>
 						<th scope="row"><?php if ($total['label'] == 'Discount:'): ?>
-                                                                            <?php echo "Discount: (" . $coupon_text . ")"; ?>
+                                                                            <?php echo "Discount (" . $coupon_text . "):"; ?>
                                                                         <?php else: ?>
                                                                             <?php echo $total['label']; ?>
                                                                         <?php endif; ?></th>
