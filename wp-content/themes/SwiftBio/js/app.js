@@ -190,6 +190,7 @@ $('a[href$=".pdf"]').prop('target', '_blank');
       return false;
   });
 
+
 // $('.parent-check input').click(function(){
 //     var child = $(this).parent().next('.child-check');
 //     child.toggleClass('active');

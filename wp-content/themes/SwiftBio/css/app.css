@@ -1956,7 +1956,6 @@ header .menu-bar {
 
 /* Checkbox accordion */
 .child-check {
-  display: none;
   padding-left: 2rem; }
   .child-check.active {
     display: block; }
