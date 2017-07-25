@@ -37,7 +37,7 @@ final class Woocommerce_Gateway_Purchase_Order extends WC_Payment_Gateway {
 		$this->token 			= 'woocommerce-gateway-purchase-order';
 		$this->plugin_url 		= plugin_dir_url( __FILE__ );
 		$this->plugin_path 		= plugin_dir_path( __FILE__ );
-		$this->version 			= '1.1.4';
+		$this->version 			= '1.1.5';
 
 		register_activation_hook( __FILE__, array( $this, 'install' ) );
 
@@ -113,7 +113,7 @@ final class Woocommerce_Gateway_Purchase_Order extends WC_Payment_Gateway {
 	 */
     public function payment_fields () {
         if( $this->description ) echo wpautop( wptexturize( $this->description ) );
-        
+
         // In case of an AJAX refresh of the page, check the form post data to see if we can repopulate an previously entered PO
 		$po_number = '';
 		if ( isset( $_REQUEST[ 'post_data' ] ) ) {

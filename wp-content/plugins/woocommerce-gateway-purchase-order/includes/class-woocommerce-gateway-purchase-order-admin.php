@@ -39,9 +39,9 @@ final class Woocommerce_Gateway_Purchase_Order_Admin {
 		add_action( 'woocommerce_admin_order_data_after_order_details', array( $this, 'display_purchase_order_number' ) );
 		add_action( 'woocommerce_email_after_order_table', array( $this, 'display_purchase_order_number' ) );
 		add_action( 'woocommerce_order_details_after_order_table', array( $this, 'display_purchase_order_number' ) );
-		
+
 	} // End __construct()
-	
+
 	/**
 	* Purchase order HTML output.
 	* @access public
