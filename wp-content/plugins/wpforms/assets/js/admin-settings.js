@@ -38,6 +38,7 @@
 			s.tabs            = $('#wpforms-tabs');
 			s.tabs_nav        = $('#wpforms-tabs-nav');
 			s.integrationFocus = WPFormsSettings.getQueryString('wpforms-integration');
+			s.jumpTo           = WPFormsSettings.getQueryString('jump');
 
 			// If we have a hash and it begins with "wpforms-tab", set the proper tab to be opened.
 			if ( s.tabs_hash && s.tabs_hash.indexOf('wpforms-tab-') >= 0 ) {
@@ -55,6 +56,10 @@
 				if ( s.integrationFocus ) {
 					$('body').animate({
 						scrollTop: $('#wpforms-integration-'+s.integrationFocus).offset().top
+					}, 1000);
+				} else if ( s.jumpTo ) {
+					$('body').animate({
+						scrollTop: $('#'+s.jumpTo).offset().top
 					}, 1000);
 				}
 			});
@@ -151,7 +156,11 @@
 						$this.closest('.wpforms-settings-provider-accounts-connect').slideToggle();
 					} else {
 						console.log(res);
-						alert( 'Could not authenticate with the provider' );
+						var msg = 'Could not authenticate with the provider.';
+						if ( res.data.error_msg ) {
+							msg = msg+"\n"+res.data.error_msg;
+						}
+						alert( msg );
 					}
 					$this.text(text);
 					$icon.hide();

@@ -20,8 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$order = wc_get_order( $order_id );
-
+if ( ! $order = wc_get_order( $order_id ) ) {
+	return;
+}
 $show_purchase_note    = $order->has_status( apply_filters( 'woocommerce_purchase_note_order_statuses', array( 'completed', 'processing' ) ) );
 $show_customer_details = is_user_logged_in() && $order->get_user_id() === get_current_user_id();
 ?>
@@ -59,27 +60,10 @@ $show_customer_details = is_user_logged_in() && $order->get_user_id() === get_cu
 
 		<tfoot>
 			<?php
-                                            if( $order->get_used_coupons() ) {
-
-                                                $coupons_count = count( $order->get_used_coupons() );
-                                                $i = 1;
-                                                $coupon_text = false;
-                                                foreach( $order->get_used_coupons() as $coupon) {
-                                                    $coupon_text .= $coupon;
-                                                    if( $i < $coupons_count )
-                                                        $coupon_text .= ', ';
-                                                    $i++;
-                                                }
-                                            }
-
 				foreach ( $order->get_order_item_totals() as $key => $total ) {
 					?>
 					<tr>
-						<th scope="row"><?php if ($total['label'] == 'Discount:'): ?>
-                                                                            <?php echo "Discount: (" . $coupon_text . ")"; ?>
-                                                                        <?php else: ?>
-                                                                            <?php echo $total['label']; ?>
-                                                                        <?php endif; ?></th>
+						<th scope="row"><?php echo $total['label']; ?></th>
 						<td><?php echo $total['value']; ?></td>
 					</tr>
 					<?php

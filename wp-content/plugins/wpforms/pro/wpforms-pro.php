@@ -17,15 +17,16 @@ class WPForms_Pro {
 		$this->constants();
 		$this->includes();
 
-		add_action( 'wpforms_loaded',                      array( $this, 'objects'                     ), 1     );
-		add_action( 'wpforms_loaded',                      array( $this, 'updater'                     ), 30    );
-		add_action( 'wpforms_install',                     array( $this, 'install'                     ), 10    );
-		add_action( 'wpforms_process_entry_save',          array( $this, 'entry_save'                  ), 10, 4 );
-		add_action( 'wpforms_form_settings_general',       array( $this, 'form_settings_general'       ), 10    );
-		add_filter( 'wpforms_overview_table_columns',      array( $this, 'form_table_columns'          ), 10, 1 );
-		add_filter( 'wpforms_overview_table_column_value', array( $this, 'form_table_columns_value'    ), 10, 3 );
-		add_action( 'wpforms_form_settings_notifications', array( $this, 'form_settings_notifications' ),  8, 1 );
-		add_filter( 'wpforms_builder_strings',             array( $this, 'form_builder_strings'        ), 10, 2 );
+		add_action( 'wpforms_loaded',                      array( $this, 'objects'                        ), 1     );
+		add_action( 'wpforms_loaded',                      array( $this, 'updater'                        ), 30    );
+		add_action( 'wpforms_install',                     array( $this, 'install'                        ), 10    );
+		add_action( 'wpforms_process_entry_save',          array( $this, 'entry_save'                     ), 10, 4 );
+		add_action( 'wpforms_form_settings_general',       array( $this, 'form_settings_general'          ), 10    );
+		add_filter( 'wpforms_overview_table_columns',      array( $this, 'form_table_columns'             ), 10, 1 );
+		add_filter( 'wpforms_overview_table_column_value', array( $this, 'form_table_columns_value'       ), 10, 3 );
+		add_action( 'wpforms_form_settings_notifications', array( $this, 'form_settings_notifications'    ),  8, 1 );
+		add_filter( 'wpforms_builder_strings',             array( $this, 'form_builder_strings'           ), 10, 2 );
+		add_action( 'admin_notices',                       array( $this, 'conditional_logic_addon_notice' )        );
 	}
 
 	/**
@@ -38,6 +39,7 @@ class WPForms_Pro {
 		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/class-db.php';
 		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/class-entry.php';
 		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/class-entry-meta.php';
+		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/class-conditional-logic-fields.php';
 		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/payments/class-payment.php';
 		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/payments/functions.php';
 
@@ -163,7 +165,7 @@ class WPForms_Pro {
 		$data = array(
 			'form_id'    => absint( $form_id ),
 			'user_id'    => absint( $user_id ),
-			'fields'     => json_encode( $fields ),
+			'fields'     => wp_json_encode( $fields ),
 			'ip_address' => sanitize_text_field( $user_ip ),
 			'user_agent' => sanitize_text_field( $user_agent ),
 			'user_uuid'  => sanitize_text_field( $user_uuid ),
@@ -179,6 +181,11 @@ class WPForms_Pro {
 	 * @param object $instance
 	 */
 	public function form_settings_general( $instance ) {
+
+		// Don't provide this option if the user has configured payments.
+		if ( ( ! empty( $instance->form_data['payments']['paypal_standard']['enable'] ) || ! empty( $instance->form_data['payments']['stripe']['enable'] ) ) && ! isset( $instance->form_data['settings']['disable_entries'] ) ) {
+			return;
+		}
 
 		wpforms_panel_field(
 			'checkbox',
@@ -246,7 +253,7 @@ class WPForms_Pro {
 
 		echo '<div class="wpforms-panel-content-section-title">';
 			_e( 'Notifications', 'wpforms' );
-			echo '<button class="wpforms-notifications-add" data-next_id="' . $next_id . '">' . __( 'Add New Notification', 'wpforms' ) . '</button>';
+			echo '<button class="wpforms-notifications-add" data-next-id="' . $next_id . '">' . __( 'Add New Notification', 'wpforms' ) . '</button>';
 		echo '</div>';
 
 		wpforms_panel_field(
@@ -439,6 +446,21 @@ class WPForms_Pro {
 		$strings['currency_symbol_pos'] = sanitize_text_field( $currencies[$currency]['symbol_pos'] );
 
 		return $strings;
+	}
+
+	/**
+	 * Check to see if the Conditional Logic addon is installed, if so notify
+	 * the user that it can be removed.
+	 *
+	 * @since 1.3.8
+	 */
+	public function conditional_logic_addon_notice() {
+
+		if ( file_exists( WP_PLUGIN_DIR . '/wpforms-conditional-logic/wpforms-conditional-logic.php' ) ) {
+			echo '<div class="notice notice-info"><p>';
+			printf( __( 'Conditional logic functionality is now included in the core WPForms plugin! The WPForms Conditional Logic addon can be removed without affecting your forms. For more details <a href="%s" target="_blank" rel="noopener noreferrer">read our annoucement</a>.', 'wpforms' ), 'https://wpforms.com/' );
+			echo '</p></div>';
+		}
 	}
 }
 new WPForms_Pro;

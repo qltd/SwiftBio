@@ -3,15 +3,15 @@
 Plugin Name: Fast Secure reCAPTCHA
 Plugin URI: https://wordpress.org/plugins/fast-secure-recaptcha/
 Description: Adds No CAPTCHA reCAPTCHA V2 anti-spam to WordPress pages for comments, login, registration, lost password, BuddyPress register, bbPress register, wpForo register, bbPress New Topic and Reply to Topic Forms, Jetpack Contact Form, and WooCommerce checkout. In order to post comments, login, or register, users will have to pass the reCAPTCHA V2 "I'm not a robot" test. Prevents spam from automated bots. Compatible with Akismet and Multisite Network Activate.
-Author: Mike Challis
+Author: fastsecure
 Author URI: http://www.642weather.com/weather/scripts.php
 Text Domain: fast-secure-recaptcha
 Domain Path: /languages
 License: GPLv2 or later
-Version: 1.0.15
+Version: 1.0.20
 */
 
-$fs_recaptcha_version = '1.0.15';
+$fs_recaptcha_version = '1.0.20';
 
 /*  Copyright (C) 2017 Mike Challis  (http://www.642weather.com/weather/contact_us.php)
 
@@ -44,6 +44,7 @@ class fsRecaptcha {
     public $fs_recaptcha_version;
     public $fs_recaptcha_add_script = false;
     private $fs_recaptcha_add_reg = false;
+    private $fs_recaptcha_add_jetpack = false;
     public $fs_add_recaptcha_js_array = array();
     private $fs_recaptcha_networkwide = false;
     private $fs_recaptcha_on_comments = false;
@@ -184,7 +185,7 @@ function fs_recaptcha_init() {
      }
 
      // woocommerce checkout form
-     if ( ! is_user_logged_in() && $fs_recaptcha_opt['wc_checkout'] == 'true' ) {
+     if ( ! is_user_logged_in() ) {
            // show recaptcha for woocommerce checkout but only when the setting is enabled and not logged in
  		   add_action('woocommerce_checkout_after_order_review', array($this, 'fs_recaptcha_wc_checkout_form'), 99);
            add_action('woocommerce_after_checkout_validation', array($this, 'fs_recaptcha_wc_checkout_post') );
@@ -510,9 +511,10 @@ $html .=  '</div>
 
 // this function adds the captcha to the woocommerce checkout form
 function fs_recaptcha_wc_checkout_form() {
-   global $fs_recaptcha_add_script;
+   global $fs_recaptcha_opt, $fs_recaptcha_add_script;
 
-   $fs_recaptcha_add_script = true;
+ if ($fs_recaptcha_opt['wc_checkout'] == 'true' ) {
+    $fs_recaptcha_add_script = true;
 
 // the recaptcha html - woocommerce checkout form
 echo '
@@ -521,6 +523,7 @@ $this->fs_recaptcha_captcha_html('wc_checkout');
 echo '</div>
 ';
 
+}
   return true;
 } // end function fs_recaptcha_wc_checkout_form
 
@@ -692,6 +695,13 @@ function fs_recaptcha_jetpack_validate($bool) {
 
 // append field to jetpack contact form shortcode
 function fs_recaptcha_jetpack_form($content) {
+  global $fs_recaptcha_add_jetpack;
+
+  //if ( $fs_recaptcha_add_jetpack )     // prevent double captcha fields jetpack
+   //       return $content;
+
+   $fs_recaptcha_add_jetpack = true;
+
         return preg_replace_callback(
             '/\[contact-form(.*?)?\](.*?)?\[\/contact-form\]/si',
             array($this, 'fs_recaptcha_jetpack_append_field_callback'),
@@ -732,8 +742,11 @@ function fs_recaptcha_jetpack_shortcode($atts) {
 
 
 // this function checks the recaptcha posted with registration page
-function fs_recaptcha_register_post(WP_Error $errors) {
+function fs_recaptcha_register_post( $errors = '' ) {
    global $fs_recaptcha_opt, $fs_recaptcha_checkout_validated;
+
+    if ( ! is_wp_error( $errors ) )
+          $errors = new WP_Error();
 
    if ($fs_recaptcha_checkout_validated)
        return $errors; // skip because already validated a captcha at woocommerce checkout, checked the box "Create an account"
@@ -748,8 +761,11 @@ function fs_recaptcha_register_post(WP_Error $errors) {
 
 
 // this function checks the recaptcha posted with lost password page
-function fs_recaptcha_lostpassword_post( WP_Error $errors ) {
+function fs_recaptcha_lostpassword_post( $errors = '' ) {
    global $fs_recaptcha_opt;
+
+   if ( ! is_wp_error( $errors ) )
+          $errors = new WP_Error();
 
    $validate_result = $this->fs_recaptcha_validate_code('lostpassword');
    if($validate_result != 'valid') {
@@ -838,11 +854,15 @@ function fs_recaptcha_check_login_recaptcha($user) {
 function fs_recaptcha_wc_checkout_post() {
    global $fs_recaptcha_opt, $fs_recaptcha_checkout_validated;
 
-   $validate_result = $this->fs_recaptcha_validate_code('wc_checkout');
-   if($validate_result != 'valid') {
+   if ($fs_recaptcha_opt['wc_checkout'] == 'true' ) {
+      $validate_result = $this->fs_recaptcha_validate_code('wc_checkout');
+      if($validate_result != 'valid') {
             wc_add_notice( $validate_result, 'error' );
-   }  else {
+      }  else {
             $fs_recaptcha_checkout_validated = true;
+      }
+   } else {
+           $fs_recaptcha_checkout_validated = true;   // always allow registering during checkot
    }
    return;
 
@@ -998,11 +1018,11 @@ function fs_recaptcha_determine_current_page() {
 		global $pagenow;
 
 		$request_uri = ltrim($_SERVER['REQUEST_URI'], '/');
-        if (strpos($request_uri, $lostpassword_path) === 0) {
+        if (!empty($lostpassword_path) && strpos($request_uri, $lostpassword_path) === 0) {
 			// user is requesting lost password page
 			$this->is_lostpassword = true;
 		}
-		elseif (strpos($request_uri, $register_path) === 0) {
+		elseif (!empty($register_path) && strpos($request_uri, $register_path) === 0) {
 			// user is requesting regular user registration page
 			$this->is_reg = true;
 		}
@@ -1010,7 +1030,7 @@ function fs_recaptcha_determine_current_page() {
             // user is requesting woocommerce registration page
 			$this->is_reg = true;
         }
-		elseif (strpos($request_uri, $login_path) === 0) {
+		elseif (!empty($login_path) && strpos($request_uri, $login_path) === 0) {
 			// user is requesting the wp-login page
 			$this->is_login = true;
 		}

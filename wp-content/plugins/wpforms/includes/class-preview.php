@@ -171,7 +171,7 @@ class WPForms_Preview {
 
 		// Create the custom preview page
 		$content  = '<p>' . __( 'This is the WPForms preview page. All your form previews will be handled on this page.', 'wpforms' ) . '</p>';
-		$content .= '<p>' . __( 'The page is set to private, so it is not publically accessible. Please do not delete this page :) .', 'wpforms' ) . '</p>';
+		$content .= '<p>' . __( 'The page is set to private, so it is not publicly accessible. Please do not delete this page :) .', 'wpforms' ) . '</p>';
 		$args = array(
 			'post_type'		 => 'page',
 			'post_name'		 => 'wpforms-preview',
@@ -258,7 +258,7 @@ class WPForms_Preview {
 		// Customize the page content
 		$title     = sanitize_text_field( $form['settings']['form_title'] );
 		$shortcode = '[wpforms id="' . absint( $form['id'] ) . '"]';
-		$content   = __( 'This is a preview of your form. This page is not publically accessible.', 'wpforms' );
+		$content   = __( 'This is a preview of your form. This page is not publicly accessible.', 'wpforms' );
 		if ( !empty( $_GET['new_window'] ) ) {
 			$content .= ' <a href="javascript:window.close();">' . __( 'Close this window', 'wpforms' ) . '.</a>';
 		}

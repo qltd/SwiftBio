@@ -40,7 +40,7 @@ abstract class WPForms_Template {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	public $includes;
+	public $includes = '';
 
 	/**
 	 * URL of the icon to display in the admin area.
@@ -48,7 +48,7 @@ abstract class WPForms_Template {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	public $icon;
+	public $icon = '';
 
 	/**
 	 * Array of data that is assigned to the post_content on form creation.

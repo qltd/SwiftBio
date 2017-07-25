@@ -1,6 +1,9 @@
 ;
 var wpf = {
 
+	cachedFields: {},
+	savedState: false,
+
 	// This file contains a collection of utility functions.
 
 	/**
@@ -21,6 +24,9 @@ var wpf = {
 	 * @since 1.0.1
 	 */
 	ready: function() {
+
+		// Load initial form saved state.
+		wpf.savedState = wpf.getFormState( '#wpforms-builder-form' );
 	},
 
 	/**
@@ -49,8 +55,10 @@ var wpf = {
 	fieldUpdate: function() {
 
 		var fields = wpf.getFields();
+
 		jQuery(document).trigger('wpformsFieldUpdate', [fields] );
-		// console.log('Field update detected');
+
+		wpf.debug('fieldUpdate triggered');
 	},
 
 	/**
@@ -58,56 +66,80 @@ var wpf = {
 	 *
 	 * @since 1.0.1
 	 * @param array allowedFields
+	 * @param bool useCache
 	 * @return object
 	 */
-	getFields: function(allowedFields) {
+	getFields: function(allowedFields, useCache ) {
 
-		var formData       = jQuery('#wpforms-builder-form').serializeObject(),
-			fields         = formData.fields,
-			fieldOrder     = [],
-			fieldsOrdered  = new Array(),
-			fieldBlacklist = ['html','divider','pagebreak'];
+		useCache = useCache || false;
 
-		if (!fields) {
-			return false;
-		}
+		if ( useCache && ! jQuery.isEmptyObject(wpf.cachedFields) ) {
 
-		// Find and store the order of forms. The order is lost when javascript
-		// serilizes the form.
-		jQuery('.wpforms-field-option').each(function(index, ele) {
-			fieldOrder.push(jQuery(ele).data('field-id'));
-		});
+			// Use cache if told and cache is primed.
+			var fieldsOrdered = jQuery.extend({}, wpf.cachedFields);
 
-		// Remove fields that are not supported and check for white list
-		jQuery.each(fields, function(index, ele) {
-			if (ele) {
-				if (jQuery.inArray(fields[index].type, fieldBlacklist) == '1' ){
-					delete fields[index];
-					wpf.removeArrayItem(fieldOrder, index);
-				} else if (typeof allowedFields !== 'undefined' && allowedFields && allowedFields.constructor === Array) {
-					if (jQuery.inArray(fields[index].type, allowedFields) == '-1' ){
+			wpf.debug('getFields triggered (cached)');
+
+		} else {
+
+			// Normal processing, get fields from builder and prime cache.
+			var formData       = jQuery('#wpforms-builder-form').serializeObject(),
+				fields         = formData.fields,
+				fieldOrder     = [],
+				fieldsOrdered  = new Array(),
+				fieldBlacklist = ['html','divider','pagebreak'];
+
+			if (!fields) {
+				return false;
+			}
+
+			// Find and store the order of forms. The order is lost when javascript
+			// serilizes the form.
+			jQuery('.wpforms-field-option').each(function(index, ele) {
+				fieldOrder.push(jQuery(ele).data('field-id'));
+			});
+
+			// Remove fields that are not supported and check for white list
+			jQuery.each(fields, function(index, ele) {
+				if (ele) {
+					if (jQuery.inArray(fields[index].type, fieldBlacklist) == '1' ){
 						delete fields[index];
 						wpf.removeArrayItem(fieldOrder, index);
 					}
 				}
-			}
-		});
+			});
 
-		// Preserve the order of field choices
-		for(var key in fields) {
-			if (fields[key].choices) {
-				jQuery('#wpforms-field-option-row-'+fields[key].id+'-choices li').each(function(index, ele) {
-					var choiceKey = jQuery(ele).data('key');
-					fields[key].choices['choice_'+choiceKey] = fields[key].choices[choiceKey];
-					fields[key].choices['choice_'+choiceKey].key = choiceKey;
-					delete fields[key].choices[choiceKey];
-				});
+			// Preserve the order of field choices
+			for(var key in fields) {
+				if (fields[key].choices) {
+					jQuery('#wpforms-field-option-row-'+fields[key].id+'-choices .choices-list li').each(function(index, ele) {
+						var choiceKey = jQuery(ele).data('key');
+						fields[key].choices['choice_'+choiceKey] = fields[key].choices[choiceKey];
+						fields[key].choices['choice_'+choiceKey].key = choiceKey;
+						delete fields[key].choices[choiceKey];
+					});
+				}
 			}
+
+			// Preserve the order of fields
+			for(var key in fieldOrder) {
+				fieldsOrdered['field_'+fieldOrder[key]] = fields[fieldOrder[key]];
+			}
+
+			// Cache the all the fields now that they have been ordered and initially
+			// processed.
+			wpf.cachedFields = fieldsOrdered;
+
+			wpf.debug('getFields triggered');
 		}
 
-		// Preserve the order of fields
-		for(var key in fieldOrder) {
-			fieldsOrdered['field_'+fieldOrder[key]] = fields[fieldOrder[key]];
+		// If we should only return specfic field types, remove the others.
+		if ( allowedFields && allowedFields.constructor === Array ) {
+			for(key in fieldsOrdered) {
+				if ( jQuery.inArray(fieldsOrdered[key].type, allowedFields) === -1 ){
+					delete fieldsOrdered[key];
+				}
+			}
 		}
 
 		return fieldsOrdered;
@@ -146,6 +178,21 @@ var wpf = {
 	 */
 	getField: function(id,key) {
 		// @todo
+	},
+
+	/**
+	 * Get form state.
+	 *
+	 * @since 1.3.8
+	 * @param object el
+	 */
+	getFormState: function( el ) {
+
+		//return JSON.stringify( jQuery( el ).serializeArray() );
+
+		// Serialize tested the most performant string we can use for
+		// comparisons.
+		return jQuery( el ).serialize();
 	},
 
 	// hasField @todo
@@ -351,6 +398,34 @@ var wpf = {
 		}
 
 		return false
+	},
+
+	/**
+	 * Debug output helper.
+	 *
+	 * @since 1.3.8
+	 * @param mixed msg
+	 */
+	debug: function( msg ) {
+
+		if ( wpf.isDebug() ) {
+			if ( typeof msg === 'object' || msg.constructor === Array ) {
+				console.log( 'WPForms Debug:' );
+				console.log( msg )
+			} else {
+				console.log( 'WPForms Debug: '+msg );
+			}
+		}
+	},
+
+	/**
+	 * Is debug mode.
+	 *
+	 * @since 1.3.8
+	 */
+	isDebug: function() {
+
+		return ( ( window.location.hash && '#wpformsdebug' === window.location.hash ) || wpforms_builder.debug );
 	}
 }
 wpf.init();

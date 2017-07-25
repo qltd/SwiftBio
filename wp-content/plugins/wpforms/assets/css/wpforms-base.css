@@ -70,6 +70,11 @@
 	margin: 5px 0 0 0;
 }
 
+.wpforms-container .wpforms-field-description-before {
+	font-size: 0.85em;
+	margin: 0 0 5px 0;
+}
+
 /* Labels and sub-labels */
 .wpforms-container .wpforms-field-label {
 	display: block;
@@ -430,7 +435,7 @@
 
 .wpforms-container .wpforms-page-indicator {
 	margin: 0 0 20px 0;
-	overflow: auto;
+	overflow: hidden;
 }
 
 /** Circles theme **/

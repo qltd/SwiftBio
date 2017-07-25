@@ -56,9 +56,12 @@ function wpforms_panel_field( $option, $panel, $field, $form_data, $label, $args
 	}
 
 	// Check for data attributes
-	if ( !empty( $args['data'] ) ) {
+	if ( ! empty( $args['data'] ) ) {
 		foreach ( $args['data'] as $key => $val ) {
-		  $data_attr .= ' data-' . $key . '="' . $val . '"';
+			if ( is_array( $val ) ) {
+				$val = wp_json_encode( $val );
+			}
+			$data_attr .= ' data-' . $key . '=\'' . $val . '\'';
 		}
 	}
 

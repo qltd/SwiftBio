@@ -140,6 +140,7 @@ abstract class WC_Data {
 		$this->maybe_read_meta_data();
 		if ( ! empty( $this->meta_data ) ) {
 			foreach ( $this->meta_data as $array_key => $meta ) {
+				$this->meta_data[ $array_key ] = clone $meta;
 				if ( ! empty( $meta->id ) ) {
 					unset( $this->meta_data[ $array_key ]->id );
 				}
@@ -247,6 +248,9 @@ abstract class WC_Data {
 	 * Filter null meta values from array.
 	 *
 	 * @since  3.0.0
+	 *
+	 * @param mixed $meta
+	 *
 	 * @return bool
 	 */
 	protected function filter_null_meta( $meta ) {
@@ -351,8 +355,8 @@ abstract class WC_Data {
 
 	/**
 	 * Update meta data by key or ID, if provided.
-	 *
 	 * @since  2.6.0
+	 *
 	 * @param  string $key
 	 * @param  string $value
 	 * @param  int $meta_id
@@ -374,7 +378,7 @@ abstract class WC_Data {
 	 * Delete meta data.
 	 *
 	 * @since 2.6.0
-	 * @param array $key Meta key
+	 * @param string $key Meta key
 	 */
 	public function delete_meta_data( $key ) {
 		$this->maybe_read_meta_data();
@@ -431,33 +435,29 @@ abstract class WC_Data {
 		}
 
 		if ( ! empty( $this->cache_group ) ) {
-			$cache_key = WC_Cache_Helper::get_cache_prefix( $this->cache_group ) . 'object_meta_' . $this->get_id();
+			// Prefix by group allows invalidation by group until https://core.trac.wordpress.org/ticket/4476 is implemented.
+			$cache_key = WC_Cache_Helper::get_cache_prefix( $this->cache_group ) . WC_Cache_Helper::get_cache_prefix( 'object_' . $this->get_id() ) . 'object_meta_' . $this->get_id();
 		}
 
 		if ( ! $force_read ) {
 			if ( ! empty( $this->cache_group ) ) {
-				$cached_meta = wp_cache_get( $cache_key, $this->cache_group );
-				if ( false !== $cached_meta ) {
-					$this->meta_data = $cached_meta;
-					$cache_loaded    = true;
-				}
+				$cached_meta  = wp_cache_get( $cache_key, $this->cache_group );
+				$cache_loaded = ! empty( $cached_meta );
 			}
 		}
 
-		if ( ! $cache_loaded ) {
-			$raw_meta_data   = $this->data_store->read_meta( $this );
-			if ( $raw_meta_data ) {
-				foreach ( $raw_meta_data as $meta ) {
-					$this->meta_data[] = (object) array(
-						'id'    => (int) $meta->meta_id,
-						'key'   => $meta->meta_key,
-						'value' => maybe_unserialize( $meta->meta_value ),
-					);
-				}
+		$raw_meta_data = $cache_loaded ? $cached_meta : $this->data_store->read_meta( $this );
+		if ( $raw_meta_data ) {
+			foreach ( $raw_meta_data as $meta ) {
+				$this->meta_data[] = (object) array(
+					'id'    => (int) $meta->meta_id,
+					'key'   => $meta->meta_key,
+					'value' => maybe_unserialize( $meta->meta_value ),
+				);
+			}
 
-				if ( ! empty( $this->cache_group ) ) {
-					wp_cache_set( $cache_key, $this->meta_data, $this->cache_group );
-				}
+			if ( ! $cache_loaded && ! empty( $this->cache_group ) ) {
+				wp_cache_set( $cache_key, $raw_meta_data, $this->cache_group );
 			}
 		}
 	}
@@ -484,9 +484,9 @@ abstract class WC_Data {
 				$this->data_store->update_meta( $this, $meta );
 			}
 		}
-
 		if ( ! empty( $this->cache_group ) ) {
-			WC_Cache_Helper::incr_cache_prefix( $this->cache_group );
+			$cache_key = WC_Cache_Helper::get_cache_prefix( $this->cache_group ) . WC_Cache_Helper::get_cache_prefix( 'object_' . $this->get_id() ) . 'object_meta_' . $this->get_id();
+			wp_cache_delete( $cache_key, $this->cache_group );
 		}
 	}
 
@@ -536,8 +536,11 @@ abstract class WC_Data {
 	 * Only sets using public methods.
 	 *
 	 * @since  3.0.0
+	 *
 	 * @param  array $props Key value pairs to set. Key is the prop and should map to a setter function name.
-	 * @return WP_Error|bool
+	 * @param string $context
+	 *
+	 * @return bool|WP_Error
 	 */
 	public function set_props( $props, $context = 'set' ) {
 		$errors = new WP_Error();

@@ -60,13 +60,18 @@
 			// Only load if jQuery validation library exists
 			if (typeof $.fn.validate !== 'undefined') {
 
+				$.validator.messages.required = wpforms_settings.val_required;
+				$.validator.messages.url = wpforms_settings.val_url;
+				$.validator.messages.email = wpforms_settings.val_email;
+				$.validator.messages.number = wpforms_settings.val_number;
+
 				// Payments: Validate method for Credit Card Number
 				if(typeof $.fn.payment !== 'undefined') {
 					$.validator.addMethod( "creditcard", function(value, element) {
 						//var type  = $.payment.cardType(value);
 						var valid = $.payment.validateCardNumber(value);
 						return this.optional(element) || valid;
-					}, "Please enter a valid credit card number.");
+					}, wpforms_settings.val_creditcard);
 					// @todo validate CVC and expiration
 				}
 
@@ -74,7 +79,7 @@
 				$.validator.addMethod( "extension", function(value, element, param) {
 					param = typeof param === "string" ? param.replace( /,/g, "|" ) : "png|jpe?g|gif";
 					return this.optional(element) || value.match( new RegExp( "\\.(" + param + ")$", "i" ) );
-				}, $.validator.format("File type is not allowed") );
+				}, wpforms_settings.val_fileextension );
 
 				// Validate method for file size
 				$.validator.addMethod("maxsize", function(value, element, param) {
@@ -95,7 +100,7 @@
 						}
 					}
 					return true;
-				}, $.validator.format("File exceeds max size allowed"));
+				}, wpforms_settings.val_filesize);
 
 				// Validate email addresses
 				$.validator.methods.email = function( value, element ) {
@@ -105,19 +110,22 @@
 				// Validate confirmations
 				$.validator.addMethod("confirm", function(value, element, param) {
 					return $.validator.methods.equalTo.call(this, value, element, param);
-				}, function(params, element) {
-					return $(element).data('rule-confirm-msg');
-				});
+				}, wpforms_settings.val_confirm);
+
+				// Validate required payments
+				$.validator.addMethod( "required-payment", function( value, element ) {
+					return WPForms.amountSanitize( value ) > 0;
+				}, wpforms_settings.val_requiredpayment );
 
 				// Validate 12-hour time
 				$.validator.addMethod( "time12h", function( value, element ) {
 					return this.optional( element ) || /^((0?[1-9]|1[012])(:[0-5]\d){1,2}(\ ?[AP]M))$/i.test( value );
-				}, "Please enter time in 12-hour AM/PM format (eg 8:45 AM)" );
+				}, wpforms_settings.val_time12h );
 
 				// Validate 24-hour time
 				$.validator.addMethod( "time24h", function( value, element ) {
 					return this.optional(element) || /^(([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(\ ?[AP]M)?$/i.test(value);
-				}, "Please enter time in 24-hour format (eg 22:45)" );
+				}, wpforms_settings.val_time24h );
 
 				// Finally load jQuery Validation library for our forms
 				$('.wpforms-validate').each(function() {
@@ -157,11 +165,16 @@
 									$submit = $form.find('.wpforms-submit'),
 									altText = $submit.data('alt-text');
 
-								if (altText) {
-									$submit.text(altText).prop('disabled', true);
+								if ( WPForms.empty( $submit.get(0).recaptchaID ) && $submit.get(0).recaptchaID !== 0 ) {
+									// Normal form.
+									if (altText) {
+										$submit.text(altText).prop('disabled', true);
+									}
+									form.submit();
+								} else {
+									// Form contains invisible reCAPTCHA.
+									grecaptcha.execute( $submit.get(0).recaptchaID );
 								}
-
-								form.submit();
 							}
 						}
 					}
@@ -284,7 +297,7 @@
 
 			// Payments: Update Total field(s) when latest calculation.
 			$(document).on('change input', '.wpforms-payment-price', function(event) {
-				WPForms.amountTotal(this);
+				WPForms.amountTotal(this, true);
 			});
 
 			// Payments: Restrict user input payment fields
@@ -431,26 +444,14 @@
 		//--------------------------------------------------------------------//
 
 		/**
-		 * Google reCAPTCHA callback.
-		 *
-		 * @since 1.3.4
-		 */
-		recaptchaCallback: function( el ) {
-
-			var $this   = $(el),
-				$hidden = $this.parent().find('.wpforms-recaptcha-hidden');
-
-			$hidden.val('1').valid();
-		},
-
-		/**
 		 * Payments: Calculate total.
 		 *
 		 * @since 1.2.3
 		 */
-		amountTotal: function(el) {
+		amountTotal: function(el, validate) {
 
-			var $form                = $(el).closest('.wpforms-form'),
+			var validate             = validate || false,
+				$form                = $(el).closest('.wpforms-form'),
 				total                = 0,
 				totalFormatted       = 0,
 				totalFormattedSymbol = 0,
@@ -483,8 +484,11 @@
 			}
 
 			$form.find('.wpforms-payment-total').each(function(index, el) {
-				if ($(this).attr('type') == 'hidden') {
+				if ( 'hidden' === $(this).attr('type') || 'text' === $(this).attr('type') ) {
 					$(this).val(totalFormattedSymbol);
+					if ( 'text' === $(this).attr('type') && validate ) {
+						$(this).valid();
+					}
 				} else {
 					$(this).text(totalFormattedSymbol);
 				}
@@ -555,17 +559,28 @@
 		getCurrency: function() {
 
 			var currency = {
+				code: 'USD',
 				thousands_sep: ',',
 				decimal_sep: '.',
 				symbol: '$',
 				symbol_pos: 'left'
 			}
 
-			if ( 'undefined' !== wpforms_currency) {
-				currency.thousands_sep = wpforms_currency.thousands;
-				currency.decimal_sep   = wpforms_currency.decimal;
-				currency.symbol        = wpforms_currency.symbol;
-				currency.symbol_pos    = wpforms_currency.symbol_pos;
+			// Backwards compatibility.
+			if ( typeof wpforms_settings.currency_code !== 'undefined' ) {
+				currency.code = wpforms_settings.currency_code;
+			}
+			if ( typeof wpforms_settings.currency_thousands !== 'undefined' ) {
+				currency.thousands_sep = wpforms_settings.currency_thousands;
+			}
+			if ( typeof wpforms_settings.currency_decimal !== 'undefined' ) {
+				currency.decimal_sep = wpforms_settings.currency_decimal;
+			}
+			if ( typeof wpforms_settings.currency_symbol !== 'undefined' ) {
+				currency.symbol = wpforms_settings.currency_symbol;
+			}
+			if ( typeof wpforms_settings.currency_symbol_pos !== 'undefined' ) {
+				currency.symbol_pos = wpforms_settings.currency_symbol_pos;
 			}
 
 			return currency;

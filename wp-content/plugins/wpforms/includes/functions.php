@@ -51,7 +51,7 @@ function wpforms_encode( $data = false ) {
 	if( empty( $data ) )
 		return false;
 
-	return wp_slash( json_encode( $data ) );
+	return wp_slash( wp_json_encode( $data ) );
 }
 
 /**
@@ -105,7 +105,7 @@ function wpforms_object_to_array( $object ) {
  *
  * @since 1.0.0
  * @return mixed
-*/
+ */
 function wpforms_setting( $key, $default = false, $option = 'wpforms_settings'  ) {
 
 	$options = get_option( $option, false );
@@ -208,32 +208,132 @@ function wpforms_get_pagebreak( $form = false, $type = false ) {
 
 	$form_data = '';
 
-	if ( is_object( $form ) && !empty( $form->post_content ) ) {
+	if ( is_object( $form ) && ! empty( $form->post_content ) ) {
 		$form_data = wpforms_decode( $form->post_content );
 	} elseif ( is_array( $form ) ) {
 		$form_data = $form;
 	}
 
-	if ( empty( $form_data['fields'] ) )
+	if ( empty( $form_data['fields'] ) ) {
 		return false;
+	}
 
 	$fields = $form_data['fields'];
 	$pages  = array();
+
 	foreach ( $fields as $field ) {
-		if ( $field['type'] == 'pagebreak' ) {
-			$position = !empty( $field['position'] ) ? $field['position'] : false;
-			if ( $type == 'pages' && $position != 'bottom' ) {
+		if ( 'pagebreak' === $field['type'] ) {
+			$position = ! empty( $field['position'] ) ? $field['position'] : false;
+			if ( 'pages' === $type && 'bottom' !== $position ) {
 				$pages[] = $field;
-			} elseif ( $position == $type ) {
+			} elseif ( $position === $type ) {
 				return $field;
 			}
 		}
 	}
 
-	if ( !empty( $pages ) ) {
+	if ( ! empty( $pages ) ) {
 		return $pages;
 	}
+
 	return false;
+}
+
+/**
+ * Returns information about pages if the form has multiple pages.
+ *
+ * @since 1.3.7
+ * @param mixed $form
+ * @return mixed false or an array
+ */
+function wpforms_get_pagebreak_details( $form = false ) {
+
+	$form_data = '';
+	$details   = array();
+	$pages     = 1;
+
+	if ( is_object( $form ) && ! empty( $form->post_content ) ) {
+		$form_data = wpforms_decode( $form->post_content );
+	} elseif ( is_array( $form ) ) {
+		$form_data = $form;
+	}
+
+	if ( empty( $form_data['fields'] ) ) {
+		return false;
+	}
+
+	foreach ( $form_data['fields'] as $field ) {
+		if ( 'pagebreak' === $field['type'] ) {
+			if ( empty( $field['position'] ) ) {
+				$pages++;
+				$details['total']   = $pages;
+				$details['pages'][] = $field;
+			} elseif ( 'top' === $field['position']  ) {
+				$details['top'] = $field;
+			} elseif ( 'bottom' === $field['position']  ) {
+				$details['bottom'] = $field;
+			}
+		}
+	}
+
+	if ( ! empty( $details ) ) {
+		if ( empty( $details['top'] ) ) {
+			$details['top'] = array();
+		}
+		if ( empty( $details['bottom'] ) ) {
+			$details['bottom'] = array();
+		}
+		$details['current'] = 1;
+		return $details;
+	} else {
+		return false;
+	}
+}
+
+/**
+ * Formats, sanitizes, and returns/echos HTML element ID, classes, attributes,
+ * and data attributes.
+ *
+ * @since 1.3.7
+ * @param string $id
+ * @param array $class
+ * @param array $datas
+ * @param array $atts
+ * @param bool $echo
+ * @return string
+ */
+function wpforms_html_attributes( $id = '', $class = array(), $datas = array(), $atts = array(), $echo = false ) {
+
+	$output = '';
+	$id     = trim( $id );
+
+	if ( ! empty( $id ) ) {
+		$output = 'id="' . sanitize_html_class( $id ) . '" ';
+	}
+
+	if ( ! empty( $class ) ) {
+		$output .= 'class="' . wpforms_sanitize_classes( $class, true ) . '" ';
+	}
+
+	if ( ! empty( $datas ) ) {
+		foreach ( $datas as $data => $val ) {
+			$output .= 'data-' . sanitize_html_class( $data ) . '="' . esc_attr( $val ) . '" ';
+		}
+	}
+
+	if ( ! empty( $atts ) ) {
+		foreach ( $atts as $att => $val ) {
+			if ( '0' == $val || ! empty( $val ) ) {
+				$output .= sanitize_html_class( $att ) . '="' . esc_attr( $val ) . '" ';
+			}
+		}
+	}
+
+	if ( $echo ) {
+		echo trim( $output );
+	} else {
+		return trim( $output );
+	}
 }
 
 /**
@@ -241,18 +341,27 @@ function wpforms_get_pagebreak( $form = false, $type = false ) {
  *
  * @since 1.2.1
  * @param string $classes
+ * @param bool $convert True will convert strings to array and vice versa.
  * @return string
  */
-function wpforms_sanitize_classes( $classes ) {
+function wpforms_sanitize_classes( $classes, $convert = false ) {
 
-	$css = array();
-	if ( !empty( $classes ) ) {
-		$the_classes = explode( ' ', str_replace('.', '', $classes ) );
-		foreach( $the_classes as $class ) {
+	$array = is_array( $classes );
+	$css   = array();
+
+	if ( ! empty( $classes ) ) {
+		if ( ! $array ) {
+			$classes = explode( ' ', trim( $classes ) );
+		}
+		foreach ( $classes as $class ) {
 			$css[] = sanitize_html_class( $class );
 		}
 	}
-	return implode( ' ', $css );
+	if ( $array ) {
+		return $convert ? implode( ' ', $css ) : $css;
+	} else {
+		return $convert ? $css : implode( ' ', $css );
+	}
 }
 
 /**
@@ -496,6 +605,12 @@ function wpforms_us_states() {
 	return apply_filters( 'wpforms_us_states', $states );
 }
 
+/**
+ * Countries.
+ *
+ * @since 1.0.0
+ * @return array
+ */
 function wpforms_countries() {
 
 	$countries = array(
@@ -760,6 +875,51 @@ function wpforms_countries() {
 }
 
 /**
+ * Calendar Months
+ *
+ * @since 1.3.7
+ * @return array
+ */
+function wpforms_months() {
+
+	$months = array(
+		'Jan' => 'January',
+		'Feb' => 'February',
+		'Mar' => 'March',
+		'Apr' => 'April',
+		'May' => 'May',
+		'Jun' => 'June',
+		'Jul' => 'July',
+		'Aug' => 'August',
+		'Sep' => 'September',
+		'Oct' => 'October',
+		'Nov' => 'November',
+		'Dec' => 'December',
+	);
+	return apply_filters( 'wpforms_months', $months );
+}
+
+/**
+ * Calendar Days
+ *
+ * @since 1.3.7
+ * @return array
+ */
+function wpforms_days() {
+
+	$days = array(
+		'Sun' => 'Sunday',
+		'Mon' => 'Monday',
+		'Tue' => 'Tuesday',
+		'Wed' => 'Wednesday',
+		'Thu' => 'Thursday',
+		'Fri' => 'Friday',
+		'Sat' => 'Saturday',
+	);
+	return apply_filters( 'wpforms_days', $days );
+}
+
+/**
  * Lookup user IP.
  *
  * There are many ways to do this, but we prefer the way EDD does it.
@@ -802,6 +962,27 @@ function wpforms_sanitize_hex_color( $color ) {
 	}
 }
 
+/**
+ * Sanitizes error message, primarily used during form frontend output.
+ *
+ * @since 1.3.7
+ * @param string $error
+ * @return string
+ */
+function wpforms_sanitize_error( $error = '' ) {
+
+	$allow = array(
+		'a'      => array(
+			'href'  => array(),
+			'title' => array(),
+		),
+		'br'     => array(),
+		'em'     => array(),
+		'strong' => array(),
+		'p'      => array(),
+	);
+	return wp_kses( $error, $allow );
+}
 
 /**
  * Detect if we should use a light or dark color based on the color given.

@@ -147,15 +147,16 @@ class WPForms_Builder_Panel_Settings extends WPForms_Builder_Panel {
 			$this->form_data,
 			__( 'Enable anti-spam honeypot', 'wpforms' )
 		);
-		$recaptcha_key    = wpforms_setting( 'recaptcha-site-key', false );
-		$recaptcha_secret = wpforms_setting( 'recaptcha-secret-key', false );
+		$recaptcha_key    = wpforms_setting( 'recaptcha-site-key' );
+		$recaptcha_secret = wpforms_setting( 'recaptcha-secret-key' );
+		$recaptcha_type   = wpforms_setting( 'recaptcha-type' );
 		if ( !empty( $recaptcha_key ) && !empty( $recaptcha_secret ) ) {
 			wpforms_panel_field(
 				'checkbox',
 				'settings',
 				'recaptcha',
 				$this->form_data,
-				__( 'Enable reCAPTCHA', 'wpforms' )
+				$recaptcha_type === 'invisible' ? __( 'Enable Google invisible reCAPTCHA', 'wpforms' ) : __( 'Enable Google reCAPTCHA (v2)', 'wpforms' )
 			);
 		}
 		do_action( 'wpforms_form_settings_general', $this );

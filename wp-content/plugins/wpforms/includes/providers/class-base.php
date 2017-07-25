@@ -248,96 +248,13 @@ abstract class WPForms_Provider {
 			return true;
 		}
 
-		$pass = false;
+		$process = wpforms_conditional_logic()->process( $fields, $form_data, $connection['conditionals'] );
 
-		foreach ( $connection['conditionals'] as $group_id => $group ) {
-
-			$pass_group = true;
-
-			if ( !empty( $group ) ) {
-
-				foreach( $group as $rule_id => $rule ) {
-
-					if (  in_array( $fields[$rule['field']]['type'], array( 'text', 'textarea' ) ) ) {
-
-						if ( $rule['operator'] == "==" ) {
-
-							$pass_rule = ( $fields[$rule['field']]['value'] === $rule['value'] );
-
-						} elseif( $rule['operator'] == "!=" ) {
-
-							$pass_rule = ( $fields[$rule['field']]['value'] !== $rule['value'] );
-
-						}
-
-					} elseif ( in_array( $fields[$rule['field']]['type'], array( 'checkbox' ) ) ) {
-
-						$provided_id = false;
-
-						if ( !empty( $fields[$rule['field']]['value'] ) ) {
-
-							$provided_id = array();
-							$values      = explode( "\n", $fields[$rule['field']]['value'] );
-
-							foreach( $form_data['fields'][$rule['field']]['choices'] as $key => $choice ) {
-
-								foreach( $values as $value ) {
-
-									if ( in_array( $value, $choice ) ) {
-										$provided_id[] = $key;
-									}
-								}
-							}
-						}
-
-						if ( $rule['operator'] == "==" ) {
-
-							$pass_rule = in_array( (int) $rule['value'], (array) $provided_id );
-
-						} elseif( $rule['operator'] == "!=" ) {
-
-							$pass_rule = ! in_array( (int) $rule['value'], (array) $provided_id );
-						}
-
-					} else {
-
-						$provided_id = false;
-
-						if ( !empty( $fields[$rule['field']]['value'] ) ) {
-
-							foreach( $form_data['fields'][$rule['field']]['choices'] as $key => $choice ) {
-
-								if ( in_array( $fields[$rule['field']]['value'], $choice ) ) {
-
-									$provided_id = (int) $key;
-								}
-							}
-						}
-
-						if ( $rule['operator'] == "==" ) {
-
-							$pass_rule = ( $provided_id === (int) $rule['value'] );
-
-						} elseif( $rule['operator'] == "!=" ) {
-
-							$pass_rule = ( $provided_id !== (int) $rule['value'] );
-
-						}
-					}
-
-					if ( !$pass_rule ) {
-						$pass_group = false;
-						break;
-					}
-				}
-			}
-
-			if ( $pass_group ) {
-				$pass = true;
-			}
+		if ( ! empty( $connection['conditional_type'] ) && 'stop' === $connection['conditional_type'] ) {
+			$process = ! $process;
 		}
 
-		return $pass;
+		return $process;
 	}
 
 	/**
@@ -706,18 +623,20 @@ abstract class WPForms_Provider {
 
 			$output .= sprintf( '<select name="providers[%s][%s][list_id]">', $this->slug, $connection_id );
 
-				foreach ( $lists as $list ) {
-					$output .= sprintf(
-						'<option value="%s" %s>%s</option>',
-						esc_attr( $list['id'] ),
-						selected( $selected, $list['id'], false ),
-						esc_attr( $list['name'] )
-					);
-				}
+		if ( ! empty( $lists ) ) {
+			foreach ( $lists as $list ) {
+				$output .= sprintf(
+					'<option value="%s" %s>%s</option>',
+					esc_attr( $list['id'] ),
+					selected( $selected, $list['id'], false ),
+					esc_attr( $list['name'] )
+				);
+			}
+		}
 
 			$output .= '</select>';
 
-		$output .='</div>';
+		$output .= '</div>';
 
 		return $output;
 	}
@@ -855,140 +774,33 @@ abstract class WPForms_Provider {
 	 * Provider connection conditional options HTML
 	 *
 	 * @since 1.0.0
-	 * @return [type]
+	 * @param string $connection_id
+	 * @param array $connection
+	 * @param array $form
+	 * @return string
 	 */
 	public function output_conditionals( $connection_id = '', $connection = array(), $form = '' ) {
 
-		if ( empty( $connection['account_id'] ) )
+		if ( empty( $connection['account_id'] ) ) {
 			return;
+		}
 
-		$form_fields = wpforms_get_form_fields( $form['id'], array( 'text', 'textarea', 'select', 'radio', 'checkbox', 'number' ) );
-
-		$output = '<div class="wpforms-provider-conditionals wpforms-connection-block">';
-
-			$output .= sprintf( '<h4>%s</h4>', __( 'Conditional Logic', 'wpforms' ) );
-
-			$output .= sprintf(
-							'<p><input id="%s_conditional_logic" class="toggle" type="checkbox" value="1" name="providers[%s][%s][conditional_logic]" %s><label for="%s_conditional_logic">%s</label></p>',
-							$connection_id,
-							$this->slug,
-							$connection_id,
-							checked( !empty( $connection['conditional_logic'] ) , true , false ),
-							$connection_id,
-							__( 'Enable conditional logic', 'wpforms' )
-						);
-
-			$style = empty( $connection['conditional_logic'] ) ? 'display:none' : '';
-
-			$output .= sprintf( '<div class="wpforms-provider-conditionals-groups" style="%s">', $style );
-
-				$output .= '<h4>' . __( 'Process this form if', 'wpforms' ) . '</h4>';
-
-				if ( empty( $connection['conditionals'] ) ){
-					$connection['conditionals'][0][0] = array();
-				}
-
-				foreach ( $connection['conditionals'] as $group_id => $group ) :
-
-					$output .= '<div class="wpforms-provider-conditionals-group">';
-
-						$output .='<table><tbody>';
-
-							foreach ( $group as $rule_id => $rule ) :
-
-								$output .= '<tr class="wpforms-provider-conditionals-group-row">';
-
-									// Fields
-									$output .= '<td class="field">';
-
-										$output .= sprintf(
-											'<select name="providers[%s][%s][conditionals][%d][%d][field]" data-provider="%s" data-connectionid="%s" data-groupid="%d" data-ruleid="%d" class="wpforms-provider-conditionals-field">',
-											$this->slug,
-											$connection_id,
-											$group_id,
-											$rule_id,
-											$this->slug,
-											$connection_id,
-											$group_id,
-											$rule_id
-										);
-
-											$output .= '<option value="">' . __( '-- Select field --', 'wpforms' ) . '</option>';
-
-											foreach( $form_fields as $form_field ) {
-												$selected = !empty( $rule['field'] ) ? $rule['field'] : false;
-												$selected = selected( $selected, $form_field['id'], false );
-												$output  .= sprintf( '<option value="%s" %s>%s</option>', absint( $form_field['id'] ), $selected, esc_html( $form_field['label'] ) );
-											}
-
-										$output .= '</select>';
-
-									$output .= '</td>';
-
-									// Operator
-									$output .= '<td class="operator">';
-
-										$output .= sprintf( '<select name="providers[%s][%s][conditionals][%s][%s][operator]" class="wpforms-provider-conditionals-operator">', $this->slug, $connection_id, $group_id, $rule_id );
-											$operator = !empty( $rule['operator'] ) ? $rule['operator'] : false;
-											$output .= sprintf( '<option value="==" %s>%s</option>', selected( $operator, '==', false ), __( 'is', 'wpforms' ) );
-											$output .= sprintf( '<option value="!=" %s>%s</option>', selected( $operator, '!=', false ), __( 'is not', 'wpforms' ) );
-										$output .= '</select>';
-
-									$output .= '</td>';
-
-									// Values
-									$output .= '<td class="value">';
-
-										if ( !empty( $rule['field'] ) ) {
-
-											if ( in_array( $form_fields[$rule['field']]['type'], array( 'text', 'textarea') ) ) {
-
-												$output .= sprintf( '<input type="text" name="providers[%s][%s][conditionals][%s][%s][value]" value="%s" class="wpforms-provider-conditionals-value">', $this->slug, $connection_id, $group_id, $rule_id, esc_attr($rule['value'] ) );
-
-											} else {
-												$output .= sprintf( '<select name="providers[%s][%s][conditionals][%s][%s][value]" class="wpforms-provider-conditionals-value">', $this->slug, $connection_id, $group_id, $rule_id );
-												$output .= '<option value="">' . __( '-- Select Choice --', 'wpforms' ) . '</option>';
-												foreach( $form_fields[$rule['field']]['choices'] as $option_id => $option ) {
-													$value    = !empty( $rule['value'] ) ? $rule['value'] : '';
-													$selected = selected( $option_id, $rule['value'], false );
-													$output  .= sprintf( '<option value="%s" %s>%s</option>', $option_id, $selected, esc_html( $option['label'] ) );
-												}
-												$output .= '</select>';
-											}
-
-										} else {
-											$output .= '<select></select>';
-										}
-
-									$output .= '</td>';
-
-									// Actions
-									$output .= '<td class="actions">';
-
-										$output .= sprintf( '<button class="wpforms-provider-conditionals-rule-add">%s</button>', __( 'AND', 'wpforms') );
-										$output .= '<button class="wpforms-provider-conditionals-rule-delete"><i class="fa fa-minus-circle"></i></button>';
-
-									$output .= '</td>';
-
-								$output .= '</tr>';
-
-							endforeach;
-
-						$output .= '</tbody></table>';
-
-						$output .= '<h5>or</h5>';
-
-					$output .= '</div>';
-
-				endforeach;
-
-				$output .= '<button class="wpforms-provider-conditionals-groups-add">' . __( 'Add rule group', 'wpforms' ) . '</button>';
-
-			$output .= '</div>';
-
-		$output .= '</div>';
-
-		return $output;
+		return wpforms_conditional_logic()->builder_block(
+			array(
+				'form'        => $this->form_data,
+				'type'        => 'panel',
+				'panel'       => $this->slug,
+				'parent'      => 'providers',
+				'subsection'  => $connection_id,
+				'actions'     => array(
+					'go'    => __( 'Process', 'wpforms' ),
+					'stop'  => __( 'Don\'t process', 'wpforms' ),
+				),
+				'action_desc' => __( 'this connection if', 'wpforms' ),
+				'reference'   => __( 'Marketing provider connection', 'wpforms' ),
+			),
+			false
+		);
 	}
 
 
@@ -1017,7 +829,7 @@ abstract class WPForms_Provider {
 	 */
 	public function builder_form_data() {
 
-		if ( !empty( $_GET['form_id'] ) ) {
+		if ( ! empty( $_GET['form_id'] ) && empty( $this->form_data ) ) {
 			$this->form_data  = wpforms()->form->get( absint( $_GET['form_id'] ), array( 'content_only' => true ) );
 		}
 	}
@@ -1198,7 +1010,10 @@ abstract class WPForms_Provider {
 
 		if ( is_wp_error( $auth ) ) {
 
-			wp_send_json_error( array( 'error' => 'Could not connect to the provider.' ) );
+			wp_send_json_error( array(
+				'error'     => 'Could not connect to the provider.',
+				'error_msg' => $auth->get_error_message(),
+			) );
 
 		} else {
 

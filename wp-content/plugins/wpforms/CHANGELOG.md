@@ -1,6 +1,69 @@
 # Change Log
 All notable changes to this project will be documented in this file, formatted via [this recommendation](http://keepachangelog.com/).
 
+## [1.3.8] - 2017-06-13
+### Added
+- Conditional logic functionality is now in the core plugin - the Conditional Logic addon can be removed
+- New conditional logic rules: empty and not empty
+- Conditional logic can now be applied to fields that are marked as required
+
+### Changed
+- Available conditional logic rules/functionality with Providers have been updated
+- Updated form builder modals (jquery-confirm.js)
+- Many Form Builder performance enhancements
+
+### Fixed
+- Allowing Storing entries form setting to be enabled when form is connected to payments
+- Number field validation message not saving
+- Email/Password confirmation setting not displaying correctly with Small field size
+
+## [1.3.7.3] - 2017-05-12
+## Fixed
+- Required setting checkbox getting out of sync when duplicating fields
+- CSS class name typo in the form builder layout selector
+- Excel mangling non-english characters when opening CSV export files
+- Smart Tag `field_id` stripping line breaks
+- Multiple Items field choices not updating correctly in form builder preview
+- Form JS settings `wpforms_settings` missing due to some caching plugins
+- Empty classes causing `array` string to be printed in some use cases
+
+## Changed
+- Updated credit card, page break, password, and phone fields to improved field class.
+
+## [1.3.7.2] - 2017-04-26
+### Fixed
+- PHP warning when displaying page break indicator at the top of a form
+- Error for some users with PHP 5.4 and below
+
+## [1.3.7.1] - 2017-04-26
+### Fixed
+- Issue sending form notifications using email fields that had confirmation enabled
+
+## [1.3.7] - 2017-04-26
+### Added
+- Google Invisible reCAPTCHA support
+- Custom field validation messages (see WPForms Settings page)
+- Bulk add choices for Checkbox, Multiple Choice, and Dropdown fields
+- Filter to allow email notifications to include empty fields, `wpforms_email_display_empty_fields`
+- Custom form template exporting
+- Field CSS layout selector
+- Total payment fields can now be marked as required, preventing the field from submitting unless it contains a payment
+
+### Changed
+- HTML fields now allow and run WordPress shortcodes
+- Leverage `wp_json_encode` instead of native PHP function
+- Various WordPress coding standard improvements (work in progress)
+- Refactored form front-end code to allow for more customizations
+- Refactored text, textarea, email, number, name, divider, file upload, hidden, html, payment total, and URL fields to allow for more customizations (more coming next release)
+
+### Fixed
+- Welcome page typo
+- Address field options getting off sync inside form builder
+- Bug adding new notifications and element IDs not updating
+- Page indicator (navigation) overflowing in some use cases
+- SmartTag selectors getting off sync inside form builder
+- File upload routine using `pathinfo` which is not reliable with some locales
+
 ## [1.3.6] - 2017-03-09
 ### Added
 - Constant Contact integration

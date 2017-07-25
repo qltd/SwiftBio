@@ -7,7 +7,7 @@
  * @since      1.0.0
  * @license    GPL-2.0+
  * @copyright  Copyright (c) 2016, WPForms LLC
-*/
+ */
 class WPForms_Upgrades {
 
 	/**
@@ -38,8 +38,9 @@ class WPForms_Upgrades {
 		// Retreive last known version
 		$version = get_option( 'wpforms_version' );
 
-		if ( ! $version )
+		if ( ! $version ) {
 			return;
+		}
 
 		if ( version_compare( $version, '1.1.6', '<' ) ) {
 			$this->v116_upgrade();
@@ -77,7 +78,7 @@ class WPForms_Upgrades {
 
 		global $wpdb;
 
-		$wpdb->query("ALTER TABLE {$wpdb->prefix}wpforms_entries ADD user_uuid VARCHAR(36)");
+		$wpdb->query( "ALTER TABLE {$wpdb->prefix}wpforms_entries ADD user_uuid VARCHAR(36)" );
 
 		$this->upgraded = true;
 	}

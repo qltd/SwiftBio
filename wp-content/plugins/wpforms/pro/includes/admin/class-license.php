@@ -101,7 +101,7 @@ class WPForms_License {
 		}
 
 		// Otherwise, our request has been done successfully. Update the option and set the success message.
-		$option                = get_option( 'wpforms_license' );
+		$option                = (array) get_option( 'wpforms_license', array() );
 		$option['key']         = $key;
 		$option['type']        = isset( $verify->type ) ? $verify->type : $option['type'];
 		$option['is_expired']  = false;
@@ -129,7 +129,7 @@ class WPForms_License {
 		$timestamp = get_option( 'wpforms_license_updates' );
 
 		if ( ! $timestamp ) {
-			$timestamp = strtotime( '+12 hours' );
+			$timestamp = strtotime( '+24 hours' );
 			update_option( 'wpforms_license_updates', $timestamp );
 			$this->validate_key( $key );
 		} else {
@@ -137,7 +137,7 @@ class WPForms_License {
 			if ( $current_timestamp < $timestamp ) {
 				return;
 			} else {
-				update_option( 'wpforms_license_updates', strtotime( '+12 hours' ) );
+				update_option( 'wpforms_license_updates', strtotime( '+24 hours' ) );
 				$this->validate_key( $key );
 			}
 		}

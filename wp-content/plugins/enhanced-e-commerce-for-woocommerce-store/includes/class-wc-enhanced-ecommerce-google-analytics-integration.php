@@ -18,7 +18,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
      * @return void
      */
     //set plugin version
-    public $tvc_eeVer = '1.0.20';
+    public $tvc_eeVer = '1.0.21.1';
     public function __construct() {
         
          //Set Global Variables
@@ -30,11 +30,8 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
         $this->method_title = __("Enhanced Ecommerce Google Analytics", "enhanced-e-commerce-for-woocommerce-store");
         $this->method_description = __("Enhanced Ecommerce is a new feature of Universal Analytics that generates detailed statistics about the users journey from product page to thank you page on your e-store. <br/><a href='http://www.tatvic.com/blog/enhanced-ecommerce/' target='_blank'>Know more about Enhanced Ecommerce.</a><br/><br/><b>Quick Tip:</b> We recently launched an Advanced Google Analytics Plugin for WooCommerce! The plugin offers tracking of 9 Reports of Enhanced Ecommerce, User ID Tracking, 15+ Custom Dimenensions & Metrics, Content Grouping & much more. <a href='https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552' target='_blank'>Learn More</a>", "woocommerce");
 
-        if(!isset($_SESSION) ) 
-        { 
-        session_start(); 
-        }
-        //session for product position count //session_start removed bcoz it gives warning
+        //session for product position count
+        //session_start removed bcoz it gives warning
         $_SESSION['t_npcnt']=0;
         $_SESSION['t_fpcnt']=0;
         // Load the integration form
@@ -159,7 +156,8 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
                    });
                 
             //Pugin Promotion
-            jQuery("form#mainform").after("<a href=http://bit.ly/1yFqA04 target=_blank><img src='.plugins_url( '/woo_plugin_promotion.png' , __FILE__ ).' title=Actionable Google Analytics Plugin by Tatvic alt=Actionable Google Analytics Plugin by Tatvic></a>");
+            jQuery("h1.screen-reader-text").before("<a href=https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552?ref=tatvic target=_blank><img src='.plugins_url( '/woo_plugin_promotion.png' , __FILE__ ).' title=Actionable Google Analytics Plugin by Tatvic alt=Actionable Google Analytics Plugin by Tatvic></a>");
+            jQuery("form#mainform").after("<a href=https://www.tatvic.com/contact/?utm_source=mage-uaee-owox&utm_medium=banner&utm_campaign=owox%20banner target=_blank><img src='.plugins_url( '/owox_banner_700_150.png' , __FILE__ ).' title=Owox Banner Ad alt=Owox Banner Ad></a>");
             </script>';
         }
     }
@@ -385,7 +383,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
                   $categories=esc_js(woocommerce_get_formatted_variation($_product->variation_data, true));
                 } else {
                     $out = array();
-                    if(version_compare($woocommerce->version, "2.4", "<=")){
+                    if(version_compare($woocommerce->version, "2.7", "<")){
                          $categories = get_the_terms($_product->id, "product_cat");
                     }else{
                          $categories = get_the_terms($_product->get_id(), "product_cat");
@@ -400,7 +398,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
                 }
 
                 //orderpage Prod json
-                if(version_compare($woocommerce->version, "2.4", "<=")){
+                if(version_compare($woocommerce->version, "2.7", "<")){
                     $orderpage_prod_Array[get_permalink($_product->id)]=array(
                         "tvc_id" => esc_html($_product->id),
                         "tvc_i" => esc_js($_product->get_sku() ? $_product->get_sku() : $_product->id),
@@ -486,7 +484,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
         if (!is_single())
             return;
         global $product,$woocommerce;
-        if(version_compare($woocommerce->version, "2.4", "<=")){
+        if(version_compare($woocommerce->version, "2.7", "<")){
              $category = get_the_terms($product->ID, "product_cat");
         }else{
             $category = get_the_terms($product->get_id(), "product_cat");
@@ -529,12 +527,13 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
      */
     public function product_detail_view() {
 
+        
         if ($this->disable_tracking($this->ga_eeT)) {
             return;
         }
 
         global $product,$woocommerce;
-        if(version_compare($woocommerce->version, "2.4", "<=")){
+        if(version_compare($woocommerce->version, "2.7", "<")){
              $category = get_the_terms($product->ID, "product_cat");
         }else{
             $category = get_the_terms($product->get_id(), "product_cat");
@@ -548,7 +547,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
         //remove last comma(,) if multiple categories are there
         $categories = rtrim($categories, ",");
         //product detail view json
-        if(version_compare($woocommerce->version, "2.4", "<=")){
+        if(version_compare($woocommerce->version, "2.7", "<")){
             $prodpage_detail_json = array(
             "tvc_id" => esc_html($product->id),
             "tvc_i" => $product->get_sku() ? $product->get_sku() : $product->id,                   
@@ -570,7 +569,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
             $prodpage_detail_json = array();
         }
         //prod page detail view json
-        $this->wc_version_compare("tvc_po=" . json_encode($prodpage_detail_json) . ";");
+       $this->wc_version_compare("tvc_po=" . json_encode($prodpage_detail_json) . ";");
         $code = '
         ga("require", "ec", "ec.js");    
         ga("ec:addProduct", {
@@ -602,7 +601,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
         }
 
         global $product,$woocommerce;
-        if (version_compare($woocommerce->version, "2.4", "<=")) {
+        if (version_compare($woocommerce->version, "2.7", "<")) {
                     $category = get_the_terms($product->Id, "product_cat");
             } else {
                      $category = get_the_terms($product->get_id(), "product_cat");
@@ -628,7 +627,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
             }
 
                 // ATC link Array
-                if(version_compare($woocommerce->version, "2.4", "<=")){
+                if(version_compare($woocommerce->version, "2.7", "<")){
                     $homepage_json_ATC_link[$product->add_to_cart_url()]=array("ATC-link"=>get_permalink($product->id));
                 }else{
                     $homepage_json_ATC_link[$product->add_to_cart_url()]=array("ATC-link"=>get_permalink($product->get_id()));
@@ -636,7 +635,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
               //check if product is featured product or not  
             if ($product->is_featured()) {
                //check if product is already exists in homepage featured json   
-               if(version_compare($woocommerce->version, "2.4", "<=")){
+               if(version_compare($woocommerce->version, "2.7", "<")){
                     if(!array_key_exists(get_permalink($product->id),$homepage_json_fp)){
                 $homepage_json_fp[get_permalink($product->id)] = array(
                         "tvc_id" => esc_html($product->id),
@@ -684,7 +683,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
                
             } else {
                 //else prod add in homepage recent json  
-                if(version_compare($woocommerce->version, "2.4", "<=")){
+                if(version_compare($woocommerce->version, "2.7", "<")){
                     $homepage_json_rp[get_permalink($product->id)] =array(
                         "tvc_id" => esc_html($product->id),
                         "tvc_i" => esc_html($product->get_sku() ? $product->get_sku() : $product->id),
@@ -713,7 +712,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
                 $prodpage_json_ATC_link = array();
             }
             // ATC link Array
-            if(version_compare($woocommerce->version, "2.4", "<=")){
+            if(version_compare($woocommerce->version, "2.7", "<")){
                 $prodpage_json_ATC_link[$product->add_to_cart_url()]=array("ATC-link"=>get_permalink($product->id));
               
             $prodpage_json_relProd[get_permalink($product->id)] = array(
@@ -737,7 +736,6 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
                         
                 );
             }
-               
         }
         //category page, search page and shop page json
         else if (is_product_category() || is_search() || is_shop()) {
@@ -746,7 +744,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
                  $catpage_json_ATC_link=array();
              }
              //cat page ATC array
-             if(version_compare($woocommerce->version, "2.4", "<=")){
+             if(version_compare($woocommerce->version, "2.7", "<")){
                 $catpage_json_ATC_link[$product->add_to_cart_url()]=array("ATC-link"=>get_permalink($product->id));
 
                   $catpage_json[get_permalink($product->id)] =array(
@@ -1038,7 +1036,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
         //echo "<pre>".print_r($woocommerce->cart->cart_contents,TRUE)."</pre>";
         foreach ($woocommerce->cart->cart_contents as $key => $item) {
             //Version compare
-            if (version_compare($woocommerce->version, "2.1", ">=") && version_compare($woocommerce->version, "2.7", "<=") ) {
+            if (version_compare($woocommerce->version, "2.7", "<")) {
                     $prod_meta = get_product($item["product_id"]);
             } else {
                      $prod_meta = wc_get_product($item["product_id"]);
@@ -1055,7 +1053,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
             }
             //remove last comma(,) if multiple categories are there
             $categories = rtrim($categories, ",");
-            if(version_compare($woocommerce->version, "2.4", "<=")){
+            if(version_compare($woocommerce->version, "2.7", "<")){
                 $cartpage_prod_array_main[$cart_remove_link] =array(
                     "tvc_id" => esc_html($prod_meta->id),
                     "tvc_i" => esc_html($prod_meta->get_sku() ? $prod_meta->get_sku() : $prod_meta->id),
@@ -1219,7 +1217,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
         //get all items added into the cart
         foreach ($woocommerce->cart->cart_contents as $item) {
             //Version Compare
-            if (version_compare($woocommerce->version, "2.1", ">=") && version_compare($woocommerce->version, "2.7", "<=") ) {
+            if ( version_compare($woocommerce->version, "2.7", "<")) {
                     $p = get_product($item["product_id"]);
             } else {
                     $p = wc_get_product($item["product_id"]);
@@ -1234,7 +1232,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
             }
             //remove last comma(,) if multiple categories are there
             $categories = rtrim($categories, ",");
-            if(version_compare($woocommerce->version, "2.4", "<=")){
+            if(version_compare($woocommerce->version, "2.7", "<")){
                 $chkout_json[get_permalink($p->id)] = array(
                 "tvc_id" => esc_html($p->id),
                 "tvc_i" => esc_js($p->get_sku() ? $p->get_sku() : $p->id),
@@ -1261,8 +1259,5 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
         //make product data json on check out page
         $this->wc_version_compare("tvc_ch=" . json_encode($chkout_json) . ";");
     }
-   
-
 }
-
 ?>

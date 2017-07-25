@@ -242,11 +242,14 @@ class WPForms_Smart_Tags {
 		// Field smart tags (settings, etc)
 		preg_match_all( "/\{field_id=\"(.+?)\"\}/", $content, $ids );
 		// We can only process field smart tags if we have $fields
-		if ( !empty( $ids[1] ) && !empty( $fields ) ) {
+		if ( ! empty( $ids[1] ) && ! empty( $fields ) ) {
 
-			foreach( $ids[1] as $key => $field_id ) {
-
-				$value   = !empty( $fields[$field_id]['value'] ) ? sanitize_text_field( $fields[$field_id]['value'] ) : '';
+			foreach ( $ids[1] as $key => $field_id ) {
+				if ( function_exists( 'sanitize_textarea_field' ) ) {
+					$value   = ! empty( $fields[ $field_id ]['value'] ) ? sanitize_textarea_field( $fields[ $field_id ]['value'] ) : '';
+				} else {
+					$value   = ! empty( $fields[ $field_id ]['value'] ) ? sanitize_text_field( $fields[ $field_id ]['value'] ) : '';
+				}
 				$content = str_replace( '{field_id="' . $field_id . '"}', $value , $content );
 			}
 		}

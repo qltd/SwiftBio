@@ -198,7 +198,7 @@ class WPForms_Field_Address extends WPForms_Field {
 				printf( '<label for="wpforms-field-option-%d-country_default" class="sub-label">%s</label>', $field['id'], __( 'Default Value', 'wpforms' ) );
 			echo '</div>';
 			echo '<div class="hide">';
-				printf(' <input type="checkbox" class="hide" name="fields[%d][country_hide]" value="1" %s>', $field['id'], checked( '1', $address2_hide, false ) );
+				printf(' <input type="checkbox" class="hide" name="fields[%d][country_hide]" value="1" %s>', $field['id'], checked( '1', $country_visibility, false ) );
 			echo '</div>';
 		echo '</div>';
 

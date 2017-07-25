@@ -89,8 +89,9 @@ class WPForms_Builder {
 			// Load builder panels
 			$this->load_panels();
 
-			add_action( 'admin_enqueue_scripts', array( $this, 'enqueues' ) );
-			add_action( 'wpforms_admin_page',    array( $this, 'output'   ) );
+			add_action( 'admin_enqueue_scripts',      array( $this, 'enqueues'       ) );
+			add_action( 'admin_print_footer_scripts', array( $this, 'footer_scripts' ) );
+			add_action( 'wpforms_admin_page',         array( $this, 'output'         ) );
 
 			// Provide hook for add-ons
 			do_action( 'wpforms_builder_init', $this->view );
@@ -194,6 +195,7 @@ class WPForms_Builder {
 		wp_enqueue_media();
 		wp_enqueue_script( 'jquery-ui-sortable' );
 		wp_enqueue_script( 'jquery-ui-draggable' );
+		wp_enqueue_script( 'wp-util' );
 
 		wp_enqueue_script(
 			'serialize-object',
@@ -268,14 +270,24 @@ class WPForms_Builder {
 		);
 
 		$strings = array(
+			'and'                    => __( 'AND', 'wpforms' ),
 			'ajax_url'               => admin_url( 'admin-ajax.php' ),
+			'bulk_add_button'        => __( 'Add New Choices', 'wpforms '),
+			'bulk_add_show'          => __( 'Bulk Add', 'wpforms' ),
+			'bulk_add_hide'          => __( 'Hide Bulk Add', 'wpforms' ),
+			'bulk_add_heading'       => __( 'Add Choices (one per line)', 'wpforms '),
+			'bulk_add_placeholder'   => __( "Blue\nRed\nGreen", 'wpforms '),
+			'bulk_add_presets_show'  => __( 'Show presets', 'wpforms '),
+			'bulk_add_presets_hide'  => __( 'Hide presets', 'wpforms '),
 			'date_select_day'        => __( 'DD', 'wpforms' ),
 			'date_select_month'      => __( 'MM', 'wpforms' ),
+			'debug'                  => wpforms_debug(),
 			'dynamic_choice_limit'   => __( 'The {source} {type} contains over {limit} items ({total}). This may make the field difficult for your vistors to use and/or cause the form to be slow.', 'wpforms' ),
 			'cancel'                 => __( 'Cancel', 'wpforms' ),
 			'ok'                     => __( 'OK', 'wpforms' ),
 			'close'                  => __( 'Close', 'wpforms' ),
 			'conditionals_change'    => __( 'Due to form changes, conditional logic rules have been removed or updated:', 'wpforms' ),
+			'conditionals_disable'   => __( 'Are you sure you want to disable conditional logic? This will remove the rules for this field or setting.' ),
 			'field'                  => __( 'Field', 'wpforms' ),
 			'field_locked'           => __( 'Field Locked', 'wpforms' ),
 			'field_locked_msg'       => __( 'This field cannot be deleted or duplicated.', 'wpforms' ),
@@ -292,6 +304,10 @@ class WPForms_Builder {
 			'saving'                 => __( 'Saving ...', 'wpforms' ),
 			'saved'                  => __( 'Saved!', 'wpforms' ),
 			'save_exit'              => __( 'Save and Exit', 'wpforms' ),
+			'layout_selector_show'   => __( 'Show Layouts', 'wpforms' ),
+			'layout_selector_hide'   => __( 'Hide Layouts', 'wpforms' ),
+			'layout_selector_layout' => __( 'Select your layout', 'wpforms' ),
+			'layout_selector_column' => __( 'Select your column', 'wpforms' ),
 			'loading'                => __( 'Loading', 'wpforms' ),
 			'template_name'          => !empty( $this->template['name'] ) ? $this->template['name'] : '',
 			'template_slug'          => !empty( $this->template['slug'] ) ? $this->template['slug'] : '',
@@ -312,8 +328,21 @@ class WPForms_Builder {
 			'error_choice'           => __( 'This item must contain at least one choice.', 'wpforms' ),
 			'off'                    => __( 'Off', 'wpforms' ),
 			'on'                     => __( 'On', 'wpforms' ),
+			'or'                     => __( 'or', 'wpforms' ),
 			'other'                  => __( 'Other', 'wpforms' ),
+			'operator_is'            => __( 'is', 'wpforms' ),
+			'operator_is_not'        => __( 'is not', 'wpforms' ),
+			'operator_empty'         => __( 'empty', 'wpforms' ),
+			'operator_not_empty'     => __( 'not empty', 'wpforms' ),
+			'operator_contains'      => __( 'contains', 'wpforms' ),
+			'operator_not_contains'  => __( 'does not contain', 'wpforms' ),
+			'operator_starts'        => __( 'starts with', 'wpforms' ),
+			'operator_ends'          => __( 'ends with', 'wpforms' ),
+			'payments_entries_off'   => __( 'Form entries must be stored to accept payments. Please enable saving form entries in the General settings first.', 'wpforms' ),
 			'previous'               => __( 'Previous', 'wpforms' ),
+			'rule_create'            => __( 'Create new rule', 'wpforms' ),
+			'rule_create_group'      => __( 'Add new group', 'wpforms' ),
+			'rule_delete'            => __( 'Delete rule', 'wpforms' ),
 			'saved_state'            => '',
 			'smart_tags'             => wpforms()->smart_tags->get(),
 			'smart_tags_show'        => __( 'Show Smart Tags', 'wpforms' ),
@@ -335,6 +364,46 @@ class WPForms_Builder {
 
 		// Hook for add-ons
 		do_action( 'wpforms_builder_enqueues', $this->view );
+	}
+
+	/**
+	 * Footer javascript.
+	 *
+	 * @since 1.3.7
+	 */
+	public function footer_scripts() {
+
+		$choices = array(
+			'countries' => array(
+				'name'    => __( 'Countries', 'wpforms' ),
+				'choices' => array_values( wpforms_countries() ),
+			),
+			'countries_postal' => array(
+				'name'    => __( 'Countries Postal Code', 'wpforms' ),
+				'choices' => array_keys( wpforms_countries() ),
+			),
+			'states' => array(
+				'name'    => __( 'States', 'wpforms' ),
+				'choices' => array_values( wpforms_us_states() ),
+			),
+			'states_postal' => array(
+				'name'    => __( 'States Postal Code', 'wpforms' ),
+				'choices' => array_keys( wpforms_us_states() ),
+			),
+			'months' => array(
+				'name'    => __( 'Months', 'wpforms' ),
+				'choices' => array_values( wpforms_months() ),
+			),
+			'days' => array(
+				'name'    => __( 'Days', 'wpforms' ),
+				'choices' => array_values( wpforms_days() ),
+			),
+		);
+		$choices = apply_filters( 'wpforms_builder_preset_choices', $choices );
+
+		echo '<script type="text/javascript">wpforms_preset_choices=' . wp_json_encode( $choices ) . '</script>';
+
+		do_action( 'wpforms_builder_print_footer_scripts' );
 	}
 
 	/**

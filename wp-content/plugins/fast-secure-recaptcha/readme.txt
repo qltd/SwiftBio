@@ -1,11 +1,11 @@
 ﻿=== Fast Secure reCAPTCHA ===
-Contributors: mikechallis
+Contributors: fastsecure
 Author URI: http://www.642weather.com/weather/scripts.php
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2NA2XBX9WG98L
 Tags: captcha, recaptcha, buddypress, bbpress, woocommerce, wpforo, multisite, jetpack, comment, comments, login, register, anti-spam, spam, security
 Requires at least: 3.6.0
-Tested up to: 4.7.4
-Stable tag: 1.0.14
+Tested up to: 4.8
+Stable tag: 1.0.19
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
  
@@ -72,7 +72,6 @@ Features:
 3. Check the setting: "Allow Multisite network activated sites to have individual Fast Secure reCAPTCHA settings." Now each site admin will have to enter reCAPTCHA site keys on their dashboard Fast Secure reCAPTCHA settings page, and be sure to select all the forms to protect.
 
 4. Optionally check the setting: "Allow Multisite network activated main site to copy main site reCAPTCHA API keys to all other sites." This will automatically copy main site API keys to all other sites.
-
 
 
 == Screenshots ==
@@ -178,6 +177,21 @@ On the plugin settings page, enter your two Google reCAPTCHA keys for the domain
 
 
 == Changelog ==
+
+= 1.0.20 =
+* (20 June 2017) - Fix readme
+
+= 1.0.19 =
+* (13 May 2017) - Fix possible Catchable fatal error on WooCommerce password reset.
+
+= 1.0.18 =
+* (04 May 2017) - Revert changes to last update to fix missing reCAPTCHA on JetPack Contact form.
+
+= 1.0.17 =
+* (04 May 2017) - Fix rare but possible double reCAPTCHA on JetPack Contact form.
+
+= 1.0.16 =
+* (02 May 2017) - Fix "You have selected an incorrect reCAPTCHA value" error on WooCommerce checkout page if "Create an account" is checked and Enable reCAPTCHA on WooCommerce checkout is disabled.
 
 = 1.0.15 =
 * (21 Apr 2017) - Fix "You have selected an incorrect reCAPTCHA value" error on WooCommerce checkout page if "Create an account" is checked.

@@ -390,7 +390,7 @@ class WPForms_WP_Emails {
 	}
 
 	/**
-	 * Process the all fields smart tag if pressent.
+	 * Process the all fields smart tag if present.
 	 *
 	 * @since 1.1.3
 	 */
@@ -416,21 +416,23 @@ class WPForms_WP_Emails {
 			$x = 1;
 			foreach( $this->fields as $field ) {
 
-				if ( !empty( $field['value'] ) && false !== $field['value'] ) {
-
-					$field_name = !empty( $field['name'] ) ? $field['name'] : __( 'Field ID #', 'wpforms' ) . absint( $field['id'] );
-
-					$field_item = $field_template;
-					if ( $x === 1 ) {
-						$field_item = str_replace( 'border-top:1px solid #dddddd;', '', $field_item );
-					}
-					$field_item  = str_replace( '{field_name}', $field_name, $field_item );
-					$field_value = apply_filters( 'wpforms_html_field_value', stripslashes( wp_specialchars_decode( $field['value'] ) ), $field, $this->form_data, 'email-html' );
-					$field_item  = str_replace( '{field_value}', $field_value, $field_item );
-
-					$message .= wpautop( $field_item );
-					$x++;
+				if ( ! apply_filters( 'wpforms_email_display_empty_fields', false ) && ( empty( $field['value'] ) && '0' !== $field['value'] ) ) {
+					continue;
 				}
+
+				$field_val  = empty( $field['value'] ) && '0' !== $field['value'] ? '<em>' . __( '(empty)', 'wpforms' ) . '</em>' : $field['value'];
+				$field_name = !empty( $field['name'] ) ? $field['name'] : __( 'Field ID #', 'wpforms' ) . absint( $field['id'] );
+
+				$field_item = $field_template;
+				if ( $x === 1 ) {
+					$field_item = str_replace( 'border-top:1px solid #dddddd;', '', $field_item );
+				}
+				$field_item  = str_replace( '{field_name}', $field_name, $field_item );
+				$field_value = apply_filters( 'wpforms_html_field_value', stripslashes( wp_specialchars_decode( $field_val ) ), $field, $this->form_data, 'email-html' );
+				$field_item  = str_replace( '{field_value}', $field_value, $field_item );
+
+				$message .= wpautop( $field_item );
+				$x++;
 			}
 
 		} else {
@@ -438,14 +440,16 @@ class WPForms_WP_Emails {
 			// Plain Text emails ---------------------------------------------//
 			foreach ( $this->fields as $field ) {
 
-				if ( !empty( $field['value'] ) && false !== $field['value'] ) {
-
-					$field_name = !empty( $field['name'] ) ? $field['name'] : __( 'Field ID #', 'wpforms' ) . absint( $field['id'] );
-
-					$message .= "--- " . wp_specialchars_decode( $field_name ) . " ---\r\n";
-					$field_value = stripslashes( wp_specialchars_decode( $field['value'] ) ) . "\r\n\r\n";
-					$message .= apply_filters( 'wpforms_plaintext_field_value', $field_value, $field, $this->form_data );
+				if ( ! apply_filters( 'wpforms_email_display_empty_fields', false ) && ( empty( $field['value'] ) && '0' !== $field['value'] ) ) {
+					continue;
 				}
+
+				$field_val  = empty( $field['value'] ) && '0' !== $field['value'] ? __( '(empty)', 'wpforms' ) : $field['value'];
+				$field_name = !empty( $field['name'] ) ? $field['name'] : __( 'Field ID #', 'wpforms' ) . absint( $field['id'] );
+
+				$message .= "--- " . wp_specialchars_decode( $field_name ) . " ---\r\n";
+				$field_value = stripslashes( wp_specialchars_decode( $field_val ) ) . "\r\n\r\n";
+				$message .= apply_filters( 'wpforms_plaintext_field_value', $field_value, $field, $this->form_data );
 			}
 		}
 

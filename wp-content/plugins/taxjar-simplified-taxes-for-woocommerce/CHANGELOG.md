@@ -1,3 +1,16 @@
+# 1.3.2 (2017-07-20)
+* Fix local pickup error for WooCommerce < 2.6.2
+
+# 1.3.1 (2017-06-18)
+* Include tlc_transient hotfix
+
+# 1.3.0 (2017-06-16)
+* Product taxability support for exemptions such as clothing.
+* Line item taxability with support for recurring subscriptions.
+* Fully exempt non-taxable items when tax status is set to "None".
+* Fix calculations to use shipping origin when local pickup selected.
+* Fix caching issues with API requests.
+
 # 1.2.4 (2016-10-19)
 * Add fallbacks to still calculate sales tax if nexus list is not populated.
 

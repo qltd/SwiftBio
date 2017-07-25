@@ -7,15 +7,32 @@
  * @since      1.0.0
  * @license    GPL-2.0+
  * @copyright  Copyright (c) 2016, WPForms LLC
-*/
+ */
 class WPForms_Settings {
 
 	/**
-	 * Holds the plugin settings
+	 * Holds the plugin settings.
 	 *
 	 * @since 1.0.0
+	 * @var array
 	 */
 	protected $options;
+
+	/**
+	 * The available forms.
+	 *
+	 * @since 1.3.7
+	 * @var array
+	 */
+	public $forms = false;
+
+	/**
+	 * Template code if generated.
+	 *
+	 * @since 1.3.7
+	 * @var string
+	 */
+	private $template = false;
 
 	/**
 	 * Primary class constructor.
@@ -35,18 +52,20 @@ class WPForms_Settings {
 	 * Get the value of a specific setting.
 	 *
 	 * @since 1.0.0
+	 * @param string $key
+	 * @param bool $default
+	 * @param string $option
 	 * @return mixed
-	*/
+	 */
 	public function get( $key, $default = false, $option = 'wpforms_settings' ) {
 
-		if ( 'wpforms_settings' == $option && !empty( $this->options ) ) {
+		if ( 'wpforms_settings' === $option && ! empty( $this->options ) ) {
 			$options = $this->options;
 		} else {
 			$options = get_option( $option, false );
 		}
 
-		$value = ! empty( $options[ $key ] ) ? $options[ $key ] : $default;
-		return $value;
+		return ! empty( $options[ $key ] ) ? $options[ $key ] : $default;
 	}
 
 	/**
@@ -56,14 +75,20 @@ class WPForms_Settings {
 	 */
 	public function init() {
 
-		// Check what page we are on
+		// Check what page we are on.
 		$page = isset( $_GET['page'] ) ? $_GET['page'] : '';
 
-		// Only load if we are actually on the settings page
-		if ( $page == 'wpforms-settings' ) {
+		// Only load if we are actually on the settings page.
+		if ( 'wpforms-settings' === $page ) {
 
-			// Retrieve settings
+			// Retrieve settings.
 			$this->options = get_option( 'wpforms_settings', array() );
+
+			// Retrieve available forms.
+			$args  = array(
+				'orderby' => 'title',
+			);
+			$this->forms = wpforms()->form->get( '', $args );
 
 			add_action( 'wpforms_tab_settings_general',       array( $this, 'settings_page_tab_general'               ) );
 			add_action( 'wpforms_tab_settings_payments',      array( $this, 'settings_page_tab_payments'              ) );
@@ -139,7 +164,7 @@ class WPForms_Settings {
 			)
 		);
 
-		// Hook for add-ons
+		// Hook for add-ons.
 		do_action( 'wpforms_settings_enqueue' );
 	}
 
@@ -151,7 +176,7 @@ class WPForms_Settings {
 	 */
 	public function setting_page_tabs() {
 
-		// Define our base tabs
+		// Define our base tabs.
 		$tabs = array(
 			'general'       => __( 'General', 'wpforms' ),
 			'payments'      => __( 'Payments', 'wpforms' ),
@@ -160,7 +185,7 @@ class WPForms_Settings {
 			'system'        => __( 'System Info', 'wpforms' ),
 		);
 
-		// Allow for addons and extensions to add additional tabs
+		// Allow for addons and extensions to add additional tabs.
 		$tabs = apply_filters( 'wpform_settings_tabs', $tabs );
 
 		return $tabs;
@@ -173,44 +198,56 @@ class WPForms_Settings {
 	 */
 	public function settings_page_tab_general() {
 
-		// Check for save, if found let's dance
-		if ( !empty( $_POST['wpforms-settings-general-nonce'] ) ) {
+		// Check for save, if found let's dance.
+		if ( ! empty( $_POST['wpforms-settings-general-nonce'] ) ) {
 
-			// Do we have a valid nonce and permission?
-			if ( ! wp_verify_nonce( $_POST['wpforms-settings-general-nonce'], 'wpforms-settings-general-nonce' ) || !current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
+			// Do we have a valid nonce and permission?.
+			if ( ! wp_verify_nonce( $_POST['wpforms-settings-general-nonce'], 'wpforms-settings-general-nonce' ) || ! current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
 
-				// No funny business
+				// No funny business.
 				printf( '<div class="error below-h2"><p>%s</p></div>', __( 'Settings check failed.', 'wpforms' ) );
 
 			} else {
 
-				// Save General Settings
+				// Save General Settings.
 				if ( isset( $_POST['submit-general'] ) ) {
 
-					// Prep and sanatize settings for save
-					$this->options['email-template']         = !empty( $_POST['email-template'] ) ? esc_attr( $_POST['email-template'] ) : 'default';
-					$this->options['email-header-image']     = !empty( $_POST['email-header-image'] ) ? esc_url_raw( $_POST['email-header-image'] ) : '';
-					$this->options['email-background-color'] = !empty( $_POST['email-background-color'] ) ? wpforms_sanitize_hex_color( $_POST['email-background-color'] ) : '#e9eaec';
-					$this->options['email-carbon-copy']      = !empty( $_POST['email-carbon-copy'] ) ? '1' : false;
-					$this->options['disable-css']            = !empty( $_POST['disable-css'] ) ? intval( $_POST['disable-css'] ) : '1';
-					$this->options['global-assets']          = !empty( $_POST['global-assets'] ) ? '1' : false;
-					$this->options['recaptcha-site-key']     = !empty( $_POST['recaptcha-site-key'] ) ? esc_html( $_POST['recaptcha-site-key'] ) : '';
-					$this->options['recaptcha-secret-key']   = !empty( $_POST['recaptcha-secret-key'] ) ? esc_html( $_POST['recaptcha-secret-key'] ) : '';
+					// Prep and sanatize settings for save.
+					$this->options['email-template']             = ! empty( $_POST['email-template'] ) ? esc_attr( $_POST['email-template'] ) : 'default';
+					$this->options['email-header-image']         = ! empty( $_POST['email-header-image'] ) ? esc_url_raw( $_POST['email-header-image'] ) : '';
+					$this->options['email-background-color']     = ! empty( $_POST['email-background-color'] ) ? wpforms_sanitize_hex_color( $_POST['email-background-color'] ) : '#e9eaec';
+					$this->options['email-carbon-copy']          = ! empty( $_POST['email-carbon-copy'] ) ? '1' : false;
+					$this->options['disable-css']                = ! empty( $_POST['disable-css'] ) ? intval( $_POST['disable-css'] ) : '1';
+					$this->options['global-assets']              = ! empty( $_POST['global-assets'] ) ? '1' : false;
+					$this->options['recaptcha-type']             = ! empty( $_POST['recaptcha-type'] ) ? esc_html( $_POST['recaptcha-type'] ) : 'v2';
+					$this->options['recaptcha-site-key']         = ! empty( $_POST['recaptcha-site-key'] ) ? esc_html( $_POST['recaptcha-site-key'] ) : '';
+					$this->options['recaptcha-secret-key']       = ! empty( $_POST['recaptcha-secret-key'] ) ? esc_html( $_POST['recaptcha-secret-key'] ) : '';
+					$this->options['validation-required']        = ! empty( $_POST['validation-required'] ) ? sanitize_text_field( $_POST['validation-required'] ) : '';
+					$this->options['validation-url']             = ! empty( $_POST['validation-url'] ) ? sanitize_text_field( $_POST['validation-url'] ) : '';
+					$this->options['validation-email']           = ! empty( $_POST['validation-email'] ) ? sanitize_text_field( $_POST['validation-email'] ) : '';
+					$this->options['validation-number']          = ! empty( $_POST['validation-number'] ) ? sanitize_text_field( $_POST['validation-number'] ) : '';
+					$this->options['validation-confirm']         = ! empty( $_POST['validation-confirm'] ) ? sanitize_text_field( $_POST['validation-confirm'] ) : '';
+					$this->options['validation-fileextension']   = ! empty( $_POST['validation-fileextension'] ) ? sanitize_text_field( $_POST['validation-fileextension'] ) : '';
+					$this->options['validation-filesize']        = ! empty( $_POST['validation-filesize'] ) ? sanitize_text_field( $_POST['validation-filesize'] ) : '';
+					$this->options['validation-time12h']         = ! empty( $_POST['validation-time12h'] ) ? sanitize_text_field( $_POST['validation-time12h'] ) : '';
+					$this->options['validation-time24h']         = ! empty( $_POST['validation-time24h'] ) ? sanitize_text_field( $_POST['validation-time24h'] ) : '';
+					$this->options['validation-requiredpayment'] = ! empty( $_POST['validation-requiredpayment'] ) ? sanitize_text_field( $_POST['validation-requiredpayment'] ) : '';
+					$this->options['validation-creditcard']      = ! empty( $_POST['validation-creditcard'] ) ? sanitize_text_field( $_POST['validation-creditcard'] ) : '';
+
 					$this->options = apply_filters( 'wpforms_settings_save', $this->options, $_POST, 'general' );
 
-					// Update settings in DB
+					// Update settings in DB.
 					update_option( 'wpforms_settings' , $this->options );
 
 					printf( '<div class="updated below-h2"><p>%s</p></div>', __( 'General settings updated.', 'wpforms' ) );
 
 				} elseif ( isset( $_POST['submit-key-verify'] ) ) {
 
-					if ( !empty( $_POST['license-key'] ) ) {
+					if ( ! empty( $_POST['license-key'] ) ) {
 						wpforms()->license->verify_key( $_POST['license-key'] );
 					} else {
 						printf( '<div class="error below-h2"><p>%s</p></div>', __( 'Please enter a license key to verify.', 'wpforms' ) );
 					}
-
 				} elseif ( isset( $_POST['submit-key-deactivate'] ) ) {
 
 					wpforms()->license->deactivate_key();
@@ -219,8 +256,8 @@ class WPForms_Settings {
 
 					wpforms()->license->validate_key( $_POST['license-key'], true);
 				}
-			}
-		}
+			} // End if().
+		} // End if().
 
 		if ( class_exists( 'WPForms_License' ) ) {
 			wpforms()->license->notices( true );
@@ -356,7 +393,29 @@ class WPForms_Settings {
 							<td class="section" colspan="2">
 								<hr>
 								<h4><?php _e( 'reCAPTCHA', 'wpforms' ); ?></h4>
-								<p><?php _e( 'reCAPTCHA is a free anti-spam service from Google. Its helps protect your website from spam and abuse while letting real people pass through with ease. <a href="http://www.google.com/recaptcha/intro/index.html" target="_blank" rel="noopener">Visit reCAPTCHA</a> to learn more and sign up for a free account or <a href="https://wpforms.com/docs/setup-captcha-wpforms/" target="_blank" rel="noopener">read our walk through</a> for step-by-step directions.', 'wpforms' ); ?></p>
+								<p><?php _e( 'reCAPTCHA is a free anti-spam service from Google which helps to protect your website from spam and abuse while letting real people pass through with ease.', 'wpforms' ); ?></p>
+								<p><?php _e( 'Google\'s original <a href="https://www.google.com/recaptcha/intro/" rel="noopener noreferrer">v2 reCAPTCHA</a> prompts users to check a box to prove they\'re human, whereas <a href="https://www.google.com/recaptcha/intro/invisible.html" rel="noopener noreferrer">Invisible reCAPTCHA</a> uses advanced technology to detect real users without requiring any input.', 'wpforms' ); ?></p>
+								<p><?php _e( 'Sites already using v2 reCAPTCHA will need to create new site keys before switching to the Invisible reCAPTCHA.', 'wpforms' ); ?></p>
+								<p><?php _e( '<a href="https://wpforms.com/docs/setup-captcha-wpforms/" rel="noopener noreferrer">Read our walk through</a> to learn more and for step-by-step directions.', 'wpforms' ); ?></p>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<label for="wpforms-settings-general-recaptcha-type"><?php _e( 'reCAPTCHA Type', 'wpforms' ); ?></label>
+							</th>
+							<td>
+								<select name="recaptcha-type" id="wpforms-settings-general-recaptcha-type">
+									<?php
+									$options = array(
+										'v2'        => 'v2 reCAPTCHA',
+										'invisible' => 'Invisible reCAPTCHA',
+									);
+									$selected = $this->get( 'recaptcha-type' );
+									foreach ( $options as $key => $option ) {
+										printf( '<option value="%s" %s>%s</option>', esc_attr( $key ), selected( $selected, $key, false ), esc_html( $option ) );
+									}
+									?>
+								</select>
 							</td>
 						</tr>
 						<tr>
@@ -373,6 +432,100 @@ class WPForms_Settings {
 							</th>
 							<td>
 								<input type="text" name="recaptcha-secret-key" value="<?php echo esc_attr( $this->get( 'recaptcha-secret-key' ) ); ?>" id="wpforms-settings-general-recaptcha-secret-key">
+							</td>
+						</tr>
+						<tr>
+							<td class="section" colspan="2">
+								<hr>
+								<h4><?php _e( 'Validation Messages', 'wpforms' ); ?></h4>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<label for="wpforms-settings-general-validation-required"><?php _e( 'Required', 'wpforms' ); ?></label>
+							</th>
+							<td>
+								<input type="text" name="validation-required" value="<?php echo esc_attr( $this->get( 'validation-required', __( 'This field is required.', 'wpforms' ) ) ); ?>" id="wpforms-settings-general-validation-required">
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<label for="wpforms-settings-general-validation-url"><?php _e( 'Website URL', 'wpforms' ); ?></label>
+							</th>
+							<td>
+								<input type="text" name="validation-url" value="<?php echo esc_attr( $this->get( 'validation-url', __( 'Please enter a valid URL.', 'wpforms' ) ) ); ?>" id="wpforms-settings-general-validation-url">
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<label for="wpforms-settings-general-validation-email"><?php _e( 'Email', 'wpforms' ); ?></label>
+							</th>
+							<td>
+								<input type="text" name="validation-email" value="<?php echo esc_attr( $this->get( 'validation-email', __( 'Please enter a valid email address.', 'wpforms' ) ) ); ?>" id="wpforms-settings-general-validation-email">
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<label for="wpforms-settings-general-validation-number"><?php _e( 'Number', 'wpforms' ); ?></label>
+							</th>
+							<td>
+								<input type="text" name="validation-number" value="<?php echo esc_attr( $this->get( 'validation-number', __( 'Please enter a valid number.', 'wpforms' ) ) ); ?>" id="wpforms-settings-general-validation-number">
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<label for="wpforms-settings-general-validation-confirm"><?php _e( 'Confirm Value', 'wpforms' ); ?></label>
+							</th>
+							<td>
+								<input type="text" name="validation-confirm" value="<?php echo esc_attr( $this->get( 'validation-confirm', __( 'Field values do not match.', 'wpforms' ) ) ); ?>" id="wpforms-settings-general-validation-confirm">
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<label for="wpforms-settings-general-validation-fileextension"><?php _e( 'File Extension', 'wpforms' ); ?></label>
+							</th>
+							<td>
+								<input type="text" name="validation-fileextension" value="<?php echo esc_attr( $this->get( 'validation-fileextension', __( 'File type is not allowed.', 'wpforms' ) ) ); ?>" id="wpforms-settings-general-validation-fileextension">
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<label for="wpforms-settings-general-validation-filesize"><?php _e( 'File Size', 'wpforms' ); ?></label>
+							</th>
+							<td>
+								<input type="text" name="validation-filesize" value="<?php echo esc_attr( $this->get( 'validation-filesize', __( 'File exceeds max size allowed.', 'wpforms' ) ) ); ?>" id="wpforms-settings-general-validation-filesize">
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<label for="wpforms-settings-general-validation-time12h"><?php _e( 'Time (12 hour)', 'wpforms' ); ?></label>
+							</th>
+							<td>
+								<input type="text" name="validation-time12h" value="<?php echo esc_attr( $this->get( 'validation-time12h', __( 'Please enter time in 12-hour AM/PM format (eg 8:45 AM).', 'wpforms' ) ) ); ?>" id="wpforms-settings-general-validation-time12h">
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<label for="wpforms-settings-general-validation-time24h"><?php _e( 'Time (24 hour)', 'wpforms' ); ?></label>
+							</th>
+							<td>
+								<input type="text" name="validation-time24h" value="<?php echo esc_attr( $this->get( 'validation-time24h', __( 'Please enter time in 24-hour format (eg 22:45).', 'wpforms' ) ) ); ?>" id="wpforms-settings-general-validation-time24h">
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<label for="wpforms-settings-general-validation-requiredpayment"><?php _e( 'Payment Required', 'wpforms' ); ?></label>
+							</th>
+							<td>
+								<input type="text" name="validation-requiredpayment" value="<?php echo esc_attr( $this->get( 'validation-requiredpayment', __( 'Payment is required.', 'wpforms' ) ) ); ?>" id="wpforms-settings-general-validation-requiredpayment">
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<label for="wpforms-settings-general-validation-creditcard"><?php _e( 'Credit Card', 'wpforms' ); ?></label>
+							</th>
+							<td>
+								<input type="text" name="validation-creditcard" value="<?php echo esc_attr( $this->get( 'validation-creditcard', __( 'Please enter a valid credit card number.', 'wpforms' ) ) ); ?>" id="wpforms-settings-general-validation-creditcard">
 							</td>
 						</tr>
 					</tbody>
@@ -393,24 +546,24 @@ class WPForms_Settings {
 	 */
 	public function settings_page_tab_payments() {
 
-		// Check for save, if found let's dance
-		if ( !empty( $_POST['wpforms-settings-payments-nonce'] ) && isset( $_POST['submit-payments'] ) ) {
+		// Check for save, if found let's dance.
+		if ( ! empty( $_POST['wpforms-settings-payments-nonce'] ) && isset( $_POST['submit-payments'] ) ) {
 
 			// Do we have a valid nonce and permission?
-			if ( ! wp_verify_nonce( $_POST['wpforms-settings-payments-nonce'], 'wpforms-settings-payments-nonce' ) || !current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
+			if ( ! wp_verify_nonce( $_POST['wpforms-settings-payments-nonce'], 'wpforms-settings-payments-nonce' ) || ! current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
 
-				// No funny business
+				// No funny business.
 				printf( '<div class="error below-h2"><p>%s</p></div>', __( 'Settings check failed.', 'wpforms' ) );
 
 			} else {
 
-				$this->options['currency'] = !empty( $_POST['currency'] ) ? esc_html( $_POST['currency'] ) : 'USD';
+				$this->options['currency'] = ! empty( $_POST['currency'] ) ? esc_html( $_POST['currency'] ) : 'USD';
 				$this->options = apply_filters( 'wpforms_settings_save', $this->options, $_POST, 'payments' );
 
-				// Update settings in DB
+				// Update settings in DB.
 				update_option( 'wpforms_settings' , $this->options );
 
-				// Winning
+				// Winning.
 				printf( '<div class="updated below-h2"><p>%s</p></div>', __( 'Settings updated.', 'wpforms' ) );
 			}
 		}
@@ -466,7 +619,7 @@ class WPForms_Settings {
 		$providers = get_option( 'wpforms_providers', false );
 		$active    = apply_filters( 'wpforms_providers_available', array() );
 
-		// If no provider addons are activated display a message and bail
+		// If no provider addons are activated display a message and bail.
 		if ( empty( $active ) ) {
 			echo '<div class="notice notice-info below-h2"><p>' . sprintf( __( 'You do not have any marketing add-ons activated. You can head over to the <a href="%s">Add-Ons page</a> to install and activate the add-on for your provider.', 'wpforms' ), admin_url( 'admin.php?page=wpforms-addons' ) ) . '</p></div>';
 			return;
@@ -474,9 +627,7 @@ class WPForms_Settings {
 		?>
 
 		<div id="wpforms-settings-providers">
-
 			<?php do_action( 'wpforms_settings_providers', $active, $providers ); ?>
-
 		</div>
 		<?php
 	}
@@ -488,7 +639,7 @@ class WPForms_Settings {
 	 */
 	public function settings_page_tab_import_export() {
 
-		if ( isset( $_GET['wpforms_notice'] ) && 'forms-imported' == $_GET['wpforms_notice'] ) {
+		if ( isset( $_GET['wpforms_notice'] ) && 'forms-imported' === $_GET['wpforms_notice'] ) {
 			printf( '<div class="updated below-h2"><p>%s</p></div>', __( 'Form(s) imported', 'wpforms' ) );
 		}
 		?>
@@ -525,9 +676,8 @@ class WPForms_Settings {
 							<form method="post" action="<?php echo admin_url( 'admin.php?page=wpforms-settings#!wpforms-tab-import_export' ); ?>">
 								<ul class="export-list">
 								<?php
-								$forms = wpforms()->form->get( '', array( 'order' => 'DESC' ) );
-								if ( $forms ) {
-									foreach ( $forms as $form ) {
+								if ( $this->forms ) {
+									foreach ( $this->forms as $form ) {
 										printf( '<li><label><input type="checkbox" name="forms[]" value="%d"> %s</label></li>', $form->ID, esc_html( $form->post_title ) );
 									}
 								} else {
@@ -538,6 +688,40 @@ class WPForms_Settings {
 								<input type="hidden" name="action" value="export_form">
 								<?php wp_nonce_field( 'wpforms_import_nonce', 'wpforms-settings-importexport-nonce' ); ?>
 								<?php submit_button( __( 'Export', 'wpforms' ), 'secondary', 'submit-importexport', false ); ?>
+							</form>
+						</td>
+					</tr>
+					<tr>
+						<td class="section" colspan="2">
+							<hr>
+							<h4 id="template-export"><?php _e( 'Form Template Export', 'wpforms' ); ?></h4>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" style="padding-left:0;">
+							<?php
+							if ( $this->template ) {
+								echo '<p>' . __( 'The following code can be used to register your custom form template. Copy and paste the following code to your theme\'s functions.php file or include it within an external file.', 'wpforms' ) . '<p>';
+								echo '<p>' . sprintf( __( 'For more information <a href="%s" target="blank" rel="noopener noreferrer">see our documentation</a> for additional details.', 'wpforms' ), 'https://wpforms.com/docs/how-to-create-a-custom-form-template/' ) . '<p>';
+								echo '<textarea class="template-export-textarea" style="font-size:11px;" readonly>' . esc_textarea( $this->template ) . '</textarea><br>';
+							}
+							?>
+							<p><?php _e( 'Select a form to generate PHP code that can be used to register a custom form template.', 'wpforms' ); ?></p>
+							<form method="post" action="<?php echo admin_url( 'admin.php?page=wpforms-settings&jump=template-export#!wpforms-tab-import_export' ); ?>">
+								<?php
+								if ( ! empty( $this->forms ) ) {
+									echo '<select id="wpforms-settings-importextport-template" name="form">';
+									foreach ( $this->forms as $form ) {
+										printf( '<option value="%d">%s</option>', $form->ID, esc_html( $form->post_title ) );
+									}
+									echo '</select>';
+								} else {
+									echo '<p>' . __( 'You need to create a form before you can generate a template.'. 'wpforms' ) . '</p>';
+								}
+								?>
+								<input type="hidden" name="action" value="export_template"><br>
+								<?php wp_nonce_field( 'wpforms_import_nonce', 'wpforms-settings-importexport-nonce' ); ?>
+								<?php submit_button( __( 'Generate template code', 'wpforms' ), 'secondary', 'submit-importexport', false ); ?>
 							</form>
 						</td>
 					</tr>
@@ -555,16 +739,18 @@ class WPForms_Settings {
 	 */
 	public function settings_page_tab_import_export_process() {
 
-		// Check for triggered save
-		if ( empty( $_POST['wpforms-settings-importexport-nonce'] ) || empty( $_POST['action'] ) || !isset( $_POST['submit-importexport'] ) )
+		// Check for triggered save.
+		if ( empty( $_POST['wpforms-settings-importexport-nonce'] ) || empty( $_POST['action'] ) || ! isset( $_POST['submit-importexport'] ) ) {
 			return;
+		}
 
-		// Check for valid nonce and permission
-		if ( !wp_verify_nonce( $_POST['wpforms-settings-importexport-nonce'], 'wpforms_import_nonce' ) || !current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) )
+		// Check for valid nonce and permission.
+		if ( ! wp_verify_nonce( $_POST['wpforms-settings-importexport-nonce'], 'wpforms_import_nonce' ) || ! current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
 			return;
+		}
 
-		// Export Form(s)
-		if ( 'export_form' == $_POST['action'] && !empty( $_POST['forms'] ) ) {
+		// Export Form(s).
+		if ( 'export_form' === $_POST['action'] && ! empty( $_POST['forms'] ) ) {
 
 			$export = array();
 			$forms  = get_posts(
@@ -572,10 +758,10 @@ class WPForms_Settings {
 					'post_type'     => 'wpforms',
 					'no_found_rows' => true,
 					'nopaging'      => true,
-					'post__in'      => array_map( 'intval', $_POST['forms'] )
+					'post__in'      => array_map( 'intval', $_POST['forms'] ),
 			) );
 
-			foreach( $forms as $form ) {
+			foreach ( $forms as $form ) {
 				$export[] = wpforms_decode( $form->post_content );
 			}
 
@@ -588,29 +774,29 @@ class WPForms_Settings {
 			nocache_headers();
 			header( 'Content-Type: application/json; charset=utf-8' );
 			header( 'Content-Disposition: attachment; filename=wpforms-form-export-' . date( 'm-d-Y' ) . '.json' );
-			header( "Expires: 0" );
+			header( 'Expires: 0' );
 
-			echo json_encode( $export );
+			echo wp_json_encode( $export );
 			exit;
 		}
 
-		// Import Form(s)
-		if ( 'import_form' == $_POST['action'] && !empty( $_FILES['file']['tmp_name'] ) ) {
+		// Import Form(s).
+		if ( 'import_form' === $_POST['action'] && ! empty( $_FILES['file']['tmp_name'] ) ) {
 
 			$ext = strtolower( pathinfo( $_FILES['file']['name'], PATHINFO_EXTENSION ) );
 
-			if ( 'json' != $ext ) {
+			if ( 'json' !== $ext ) {
 				wp_die( __( 'Please upload a valid .json form export file.', 'wpforms' ), __( 'Error', 'wpformsp' ), array( 'response' => 400 ) );
 			}
 
 			$forms = json_decode( file_get_contents( $_FILES['file']['tmp_name'] ), true );
 
-			if ( !empty( $forms ) ) {
+			if ( ! empty( $forms ) ) {
 
-				foreach( $forms as $form ) {
+				foreach ( $forms as $form ) {
 
-					$title  = !empty( $form['settings']['form_title'] ) ? $form['settings']['form_title'] : '';;
-					$desc   = !empty( $form['settings']['form_desc'] ) ? $form['settings']['form_desc'] : ''; ;
+					$title  = ! empty( $form['settings']['form_title'] ) ? $form['settings']['form_title'] : '';
+					$desc   = ! empty( $form['settings']['form_desc'] ) ? $form['settings']['form_desc'] : '';
 					$new_id = wp_insert_post( array(
 							'post_title'   => $title,
 							'post_status'  => 'publish',
@@ -630,6 +816,66 @@ class WPForms_Settings {
 				exit;
 			}
 		}
+
+		// Export form template.
+		if ( 'export_template' === $_POST['action'] && ! empty( $_POST['form'] ) ) {
+
+			$args = array(
+				'content_only' => true,
+			);
+			$form_data = wpforms()->form->get( absint( $_POST['form'] ), $args );
+
+			if ( ! $form_data ) {
+				return;
+			}
+
+			// Define basic data.
+			$name  = sanitize_text_field( $form_data['settings']['form_title'] );
+			$desc  = sanitize_text_field( $form_data['settings']['form_desc'] );
+			$slug  = sanitize_key( str_replace( ' ', '_' , $form_data['settings']['form_title'] ) );
+			$class = 'WPForms_Template_' . $slug;
+
+			// Format template field and settings data.
+			$data = $form_data;
+			$data['meta']['template'] = $slug;
+			unset( $data['id'] );
+			$data = var_export( $data, true );
+			$data = str_replace( '  ', "\t", $data );
+			$data = preg_replace( '/([\t\r\n]+?)array/', 'array', $data );
+
+			// Build the final template string.
+			$this->template = <<<EOT
+if ( class_exists( 'WPForms_Template' ) ) :
+/**
+ * {$name}
+ * Template for WPForms.
+ */
+class {$class} extends WPForms_Template {
+
+	/**
+	 * Primary class constructor.
+	 *
+	 * @since 1.0.0
+	 */
+	public function init() {
+
+		// Template name
+		\$this->name = '{$name}';
+
+		// Template slug
+		\$this->slug = '{$slug}';
+
+		// Template description
+		\$this->description = '{$desc}';
+
+		// Template field and settings
+		\$this->data = {$data};
+	}
+}
+new {$class};
+endif;
+EOT;
+		} // End if().
 	}
 
 	/**
@@ -641,9 +887,7 @@ class WPForms_Settings {
 
 		?>
 		<div id="wpforms-settings-system">
-
 			<textarea readonly="readonly" class="system-info-textarea"><?php echo $this->get_system_info(); ?></textarea>
-
 		</div>
 		<?php
 	}
@@ -706,7 +950,19 @@ class WPForms_Settings {
 	 */
 	public function settings_link( $links ) {
 
-		$setting_link = sprintf( '<a href="%s">%s</a>', add_query_arg( array( 'page' => 'wpforms-settings' ), admin_url( 'admin.php' ) ), __( 'Settings', 'wpforms' ) );
+		$admin_link  = add_query_arg(
+			array(
+				'page' => 'wpforms-settings',
+			),
+			admin_url( 'admin.php' )
+		);
+
+		$setting_link = sprintf(
+			'<a href="%s">%s</a>',
+			$admin_link ,
+			__( 'Settings', 'wpforms' )
+		);
+
 		array_unshift( $links, $setting_link );
 
 		return $links;
@@ -715,7 +971,7 @@ class WPForms_Settings {
 	/**
 	 * Get system information.
 	 *
-	 * Based on a function from Easy Digital Downloads by Pippin Williamson
+	 * Based on a function from Easy Digital Downloads by Pippin Williamson.
 	 *
 	 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/blob/master/includes/admin/tools.php#L470
 	 * @since 1.2.3
@@ -725,20 +981,20 @@ class WPForms_Settings {
 
 		global $wpdb;
 
-		// Get theme info
+		// Get theme info.
 		$theme_data = wp_get_theme();
 		$theme      = $theme_data->Name . ' ' . $theme_data->Version;
 
 		$return  = '### Begin System Info ###' . "\n\n";
 
-		// WPForms info
+		// WPForms info.
 		$activated = get_option( 'wpforms_activated', array() );
 		$return .= '-- WPForms Info' . "\n\n";
-		if ( !empty( $activated['pro'] ) ) {
+		if ( ! empty( $activated['pro'] ) ) {
 			$date    = $activated['pro'] + ( get_option( 'gmt_offset' ) * 3600 );
 			$return .= 'Pro:                      ' . date_i18n( __( 'M j, Y @ g:ia' ), $date ) . "\n";
 		}
-		if ( !empty( $activated['lite'] ) ) {
+		if ( ! empty( $activated['lite'] ) ) {
 			$date    = $activated['lite'] + ( get_option( 'gmt_offset' ) * 3600 );
 			$return .= 'Lite:                     ' . date_i18n( __( 'M j, Y @ g:ia' ), $date ) . "\n";
 		}
@@ -749,19 +1005,19 @@ class WPForms_Settings {
 		$return .= 'Home URL:                 ' . home_url() . "\n";
 		$return .= 'Multisite:                ' . ( is_multisite() ? 'Yes' : 'No' ) . "\n";
 
-		// WordPress configuration
+		// WordPress configuration.
 		$return .= "\n" . '-- WordPress Configuration' . "\n\n";
 		$return .= 'Version:                  ' . get_bloginfo( 'version' ) . "\n";
 		$return .= 'Language:                 ' . ( defined( 'WPLANG' ) && WPLANG ? WPLANG : 'en_US' ) . "\n";
 		$return .= 'Permalink Structure:      ' . ( get_option( 'permalink_structure' ) ? get_option( 'permalink_structure' ) : 'Default' ) . "\n";
 		$return .= 'Active Theme:             ' . $theme . "\n";
 		$return .= 'Show On Front:            ' . get_option( 'show_on_front' ) . "\n";
-		// Only show page specs if frontpage is set to 'page'
-		if( get_option( 'show_on_front' ) == 'page' ) {
+		// Only show page specs if frontpage is set to 'page'.
+		if ( get_option( 'show_on_front' ) === 'page' ) {
 			$front_page_id = get_option( 'page_on_front' );
 			$blog_page_id = get_option( 'page_for_posts' );
-			$return .= 'Page On Front:            ' . ( $front_page_id != 0 ? get_the_title( $front_page_id ) . ' (#' . $front_page_id . ')' : 'Unset' ) . "\n";
-			$return .= 'Page For Posts:           ' . ( $blog_page_id != 0 ? get_the_title( $blog_page_id ) . ' (#' . $blog_page_id . ')' : 'Unset' ) . "\n";
+			$return .= 'Page On Front:            ' . ( 0 != $front_page_id ? get_the_title( $front_page_id ) . ' (#' . $front_page_id . ')' : 'Unset' ) . "\n";
+			$return .= 'Page For Posts:           ' . ( 0 != $blog_page_id ? get_the_title( $blog_page_id ) . ' (#' . $blog_page_id . ')' : 'Unset' ) . "\n";
 		}
 		$return .= 'ABSPATH:                  ' . ABSPATH . "\n";
 		$return .= 'Table Prefix:             ' . 'Length: ' . strlen( $wpdb->prefix ) . '   Status: ' . ( strlen( $wpdb->prefix ) > 16 ? 'ERROR: Too long' : 'Acceptable' ) . "\n";
@@ -770,85 +1026,82 @@ class WPForms_Settings {
 		$return .= 'Memory Limit:             ' . WP_MEMORY_LIMIT . "\n";
 		$return .= 'Registered Post Stati:    ' . implode( ', ', get_post_stati() ) . "\n";
 
-		// @todo WPForms configuration/specific details
+		// @todo WPForms configuration/specific details.
 		$return .= "\n" . '-- WordPress Uploads/Constants' . "\n\n";
 		$return .= 'WP_CONTENT_DIR:           ' . ( defined( 'WP_CONTENT_DIR' ) ? WP_CONTENT_DIR ? WP_CONTENT_DIR : 'Disabled' : 'Not set' ) . "\n";
 		$return .= 'WP_CONTENT_URL:           ' . ( defined( 'WP_CONTENT_URL' ) ? WP_CONTENT_URL ? WP_CONTENT_URL : 'Disabled' : 'Not set' ) . "\n";
 		$return .= 'UPLOADS:                  ' . ( defined( 'UPLOADS' ) ? UPLOADS ? UPLOADS : 'Disabled' : 'Not set' ) . "\n";
 		$uploads_dir = wp_upload_dir();
-		$return .= 'wp_uploads_dir() path:    ' . $uploads_dir['path']. "\n";
-		$return .= 'wp_uploads_dir() url:     ' . $uploads_dir['url']. "\n";
-		$return .= 'wp_uploads_dir() basedir: ' . $uploads_dir['basedir']. "\n";
-		$return .= 'wp_uploads_dir() baseurl: ' . $uploads_dir['baseurl']. "\n";
+		$return .= 'wp_uploads_dir() path:    ' . $uploads_dir['path'] . "\n";
+		$return .= 'wp_uploads_dir() url:     ' . $uploads_dir['url'] . "\n";
+		$return .= 'wp_uploads_dir() basedir: ' . $uploads_dir['basedir'] . "\n";
+		$return .= 'wp_uploads_dir() baseurl: ' . $uploads_dir['baseurl'] . "\n";
 
-
-		// Get plugins that have an update
+		// Get plugins that have an update.
 		$updates = get_plugin_updates();
 
-		// Must-use plugins
+		// Must-use plugins.
 		// NOTE: MU plugins can't show updates!
 		$muplugins = get_mu_plugins();
-		if( count( $muplugins ) > 0 && !empty( $muplugins ) ) {
+		if ( count( $muplugins ) > 0 && ! empty( $muplugins ) ) {
 			$return .= "\n" . '-- Must-Use Plugins' . "\n\n";
 
-			foreach( $muplugins as $plugin => $plugin_data ) {
+			foreach ( $muplugins as $plugin => $plugin_data ) {
 				$return .= $plugin_data['Name'] . ': ' . $plugin_data['Version'] . "\n";
 			}
 		}
 
-		// WordPress active plugins
+		// WordPress active plugins.
 		$return .= "\n" . '-- WordPress Active Plugins' . "\n\n";
 
 		$plugins = get_plugins();
 		$active_plugins = get_option( 'active_plugins', array() );
 
-		foreach( $plugins as $plugin_path => $plugin ) {
-			if( !in_array( $plugin_path, $active_plugins ) )
+		foreach ( $plugins as $plugin_path => $plugin ) {
+			if ( ! in_array( $plugin_path, $active_plugins, true ) ) {
 				continue;
-
-			$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[$plugin_path]->update->new_version . ')' : '';
+			}
+			$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
 			$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 		}
 
-		// WordPress inactive plugins
+		// WordPress inactive plugins.
 		$return .= "\n" . '-- WordPress Inactive Plugins' . "\n\n";
 
-		foreach( $plugins as $plugin_path => $plugin ) {
-			if( in_array( $plugin_path, $active_plugins ) )
+		foreach ( $plugins as $plugin_path => $plugin ) {
+			if ( in_array( $plugin_path, $active_plugins ) ) {
 				continue;
-
-			$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[$plugin_path]->update->new_version . ')' : '';
+			}
+			$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
 			$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 		}
 
-		if( is_multisite() ) {
-			// WordPress Multisite active plugins
+		if ( is_multisite() ) {
+			// WordPress Multisite active plugins.
 			$return .= "\n" . '-- Network Active Plugins' . "\n\n";
 
 			$plugins = wp_get_active_network_plugins();
 			$active_plugins = get_site_option( 'active_sitewide_plugins', array() );
 
-			foreach( $plugins as $plugin_path ) {
+			foreach ( $plugins as $plugin_path ) {
 				$plugin_base = plugin_basename( $plugin_path );
-
-				if( !array_key_exists( $plugin_base, $active_plugins ) )
+				if ( ! array_key_exists( $plugin_base, $active_plugins ) ) {
 					continue;
-
-				$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[$plugin_path]->update->new_version . ')' : '';
+				}
+				$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
 				$plugin  = get_plugin_data( $plugin_path );
 				$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 			}
 		}
 
-		// Server configuration (really just versioning)
+		// Server configuration (really just versioning).
 		$return .= "\n" . '-- Webserver Configuration' . "\n\n";
 		$return .= 'PHP Version:              ' . PHP_VERSION . "\n";
 		$return .= 'MySQL Version:            ' . $wpdb->db_version() . "\n";
 		$return .= 'Webserver Info:           ' . $_SERVER['SERVER_SOFTWARE'] . "\n";
 
-		// PHP configs... now we're getting to the important stuff
+		// PHP configs... now we're getting to the important stuff.
 		$return .= "\n" . '-- PHP Configuration' . "\n\n";
-		//$return .= 'Safe Mode:                ' . ( ini_get( 'safe_mode' ) ? 'Enabled' : 'Disabled' . "\n" );
 		$return .= 'Memory Limit:             ' . ini_get( 'memory_limit' ) . "\n";
 		$return .= 'Upload Max Size:          ' . ini_get( 'upload_max_filesize' ) . "\n";
 		$return .= 'Post Max Size:            ' . ini_get( 'post_max_size' ) . "\n";
@@ -857,7 +1110,7 @@ class WPForms_Settings {
 		$return .= 'Max Input Vars:           ' . ini_get( 'max_input_vars' ) . "\n";
 		$return .= 'Display Errors:           ' . ( ini_get( 'display_errors' ) ? 'On (' . ini_get( 'display_errors' ) . ')' : 'N/A' ) . "\n";
 
-		// PHP extensions and such
+		// PHP extensions and such.
 		$return .= "\n" . '-- PHP Extensions' . "\n\n";
 		$return .= 'cURL:                     ' . ( function_exists( 'curl_init' ) ? 'Supported' : 'Not Supported' ) . "\n";
 		$return .= 'fsockopen:                ' . ( function_exists( 'fsockopen' ) ? 'Supported' : 'Not Supported' ) . "\n";
@@ -868,8 +1121,8 @@ class WPForms_Settings {
 		$return .= "\n" . '-- Session Configuration' . "\n\n";
 		$return .= 'Session:                  ' . ( isset( $_SESSION ) ? 'Enabled' : 'Disabled' ) . "\n";
 
-		// The rest of this is only relevant is session is enabled
-		if( isset( $_SESSION ) ) {
+		// The rest of this is only relevant is session is enabled.
+		if ( isset( $_SESSION ) ) {
 			$return .= 'Session Name:             ' . esc_html( ini_get( 'session.name' ) ) . "\n";
 			$return .= 'Cookie Path:              ' . esc_html( ini_get( 'session.cookie_path' ) ) . "\n";
 			$return .= 'Save Path:                ' . esc_html( ini_get( 'session.save_path' ) ) . "\n";

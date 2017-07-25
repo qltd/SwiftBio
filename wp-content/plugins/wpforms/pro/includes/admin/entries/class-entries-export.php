@@ -9,7 +9,7 @@
  * @since      1.1.5
  * @license    GPL-2.0+
  * @copyright  Copyright (c) 2016, WPForms LLC
-*/
+ */
 class WPForms_Entries_Export {
 
 	/**
@@ -101,7 +101,7 @@ class WPForms_Entries_Export {
 	 */
 	public function is_single_entry() {
 
-		if ( 'all' == $this->entry_type || is_array( $this->entry_type ) ) {
+		if ( 'all' === $this->entry_type || is_array( $this->entry_type ) ) {
 			return false;
 		} else {
 			return true;
@@ -119,8 +119,9 @@ class WPForms_Entries_Export {
 
 		ignore_user_abort( true );
 
-		if ( ! in_array( 'set_time_limit', explode( ',', ini_get( 'disable_functions' ) ) ) )
+		if ( ! in_array( 'set_time_limit', explode( ',', ini_get( 'disable_functions' ) ) ) ) {
 			set_time_limit( 0 );
+		}
 
 		if ( ! $this->is_single_entry() ) {
 			$file_name = 'wpforms-' . sanitize_file_name( get_the_title( $this->form_id ) ) . '-' . date( 'm-d-Y' ) . '.csv';
@@ -129,9 +130,13 @@ class WPForms_Entries_Export {
 		}
 
 		nocache_headers();
+		header( 'Expires: 0' );
 		header( 'Content-Type: text/csv; charset=utf-8' );
 		header( 'Content-Disposition: attachment; filename=' . $file_name );
-		header( "Expires: 0" );
+		header( 'Content-Transfer-Encoding: binary' );
+		// Hack for MS Excel to correct read UTF8 CSVs.
+		// See https://www.skoumal.net/en/making-utf-8-csv-excel/.
+		echo chr( 0xEF ) . chr( 0xBB ) . chr( 0xBF );
 	}
 
 	/**
@@ -160,12 +165,12 @@ class WPForms_Entries_Export {
 		$allowed = $this->allowed_fields();
 
 		// Add whitelisted fields to export columns
-		foreach( $this->fields as $id => $field ) {
-			if ( in_array( $field['type'], $allowed ) ) {
+		foreach ( $this->fields as $id => $field ) {
+			if ( in_array( $field['type'], $allowed, true ) ) {
 				if ( $this->is_single_entry() ) {
-					$cols[$field['id']] = sanitize_text_field( $field['name'] );
+					$cols[ $field['id'] ] = sanitize_text_field( $field['name'] );
 				} else {
-					$cols[$field['id']] = sanitize_text_field( $field['label'] );
+					$cols[ $field['id'] ] = sanitize_text_field( $field['label'] );
 				}
 			}
 		}
@@ -198,9 +203,9 @@ class WPForms_Entries_Export {
 
 		$cols = $this->get_csv_cols();
 		$i = 1;
-		foreach( $cols as $col_id => $column ) {
+		foreach ( $cols as $col_id => $column ) {
 			echo '"' . addslashes( $column ) . '"';
-			echo $i == count( $cols ) ? '' : ',';
+			echo count( $cols ) === $i ? '' : ',';
 			$i++;
 		}
 		echo "\r\n";
@@ -221,9 +226,9 @@ class WPForms_Entries_Export {
 
 			// For single entry exports we have the needed fields already
 			// and no more queries are necessary
-			foreach( $this->fields as $id => $field ) {
-				if ( in_array( $field['type'], $allowed ) ) {
-					$data[1][$field['id']] = $field['value'];
+			foreach ( $this->fields as $id => $field ) {
+				if ( in_array( $field['type'], $allowed, true ) ) {
+					$data[1][ $field['id'] ] = $field['value'];
 				}
 			}
 			$date_format         = sprintf( '%s %s', get_option( 'date_format' ), get_option( 'time_format' ) );
@@ -235,28 +240,28 @@ class WPForms_Entries_Export {
 
 			// All or multiple entry export
 			$args = array(
-				'number'   => -1,
+				'number'  => -1,
 				//'entry_id' => is_array( $this->entry_type ) ? $this->entry_type : '', @todo
 				'form_id' => $this->form_id,
 			);
 			$entries     = wpforms()->entry->get_entries( $args );
 			$form_fields = $this->form_data['fields'];
 
-			foreach( $entries as $entry ) {
+			foreach ( $entries as $entry ) {
 
 				$fields = wpforms_decode( $entry->fields );
 
-				foreach( $form_fields as $form_field ) {
-					if ( in_array( $form_field['type'], $allowed ) ) {
-						$data[$entry->entry_id][$form_field['id']] = $fields[$form_field['id']]['value'];
+				foreach ( $form_fields as $form_field ) {
+					if ( in_array( $form_field['type'], $allowed, true ) ) {
+						$data[ $entry->entry_id ][ $form_field['id'] ] = $fields[ $form_field['id'] ]['value'];
 					}
 				}
-				$date_format                        = sprintf( '%s %s', get_option( 'date_format' ), get_option( 'time_format' ) );
-				$data[$entry->entry_id]['date']     = date( $date_format, strtotime( $entry->date ) + ( get_option( 'gmt_offset' ) * 3600 )  );
-				$data[$entry->entry_id]['date_gmt'] = date( $date_format, strtotime( $entry->date ) );
-				$data[$entry->entry_id]['entry_id'] = absint( $entry->entry_id );
+				$date_format                          = sprintf( '%s %s', get_option( 'date_format' ), get_option( 'time_format' ) );
+				$data[ $entry->entry_id ]['date']     = date( $date_format, strtotime( $entry->date ) + ( get_option( 'gmt_offset' ) * 3600 )  );
+				$data[ $entry->entry_id ]['date_gmt'] = date( $date_format, strtotime( $entry->date ) );
+				$data[ $entry->entry_id ]['entry_id'] = absint( $entry->entry_id );
 			}
-		}
+		} // End if().
 
 		$data = apply_filters( 'wpforms_export_get_data', $data, $this->entry_type );
 
@@ -279,9 +284,9 @@ class WPForms_Entries_Export {
 			foreach ( $row as $col_id => $column ) {
 				// Make sure the column is valid
 				if ( array_key_exists( $col_id, $cols ) ) {
-					$data = str_replace("\n", "\r\n", trim( $column ) );
+					$data = str_replace( "\n", "\r\n", trim( $column ) );
 					echo '"' . addslashes( $data ) . '"';
-					echo $i == count( $cols ) ? '' : ',';
+					echo count( $cols ) === $i ? '' : ',';
 					$i++;
 				}
 			}
@@ -296,7 +301,7 @@ class WPForms_Entries_Export {
 	 */
 	public function export() {
 
-		if ( !current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
+		if ( ! current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
 			wp_die( __( 'You do not have permission to export entries.', 'wpforms' ), __( 'Error', 'wpforms' ), array( 'response' => 403 ) );
 		}
 
