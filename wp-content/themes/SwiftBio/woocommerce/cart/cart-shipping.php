@@ -12,22 +12,25 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see 	    https://docs.woocommerce.com/document/template-structure/
- * @author 		WooThemes
- * @package 	WooCommerce/Templates
- * @version     2.5.0
+ * @see         https://docs.woocommerce.com/document/template-structure/
+ * @author      WooThemes
+ * @package     WooCommerce/Templates
+ * @version     3.1.0
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+/* Q Edits */
 global $post;
 $other = false;
 $account = false;
+/*** Q Edits */
 ?>
 <tr class="shipping">
 	<th><?php echo wp_kses_post( $package_name ); ?></th>
 	<td data-title="<?php echo esc_attr( $package_name ); ?>" style="max-width: 450px;">
 		<?php if ( 1 < count( $available_methods ) ) : ?>
+                                <?php /* Q Edits - Turned radio buttons into dropdown instead */ ?>
 			<select name="shipping_method[<?php echo $index; ?>]" data-index="<?php echo $index; ?>" id="shipping_method_<?php echo $index; ?>" class="shipping_method select-me">
 				<option value=""><?php echo "Select Shipping Method"; ?></option>
                                             <?php foreach ( $available_methods as $method ) : ?>
@@ -47,7 +50,8 @@ $account = false;
                                                 ?></option>
                                             <?php endforeach; ?>
                         	</select>
-
+                            <?php /*** Q Edits */ ?>
+                            <?php /* Q Edits - Added Special Shipping Rules */ ?>
                             <?php if ($post->ID == 6): ?>
                                 <?php  parse_str($_POST['post_data'], $shipping); ?>
 
@@ -81,7 +85,7 @@ Shipping charges will be billed to your company directly from your carrier.</sma
                                     </div>
                                 <?php endif; ?>
                             <?php endif; ?>
-
+                            <?php /*** Q Edits */ ?>
 		<?php elseif ( 1 === count( $available_methods ) ) :  ?>
 			<?php
 				$method = current( $available_methods );
@@ -95,11 +99,11 @@ Shipping charges will be billed to your company directly from your carrier.</sma
 		<?php endif; ?>
 
 		<?php if ( $show_package_details ) : ?>
-			<?php echo '<p class="woocommerce-shipping-contents"><small>' . esc_html( $package_details ) . '</small></p>'; ?>
-		<?php endif; ?>
+                        <?php echo '<p class="woocommerce-shipping-contents"><small>' . esc_html( $package_details ) . '</small></p>'; ?>
+                    <?php endif; ?>
 
-		<?php if ( is_cart() && ! $index ) : ?>
-			<?php woocommerce_shipping_calculator(); ?>
-		<?php endif; ?>
+                    <?php if ( ! empty( $show_shipping_calculator ) ) : ?>
+                        <?php woocommerce_shipping_calculator(); ?>
+                    <?php endif; ?>
 	</td>
 </tr>
