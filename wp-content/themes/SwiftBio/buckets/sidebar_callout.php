@@ -10,6 +10,9 @@
     <?php if (get_sub_field('link_type') == 'Page') {
         $url = get_sub_field('page');
         $target = false;
+    } elseif (get_sub_field('link_type') == 'External URL') {
+        $url = get_sub_field('url');
+        $target='target="_blank"';
     } else {
         $url = get_sub_field('pdf');
         $target='target="_blank"';
