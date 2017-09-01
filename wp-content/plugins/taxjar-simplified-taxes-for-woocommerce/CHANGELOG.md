@@ -1,3 +1,10 @@
+# 1.4.0 (2017-08-17)
+* Support backend order calculations for both WooCommerce 2.6.x and 3.x
+* Fix backend rate display for orders with multiple tax classes
+
+# 1.3.3 (2017-08-01)
+* Fix initial calculation for recurring subscriptions with a trial period
+
 # 1.3.2 (2017-07-20)
 * Fix local pickup error for WooCommerce < 2.6.2
 

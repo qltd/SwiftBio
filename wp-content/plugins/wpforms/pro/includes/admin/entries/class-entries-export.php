@@ -26,7 +26,7 @@ class WPForms_Entries_Export {
 	public $entry_type = 'all';
 
 	/**
-	 * Entry object, when exporting a single entry/
+	 * Entry object, when exporting a single entry.
 	 *
 	 * @since 1.1.5
 	 * @var object
@@ -61,6 +61,14 @@ class WPForms_Entries_Export {
 	public $form_data;
 
 	/**
+	 * File pointer resource.
+	 *
+	 * @since 1.4.0
+	 * @var null
+	 */
+	public $file;
+
+	/**
 	 * Field types that are allowed in entry exports.
 	 *
 	 * @since 1.0.0
@@ -88,6 +96,7 @@ class WPForms_Entries_Export {
 				'payment-multiple',
 				'payment-select',
 				'payment-total',
+				'signature',
 			)
 		);
 		return $fields;
@@ -119,7 +128,7 @@ class WPForms_Entries_Export {
 
 		ignore_user_abort( true );
 
-		if ( ! in_array( 'set_time_limit', explode( ',', ini_get( 'disable_functions' ) ) ) ) {
+		if ( ! in_array( 'set_time_limit', explode( ',', ini_get( 'disable_functions' ) ), true ) ) {
 			set_time_limit( 0 );
 		}
 
@@ -129,23 +138,28 @@ class WPForms_Entries_Export {
 			$file_name = 'wpforms-' . sanitize_file_name( get_the_title( $this->form_id ) ) . '-entry' . absint( $this->entry_type ) . '-' . date( 'm-d-Y' ) . '.csv';
 		}
 
+		// Headers to send.
 		nocache_headers();
-		header( 'Expires: 0' );
 		header( 'Content-Type: text/csv; charset=utf-8' );
 		header( 'Content-Disposition: attachment; filename=' . $file_name );
 		header( 'Content-Transfer-Encoding: binary' );
+
+		// Create file pointer connected to the output stream.
+		$this->file = fopen( 'php://output', 'w' );
+
 		// Hack for MS Excel to correct read UTF8 CSVs.
 		// See https://www.skoumal.net/en/making-utf-8-csv-excel/.
-		echo chr( 0xEF ) . chr( 0xBB ) . chr( 0xBF );
+		$bom = chr( 0xEF ) . chr( 0xBB ) . chr( 0xBF );
+		fputs( $this->file, $bom );
 	}
 
 	/**
-	 * Set the CSV columns.
+	 * Retrieve the CSV columns.
 	 *
 	 * @since 1.1.5
-	 * @return array $cols All the columns
+	 * @return array $cols Array of the columns
 	 */
-	public function csv_cols() {
+	public function get_csv_cols() {
 
 		$cols = array();
 
@@ -161,10 +175,10 @@ class WPForms_Entries_Export {
 			$this->fields    = $this->form_data['fields'];
 		}
 
-		// Get field types now allowed (eg exclude page break, divider, etc)
+		// Get field types now allowed (eg exclude page break, divider, etc).
 		$allowed = $this->allowed_fields();
 
-		// Add whitelisted fields to export columns
+		// Add whitelisted fields to export columns.
 		foreach ( $this->fields as $id => $field ) {
 			if ( in_array( $field['type'], $allowed, true ) ) {
 				if ( $this->is_single_entry() ) {
@@ -183,32 +197,16 @@ class WPForms_Entries_Export {
 	}
 
 	/**
-	 * Retrieve the CSV columns.
-	 *
-	 * @since 1.1.5
-	 * @return array $cols Array of the columns
-	 */
-	public function get_csv_cols() {
-
-		$cols = $this->csv_cols();
-		return $cols;
-	}
-
-	/**
 	 * Output the CSV columns.
 	 *
 	 * @since 1.1.5
 	 */
 	public function csv_cols_out() {
 
+		$sep  = apply_filters( 'wpforms_csv_export_seperator', ',' );
 		$cols = $this->get_csv_cols();
-		$i = 1;
-		foreach ( $cols as $col_id => $column ) {
-			echo '"' . addslashes( $column ) . '"';
-			echo count( $cols ) === $i ? '' : ',';
-			$i++;
-		}
-		echo "\r\n";
+
+		fputcsv( $this->file, $cols, $sep );
 	}
 
 	/**
@@ -225,7 +223,7 @@ class WPForms_Entries_Export {
 		if ( $this->is_single_entry() ) {
 
 			// For single entry exports we have the needed fields already
-			// and no more queries are necessary
+			// and no more queries are necessary.
 			foreach ( $this->fields as $id => $field ) {
 				if ( in_array( $field['type'], $allowed, true ) ) {
 					$data[1][ $field['id'] ] = $field['value'];
@@ -238,7 +236,7 @@ class WPForms_Entries_Export {
 
 		} else {
 
-			// All or multiple entry export
+			// All or multiple entry export.
 			$args = array(
 				'number'  => -1,
 				//'entry_id' => is_array( $this->entry_type ) ? $this->entry_type : '', @todo
@@ -275,22 +273,28 @@ class WPForms_Entries_Export {
 	 */
 	public function csv_rows_out() {
 
+		$sep  = apply_filters( 'wpforms_csv_export_seperator', ',' );
 		$data = $this->get_data();
 		$cols = $this->get_csv_cols();
+		$rows = array();
+		$i    = 0;
 
-		// Output each row
+		// First, compile each each row.
 		foreach ( $data as $row ) {
-			$i = 1;
+
 			foreach ( $row as $col_id => $column ) {
-				// Make sure the column is valid
+				// Make sure the column is valid.
 				if ( array_key_exists( $col_id, $cols ) ) {
 					$data = str_replace( "\n", "\r\n", trim( $column ) );
-					echo '"' . addslashes( $data ) . '"';
-					echo count( $cols ) === $i ? '' : ',';
-					$i++;
+					$rows[ $i ][] = $data;
 				}
 			}
-			echo "\r\n";
+			$i++;
+		}
+
+		// Second, now write each row.
+		foreach ( $rows as $row ) {
+			fputcsv( $this->file, $row, $sep );
 		}
 	}
 
@@ -305,13 +309,13 @@ class WPForms_Entries_Export {
 			wp_die( __( 'You do not have permission to export entries.', 'wpforms' ), __( 'Error', 'wpforms' ), array( 'response' => 403 ) );
 		}
 
-		// Set headers
+		// Set headers.
 		$this->headers();
 
-		// Output CSV columns (headers)
+		// Output CSV columns (headers).
 		$this->csv_cols_out();
 
-		// Output CSV rows
+		// Output CSV rows.
 		$this->csv_rows_out();
 
 		die();

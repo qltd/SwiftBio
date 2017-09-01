@@ -7,7 +7,7 @@
  * @since      1.0.0
  * @license    GPL-2.0+
  * @copyright  Copyright (c) 2016, WPForms LLC
-*/
+ */
 abstract class WPForms_Template {
 
 	/**
@@ -32,7 +32,7 @@ abstract class WPForms_Template {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	public $description;
+	public $description = '';
 
 	/**
 	 * Short description of the fields included with the template.
@@ -67,6 +67,14 @@ abstract class WPForms_Template {
 	public $priority = 20;
 
 	/**
+	 * Core or additional template.
+	 *
+	 * @since 1.4.0
+	 * @var bool
+	 */
+	public $core = false;
+
+	/**
 	 * Modal message to display when the template is applied.
 	 *
 	 * @since 1.0.0
@@ -84,10 +92,12 @@ abstract class WPForms_Template {
 		// Bootstrap
 		$this->init();
 
-		add_filter( 'wpforms_form_templates',          array( $this , 'template_details' ), $this->priority );
-		add_filter( 'wpforms_create_form_args',        array( $this,  'template_data'    ), 10, 2           );
-		add_filter( 'wpforms_save_form_args',          array( $this,  'template_replace' ), 10, 4           );
-		add_filter( 'wpforms_builder_template_active', array( $this,  'template_active'  ), 10, 2           );
+		$type = $this->core ? '_core' : '';
+
+		add_filter( "wpforms_form_templates{$type}",   array( $this, 'template_details' ), $this->priority );
+		add_filter( 'wpforms_create_form_args',        array( $this, 'template_data'    ), 10, 2           );
+		add_filter( 'wpforms_save_form_args',          array( $this, 'template_replace' ), 10, 4           );
+		add_filter( 'wpforms_builder_template_active', array( $this, 'template_active'  ), 10, 2           );
 	}
 
 	/**
@@ -96,7 +106,6 @@ abstract class WPForms_Template {
 	 * @since 1.0.0
 	 */
 	public function init() {
-
 	}
 
 	/**
@@ -107,14 +116,15 @@ abstract class WPForms_Template {
 	 * @return array
 	 */
 	function template_details( $templates ) {
-		$template = array(
+
+		$templates[] = array(
 			'name'        => $this->name,
 			'slug'        => $this->slug,
 			'description' => $this->description,
 			'includes'    => $this->includes,
 			'icon'        => $this->icon,
 		);
-		$templates[] = $template;
+
 		return $templates;
 	}
 
@@ -128,8 +138,8 @@ abstract class WPForms_Template {
 	 */
 	function template_data( $args, $data ) {
 
-		if ( !empty( $data ) && !empty( $data['template'] ) ) {
-			if ( $data['template'] == $this->slug ) {
+		if ( ! empty( $data ) && ! empty( $data['template'] ) ) {
+			if ( $data['template'] === $this->slug ) {
 				$args['post_content'] = wpforms_encode( $this->data );
 			}
 		}
@@ -147,10 +157,10 @@ abstract class WPForms_Template {
 	 */
 	function template_replace( $form, $data, $args ) {
 
-		if ( !empty( $args['template'] ) ) {
-			if ( $args['template'] == $this->slug ) {
+		if ( ! empty( $args['template'] ) ) {
+			if ( $args['template'] === $this->slug ) {
 				$new = $this->data;
-				$new['settings'] = !empty( $form['post_content']['settings'] ) ? $form['post_content']['settings'] : array();
+				$new['settings'] = ! empty( $form['post_content']['settings'] ) ? $form['post_content']['settings'] : array();
 				$form['post_content'] = wpforms_encode( $new );
 			}
 		}
@@ -167,12 +177,13 @@ abstract class WPForms_Template {
 	 */
 	function template_active( $details, $form ) {
 
-		if ( empty( $form ) )
+		if ( empty( $form ) ) {
 			return;
+		}
 
 		$form_data = wpforms_decode( $form->post_content );
 
-		if ( empty( $this->modal ) || empty( $form_data['meta']['template'] ) || $this->slug != $form_data['meta']['template'] ) {
+		if ( empty( $this->modal ) || empty( $form_data['meta']['template'] ) || $this->slug !== $form_data['meta']['template'] ) {
 			return $details;
 		} else {
 			$display = $this->template_modal_conditional( $form_data );

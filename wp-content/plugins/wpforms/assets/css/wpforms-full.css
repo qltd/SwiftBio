@@ -370,6 +370,7 @@ div.wpforms-container-full.inline-fields .wpforms-form .wpforms-field-container 
 div.wpforms-container-full.inline-fields .wpforms-form .wpforms-field  {
 	display: table-cell;
 	padding-right: 2%;
+	vertical-align: top;
 }
 
 div.wpforms-container-full.inline-fields .wpforms-form .wpforms-submit-container {

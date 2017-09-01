@@ -95,7 +95,7 @@ class WPForms_Form_Handler {
 			$forms = get_post( absint( $id ) );
 
 			if ( !empty( $args['content_only'] ) && !empty( $forms ) && 'wpforms' == $forms->post_type ) {
-	 			$forms = wpforms_decode( $forms->post_content );
+				 $forms = wpforms_decode( $forms->post_content );
 			}
 
 		} else {
@@ -147,7 +147,8 @@ class WPForms_Form_Handler {
 			$form = wp_delete_post( $id, true );
 
 			if ( class_exists( 'WPForms_Entry_Handler' ) ) {
-				$entries = wpforms()->entry->delete_by( 'form_id', $id );
+				wpforms()->entry->delete_by( 'form_id', $id );
+				wpforms()->entry_meta->delete_by( 'form_id', $id );
 			}
 
 			if ( ! $form  ) {
@@ -398,6 +399,91 @@ class WPForms_Form_Handler {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Update or add form meta information to a form.
+	 *
+	 * @since 1.4.0
+	 * @param int $form_id
+	 * @param string $meta_key
+	 * @param string $meta_value
+	 * @return bool
+	 */
+	public function update_meta( $form_id, $meta_key, $meta_value ) {
+
+		// Check for permissions
+		if ( ! current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
+			return false;
+		}
+
+		if ( empty( $form_id ) || empty( $meta_key ) ) {
+			return false;
+		}
+
+		$form = get_post( absint( $form_id ) );
+
+		if ( empty( $form ) ) {
+			return false;
+		}
+
+		$data     = wpforms_decode( $form->post_content );
+		$meta_key = wpforms_sanitize_key( $meta_key );
+
+		$data['meta'][ $meta_key ] = $meta_value;
+
+		$form = array(
+			'ID'           => $form_id,
+			'post_content' => wpforms_encode( $data ),
+		);
+		$form    = apply_filters( 'wpforms_update_form_meta_args', $form, $data );
+		$form_id = wp_update_post( $form );
+
+		do_action( 'wpforms_update_form_meta', $form_id, $form, $meta_key, $meta_value );
+
+		return $form_id;
+	}
+
+	/**
+	 * Delete form meta information from a form.
+	 *
+	 * @since 1.4.0
+	 * @param int $form_id
+	 * @param string $meta_key
+	 * @return bool
+	 */
+	public function delete_meta( $form_id, $meta_key ) {
+
+		// Check for permissions
+		if ( ! current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
+			return false;
+		}
+
+		if ( empty( $form_id ) || empty( $meta_key ) ) {
+			return false;
+		}
+
+		$form = get_post( absint( $form_id ) );
+
+		if ( empty( $form ) ) {
+			return false;
+		}
+
+		$data     = wpforms_decode( $form->post_content );
+		$meta_key = wpforms_sanitize_key( $meta_key );
+
+		unset( $data['meta'][ $meta_key ] );
+
+		$form = array(
+			'ID'           => $form_id,
+			'post_content' => wpforms_encode( $data ),
+		);
+		$form    = apply_filters( 'wpforms_delete_form_meta_args', $form, $data );
+		$form_id = wp_update_post( $form );
+
+		do_action( 'wpforms_delete_form_meta', $form_id, $form, $meta_key );
+
+		return $form_id;
 	}
 
 	/**

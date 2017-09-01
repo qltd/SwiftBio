@@ -3,8 +3,8 @@ Contributors: alekv
 Donate link: http://www.wolfundbaer.ch/donations/
 Tags: woocommerce, woocommerce conversion tracking, google adwords, adwords, conversion, conversion value, conversion tag, conversion pixel, conversion value tracking, conversion tracking, conversion tracking adwords, conversion tracking pixel, conversion tracking script, track conversions, tracking code manager
 Requires at least: 3.1
-Tested up to: 4.8
-Stable tag: 1.4.2
+Tested up to: 4.8.1
+Stable tag: 1.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,13 +36,10 @@ If you like this plugin you might like that one too: https://wordpress.org/plugi
  
 == Installation ==
 
-1. Upload the WGACT Plugin directory into your `/wp-content/plugins/` directory
+1. Upload the plugin directory into your plugins directory `/wp-content/plugins/`
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Get the AdWords conversion ID and the conversion label. You will find both values in the AdWords conversion tracking code. 
-4. In the WordPress admin panel go to settings and then into the WGACT Plugin Menu. Please enter the conversion ID and the conversion label into their respective fields.
-5. Delete any other instances of the AdWords tracking code which tracks sales. (You might have several AdWords tracking codes, eg. tracking newsletter applications. Keep those.)
-6. Delete the cache on your server and on your browser.
-7. Check if the AdWords tag is running fine by placing a test order (ideally click on one of your AdWords ads first) and then check with the Google Tag Assistant browser plugin if the tag has been inserted correctly on the thank you page. Bear in mind that the code is only visible if you are not logged in as admin or shop manager. You will have to log out first.
+3. Get the AdWords conversion ID and the conversion label. You will find both values in the AdWords conversion tracking code.
+4. In the WordPress admin panel go to WooCommerce and then into the 'AdWords Conversion Tracking' menu. Please enter the conversion ID and the conversion label into their respective fields.
 
 == Frequently Asked Questions ==
 
@@ -83,6 +80,8 @@ You can send the link to the front page of your shop too if you think it would b
 
 == Changelog ==
 
+= 1.4.3 =
+* Tweak: Remove campaign URL parameter
 = 1.4.2 =
 * Fix: Backward compatibility for $order->get_currency()
 = 1.4.1 =

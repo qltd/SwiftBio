@@ -5,10 +5,15 @@
  * Description:  Google AdWords dynamic conversion value tracking for WooCommerce.
  * Author:       Wolf+Bär GmbH
  * Author URI:   https://wolfundbaer.ch
- * Version:      1.4.2
+ * Version:      1.4.3
  * License:      GPLv2 or later
  * Text Domain:  woocommerce-google-adwords-conversion-tracking-tag
  **/
+
+// TODO add validation for the input fields. Try to use jQuery validation in the form.
+// TODO add sanitization to the output
+// TODO in case Google starts to use alphabetic characters in the conversion ID, output the conversion ID with ''
+// TODO change Wolf+Bär GmbH to Wolf+Bär Agency
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -257,7 +262,7 @@ class WGACT {
 						<?php esc_html_e( 'Profit Driven Marketing by Wolf+Bär', 'woocommerce-google-adwords-conversion-tracking-tag' ) ?>
 					</span>
 					<span style="float: right;">
-						<a href="https://wolfundbaer.ch/?utm_source=WGACT&utm_medium=plugin&utm_campaign=WGACT-Plugin"
+						<a href="https://wolfundbaer.ch/"
 						   target="_blank" style="color: white">
 							<?php esc_html_e( 'Visit us here: https://wolfundbaer.ch', 'woocommerce-google-adwords-conversion-tracking-tag' ) ?>
 						</a>

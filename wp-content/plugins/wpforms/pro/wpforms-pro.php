@@ -20,6 +20,8 @@ class WPForms_Pro {
 		add_action( 'wpforms_loaded',                      array( $this, 'objects'                        ), 1     );
 		add_action( 'wpforms_loaded',                      array( $this, 'updater'                        ), 30    );
 		add_action( 'wpforms_install',                     array( $this, 'install'                        ), 10    );
+		add_filter( 'wpforms_settings_tabs',               array( $this, 'register_settings_tabs'         ), 5,  1 );
+		add_filter( 'wpforms_settings_defaults',           array( $this, 'register_settings_fields'       ), 5,  1 );
 		add_action( 'wpforms_process_entry_save',          array( $this, 'entry_save'                     ), 10, 4 );
 		add_action( 'wpforms_form_settings_general',       array( $this, 'form_settings_general'          ), 10    );
 		add_filter( 'wpforms_overview_table_columns',      array( $this, 'form_table_columns'             ), 10, 1 );
@@ -46,12 +48,11 @@ class WPForms_Pro {
 		if ( is_admin() ) {
 			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/class-upgrades.php';
 			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/ajax-actions.php';
-			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/class-settings.php';
-			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/entries/class-entries.php';
+			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/entries/class-entries-single.php';
+			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/entries/class-entries-list.php';
 			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/class-addons.php';
 			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/class-updater.php';
 			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/class-license.php';
-			require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/class-review.php';
 		}
 	}
 
@@ -131,6 +132,103 @@ class WPForms_Pro {
 		// Entry tables
 		$wpforms_install->entry->create_table();
 		$wpforms_install->entry_meta->create_table();
+	}
+
+	/**
+	 * Register Pro settings tabs.
+	 *
+	 * @since 1.3.9
+	 * @param array $tabs
+	 * @return array
+	 */
+	public function register_settings_tabs( $tabs ) {
+
+		// Add Payments tab.
+		$payments = array(
+			'payments' => array(
+				'name'   => __( 'Payments', 'wpforms' ),
+				'form'   => true,
+				'submit' => __( 'Save Settings', 'wpforms' ),
+			),
+		);
+
+		$tabs = wpforms_array_insert( $tabs, $payments, 'validation' );
+
+		return $tabs;
+	}
+
+	/**
+	 * Register Pro settings fields.
+	 *
+	 * @since 1.3.9
+	 * @param array $settings
+	 * @return array
+	 */
+	public function register_settings_fields( $settings ) {
+
+		// Format currencies for select element.
+		$currencies = wpforms_get_currencies();
+		foreach ( $currencies as $code => $currency ) {
+			$currency_option[ $code ] = sprintf( '%s (%s %s)', $currency['name'], $code, $currency['symbol']  );
+		}
+
+		// Validation settings for fields only available in Pro.
+		$settings['validation']['validation-fileextension'] = array(
+			'id'        => 'validation-fileextension',
+			'name'      => __( 'File Extension', 'wpforms' ),
+			'type'      => 'text',
+			'default'   => __( 'File type is not allowed.', 'wpforms' ),
+		);
+		$settings['validation']['validation-filesize'] = array(
+			'id'        => 'validation-filesize',
+			'name'      => __( 'File Size', 'wpforms' ),
+			'type'      => 'text',
+			'default'   => __( 'File exceeds max size allowed.', 'wpforms' ),
+		);
+		$settings['validation']['validation-time12h'] = array(
+			'id'        => 'validation-time12h',
+			'name'      => __( 'Time (12 hour)', 'wpforms' ),
+			'type'      => 'text',
+			'default'   => __( 'Please enter time in 12-hour AM/PM format (eg 8:45 AM).', 'wpforms' ),
+		);
+		$settings['validation']['validation-time24h'] = array(
+			'id'        => 'validation-time24h',
+			'name'      => __( 'Time (24 hour)', 'wpforms' ),
+			'type'      => 'text',
+			'default'   => __( 'Please enter time in 24-hour format (eg 22:45).', 'wpforms' ),
+		);
+		$settings['validation']['validation-requiredpayment'] = array(
+			'id'        => 'validation-requiredpayment',
+			'name'      => __( 'Payment Required', 'wpforms' ),
+			'type'      => 'text',
+			'default'   => __( 'Payment is required.', 'wpforms' ),
+		);
+		$settings['validation']['validation-creditcard'] = array(
+			'id'        => 'validation-creditcard',
+			'name'      => __( 'Credit Card', 'wpforms' ),
+			'type'      => 'text',
+			'default'   => __( 'Please enter a valid credit card number.', 'wpforms' ),
+		);
+
+		// Payment settings.
+		$settings['payments']['payments-heading'] = array(
+			'id'       => 'payments-heading',
+			'content'  => '<h4>' . __( 'Payments', 'wpforms' ) . '</h4>',
+			'type'     => 'content',
+			'no_label' => true,
+			'class'    => array( 'section-heading', 'no-desc' ),
+		);
+		$settings['payments']['currency'] = array(
+			'id'        => 'currency',
+			'name'      => __( 'Currency', 'wpforms' ),
+			'type'      => 'select',
+			'choicesjs' => true,
+			'search'    => true,
+			'default'   => 'USD',
+			'options'   => $currency_option,
+		);
+
+		return $settings;
 	}
 
 	/**
@@ -456,7 +554,7 @@ class WPForms_Pro {
 	 */
 	public function conditional_logic_addon_notice() {
 
-		if ( file_exists( WP_PLUGIN_DIR . '/wpforms-conditional-logic/wpforms-conditional-logic.php' ) ) {
+		if ( file_exists( WP_PLUGIN_DIR . '/wpforms-conditional-logic/wpforms-conditional-logic.php' ) && ! defined( 'WPFORMS_DEBUG' ) ) {
 			echo '<div class="notice notice-info"><p>';
 			printf( __( 'Conditional logic functionality is now included in the core WPForms plugin! The WPForms Conditional Logic addon can be removed without affecting your forms. For more details <a href="%s" target="_blank" rel="noopener noreferrer">read our annoucement</a>.', 'wpforms' ), 'https://wpforms.com/' );
 			echo '</p></div>';

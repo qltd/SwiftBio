@@ -60,6 +60,16 @@
 			// Only load if jQuery validation library exists
 			if (typeof $.fn.validate !== 'undefined') {
 
+				// jQuery Validation library will not correctly validate
+				// fields that do not have a name attribute, so we use the
+				// `wpforms-input-temp-name` class to add a temporary name
+				// attribute before validation is initilized, then remove it
+				// before the form submits.
+				$( '.wpforms-input-temp-name' ).each(function( index, el ) {
+					var random = Math.floor( Math.random() * 9999 ) + 1;
+					$( this ).attr( 'name', 'wpf-temp-' + random );
+				});
+
 				$.validator.messages.required = wpforms_settings.val_required;
 				$.validator.messages.url = wpforms_settings.val_url;
 				$.validator.messages.email = wpforms_settings.val_email;
@@ -170,7 +180,12 @@
 									if (altText) {
 										$submit.text(altText).prop('disabled', true);
 									}
+
+									// Remove name attributes if needed.
+									$( '.wpforms-input-temp-name' ).removeAttr('name');
+
 									form.submit();
+
 								} else {
 									// Form contains invisible reCAPTCHA.
 									grecaptcha.execute( $submit.get(0).recaptchaID );

@@ -177,8 +177,12 @@ class WPForms_Field_Phone extends WPForms_Field {
 		// Define data.
 		$primary = $field['properties']['inputs']['primary'];
 
+		// Allow input type to be changed for this particular field.
+		$type = apply_filters( 'wpforms_phone_field_input_type', 'tel' );
+
 		// Primary field.
-		printf( '<input type="text" %s %s>',
+		printf( '<input type="%s" %s %s>',
+			esc_attr( $type ),
 			wpforms_html_attributes( $primary['id'], $primary['class'], $primary['data'], $primary['attr'] ),
 			$primary['required']
 		);

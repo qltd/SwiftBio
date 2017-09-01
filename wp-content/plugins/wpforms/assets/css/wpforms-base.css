@@ -288,6 +288,7 @@
 .wpforms-container.inline-fields .wpforms-field  {
 	display: table-cell;
 	padding-right: 2%;
+	vertical-align: top;
 }
 
 .wpforms-container.inline-fields .wpforms-submit-container {

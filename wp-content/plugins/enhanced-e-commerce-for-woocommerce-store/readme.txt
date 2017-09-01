@@ -7,8 +7,8 @@ Author URI: http://www.tatvic.com/
 Author: Tatvic
 Requires at least: 3.6
 Tested up to: 4.8
-Stable tag: 1.0.21.1
-Version: 1.0.21.1
+Stable tag: 1.1.0
+Version: 1.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,10 +55,10 @@ We have recently launched an Advanced Google Analytics Plugin for WooCommerce wh
 == Note : ==
 == Our plugin does not support the below features out of the box ==
 * Highly Customized store
-* Child/Custom Themes
 * Product types other than Simple Product
 * Store with the Subscription product for Orders.
 * Ecommerce Pages with Shortcodes
+* For the Child theme support; kindly contact us at analytics2(at)tatvic(dot)com
 
 == Installation ==
 1. Download the plugin file to your computer and unzip it
@@ -147,6 +147,10 @@ Our existing plugin does not track product refund data, however you can buy our 
 
 Our plugin does not support Multilingual Wordpress site.
 
+= Does your plugin supports Child/Custom Theme? =
+
+For the Child/Custom theme support; kindly contact us at analytics2(at)tatvic(dot)com.
+
 = How to verify if you have implemented the Plugin well? =
 
 To verify if you have implemented the plugin well, just log in to your Google Analytics account & check if the data is coming well in your Enhanced Ecommerce Reports.
@@ -227,3 +231,6 @@ Important Note: When you update the plugin, please save your settings again.
 
  = 1.0.21.1 - 13/07/2017 =
  * Minor Changes.
+
+ = 1.1.0 - 09/08/2017 =
+ * Minor Bug Fixes & Optimization.

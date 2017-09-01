@@ -75,6 +75,9 @@
 			s.formID          = $('#wpforms-builder-form').data('id');
 			s.pagebreakTop    = $('.wpforms-pagebreak-top').length;
 			s.pagebreakBottom = $('.wpforms-pagebreak-bottom').length;
+			s.templateList    = new List('wpforms-setup-templates-additional', {
+				valueNames: [ 'wpforms-template-name' ]
+			});
 
 			// If there is a section configured, display it. Otherwise
 			// we show the first panel by default.
@@ -101,8 +104,13 @@
 			WPFormsBuilder.fieldChoiceSortable('payment-select');
 
 			// Load match heights
-			$('.wpforms-template').matchHeight({
-				property: 'min-height'
+			$('.wpforms-setup-templates.core .wpforms-template-inner').matchHeight({
+				property: 'min-height',
+				byRow: false
+			});
+			$('.wpforms-setup-templates.additional .wpforms-template-inner').matchHeight({
+				property: 'min-height',
+				byRow: false
 			});
 
 			// Set field group visibility
@@ -131,8 +139,8 @@
 			// Notification settings
 			WPFormsBuilder.notificationToggle();
 
-			// Secret preview hotkey
-			WPFormsBuilder.previewHotkey();
+			// Secret builder hotkeys.
+			WPFormsBuilder.builderHotkeys();
 
 			// Clone form title to setup page
 			$('#wpforms-setup-name').val($('#wpforms-panel-field-settings-form_title').val());
@@ -278,11 +286,16 @@
 			});
 
 			// Keep Setup title and settings title instances the same
-			$(document).on('input', '#wpforms-panel-field-settings-form_title', function() {
+			$(document).on('input ', '#wpforms-panel-field-settings-form_title', function() {
 				$('#wpforms-setup-name').val($('#wpforms-panel-field-settings-form_title').val());
 			});
 			$(document).on('input', '#wpforms-setup-name', function() {
-				$('#wpforms-panel-field-settings-form_title').val($('#wpforms-setup-name').val()).trigger('input');
+				$('#wpforms-panel-field-settings-form_title').val($('#wpforms-setup-name').val());
+			});
+
+			// Additional template searching
+			$(document).on('keyup', '#wpforms-setup-template-search' , function() {
+				s.templateList.search( $(this).val() );
 			});
 		},
 
@@ -1235,7 +1248,7 @@
 					$el.append('<i class="fa fa-cog fa-spin"></i>');
 
 					WPFormsBuilder.fieldAdd(type, {position: pos, placeholder: $el});
-   				}
+				   }
 			});
 
 			$('.wpforms-add-fields-button').draggable({
@@ -1304,7 +1317,16 @@
 			if (total == '1') {
 				$.alert({
 					title: false,
-					content: wpforms_builder.error_choice
+					content: wpforms_builder.error_choice,
+					icon: 'fa fa-info-circle',
+					type: 'blue',
+					buttons: {
+						confirm: {
+							text: wpforms_builder.ok,
+							btnClass: 'btn-confirm',
+							keys: ['enter']
+						}
+					}
 				});
 			} else {
 				$this.parent().remove();
@@ -1750,7 +1772,16 @@
 						msg = msg.replace('{total}',res.data.total);
 						$.alert({
 							title: wpforms_builder.heads_up,
-							content: msg
+							content: msg,
+							icon: 'fa fa-info-circle',
+							type: 'blue',
+							buttons: {
+								confirm: {
+									text: wpforms_builder.ok,
+									btnClass: 'btn-confirm',
+									keys: ['enter']
+								}
+							}
 						});
 					}
 				} else {
@@ -1821,7 +1852,7 @@
 					'layout-4' : [
 						{
 							'class': 'one-third',
-							'data' : 'wpforms-one-thirds wpforms-first'
+							'data' : 'wpforms-one-third wpforms-first'
 						},
 						{
 							'class': 'two-third',
@@ -1983,7 +2014,7 @@
 			})
 
 			// Real-time updates for editing the form title
-			$(document).on('input', '#wpforms-panel-field-settings-form_title', function(){
+			$(document).on('input', '#wpforms-panel-field-settings-form_title, #wpforms-setup-name', function(){
 				var title = $(this).val();
 				if (title.length > 38) {
 					title = $.trim(title).substring(0, 38).split(" ").slice(0, -1).join(" ") + "..."
@@ -2149,15 +2180,11 @@
 								// Conditional logic, if present
 								var $conditionalLogic = $newNotification.find('.wpforms-conditional-block');
 								if ($conditionalLogic.length) {
-									$conditionalLogic.find('.wpforms-conditional-group').not(':first').remove();
-									$conditionalLogic.find('.wpforms-conditional-row').not(':first').remove();
-									$conditionalLogic.find('.wpforms-conditional-row').attr('data-input-name', 'settings[notifications]['+nextID+']');
-									$conditionalLogic.find('.wpforms-conditional-field').attr('data-groupid', '0').attr('data-ruleid', '0');
-									$conditionalLogic.find('.wpforms-conditional-row').find('.value').empty().append('<select>');
-									$conditionalLogic.find('.wpforms-conditional-groups').hide();
+									$conditionalLogic.find('.wpforms-conditionals-enable-toggle input').attr('data-name', 'settings[notifications]['+nextID+']');
+									$conditionalLogic.find('.wpforms-conditional-groups').remove();
 								}
 								newNotification = $newNotification.wrap('<div>').parent().html();
-								newNotification = newNotification.replace( /wpforms-panel-field-notifications-(\d+)/g, 'wpforms-panel-field-notification-'+nextID );
+								newNotification = newNotification.replace( /wpforms-panel-field-notifications-(\d+)/g, 'wpforms-panel-field-notifications-'+nextID );
 								newNotification = newNotification.replace( /\[conditionals\]\[(\d+)\]\[(\d+)\]/g, '[conditionals][0][0]' );
 
 								$firstNotification.before( newNotification );
@@ -2201,7 +2228,7 @@
 									icon: 'fa fa-exclamation-circle',
 									type: 'orange',
 									buttons: {
-										cancel: {
+										confirm: {
 											text: wpforms_builder.ok,
 											btnClass: 'btn-confirm',
 											keys: ['enter']
@@ -2235,7 +2262,7 @@
 			$(document).on('click', '#wpforms-embed', function(e) {
 				e.preventDefault();
 				var content = wpforms_builder.embed_modal;
-					content += '<input type=\'text\' value=\'[wpforms id="' + s.formID + '"]\' readonly id=\'wpforms-embed-shortcode\'>';
+					content += '<input type=\'text\' value=\'[wpforms id="' + s.formID + '" title="false" description="false"]\' readonly id=\'wpforms-embed-shortcode\'>';
 					content += wpforms_builder.embed_modal_2;
 					content += '<br><br><iframe width="600" height="338" src="https://www.youtube-nocookie.com/embed/IxGVz3AjEe0?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>';
 				$.alert({
@@ -2409,8 +2436,11 @@
 			// Restrict user money input fields
 			$(document).on('input', '.wpforms-money-input', function(event) {
 				var $this = $(this),
-					amount = $this.val();
+					amount = $this.val(),
+					start  = $this[0].selectionStart,
+					end    = $this[0].selectionEnd;
 				$this.val(amount.replace(/[^0-9.,]/g, ''));
+				$this[0].setSelectionRange(start,end);
 			});
 
 			// Format user money input fields
@@ -2691,7 +2721,7 @@
 		 *
 		 * @since 1.2.4
 		 */
-		previewHotkey: function() {
+		builderHotkeys: function() {
 
 			var ctrlDown = false;
 
@@ -2700,6 +2730,11 @@
 					ctrlDown = true;
 				} else if (ctrlDown && e.keyCode == 80) {
 					window.open(wpforms_builder.preview_url);
+					ctrlDown = false;
+					return false;
+				} else if (ctrlDown && e.keyCode == 69) {
+					console.log('weee');
+					window.open(wpforms_builder.entries_url);
 					ctrlDown = false;
 					return false;
 				}

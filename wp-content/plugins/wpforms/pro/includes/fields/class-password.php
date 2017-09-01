@@ -185,8 +185,8 @@ class WPForms_Field_Password extends WPForms_Field {
 			array(
 				'slug'    => 'confirmation',
 				'value'   => isset( $field['confirmation'] ) ? '1' : '0',
-				'desc'    => __( 'Enable Email Confirmation', 'wpforms' ),
-				'tooltip' => __( 'Check this option ask the user to provide their email address twice.', 'wpforms' ),
+				'desc'    => __( 'Enable Password Confirmation', 'wpforms' ),
+				'tooltip' => __( 'Check this option ask the user to provide their password twice.', 'wpforms' ),
 			),
 			false
 		);
@@ -413,7 +413,7 @@ class WPForms_Field_Password extends WPForms_Field {
 			$value = ! empty( $field_submit ) ? $field_submit : '';
 		}
 
-		$name  = ! empty( $form_data['fields'][ $field_id ] ['label'] ) ? $form_data['fields'][ $field_id ]['label'] : '';
+		$name = ! empty( $form_data['fields'][ $field_id ] ['label'] ) ? $form_data['fields'][ $field_id ]['label'] : '';
 
 		// Set final field details.
 		wpforms()->process->fields[ $field_id ] = array(

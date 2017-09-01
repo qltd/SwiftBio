@@ -519,8 +519,8 @@ class WPForms_Field_File_Upload extends WPForms_Field {
 			wp_update_attachment_metadata( $attachment_id,  $meta );
 
 			// Update file url/name.
-			$file_url      = $upload['url'];
-			$file_name_new = basename( $upload['url'] );
+			$file_url      = wp_get_attachment_url( $attachment_id );
+			$file_name_new = basename( $file_url );
 
 			// Remove the original non-media library file.
 			@ unlink( $file_new );

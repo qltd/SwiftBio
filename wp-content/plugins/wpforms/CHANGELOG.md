@@ -1,6 +1,75 @@
 # Change Log
 All notable changes to this project will be documented in this file, formatted via [this recommendation](http://keepachangelog.com/).
 
+## [1.4.0.1] - 2017-08-24
+### Added
+- Non-dismissible Dashboard page admin only notice about PHP 5.2
+
+### Changed
+- Updated FontAwesome library
+
+### Fixed
+- Fatal error with PHP 5.2 due to an anonymous function
+- Required Credit Card fields incorrectly passing JS validation if empty
+- CSV exports missing line breaks
+- Entries dropdown menu being cut off under the WordPress menu
+
+## [1.4.0] - 2017-08-21
+### Added
+- Entries table columns can now be customized; personalize what fields you want to see!
+- All entries can be deleted for a form from the Entries page
+
+### Changed
+- Phone number field switched to `tel` input for improved mobile experience
+- Core form templates are now displayed separate in the form builder from other custom templates
+- Refactored CSV exporting for better support
+
+### Fixed
+- Dynamic Choices large items modal render issue
+- Certain characters (such as comma) breaking CSV export format
+- Cursor issues inside the form builder
+- CSS Layout Generator class name typo
+- Dynamic choices with nesting sometimes causing form builder to time out
+- Settings page typos
+- Deleting a form in some cases did not remove entry meta for its entries
+- File Uploads stored in the media library not storing the correct URL when offloaded to other services such as S3
+- Tools page export description text typo
+- Widget state not displayed correctly when adding via Customizer, without forcing user to select a form
+
+## [1.3.9.2] - 2017-08-03
+## Fixed
+- Currency setting for new users saving to an incorrect option key
+
+## [1.3.9.1] - 2017-08-02
+## Changed
+- Template Export excludes array items with empty strings
+
+### Fixed
+- Admin notices displaying on plugin Welcome/activation screen
+- WPForms admin pages displaying blank due to conflicts with a few other plugins
+- License related notices not removed immediately after key is activated
+- Addons page items not displaying with uniform height
+- Addons page installing returned JS object instead of message
+
+## [1.3.9] - 2017-08-01
+### Added
+- Complete redesign and refactor of admin area
+- New Settings API
+- Entry print preview compact mode
+- Entry print preview view entry notes
+- Dynamic field choices nest hierarchical items
+
+### Changed
+- Moved Import/Export and System Info content to new Tools sub-page
+- Shortcode provided in form builder now includes title/description arguments
+- Don't show CSS layout selector helper in Pagebreak fields
+
+### Fixed
+- Form builder URL redirect issue on the Marketing tab with some configurations
+- Password field item mislabeled
+- PHP notices on Entries page if form contained no fields
+- PHP notices when using HTML field with conditional logic
+
 ## [1.3.8] - 2017-06-13
 ### Added
 - Conditional logic functionality is now in the core plugin - the Conditional Logic addon can be removed

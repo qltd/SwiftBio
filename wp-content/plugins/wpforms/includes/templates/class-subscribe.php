@@ -22,6 +22,7 @@ class WPForms_Template_Subscribe extends WPForms_Template {
 		$this->description = __( 'Add subscribers and grow your email list with this newsletter signup form. You can add and remove fields as needed.', 'wpforms' );
 		$this->includes    = '';
 		$this->icon        = '';
+		$this->core        = true;
 		$this->modal       = array(
 			'title'   => __( 'Don&#39;t Forget', 'wpforms' ),
 			'message' => __( 'Click the marketing tab to configure your newsletter service provider', 'wpforms' ),

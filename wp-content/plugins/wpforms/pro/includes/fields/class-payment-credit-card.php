@@ -145,6 +145,29 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 		);
 		$properties = array_merge_recursive( $properties, $props );
 
+		// If this field is required we need to make some adjustments.
+		if ( ! empty( $field['required'] ) ) {
+
+			// Add required class if needed (for multipage validation).
+			$properties['inputs']['number']['class'][] = 'wpforms-field-required';
+			$properties['inputs']['cvc']['class'][]    = 'wpforms-field-required';
+			$properties['inputs']['name']['class'][]   = 'wpforms-field-required';
+			$properties['inputs']['month']['class'][]  = 'wpforms-field-required';
+			$properties['inputs']['year']['class'][]   = 'wpforms-field-required';
+
+			// Below we add our input special classes if certain fields are
+			// required. jQuery Validation library will not correctly validate
+			// fields that do not have a name attribute, so we use the
+			// `wpforms-input-temp-name` class to let jQuery know we should add
+			// a temporary name attribute before validation is initilized, then
+			// remove it before the form submits.
+			$properties['inputs']['number']['class'][] = 'wpforms-input-temp-name';
+			$properties['inputs']['cvc']['class'][]    = 'wpforms-input-temp-name';
+			$properties['inputs']['name']['class'][]   = 'wpforms-input-temp-name';
+			$properties['inputs']['month']['class'][]  = 'wpforms-input-temp-name';
+			$properties['inputs']['year']['class'][]   = 'wpforms-input-temp-name';
+		}
+
 		return $properties;
 	}
 

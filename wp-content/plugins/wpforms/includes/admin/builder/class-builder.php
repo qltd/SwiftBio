@@ -173,14 +173,14 @@ class WPForms_Builder {
 			'jquery-confirm',
 			WPFORMS_PLUGIN_URL . 'assets/css/jquery-confirm.min.css',
 			null,
-			'2.0.0'
+			'3.2.3'
 		);
 
 		wp_enqueue_style(
 			'minicolors',
 			WPFORMS_PLUGIN_URL . 'assets/css/jquery.minicolors.css',
 			null,
-			'2.2.3'
+			'2.2.6'
 		);
 
 		wp_enqueue_style(
@@ -217,7 +217,7 @@ class WPForms_Builder {
 			'jquery-confirm',
 			WPFORMS_PLUGIN_URL . 'assets/js/jquery.jquery-confirm.min.js',
 			array(),
-			'2.0.0',
+			'3.2.3',
 			false
 		);
 
@@ -241,7 +241,7 @@ class WPForms_Builder {
 			'minicolors',
 			WPFORMS_PLUGIN_URL . 'assets/js/jquery.minicolors.min.js',
 			array( 'jquery' ),
-			'2.2.3',
+			'2.2.6',
 			false
 		);
 
@@ -250,6 +250,14 @@ class WPForms_Builder {
 			WPFORMS_PLUGIN_URL . 'assets/js/jquery.conditionals.min.js',
 			array( 'jquery' ),
 			'1.0.0',
+			false
+		);
+
+		wp_enqueue_script(
+			'listjs',
+			WPFORMS_PLUGIN_URL . 'assets/js/list.min.js',
+			array( 'jquery' ),
+			'1.5.0',
 			false
 		);
 
@@ -352,8 +360,9 @@ class WPForms_Builder {
 		);
 		$strings = apply_filters( 'wpforms_builder_strings', $strings, $this->form );
 
-		if ( !empty( $_GET['form_id'] ) ) {
+		if ( ! empty( $_GET['form_id'] ) ) {
 			$strings['preview_url'] = add_query_arg( array( 'new_window' => 1 ), wpforms()->preview->form_preview_url( $_GET['form_id'] ) );
+			$strings['entries_url'] = esc_url_raw( admin_url( 'admin.php?page=wpforms-entries&view=list&form_id=' . intval( $_GET['form_id'] ) ) );
 		}
 
 		wp_localize_script(
@@ -439,7 +448,7 @@ class WPForms_Builder {
 
 					<div class="wpforms-left">
 
-						<img src="<?php echo WPFORMS_PLUGIN_URL; ?>assets/images/logo-builder.png" alt="Sullie WPForms mascot">
+						<img src="<?php echo WPFORMS_PLUGIN_URL; ?>assets/images/sullie-alt.png" alt="Sullie WPForms mascot">
 
 					</div>
 

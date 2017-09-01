@@ -23,6 +23,7 @@ class WPForms_Template_Suggestion extends WPForms_Template {
 		$this->includes    = '';
 		$this->icon        = '';
 		$this->modal       = '';
+		$this->core        = true;
 		$this->data        = array(
 			'field_id' => '5',
 			'fields'   => array(
@@ -81,7 +82,7 @@ class WPForms_Template_Suggestion extends WPForms_Template {
 					'1' => array(
 						'sender_name'    => '{field_id="0"}',
 						'sender_address' => '{field_id="1"}',
-					),	
+					),
 				),
 				'honeypot'                    => '1',
 				'confirmation_message_scroll' => '1',

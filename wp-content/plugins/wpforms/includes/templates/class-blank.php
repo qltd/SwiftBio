@@ -23,6 +23,7 @@ class WPForms_Template_Blank extends WPForms_Template {
 		$this->includes    = '';
 		$this->icon        = '';
 		$this->modal       = '';
+		$this->core        = true;
 		$this->data        = array(
 			'field_id' => '1',
 			'fields'   => array(),

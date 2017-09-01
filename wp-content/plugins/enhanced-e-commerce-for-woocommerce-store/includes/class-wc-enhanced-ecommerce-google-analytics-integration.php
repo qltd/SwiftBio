@@ -18,7 +18,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
      * @return void
      */
     //set plugin version
-    public $tvc_eeVer = '1.0.21.1';
+    public $tvc_eeVer = '1.1.0';
     public function __construct() {
         
          //Set Global Variables
@@ -822,11 +822,10 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
         $this->wc_version_compare("tvc_pgc=" . json_encode($catpage_json) . ";");
         $this->wc_version_compare("catpage_json_ATC_link=" . json_encode($catpage_json_ATC_link) . ";");
         
-        
         $hmpg_impressions_jQ = '
                   ga("require", "ec", "ec.js");
                   ga("set", "&cu", tvc_lc);
-        function t_products_impre_clicks(t_json_name,t_action,t_list){
+        function t_products_impre_clicks(t_json_name,t_action){
                    t_send_threshold=0;
                    t_prod_pos=0;
                    
@@ -840,7 +839,6 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
                             "id": t_json_name[t_item].tvc_i,
                             "name": t_json_name[t_item].tvc_n,
                             "category": t_json_name[t_item].tvc_c,
-                            "list":t_list,
                             "price": t_json_name[t_item].tvc_p,
                             "position": t_json_name[t_item].tvc_po,
                         });
@@ -861,7 +859,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
         }
                 
         //function for comparing urls in json object
-        function prod_exists_in_JSON(t_url,t_json_name,t_list,t_action){
+        function prod_exists_in_JSON(t_url,t_json_name,t_action){
                                     if(t_json_name.hasOwnProperty(t_url)){
                                         t_call_fired=true;
                     ga("ec:addProduct", {              
@@ -871,7 +869,6 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
                                             "price": t_json_name[t_url].tvc_p,
                                             "position": t_json_name[t_url].tvc_po,
                     });
-                    ga("ec:setAction", "click", {"list": t_list});
                     ga("send", "event", "Enhanced-Ecommerce","click", "product_click_"+t_action, {"nonInteraction": 1});  
                                    }else{
                                    t_call_fired=false;
@@ -904,17 +901,17 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
         if(is_home() || is_front_page()){
        $hmpg_impressions_jQ .='
                 if(tvc_fp.length !== 0){
-                    t_products_impre_clicks(tvc_fp,"fp","Featured Products");       
+                    t_products_impre_clicks(tvc_fp,"fp");       
                 }
                 if(tvc_rcp.length !== 0){
-                    t_products_impre_clicks(tvc_rcp,"rp","Recent Products");    
+                    t_products_impre_clicks(tvc_rcp,"rp");    
                 }
                 jQuery("a:not([href*=add-to-cart],.product_type_variable, .product_type_grouped)").on("click",function(){
             t_url=jQuery(this).attr("href");
                         //home page call for click
-                        t_call_fired=prod_exists_in_JSON(t_url,tvc_fp,"Featured Products","fp");
+                        t_call_fired=prod_exists_in_JSON(t_url,tvc_fp,"fp");
                         if(!t_call_fired){
-                            prod_exists_in_JSON(t_url,tvc_rcp,"Recent Products","rp");
+                            prod_exists_in_JSON(t_url,tvc_rcp,"rp");
                         }    
                 });
                 //ATC click
@@ -936,13 +933,13 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
             $hmpg_impressions_jQ .='
                 //search page json
                 if(tvc_pgc.length !== 0){
-                    t_products_impre_clicks(tvc_pgc,"srch","Search Results");   
+                    t_products_impre_clicks(tvc_pgc,"srch");   
                 }
                 //search page prod click
                 jQuery("a:not(.product_type_variable, .product_type_grouped)").on("click",function(){
                     t_url=jQuery(this).attr("href");
                      //cat page prod call for click
-                     prod_exists_in_JSON(t_url,catpage_json,"Search Results","srch");
+                     prod_exists_in_JSON(t_url,tvc_pgc,"srch");
                      });
                 
             '; 
@@ -950,13 +947,13 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
                 //product page releted products
                 $hmpg_impressions_jQ .='
                 if(tvc_rdp.length !== 0){
-                    t_products_impre_clicks(tvc_rdp,"rdp","Related Products");  
+                    t_products_impre_clicks(tvc_rdp,"rdp");  
                 }          
                 //product click - image and product name
                 jQuery("a:not(.product_type_variable, .product_type_grouped)").on("click",function(){
                     t_url=jQuery(this).attr("href");
                      //prod page related call for click
-                     prod_exists_in_JSON(t_url,tvc_rdp,"Related Products","rdp");
+                     prod_exists_in_JSON(t_url,tvc_rdp,"rdp");
                 });  
                 //Prod ATC link click in related product section
                 jQuery("a[href*=add-to-cart]").on("click",function(){
@@ -973,13 +970,13 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
             $hmpg_impressions_jQ .='
                 //category page json
                 if(tvc_pgc.length !== 0){
-                    t_products_impre_clicks(tvc_pgc,"cp","Category Page");  
+                    t_products_impre_clicks(tvc_pgc,"cp");  
                 }
                //Prod category ATC link click in related product section
                 jQuery("a:not(.product_type_variable, .product_type_grouped)").on("click",function(){
                      t_url=jQuery(this).attr("href");
                      //cat page prod call for click
-                     prod_exists_in_JSON(t_url,tvc_pgc,"Category Page","cp");
+                     prod_exists_in_JSON(t_url,tvc_pgc,"cp");
                      });
                
         ';
@@ -987,13 +984,13 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
             $hmpg_impressions_jQ .='
                 //shop page json
                 if(tvc_pgc.length !== 0){
-                    t_products_impre_clicks(tvc_pgc,"sp","Shop Page");  
+                    t_products_impre_clicks(tvc_pgc,"sp");  
                 }
                 //shop page prod click
                 jQuery("a:not(.product_type_variable, .product_type_grouped)").on("click",function(){
                     t_url=jQuery(this).attr("href");
                      //cat page prod call for click
-                     prod_exists_in_JSON(t_url,tvc_pgc,"Shop Page","sp");
+                     prod_exists_in_JSON(t_url,tvc_pgc,"sp");
                      });
                 
                      

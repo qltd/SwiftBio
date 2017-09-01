@@ -182,7 +182,7 @@ function wpforms_has_payment( $type = 'entry', $data = '' ) {
 	}
 
 	foreach( $data as $field ) {
-		if ( in_array( $field['type'], $payment_fields ) ) {
+		if ( isset( $field['type'] ) && in_array( $field['type'], $payment_fields ) ) {
 
 			// For entries, only return true if the payment field has an amount
 			if ( $type == 'form' || ( $type == 'entry' && !empty( $field['amount'] ) && $field['amount'] != wpforms_sanitize_amount( '0' ) ) ) {
