@@ -25,7 +25,7 @@ class WPForms_Template_Order extends WPForms_Template {
 		$this->core        = true;
 		$this->modal       = array(
 			'title'   => __( 'Don&#39;t Forget', 'wpforms' ),
-			'message' => __( 'Click the payments tab to configure your payment provider', 'wpforms' ),
+			'message' => __( 'Click the Payments tab to configure your payment provider', 'wpforms' ),
 		);
 		$this->data        = array(
 			'field_id' => '7',

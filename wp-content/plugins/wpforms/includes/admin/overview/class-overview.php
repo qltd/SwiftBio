@@ -52,7 +52,7 @@ class WPForms_Overview {
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueues' ) );
 			add_action( 'wpforms_admin_page',    array( $this, 'output'   ) );
 
-			// Provide hook for add-ons.
+			// Provide hook for addons.
 			do_action( 'wpforms_overview_init' );
 		}
 	}
@@ -105,7 +105,7 @@ class WPForms_Overview {
 	 */
 	public function enqueues() {
 
-		// Hook for add-ons.
+		// Hook for addons.
 		do_action( 'wpforms_overview_enqueue' );
 	}
 

@@ -467,7 +467,7 @@
 
 			// New field choices should be sortable
 			$(document).on('wpformsFieldAdd', function(event, id, type) {
-				if (type == 'select' || type == 'radio'  || type == 'checkbox' || type == 'payment-multiple' || type == 'payment-select' ) {
+				if (type === 'select' || type === 'radio'  || type === 'checkbox' || type === 'payment-multiple' || type === 'payment-select' ) {
 					WPFormsBuilder.fieldChoiceSortable(type,'#wpforms-field-option-row-' + id + '-choices ul');
 				}
 			 });
@@ -863,7 +863,7 @@
 		 */
 		fieldGroupToggle: function(el, action) {
 
-			if ( 'click' == action ) {
+			if ( 'click' === action ) {
 
 				var $this      = $(el),
 					$buttons   = $this.next('.wpforms-add-fields-buttons'),
@@ -881,7 +881,7 @@
 				$buttons.slideToggle();
 				$group.toggleClass('wpforms-hide');
 
-			} else if ( 'load' == action ) {
+			} else if ( 'load' === action ) {
 
 				var $this      = $(el),
 					$buttons   = $this.find('.wpforms-add-fields-buttons'),
@@ -959,8 +959,8 @@
 		 */
 		fieldDuplicate: function(id) {
 
-			var $field       = $('#wpforms-field-'+id),
-				type          = $field.data('field-type');
+			var $field = $('#wpforms-field-'+id),
+				type   = $field.data('field-type');
 
 			if ($field.hasClass('no-duplicate')) {
 				$.alert({
@@ -972,7 +972,7 @@
 						confirm : {
 							text: wpforms_builder.close,
 							btnClass: 'btn-confirm',
-							keys: ['enter'],
+							keys: ['enter']
 						}
 					}
 				});
@@ -1251,7 +1251,7 @@
 				   }
 			});
 
-			$('.wpforms-add-fields-button').draggable({
+			$('.wpforms-add-fields-button').not('.upgrade-modal').draggable({
 				connectToSortable: '.wpforms-field-wrap',
 				delay: 200,
 				helper: function(event) {
@@ -1338,7 +1338,7 @@
 		/**
 		 * Make field choices sortable.
 		 *
-		 * Currenty used for select, radio, and checkboxes field types
+		 * Currently used for select, radio, and checkboxes field types
 		 *
 		 * @since 1.0.0
 		 */
@@ -1365,7 +1365,7 @@
 		/**
 		 * Update field choices in preview area, for the Fields panel.
 		 *
-		 * Currenty used for select, radio, and checkboxes field types
+		 * Currently used for select, radio, and checkboxes field types
 		 *
 		 * @since 1.0.0
 		 */
@@ -1374,18 +1374,18 @@
 			var new_choice;
 
 			// Multiple payment choices are radio buttons
-			if ( type == 'payment-multiple') {
+			if ( type === 'payment-multiple') {
 				type = 'radio';
 			}
 			// Dropdown payment choices are selects
-			if ( type == 'payment-select') {
+			if ( type === 'payment-select') {
 				type = 'select';
 			}
 
-			if (type == 'select') {
+			if (type === 'select') {
 				$('#wpforms-field-'+id+' .primary-input option' ).not('.placeholder').remove();
 				new_choice = '<option>{label}</option>';
-			} else if (type == 'radio' || type == 'checkbox' ) {
+			} else if (type === 'radio' || type === 'checkbox' ) {
 				$('#wpforms-field-'+id+' .primary-input li' ).remove();
 				new_choice = '<li><input type="'+type+'" disabled>{label}</li>';
 			}
@@ -1395,7 +1395,7 @@
 					selected = $this.find('input.default').is(':checked'),
 					choice 	 = $( new_choice.replace('{label}',label) );
 				$('#wpforms-field-'+id+' .primary-input').append(choice);
-				if ( selected == true ) {
+				if ( selected === true ) {
 					switch (type) {
 						case 'select':
 							choice.prop('selected', 'true');
@@ -1416,8 +1416,8 @@
 		 */
 		fieldChoiceBulkAddToggle: function(el) {
 
-			var $this   = $(el),
-				$label  = $this.closest('label');
+			var $this  = $(el),
+				$label = $this.closest('label');
 
 			if ( $this.hasClass('bulk-add-showing') ) {
 
@@ -1501,13 +1501,13 @@
 			$('.wpforms-tab a').removeClass('active').find('i').removeClass('fa-angle-down').addClass('fa-angle-right');
 			$('.wpforms-field, .wpforms-title-desc').removeClass('active');
 
-			if (id == 'add-fields') {
+			if (id === 'add-fields') {
 				$('#add-fields').find('a').addClass('active').find('i').addClass('fa-angle-down');
 				$('.wpforms-field-options').hide();
 				$('.wpforms-add-fields').show()
 			} else {
 				$('#field-options').find('a').addClass('active').find('i').addClass('fa-angle-down');
-				if (id == 'field-options') {
+				if (id === 'field-options') {
 					$('.wpforms-field').first().addClass('active');
 					id = $('.wpforms-field').first().data('field-id');
 				} else {
@@ -1622,7 +1622,7 @@
 				$thisOption = $this.parent(),
 				value       = $this.val(),
 				id          = $thisOption.data('field-id'),
-				$field      = $('#wpforms-field-'+id);
+				$field      = $('#wpforms-field-'+id),
 				$choices    = $('#wpforms-field-option-row-'+id+'-choices');
 
 			// Loading
@@ -1632,7 +1632,7 @@
 			$('#wpforms-field-option-row-'+id+'-dynamic_post_type').remove();
 			$('#wpforms-field-option-row-'+id+'-dynamic_taxonomy').remove();
 
-			if ( '' == value ) {
+			if ( '' === value ) {
 				// "Off" - no dynamic populating
 
 				// Get original field choices
@@ -1677,7 +1677,7 @@
 					field_id: id,
 					action  : 'wpforms_builder_dynamic_choices',
 					nonce   : wpforms_builder.nonce
-				}
+				};
 				$.post(wpforms_builder.ajax_url, data, function(res) {
 					if (res.success){
 						// New option markup
@@ -1714,7 +1714,7 @@
 				id          = $thisOption.data('field-id'),
 				form_id     = $('#wpforms-builder-form').data('id'),
 				$choices    = $('#wpforms-field-option-row-'+id+'-choices'),
-				$field      = $('#wpforms-field-'+id);
+				$field      = $('#wpforms-field-'+id),
 				type        = $('#wpforms-field-option-'+id+'-dynamic_choices option:selected').val(),
 				limit       = 20;
 
@@ -1728,7 +1728,7 @@
 				form_id : form_id,
 				action  : 'wpforms_builder_dynamic_source',
 				nonce   : wpforms_builder.nonce
-			}
+			};
 			$.post(wpforms_builder.ajax_url, data, function(res) {
 				if (res.success){
 
@@ -2001,17 +2001,17 @@
 				WPFormsBuilder.panelSwitch('settings');
 			});
 
-			// Clicking form last page break button
+			// Clicking form previous page break button
 			$(document).on('click', '.wpforms-field-pagebreak-last button', function(e) {
 				e.preventDefault();
 				WPFormsBuilder.panelSwitch('settings');
 				$('#wpforms-panel-field-settings-pagebreak_prev').focus();
 			});
 
-			// Real-time updates for editing the form title
+			// Clicking form last page break button
 			$(document).on('input', '#wpforms-panel-field-settings-pagebreak_prev', function(){
 				$('.wpforms-field-pagebreak-last button').text( $(this).val() );
-			})
+			});
 
 			// Real-time updates for editing the form title
 			$(document).on('input', '#wpforms-panel-field-settings-form_title, #wpforms-setup-name', function(){
@@ -2020,35 +2020,35 @@
 					title = $.trim(title).substring(0, 38).split(" ").slice(0, -1).join(" ") + "..."
 				}
 				$('.wpforms-form-name').text( title );
-			})
+			});
 
 			// Real-time updates for editing the form description
 			$(document).on('input', '#wpforms-panel-field-settings-form_desc', function(){
 				$('.wpforms-form-desc').text( $(this).val() );
-			})
+			});
 
 			// Real-time updates for editing the form submit button
 			$(document).on('input', '#wpforms-panel-field-settings-submit_text', function(){
 				$('.wpforms-field-submit input[type=submit]').val( $(this).val() );
-			})
+			});
 
 			// Toggle form reCAPTCHA setting
-			$(document).on('change', '#wpforms-settings-recaptcha', function(e) {
+			$(document).on('change', '#wpforms-settings-recaptcha', function() {
 				WPFormsBuilder.recaptchaToggle();
 			});
 
 			// Toggle form title area
-			$(document).on('change', '#wpforms-panel-field-settings-hide_title_desc', function(e) {
+			$(document).on('change', '#wpforms-panel-field-settings-hide_title_desc', function() {
 				WPFormsBuilder.titleAreaToggle();
 			});
 
 			// Toggle form confirmation setting fields
-			$(document).on('change', '#wpforms-panel-field-settings-confirmation_type', function(e) {
+			$(document).on('change', '#wpforms-panel-field-settings-confirmation_type', function() {
 				WPFormsBuilder.confirmationToggle();
 			});
 
 			// Toggle form notification setting fields
-			$(document).on('change', '#wpforms-panel-field-settings-notification_enable', function(e) {
+			$(document).on('change', '#wpforms-panel-field-settings-notification_enable', function() {
 				WPFormsBuilder.notificationToggle();
 			});
 
@@ -2058,7 +2058,46 @@
 				WPFormsBuilder.notificationAdd();
 			});
 
-			// Add New notification settings block
+            // Edit notification settings block name
+            $(document).on('click', '.wpforms-notification-edit', function(e) {
+                e.preventDefault();
+
+                var $el = $(this);
+
+                if ( $el.parents('.wpforms-notification-header').find('.wpforms-notification-name').hasClass('editing') ) {
+					WPFormsBuilder.notificationNameEditingHide( $el );
+				} else {
+					WPFormsBuilder.notificationNameEditingShow( $el );
+				}
+			});
+
+            // Update notification settings block name and close editing interface
+            $(document).on('blur', '.wpforms-notification-name-edit input', function(e) {
+				// Do not fire if for onBlur user clicked on edit button - it has own event processing.
+            	if ( ! $(e.relatedTarget).hasClass('wpforms-notification-edit')) {
+					WPFormsBuilder.notificationNameEditingHide( $(this) );
+				}
+            });
+
+			// Close notifications editing interface with pressed Enter
+			$(document).on('keypress', '.wpforms-notification-name-edit input', function(e) {
+				// On Enter - hide editing interface.
+				if (e.keyCode === 13) {
+					WPFormsBuilder.notificationNameEditingHide( $(this) );
+
+					// We need this preventDefault() to stop jumping to form name editing input.
+					e.preventDefault();
+				}
+			});
+
+			// Toggle notification settings block - slide up or down
+			$(document).on('click', '.wpforms-notification-toggle', function(e) {
+				e.preventDefault();
+
+				WPFormsBuilder.notificationPanelToggle($(this));
+			});
+
+			// Remove notification settings block
 			$(document).on('click', '.wpforms-notification-delete', function(e) {
 				e.preventDefault();
 				WPFormsBuilder.notificationDelete($(this));
@@ -2105,7 +2144,7 @@
 				var type = $confirmation.val();
 				$confirmation.parent().parent().find('.wpforms-panel-field').not($confirmation.parent()).hide();
 				$('#wpforms-panel-field-settings-confirmation_'+type+'-wrap').show();
-				if (type == 'message') {
+				if (type === 'message') {
 					$('#wpforms-panel-field-settings-confirmation_message_scroll-wrap').show();
 				}
 			}
@@ -2137,9 +2176,9 @@
 				namePrompt   = wpforms_builder.notification_prompt,
 				nameField    = '<input autofocus="" type="text" id="notification-name" placeholder="'+wpforms_builder.notification_ph+'">',
 				nameError    = '<p class="error">'+wpforms_builder.notification_error+'</p>',
-				modalContent = namePrompt+nameField+nameError;
+				modalContent = namePrompt + nameField + nameError;
 
-			$.confirm({
+			var modal = $.confirm({
 				title: false,
 				content: modalContent,
 				icon: 'fa fa-info-circle',
@@ -2150,17 +2189,18 @@
 						btnClass: 'btn-confirm',
 						keys: ['enter'],
 						action: function() {
-							var input = this.$content.find('input#notification-name'),
+							var notification_name = $.trim(this.$content.find('input#notification-name').val()),
 								error = this.$content.find('.error');
-							if (input.val() == '') {
+
+							if (notification_name === '') {
 								error.show();
 								return false;
 							} else {
 								var $firstNotification = $('.wpforms-notification').first(),
 									$newNotification   = $firstNotification.clone(),
-									newNotification    = '';
+									newNotification;
 
-								$newNotification.find('.wpforms-notification-header span').text(input.val());
+								$newNotification.find('.wpforms-notification-header span').text(notification_name);
 								$newNotification.find('input, textarea, select').each(function(index, el) {
 									if ($(this).attr('name')) {
 										$(this).val('').attr('name', $(this).attr('name').replace(/\[(\d+)\]/, '['+nextID+']'));
@@ -2174,15 +2214,17 @@
 										}
 									}
 								});
-								$newNotification.find('.wpforms-notification-header input').val(input.val()).attr('value',input.val());
-								$newNotification.find('.email-msg textarea').val('{all_fields}').attr('value','{all_fields}');;
+								$newNotification.find('.wpforms-notification-header input').val(notification_name).attr('value',notification_name);
+								$newNotification.find('.email-msg textarea').val('{all_fields}').attr('value','{all_fields}');
 								$newNotification.find('.email-recipient input').val('{admin_email}').attr('value','{admin_email}');
+
 								// Conditional logic, if present
 								var $conditionalLogic = $newNotification.find('.wpforms-conditional-block');
 								if ($conditionalLogic.length) {
 									$conditionalLogic.find('.wpforms-conditionals-enable-toggle input').attr('data-name', 'settings[notifications]['+nextID+']');
 									$conditionalLogic.find('.wpforms-conditional-groups').remove();
 								}
+
 								newNotification = $newNotification.wrap('<div>').parent().html();
 								newNotification = newNotification.replace( /wpforms-panel-field-notifications-(\d+)/g, 'wpforms-panel-field-notifications-'+nextID );
 								newNotification = newNotification.replace( /\[conditionals\]\[(\d+)\]\[(\d+)\]/g, '[conditionals][0][0]' );
@@ -2195,6 +2237,96 @@
 					},
 					cancel: {
 						text: wpforms_builder.cancel
+					}
+				}
+			});
+
+			// We need to process this event here, because we need a confirm modal object defined, so we can intrude into it.
+			// Pressing Enter will click the Ok button.
+			$(document).on('keypress', '#notification-name', function(e) {
+				if (e.keyCode === 13) {
+					$(modal.buttons.confirm.el).trigger('click');
+				}
+			});
+		},
+
+		/**
+		 * Show notification editing interface.
+		 *
+		 * @since 1.4.1
+		 */
+		notificationNameEditingShow: function (el) {
+
+			var header_holder = el.parents('.wpforms-notification-header'),
+				name_holder   = header_holder.find('.wpforms-notification-name');
+
+			name_holder
+				.addClass('editing')
+				.hide();
+
+			// Make the editing interface active and in focus
+			header_holder.find('.wpforms-notification-name-edit').addClass('active');
+			wpf.focusCaretToEnd(header_holder.find('input'));
+		},
+
+		/**
+		 * Update notification name and hide editing interface.
+		 *
+		 * @since 1.4.1
+		 */
+		notificationNameEditingHide: function (el) {
+
+			var header_holder = el.parents('.wpforms-notification-header'),
+				name_holder   = header_holder.find('.wpforms-notification-name'),
+				edit_holder   = header_holder.find('.wpforms-notification-name-edit'),
+				current_name  = edit_holder.find('input').val().trim();
+
+			// Provide a default value for empty notification name.
+			if (! current_name.length) {
+				current_name = wpforms_builder.notification_def_name;
+			}
+
+			// This is done for sanitizing.
+			edit_holder.find('input').val(current_name);
+			name_holder.text(current_name);
+
+			// Editing should be hidden, displaying - active.
+			name_holder
+				.removeClass('editing')
+				.show();
+			edit_holder.removeClass('active');
+		},
+
+		/**
+		 * Show or hide notification panel content.
+		 *
+		 * @since 1.4.1
+		 */
+		notificationPanelToggle: function(el) {
+
+			var $notification = el.closest('.wpforms-notification'),
+				notification_id = /settings\[notifications\]\[(\d+)\]\[notification_name\]/g.exec($notification.find('.wpforms-notification-name-edit input').attr('name'))[1],
+				$content = $notification.find('.wpforms-notification-content'),
+				is_visible = $content.is(':visible');
+
+			$content.slideToggle({
+				duration: 400,
+				start: function () {
+					// Send early to save fast.
+					// It's animation start, so we should save the state for animation end (reversed).
+					$.post(wpforms_builder.ajax_url, {
+						action: 'wpforms_builder_notification_state_save',
+						state: is_visible ? 'closed' : 'opened',
+						form_id: s.formID,
+						notification_id: notification_id,
+						nonce : wpforms_builder.nonce
+					});
+				},
+				always: function() {
+					if ($content.is(':visible')) {
+						el.html('<i class="fa fa-chevron-up"></i>');
+					} else {
+						el.html('<i class="fa fa-chevron-down"></i>');
 					}
 				}
 			});
@@ -2221,6 +2353,7 @@
 						keys: ['enter'],
 						action: function () {
 							var notifications = $('.wpforms-notification');
+
 							if ( notifications.length <= 1 ) {
 								$.alert({
 									title: false,
@@ -2236,7 +2369,17 @@
 									}
 								});
 							} else {
-								$this.closest('.wpforms-notification').remove();
+								var $current_notification = $this.closest('.wpforms-notification'),
+									notification_id = /settings\[notifications\]\[(\d+)\]\[notification_name\]/g.exec($current_notification.find('.wpforms-notification-name-edit input').attr('name'))[1];
+
+								$.post(wpforms_builder.ajax_url, {
+									action: 'wpforms_builder_notification_state_remove',
+									nonce: wpforms_builder.nonce,
+									notification_id: notification_id,
+									form_id: s.formID
+								} );
+
+								$current_notification.remove();
 							}
 						}
 					},
@@ -2258,7 +2401,7 @@
 		 */
 		bindUIActionsSaveExit: function() {
 
-			// Save form
+			// Embed form
 			$(document).on('click', '#wpforms-embed', function(e) {
 				e.preventDefault();
 				var content = wpforms_builder.embed_modal;
@@ -2317,7 +2460,7 @@
 				data  : JSON.stringify($('#wpforms-builder-form').serializeArray()),
 				id    : s.formID,
 				nonce : wpforms_builder.nonce
-			}
+			};
 			$.post(wpforms_builder.ajax_url, data, function(res) {
 				if (res.success) {
 					$label.text(text);
@@ -2411,12 +2554,12 @@
 			// Field map table, update key source
 			$(document).on('input', '.wpforms-field-map-table .key-source', function(){
 				var value = $(this).val(),
-					$dest = $(this).parent().parent().find('.key-destination');
+					$dest = $(this).parent().parent().find('.key-destination'),
 					name  = $dest.data('name');
 					if (value) {
 						$dest.attr('name', name.replace('{source}', value.replace(/[^0-9a-zA-Z_-]/gi, '')));
 					}
-			})
+			});
 
 			// Field map table, delete row
 			$(document).on('click', '.wpforms-field-map-table .remove', function(e) {
@@ -2469,7 +2612,7 @@
 							buttons: {
 								confirm: {
 									text: wpforms_builder.ok,
-									btnClass: 'btn-confirm',
+									btnClass: 'btn-confirm'
 								}
 							}
 						});
@@ -2477,7 +2620,6 @@
 					}
 				}
 			});
-
 		},
 
 		/**
@@ -2487,62 +2629,68 @@
 		 */
 		smartTagToggle: function(el) {
 
-			var $this   = $(el),
-				$label  = $this.closest('label');
+			var $this = $( el ),
+				$label = $this.closest( 'label' );
 
-			if ( $this.hasClass('smart-tag-showing') ) {
+			if ( $this.hasClass( 'smart-tag-showing' ) ) {
 
 				// Smart tags are showing, so hide/remove them
-				var $list = $label.next('.smart-tags-list-display');
-				$list.slideUp(400, function() {
+				var $list = $label.next( '.smart-tags-list-display' );
+				$list.slideUp( 400, function () {
 					$list.remove();
-				});
-				$this.find('span').text(wpforms_builder.smart_tags_show);
-			} else {
+				} );
+				$this.find( 'span' ).text( wpforms_builder.smart_tags_show );
+			}
+			else {
 
 				// Show all fields or narrow to specific field types
-				var allowed = $this.data('fields'),
-					type    = $this.data('type');
+				var allowed = $this.data( 'fields' ),
+					type = $this.data( 'type' ),
+					fields = [];
 				if ( allowed && allowed.length ) {
-					var fields = wpf.getFields(allowed.split(','),true);
-				} else {
-					var fields = wpf.getFields(false, true);
+					fields = wpf.getFields( allowed.split( ',' ), true );
+				}
+				else {
+					fields = wpf.getFields( false, true );
 				}
 
 				// Create smart tags list
 				var smartTagList = '<ul class="smart-tags-list-display">';
 
-				if (type === 'fields' || type === 'all') {
-					if (!fields) {
-						smartTagList += '<li class="heading">'+wpforms_builder.fields_unavailable+'</li>';
-					} else {
-						smartTagList += '<li class="heading">'+wpforms_builder.fields_available+'</li>';
-						for(var key in fields) {
-							if (fields[key].label) {
-								var label = wpf.sanitizeString(fields[key].label);
-							} else {
-								var label = wpforms_builder.field+' #'+fields[key].id;
+				if ( type === 'fields' || type === 'all' ) {
+					if ( ! fields ) {
+						smartTagList += '<li class="heading">' + wpforms_builder.fields_unavailable + '</li>';
+					}
+					else {
+						smartTagList += '<li class="heading">' + wpforms_builder.fields_available + '</li>';
+						for ( var field_key in fields ) {
+							var label = '';
+							if ( fields[ field_key ].label ) {
+								label = wpf.sanitizeString( fields[ field_key ].label );
 							}
-							smartTagList += '<li><a href="#" data-type="field" data-meta=\'' + fields[key].id + '\'>'+label+'</a></li>';
+							else {
+								label = wpforms_builder.field + ' #' + fields[ field_key ].id;
+							}
+							smartTagList += '<li><a href="#" data-type="field" data-meta=\'' + fields[ field_key ].id + '\'>' + label + '</a></li>';
 						}
 					}
 				}
 
-				if (type === 'other' || type === 'all') {
-					smartTagList += '<li class="heading">'+wpforms_builder.other+'</li>';
-					for(var key in wpforms_builder.smart_tags) {
-						smartTagList += '<li><a href="#" data-type="other" data-meta=\'' + key+ '\'>'+wpforms_builder.smart_tags[key]+'</a></li>';
+				if ( type === 'other' || type === 'all' ) {
+					smartTagList += '<li class="heading">' + wpforms_builder.other + '</li>';
+					for ( var smarttag_key in wpforms_builder.smart_tags ) {
+						smartTagList += '<li><a href="#" data-type="other" data-meta=\'' + smarttag_key + '\'>' + wpforms_builder.smart_tags[ smarttag_key ] + '</a></li>';
 					}
 				}
 
 				smartTagList += '</ul>';
 
-				$label.after(smartTagList);
-				$label.next('.smart-tags-list-display').slideDown();
-				$this.find('span').text(wpforms_builder.smart_tags_hide);
+				$label.after( smartTagList );
+				$label.next( '.smart-tags-list-display' ).slideDown();
+				$this.find( 'span' ).text( wpforms_builder.smart_tags_hide );
 			}
 
-			$this.toggleClass('smart-tag-showing');
+			$this.toggleClass( 'smart-tag-showing' );
 		},
 
 		/**
@@ -2589,7 +2737,7 @@
 
 			var $this = $(el),
 				$row = $this.closest('tr'),
-				$table = $this.closest('table')
+				$table = $this.closest('table'),
 				total = $table.find('tr').length;
 
 			if (total > '1') {
@@ -2606,7 +2754,7 @@
 
 			var $this   = $(el),
 				$row    = $this.closest('tr'),
-				$table  = $this.closest('tbody')
+				$table  = $this.closest('tbody'),
 				choice  = $row.clone().insertAfter($row);
 
 			choice.find('input').val('');
@@ -2618,12 +2766,10 @@
 		 * Update field mapped select items on form updates.
 		 *
 		 * @since 1.2.0
-		 * @param object event
-		 * @param object fields
 		 */
 		fieldMapSelect: function(e, fields) {
 
-			// Apply to all selects with indentifier class
+			// Apply to all selects with identifier class
 			$('.wpforms-field-map-select').each(function(index, el) {
 
 				var $this         = $(this),
@@ -2652,18 +2798,18 @@
 				}
 
 				// Loop through the current fields
-				for(var key in fields) {
-
+				for(var field_key in fields) {
+					var label = '';
 					// Compile the label
-					if (typeof fields[key].label !== 'undefined' && fields[key].label.length) {
-						var label = wpf.sanitizeString(fields[key].label);
+					if (typeof fields[field_key].label !== 'undefined' && fields[field_key].label.length) {
+						label = wpf.sanitizeString(fields[field_key].label);
 					} else {
-						var label = wpforms_builder.field + ' #' + fields[key].val;
+						label = wpforms_builder.field + ' #' + fields[field_key].val;
 					}
 
 					// Add to select if it is a field type allowed
-					if ($.inArray(fields[key].type, allowedFields) >= 0 || $.inArray('all-fields', allowedFields) >= 0) {
-						$this.append($('<option>', { value: fields[key].id, text : label }));
+					if ($.inArray(fields[field_key].type, allowedFields) >= 0 || $.inArray('all-fields', allowedFields) >= 0) {
+						$this.append($('<option>', { value: fields[field_key].id, text : label }));
 					}
 				}
 
@@ -2726,20 +2872,19 @@
 			var ctrlDown = false;
 
 			$(document).keydown(function(e) {
-				if (e.keyCode == 17) {
+				if (e.keyCode === 17) {
 					ctrlDown = true;
-				} else if (ctrlDown && e.keyCode == 80) {
+				} else if (ctrlDown && e.keyCode === 80) {
 					window.open(wpforms_builder.preview_url);
 					ctrlDown = false;
 					return false;
-				} else if (ctrlDown && e.keyCode == 69) {
-					console.log('weee');
+				} else if (ctrlDown && e.keyCode === 69) {
 					window.open(wpforms_builder.entries_url);
 					ctrlDown = false;
 					return false;
 				}
 			}).keyup(function(e) {
-				if (e.keyCode == 17) {
+				if (e.keyCode === 17) {
 					ctrlDown = false;
 				}
 			});

@@ -25,17 +25,18 @@ class WPForms_Smart_Tags {
 	 *
 	 * @since 1.0.0
 	 * @param string $return
-	 * @return array
+	 *
+	 * @return string|array
 	 */
-	function get( $return = 'array'  ) {
+	function get( $return = 'array' ) {
 
 		$tags = array(
-			'admin_email'         => __( 'Site Administer Email', 'wpforms' ),
+			'admin_email'         => __( 'Site Administrator Email', 'wpforms' ),
 			'entry_id'            => __( 'Entry ID', 'wpforms' ),
 			'form_id'             => __( 'Form ID', 'wpforms' ),
 			'form_name'           => __( 'Form Name', 'wpforms' ),
 			'page_title'          => __( 'Embedded Post/Page Title', 'wpforms' ),
-			'page_url'            => __( 'Embeded Post Page URL', 'wpforms' ),
+			'page_url'            => __( 'Embedded Post Page URL', 'wpforms' ),
 			'page_id'             => __( 'Embedded Post/Page ID', 'wpforms' ),
 			'date format="m/d/Y"' => __( 'Date', 'wpforms' ),
 			'query_var key=""'    => __( 'Query String Variable', 'wpforms' ),
@@ -46,7 +47,7 @@ class WPForms_Smart_Tags {
 			'author_id'           => __( 'Author ID', 'wpforms' ),
 			'author_display'      => __( 'Author Name', 'wpforms' ),
 			'author_email'        => __( 'Author Email', 'wpforms' ),
-			'url_referer'         => __( 'Referer URL', 'wpforms' ),
+			'url_referer'         => __( 'Referrer URL', 'wpforms' ),
 			'url_login'           => __( 'Login URL', 'wpforms' ),
 			'url_logout'          => __( 'Logout URL', 'wpforms' ),
 			'url_register'        => __( 'Register URL', 'wpforms' ),
@@ -55,12 +56,12 @@ class WPForms_Smart_Tags {
 
 		$tags = apply_filters( 'wpforms_smart_tags', $tags );
 
-		if ( 'list' == $return ) {
+		if ( 'list' === $return ) {
 
 			// Return formatted list
 			$output = '<ul class="smart-tags-list">';
-			foreach( $tags as $key => $tag  ) {
-				$output .= '<li><a href="#" data-value="' . esc_attr( $key ) . '">' .  esc_html( $tag ) . '</a></li>';
+			foreach ( $tags as $key => $tag ) {
+				$output .= '<li><a href="#" data-value="' . esc_attr( $key ) . '">' . esc_html( $tag ) . '</a></li>';
 			}
 			$output .= '</ul>';
 
@@ -245,11 +246,8 @@ class WPForms_Smart_Tags {
 		if ( ! empty( $ids[1] ) && ! empty( $fields ) ) {
 
 			foreach ( $ids[1] as $key => $field_id ) {
-				if ( function_exists( 'sanitize_textarea_field' ) ) {
-					$value   = ! empty( $fields[ $field_id ]['value'] ) ? sanitize_textarea_field( $fields[ $field_id ]['value'] ) : '';
-				} else {
-					$value   = ! empty( $fields[ $field_id ]['value'] ) ? sanitize_text_field( $fields[ $field_id ]['value'] ) : '';
-				}
+				$value = ! empty( $fields[ $field_id ]['value'] ) ? wpforms_sanitize_textarea_field( $fields[ $field_id ]['value'] ) : '';
+
 				$content = str_replace( '{field_id="' . $field_id . '"}', $value , $content );
 			}
 		}

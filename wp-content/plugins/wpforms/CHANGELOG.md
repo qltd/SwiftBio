@@ -1,6 +1,46 @@
 # Change Log
 All notable changes to this project will be documented in this file, formatted via [this recommendation](http://keepachangelog.com/).
 
+## [1.4.1.1] - 2017-09-29
+### Changed
+- Improved the loading order of javascript files for forms builder
+- Update some strings for Russian translation
+
+### Fixed
+- Entries export functionality was broken
+- Multipage indicators behavior when several multipage forms present on the same page
+
+## [1.4.1] - 2017-09-28
+### Added
+- Ability to rename Form >Settings>Notifications>Single notification panels
+- Define a minimum PHP version support in plugin readme.txt file
+- Display a friendly link to a full page version, when form is previewed on AMP pages
+- Ability to collapse Form>Settings>Notifications>Single notification panels
+- Russian translation
+- Allow more than 1 default selection for checkboxes fields
+
+### Changed
+- Bump minimum WordPress version to 4.6
+- Improved localization support of the plugin
+- Improved texts in various places
+- Code style improvements throughout the plugin
+- Combine WPFORMS_DEBUG and WPFORMS_DEVELOPMENT into one, use `wpforms_debug()` to check
+- All HTTP requests now validate target sites SSL certificates with WP bundled certificates (since 3.7)
+
+### Fixed
+- Payments and providers classes version visibility
+- Postal field (part of Address field) now supports the {query_var} smart tag
+- Form's Entries page unread/read and starred/unstarred counters
+- Incomplete selection of Date dropdown fields causes entries to be recorded as 'Array'
+- Notification email is empty if submitted form has no user values (displaying user friendly message instead)
+- Pressing enter in "Enter a notification name" popup does nothing
+- Removed Screen Options on single entry screen
+- Allow postal code to be hidden/removed, fix Country issues
+- Country names don't have redundant `)` or spaces anymore
+- Do not display 2400 option in TimePicker in Date / Time field for 24h format
+- Deprecate a misspelled `wpforms_csv_export_seperator` filter, introduced a proper name for it
+- Conditional logic comparison issues if rule contained special characters
+
 ## [1.4.0.1] - 2017-08-24
 ### Added
 - Non-dismissible Dashboard page admin only notice about PHP 5.2

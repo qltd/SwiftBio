@@ -7,8 +7,8 @@ Author URI: http://www.tatvic.com/
 Author: Tatvic
 Requires at least: 3.6
 Tested up to: 4.8
-Stable tag: 1.1.0
-Version: 1.1.0
+Stable tag: 1.1.2
+Version: 1.1.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -232,5 +232,11 @@ Important Note: When you update the plugin, please save your settings again.
  = 1.0.21.1 - 13/07/2017 =
  * Minor Changes.
 
- = 1.1.0 - 09/08/2017 =
+ = 1.1.0 - 08/08/2017 =
  * Minor Bug Fixes & Optimization.
+
+ = 1.1.1 - 04/09/2017 =
+ * Minor Optimization on Order-Received Page.
+
+ = 1.1.2 - 05/09/2017 =
+ * Quick Fix of Minor Bugs.

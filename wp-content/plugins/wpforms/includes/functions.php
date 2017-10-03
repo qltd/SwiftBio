@@ -14,7 +14,8 @@
  * Helper function to trigger displaying a form.
  *
  * @since 1.0.2
- * @param int $form_id
+ *
+ * @param mixed $form_id
  * @param bool $title
  * @param bool $desc
  */
@@ -27,8 +28,10 @@ function wpforms_display( $form_id = false, $title = false, $desc = false ) {
  * Performs json_decode and unslash.
  *
  * @since 1.0.0
+ *
  * @param string $data
- * @return array
+ *
+ * @return array|bool
  */
 function wpforms_decode( $data ) {
 
@@ -43,13 +46,16 @@ function wpforms_decode( $data ) {
  * Performs json_encode and wp_slash.
  *
  * @since 1.3.1.3
- * @param array $data
+ *
+ * @param mixed $data
+ *
  * @return string
  */
 function wpforms_encode( $data = false ) {
 
-	if( empty( $data ) )
+	if ( empty( $data ) ) {
 		return false;
+	}
 
 	return wp_slash( wp_json_encode( $data ) );
 }
@@ -58,26 +64,31 @@ function wpforms_encode( $data = false ) {
  * Check if a string is a valid URL.
  *
  * @since 1.0.0
- * @param $url
+ *
+ * @param string $url
+ *
  * @return bool
  */
 function wpforms_is_url( $url ) {
 
 	if ( preg_match( '_^(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,})))(?::\d{2,5})?(?:/[^\s]*)?$_iuS', trim( $url ) ) ) {
 		return true;
-	} else {
-		return false;
 	}
+
+	return false;
 }
 
 /**
  * Get current URL.
  *
  * @since 1.0.0
+ *
  * @return string
  */
 function wpforms_current_url() {
-	$url = ( !empty( $_SERVER['HTTPS'] ) ) ? "https://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'] : "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+
+	$url = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+
 	return esc_url_raw( $url );
 }
 
@@ -85,18 +96,21 @@ function wpforms_current_url() {
  * Object to array.
  *
  * @since 1.1.7
+ *
  * @param object $object
- * @return array
+ *
+ * @return mixed
  */
 function wpforms_object_to_array( $object ) {
 
-	if ( !is_object( $object ) && !is_array( $object ) ) {
+	if ( ! is_object( $object ) && ! is_array( $object ) ) {
 		return $object;
 	}
 
 	if ( is_object( $object ) ) {
 		$object = get_object_vars( $object );
 	}
+
 	return array_map( 'wpforms_object_to_array', $object );
 }
 
@@ -104,6 +118,11 @@ function wpforms_object_to_array( $object ) {
  * Get the value of a specific WPForms setting.
  *
  * @since 1.0.0
+ *
+ * @param string $key
+ * @param mixed $default
+ * @param string $option
+ *
  * @return mixed
  */
 function wpforms_setting( $key, $default = false, $option = 'wpforms_settings' ) {
@@ -119,7 +138,9 @@ function wpforms_setting( $key, $default = false, $option = 'wpforms_settings' )
  * Sanitize key, primarily used for looking up options.
  *
  * @since 1.3.9
+ *
  * @param string $key
+ *
  * @return string
  */
 function wpforms_sanitize_key( $key = '' ) {
@@ -131,8 +152,11 @@ function wpforms_sanitize_key( $key = '' ) {
  * Check if form provided contains the specified field type.
  *
  * @since 1.0.5
+ *
  * @param string $type
- * @param mixed $form
+ * @param array $form
+ * @param bool $multiple
+ *
  * @return bool
  */
 function wpforms_has_field_type( $type, $form, $multiple = false ) {
@@ -142,26 +166,28 @@ function wpforms_has_field_type( $type, $form, $multiple = false ) {
 	$type      = (array) $type;
 
 	if ( $multiple ) {
-		foreach( $form as $single_form ) {
+		foreach ( $form as $single_form ) {
 			$field = wpforms_has_field_type( $type, $single_form );
 			if ( $field ) {
 				break;
 			}
 		}
+
 		return $field;
 	} else {
 
-		if ( is_object( $form ) && !empty( $form->post_content ) ) {
+		if ( is_object( $form ) && ! empty( $form->post_content ) ) {
 			$form_data = wpforms_decode( $form->post_content );
 		} elseif ( is_array( $form ) ) {
 			$form_data = $form;
 		}
 
-		if ( empty( $form_data['fields'] ) )
+		if ( empty( $form_data['fields'] ) ) {
 			return false;
+		}
 
 		foreach ( $form_data['fields'] as $single_field ) {
-			if ( in_array( $single_field['type'], $type ) ) {
+			if ( in_array( $single_field['type'], $type, true ) ) {
 				$field = true;
 				break;
 			}
@@ -175,6 +201,9 @@ function wpforms_has_field_type( $type, $form, $multiple = false ) {
  * Checks if form provided contains page breaks, if so give details.
  *
  * @since 1.0.0
+ *
+ * @param mixed $form
+ *
  * @return mixed
  */
 function wpforms_has_pagebreak( $form = false ) {
@@ -183,21 +212,22 @@ function wpforms_has_pagebreak( $form = false ) {
 	$pagebreak = false;
 	$pages     = 1;
 
-	if ( is_object( $form ) && !empty( $form->post_content ) ) {
+	if ( is_object( $form ) && ! empty( $form->post_content ) ) {
 		$form_data = wpforms_decode( $form->post_content );
 	} elseif ( is_array( $form ) ) {
 		$form_data = $form;
 	}
 
-	if ( empty( $form_data['fields'] ) )
+	if ( empty( $form_data['fields'] ) ) {
 		return false;
+	}
 
 	$fields = $form_data['fields'];
 
 	foreach ( $fields as $field ) {
-		if ( $field['type'] == 'pagebreak' && empty( $field['position'] ) ) {
+		if ( 'pagebreak' === $field['type'] && empty( $field['position'] ) ) {
 			$pagebreak = true;
-			$pages++;
+			$pages ++;
 		}
 	}
 
@@ -212,9 +242,11 @@ function wpforms_has_pagebreak( $form = false ) {
  * Tries to find and return an top or bottom pagebreak.
  *
  * @since 1.2.1
- * @param boolean $form
- * @param string $type
- * @return boolean
+ *
+ * @param mixed $form
+ * @param mixed $type
+ *
+ * @return array|bool
  */
 function wpforms_get_pagebreak( $form = false, $type = false ) {
 
@@ -255,7 +287,9 @@ function wpforms_get_pagebreak( $form = false, $type = false ) {
  * Returns information about pages if the form has multiple pages.
  *
  * @since 1.3.7
+ *
  * @param mixed $form
+ *
  * @return mixed false or an array
  */
 function wpforms_get_pagebreak_details( $form = false ) {
@@ -277,12 +311,12 @@ function wpforms_get_pagebreak_details( $form = false ) {
 	foreach ( $form_data['fields'] as $field ) {
 		if ( 'pagebreak' === $field['type'] ) {
 			if ( empty( $field['position'] ) ) {
-				$pages++;
+				$pages ++;
 				$details['total']   = $pages;
 				$details['pages'][] = $field;
-			} elseif ( 'top' === $field['position']  ) {
+			} elseif ( 'top' === $field['position'] ) {
 				$details['top'] = $field;
-			} elseif ( 'bottom' === $field['position']  ) {
+			} elseif ( 'bottom' === $field['position'] ) {
 				$details['bottom'] = $field;
 			}
 		}
@@ -296,6 +330,7 @@ function wpforms_get_pagebreak_details( $form = false ) {
 			$details['bottom'] = array();
 		}
 		$details['current'] = 1;
+
 		return $details;
 	} else {
 		return false;
@@ -307,11 +342,13 @@ function wpforms_get_pagebreak_details( $form = false ) {
  * and data attributes.
  *
  * @since 1.3.7
+ *
  * @param string $id
  * @param array $class
  * @param array $datas
  * @param array $atts
  * @param bool $echo
+ *
  * @return string
  */
 function wpforms_html_attributes( $id = '', $class = array(), $datas = array(), $atts = array(), $echo = false ) {
@@ -352,9 +389,11 @@ function wpforms_html_attributes( $id = '', $class = array(), $datas = array(), 
  * Sanitizes string of CSS classes.
  *
  * @since 1.2.1
+ *
  * @param string $classes
  * @param bool $convert True will convert strings to array and vice versa.
- * @return string
+ *
+ * @return string|array
  */
 function wpforms_sanitize_classes( $classes, $convert = false ) {
 
@@ -381,7 +420,9 @@ function wpforms_sanitize_classes( $classes, $convert = false ) {
  *
  * @since 1.0.0
  * @link http://stackoverflow.com/a/22500394
+ *
  * @param string $size
+ *
  * @return int
  */
 function wpforms_size_to_bytes( $size ) {
@@ -390,10 +431,10 @@ function wpforms_size_to_bytes( $size ) {
 		return $size;
 	}
 
-	$suffix = substr( $size, -1 );
-	$value = substr( $size, 0, -1 );
+	$suffix = substr( $size, - 1 );
+	$value  = substr( $size, 0, - 1 );
 
-	switch( strtoupper( $suffix ) ) {
+	switch ( strtoupper( $suffix ) ) {
 		case 'P':
 			$value *= 1024;
 		case 'T':
@@ -406,6 +447,7 @@ function wpforms_size_to_bytes( $size ) {
 			$value *= 1024;
 			break;
 	}
+
 	return $value;
 }
 
@@ -413,15 +455,17 @@ function wpforms_size_to_bytes( $size ) {
  * Convert bytes to megabytes (or in some cases KB).
  *
  * @since 1.0.0
+ *
  * @param int $bytes
+ *
  * @return string
  */
 function wpforms_size_to_megabytes( $bytes ) {
 
 	if ( $bytes < 1048676 ) {
-		return number_format( $bytes/1024, 1 ) . " KB";
+		return number_format( $bytes / 1024, 1 ) . ' KB';
 	} else {
-		return round( number_format( $bytes/1048576, 1 ) ) . " MB";
+		return round( number_format( $bytes / 1048576, 1 ) ) . ' MB';
 	}
 }
 
@@ -430,8 +474,10 @@ function wpforms_size_to_megabytes( $bytes ) {
  *
  * @since 1.0.0
  * @link http://stackoverflow.com/a/22500394
- * @param string $size
- * @return int
+ *
+ * @param bool $bytes
+ *
+ * @return mixed
  */
 function wpforms_max_upload( $bytes = false ) {
 
@@ -450,7 +496,10 @@ function wpforms_max_upload( $bytes = false ) {
  * automatically excluded. Optionally a white list can be provided.
  *
  * @since 1.0.0
+ *
  * @param mixed $form
+ * @param array $whitelist
+ *
  * @return mixed boolean or array
  */
 function wpforms_get_form_fields( $form = false, $whitelist = array() ) {
@@ -459,11 +508,17 @@ function wpforms_get_form_fields( $form = false, $whitelist = array() ) {
 	if ( is_object( $form ) ) {
 		$form = wpforms_decode( $form->post_content );
 	} elseif ( is_numeric( $form ) ) {
-		$form = wpforms()->form->get( $form, array( 'content_only' => true ) );
+		$form = wpforms()->form->get(
+			$form,
+			array(
+				'content_only' => true,
+			)
+		);
 	}
 
-	if ( !is_array( $form ) || empty( $form['fields'] ) )
+	if ( ! is_array( $form ) || empty( $form['fields'] ) ) {
 		return false;
+	}
 
 	// White list of field types to allow
 	$allowed_form_fields = array(
@@ -488,13 +543,13 @@ function wpforms_get_form_fields( $form = false, $whitelist = array() ) {
 	);
 	$allowed_form_fields = apply_filters( 'wpforms_get_form_fields_allowed', $allowed_form_fields );
 
-	$whitelist = !empty( $whitelist ) ? $whitelist : $allowed_form_fields;
+	$whitelist = ! empty( $whitelist ) ? $whitelist : $allowed_form_fields;
 
 	$form_fields = $form['fields'];
 
-	foreach( $form_fields as $id => $form_field ) {
-		if ( !in_array( $form_field['type'], $whitelist ) ) {
-			unset( $form_fields[$id] );
+	foreach ( $form_fields as $id => $form_field ) {
+		if ( ! in_array( $form_field['type'], $whitelist, true ) ) {
+			unset( $form_fields[ $id ] );
 		}
 	}
 
@@ -505,9 +560,11 @@ function wpforms_get_form_fields( $form = false, $whitelist = array() ) {
  * Get meta key value for a form field.
  *
  * @since 1.1.9
- * @param int $id Field ID
- * @param string $key Meta key
- * @param array $form_data Form data array
+ *
+ * @param int|string $id Field ID.
+ * @param string $key Meta key.
+ * @param mixed $form_data Form data array.
+ *
  * @return string
  */
 function wpforms_get_form_field_meta( $id = '', $key = '', $form_data = '' ) {
@@ -516,8 +573,8 @@ function wpforms_get_form_field_meta( $id = '', $key = '', $form_data = '' ) {
 		return '';
 	}
 
-	if ( !empty( $form_data['fields'][$id]['meta'][$key] ) ) {
-		return $form_data['fields'][$id]['meta'][$key];
+	if ( ! empty( $form_data['fields'][ $id ]['meta'][ $key ] ) ) {
+		return $form_data['fields'][ $id ]['meta'][ $key ];
 	} else {
 		return '';
 	}
@@ -527,8 +584,11 @@ function wpforms_get_form_field_meta( $id = '', $key = '', $form_data = '' ) {
  * Get meta key value for a form field.
  *
  * @since 1.3.1
- * @param string $key Meta key
- * @param array $form_data Form data array
+ *
+ * @param string $key Meta key.
+ * @param string $value
+ * @param mixed $form_data Form data array.
+ *
  * @return string
  */
 function wpforms_get_form_fields_by_meta( $key = '', $value = '', $form_data = '' ) {
@@ -539,14 +599,14 @@ function wpforms_get_form_fields_by_meta( $key = '', $value = '', $form_data = '
 
 	$found = array();
 
-	foreach( $form_data['fields'] as $id => $field ) {
+	foreach ( $form_data['fields'] as $id => $field ) {
 
-		if ( !empty( $field['meta'][$key] ) && $value == $field['meta'][$key] ) {
-			$found[$id] = $field;
+		if ( ! empty( $field['meta'][ $key ] ) && $value == $field['meta'][ $key ] ) {
+			$found[ $id ] = $field;
 		}
 	}
 
-	if ( !empty( $found ) ) {
+	if ( ! empty( $found ) ) {
 		return $found;
 	} else {
 		return false;
@@ -614,6 +674,7 @@ function wpforms_us_states() {
 		'WI' => 'Wisconsin',
 		'WY' => 'Wyoming',
 	);
+
 	return apply_filters( 'wpforms_us_states', $states );
 }
 
@@ -642,7 +703,7 @@ function wpforms_countries() {
 		'AC' => 'Ascension Island',
 		'AU' => 'Australia',
 		'AT' => 'Austria',
-		'AZ' => 'Azerbaijan)',
+		'AZ' => 'Azerbaijan',
 		'BS' => 'Bahamas',
 		'BH' => 'Bahrain',
 		'BD' => 'Bangladesh',
@@ -673,7 +734,7 @@ function wpforms_countries() {
 		'KY' => 'Cayman Islands',
 		'CF' => 'Central African Republic',
 		'EA' => 'Ceuta and Melilla',
-		'TD' => 'Chad ',
+		'TD' => 'Chad',
 		'CL' => 'Chile',
 		'CN' => 'China',
 		'CX' => 'Christmas Island',
@@ -699,7 +760,7 @@ function wpforms_countries() {
 		'EC' => 'Ecuador',
 		'EG' => 'Egypt',
 		'SV' => 'El Salvador',
-		'GQ' => 'Equatorial Guinea ',
+		'GQ' => 'Equatorial Guinea',
 		'ER' => 'Eritrea',
 		'EE' => 'Estonia',
 		'ET' => 'Ethiopia',
@@ -730,7 +791,7 @@ function wpforms_countries() {
 		'HT' => 'Haiti',
 		'HM' => 'Heard & McDonald Islands',
 		'HN' => 'Honduras',
-		'HK' => 'Hong Kong)',
+		'HK' => 'Hong Kong',
 		'HU' => 'Hungary',
 		'IS' => 'Iceland',
 		'IN' => 'India',
@@ -745,7 +806,7 @@ function wpforms_countries() {
 		'JP' => 'Japan',
 		'JE' => 'Jersey',
 		'JO' => 'Jordan',
-		'KZ' => 'Kazakhstan)',
+		'KZ' => 'Kazakhstan',
 		'KE' => 'Kenya',
 		'KI' => 'Kiribati',
 		'XK' => 'Kosovo',
@@ -771,7 +832,7 @@ function wpforms_countries() {
 		'MH' => 'Marshall Islands',
 		'MQ' => 'Martinique',
 		'MR' => 'Mauritania',
-		'MU' => 'Mauritius)',
+		'MU' => 'Mauritius',
 		'YT' => 'Mayotte',
 		'MX' => 'Mexico',
 		'FM' => 'Micronesia',
@@ -819,7 +880,7 @@ function wpforms_countries() {
 		'SH' => 'Saint Helena',
 		'KN' => 'Saint Kitts and Nevis',
 		'LC' => 'Saint Lucia',
-		'MF' => 'Saint Martin ',
+		'MF' => 'Saint Martin',
 		'PM' => 'Saint Pierre and Miquelon',
 		'WS' => 'Samoa',
 		'SM' => 'San Marino',
@@ -883,6 +944,7 @@ function wpforms_countries() {
 		'ZM' => 'Zambia',
 		'ZW' => 'Zimbabwe',
 	);
+
 	return apply_filters( 'wpforms_countries', $countries );
 }
 
@@ -908,6 +970,7 @@ function wpforms_months() {
 		'Nov' => 'November',
 		'Dec' => 'December',
 	);
+
 	return apply_filters( 'wpforms_months', $months );
 }
 
@@ -928,6 +991,7 @@ function wpforms_days() {
 		'Fri' => 'Friday',
 		'Sat' => 'Saturday',
 	);
+
 	return apply_filters( 'wpforms_days', $days );
 }
 
@@ -948,11 +1012,13 @@ function wpforms_get_ip() {
 		$ip = $_SERVER['HTTP_CLIENT_IP'];
 	} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
 		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-	} elseif( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
+	} elseif ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
 		$ip = $_SERVER['REMOTE_ADDR'];
 	}
+
 	// Fix potential CSV returned from $_SERVER variables
 	$ip_array = array_map( 'trim', explode( ',', $ip ) );
+
 	return $ip_array[0];
 }
 
@@ -960,7 +1026,9 @@ function wpforms_get_ip() {
  * Sanitizes hex color.
  *
  * @since 1.2.1
+ *
  * @param string $color
+ *
  * @return string
  */
 function wpforms_sanitize_hex_color( $color ) {
@@ -970,16 +1038,20 @@ function wpforms_sanitize_hex_color( $color ) {
 	}
 
 	// 3 or 6 hex digits, or the empty string.
-	if ( preg_match('|^#([A-Fa-f0-9]{3}){1,2}$|', $color ) ) {
+	if ( preg_match( '|^#([A-Fa-f0-9]{3}){1,2}$|', $color ) ) {
 		return $color;
 	}
+
+	return '';
 }
 
 /**
  * Sanitizes error message, primarily used during form frontend output.
  *
  * @since 1.3.7
+ *
  * @param string $error
+ *
  * @return string
  */
 function wpforms_sanitize_error( $error = '' ) {
@@ -994,7 +1066,53 @@ function wpforms_sanitize_error( $error = '' ) {
 		'strong' => array(),
 		'p'      => array(),
 	);
+
 	return wp_kses( $error, $allow );
+}
+
+/**
+ * Sanitizes a string, that can be a multiline.
+ * If WP core `sanitize_textarea_field()` exists (after 4.7.0) - use it.
+ * Otherwise - split onto separate lines, sanitize each one, merge again.
+ *
+ * @since 1.4.1
+ *
+ * @param string $string
+ *
+ * @return string If empty var is passed, or not a string - return unmodified. Otherwise - sanitize.
+ */
+function wpforms_sanitize_textarea_field( $string ) {
+
+	if ( empty( $string ) || ! is_string( $string ) ) {
+		return $string;
+	}
+
+	if ( function_exists( 'sanitize_textarea_field' ) ) {
+		$string = sanitize_textarea_field( $string );
+	} else {
+		$string = implode( "\n", array_map( 'sanitize_text_field', explode( "\n", $string ) ) );
+	}
+
+	return $string;
+}
+
+/**
+ * Sanitizes an array, that consists of values as strings.
+ * After that - merge all array values into multiline string.
+ *
+ * @since 1.4.1
+ *
+ * @param array $array
+ *
+ * @return mixed If not an array is passed (or empty var) - return unmodified var. Otherwise - a merged array into multiline string.
+ */
+function wpforms_sanitize_array_combine( $array ) {
+
+	if ( empty( $array ) || ! is_array( $array ) ) {
+		return $array;
+	}
+
+	return implode( "\n", array_map( 'sanitize_text_field', $array ) );
 }
 
 /**
@@ -1002,9 +1120,11 @@ function wpforms_sanitize_error( $error = '' ) {
  *
  * @since 1.2.5
  * @link https://docs.woocommerce.com/wc-apidocs/source-function-wc_light_or_dark.html#608-627
+ *
  * @param mixed $color
- * @param string $dark (default: '#000000')
- * @param string $light (default: '#FFFFFF')
+ * @param string $dark (default: '#000000').
+ * @param string $light (default: '#FFFFFF').
+ *
  * @return string
  */
 function wpforms_light_or_dark( $color, $dark = '#000000', $light = '#FFFFFF' ) {
@@ -1022,12 +1142,14 @@ function wpforms_light_or_dark( $color, $dark = '#000000', $light = '#FFFFFF' ) 
 
 /**
  * Builds and returns either a taxonomy or post type object that is
- * nests to accomodate any hierarchy.
+ * nests to accommodate any hierarchy.
  *
  * @since 1.3.9
+ *
  * @param array $args
  * @param bool $flat
- * @return array
+ *
+ * @return bool|array
  */
 function wpforms_get_hierarchical_object( $args = array(), $flat = false ) {
 
@@ -1040,8 +1162,8 @@ function wpforms_get_hierarchical_object( $args = array(), $flat = false ) {
 
 	if ( ! empty( $args['post_type'] ) ) {
 
-		$defaults = array(
-			'posts_per_page' => -1,
+		$defaults   = array(
+			'posts_per_page' => - 1,
 			'orderby'        => 'title',
 			'order'          => 'ASC',
 		);
@@ -1053,7 +1175,7 @@ function wpforms_get_hierarchical_object( $args = array(), $flat = false ) {
 
 	} elseif ( ! empty( $args['taxonomy'] ) ) {
 
-		$defaults = array(
+		$defaults   = array(
 			'hide_empty' => false,
 		);
 		$args       = wp_parse_args( $args, $defaults );
@@ -1069,15 +1191,16 @@ function wpforms_get_hierarchical_object( $args = array(), $flat = false ) {
 
 	foreach ( $items as $item ) {
 		if ( $item->{$ref_parent} ) {
-			$children[ $item->{$ref_id} ] = $item;
+			$children[ $item->{$ref_id} ]     = $item;
 			$children[ $item->{$ref_id} ]->ID = (int) $item->{$ref_id};
 		} else {
-			$parents[ $item->{$ref_id} ] = $item;
+			$parents[ $item->{$ref_id} ]     = $item;
 			$parents[ $item->{$ref_id} ]->ID = (int) $item->{$ref_id};
 		}
 	}
 
-	while ( count ( $children ) >= 1 ) {
+	$children_count = count( $children );
+	while ( $children_count >= 1 ) {
 		foreach ( $children as $child ) {
 			_wpforms_get_hierarchical_object_search( $child, $parents, $children, $ref_parent );
 		}
@@ -1086,6 +1209,7 @@ function wpforms_get_hierarchical_object( $args = array(), $flat = false ) {
 	if ( $flat ) {
 		$parents_flat = array();
 		_wpforms_get_hierarchical_object_flatten( $parents, $parents_flat, $ref_name );
+
 		return $parents_flat;
 	}
 
@@ -1096,7 +1220,8 @@ function wpforms_get_hierarchical_object( $args = array(), $flat = false ) {
  * Searches a given array and finds the parent of the provided object.
  *
  * @since 1.3.9
- * @param array $child
+ *
+ * @param object $child
  * @param array $parents
  * @param array $children
  * @param string $ref_parent
@@ -1108,14 +1233,16 @@ function _wpforms_get_hierarchical_object_search( $child, &$parents, &$children,
 		if ( $parent->ID === $child->{$ref_parent} ) {
 
 			if ( empty( $parent->children ) ) {
-				$parents[ $id ]->children = array( $child->ID => $child );
+				$parents[ $id ]->children = array(
+					$child->ID => $child,
+				);
 			} else {
 				$parents[ $id ]->children[ $child->ID ] = $child;
 			}
 
 			unset( $children[ $child->ID ] );
 
-		} else if ( ! empty( $parent->children ) && is_array( $parent->children ) ) {
+		} elseif ( ! empty( $parent->children ) && is_array( $parent->children ) ) {
 
 			_wpforms_get_hierarchical_object_search( $child, $parent->children, $children, $ref_parent );
 		}
@@ -1123,9 +1250,10 @@ function _wpforms_get_hierarchical_object_search( $child, &$parents, &$children,
 }
 
 /**
- * Flattens a heirarchical object.
+ * Flattens a hierarchical object.
  *
  * @since 1.3.9
+ *
  * @param array $array
  * @param array $output
  * @param string $ref_name
@@ -1142,7 +1270,7 @@ function _wpforms_get_hierarchical_object_flatten( $array, &$output, $ref_name =
 
 		if ( ! empty( $item->children ) ) {
 
-			_wpforms_get_hierarchical_object_flatten( $item->children, $output, $ref_name, $level + 1);
+			_wpforms_get_hierarchical_object_flatten( $item->children, $output, $ref_name, $level + 1 );
 			unset( $output[ $item->ID ]->children );
 		}
 	}
@@ -1153,17 +1281,19 @@ function _wpforms_get_hierarchical_object_flatten( $array, &$output, $ref_name =
  *
  * @since 1.3.9
  * @link https://gist.github.com/scribu/588429
- * @param array $array The initial array
- * @param array $pairs The array to insert
- * @param string $key The certain key
- * @param string $position Wether to insert the array before or after the key
+ *
+ * @param array $array The initial array.
+ * @param array $pairs The array to insert.
+ * @param string $key The certain key.
+ * @param string $position Where to insert the array - before or after the key.
+ *
  * @return array
  */
 function wpforms_array_insert( $array, $pairs, $key, $position = 'after' ) {
 
-	$key_pos = array_search( $key, array_keys( $array ) );
-	if ( 'after' == $position ) {
-		$key_pos++;
+	$key_pos = array_search( $key, array_keys( $array ), true );
+	if ( 'after' === $position ) {
+		$key_pos ++;
 	}
 
 	if ( false !== $key_pos ) {
@@ -1181,7 +1311,9 @@ function wpforms_array_insert( $array, $pairs, $key, $position = 'after' ) {
  * Recursively remove empty strings from an array.
  *
  * @since 1.3.9.1
+ *
  * @param array $data
+ *
  * @return array
  */
 function wpforms_array_remove_empty_strings( $data ) {
@@ -1203,6 +1335,8 @@ function wpforms_array_remove_empty_strings( $data ) {
  * Debug mode bool.
  *
  * @since 1.2.3
+ *
+ * @return bool
  */
 function wpforms_debug() {
 
@@ -1216,7 +1350,7 @@ function wpforms_debug() {
 
 	if ( $debug_option ) {
 		$current_user = wp_get_current_user();
-		if ( $current_user->user_login == $debug_option ) {
+		if ( $current_user->user_login === $debug_option ) {
 			$debug = true;
 		}
 	}
@@ -1228,7 +1362,10 @@ function wpforms_debug() {
  * Helper function to display debug data.
  *
  * @since 1.0.0
- * @param string $data
+ *
+ * @param mixed $data
+ * @param bool $echo
+ *
  * @return string
  */
 function wpforms_debug_data( $data, $echo = true ) {
@@ -1237,13 +1374,13 @@ function wpforms_debug_data( $data, $echo = true ) {
 
 		$output = '<textarea style="background:#fff;margin: 20px 0;width:100%;height:500px;font-size:12px;font-family: Consolas,Monaco,monospace;direction: ltr;unicode-bidi: embed;line-height: 1.4;padding: 4px 6px 1px;" readonly>';
 
-			$output .= "=================== WPFORMS DEBUG ===================\n\n";
+		$output .= "=================== WPFORMS DEBUG ===================\n\n";
 
-			if ( is_array( $data ) || is_object( $data ) ) {
-				$output .= ( print_r( $data, true ) );
-			} else {
-				$output .= $data;
-			}
+		if ( is_array( $data ) || is_object( $data ) ) {
+			$output .= ( print_r( $data, true ) );
+		} else {
+			$output .= $data;
+		}
 
 		$output .= '</textarea>';
 
@@ -1259,15 +1396,17 @@ function wpforms_debug_data( $data, $echo = true ) {
  * Log helper.
  *
  * @since 1.0.0
+ *
  * @param string $title
  * @param string $message
  * @param array $args
  */
-function wpforms_log( $title = '', $message = '', $args = array()  ) {
+function wpforms_log( $title = '', $message = '', $args = array() ) {
 
 	// Require log title
-	if ( empty( $title ) )
+	if ( empty( $title ) ) {
 		return;
+	}
 
 	// Force logging everything when in debug mode
 	if ( ! wpforms_debug() ) {
@@ -1282,25 +1421,26 @@ function wpforms_log( $title = '', $message = '', $args = array()  ) {
 		 * - Providers (provider)
 		 * - Conditional Logic (conditional_logic)
 		 */
-		$type   = !empty( $args['type'] ) ? (array) $args['type'] : array( 'error' );
-		$levels = get_option( 'wpforms_logging', array() );
-		$lvls   = array_intersect( $type, $levels );
-		if ( empty( $lvls ) ) {
+		$type   = ! empty( $args['type'] ) ? (array) $args['type'] : array( 'error' );
+		$levels = array_intersect( $type, get_option( 'wpforms_logging', array() ) );
+		if ( empty( $levels ) ) {
 			return;
 		}
 	}
 
-	// Meta
-	if ( !empty( $args['form_id'] ) ) {
-		$meta = array( 'form' => absint( $args['form_id'] ) );
-	} elseif ( !empty( $args['meta'] ) ) {
+	// Meta.
+	if ( ! empty( $args['form_id'] ) ) {
+		$meta = array(
+			'form' => absint( $args['form_id'] ),
+		);
+	} elseif ( ! empty( $args['meta'] ) ) {
 		$meta = $args['meta'];
 	} else {
 		$meta = '';
 	}
 
-	// Parent
-	$parent = !empty( $args['parent'] ) ? $args['parent'] : 0;
+	// Parent.
+	$parent = ! empty( $args['parent'] ) ? $args['parent'] : 0;
 
 	// Make arrays and objects look nice
 	if ( is_array( $message ) || is_object( $message ) ) {
@@ -1313,27 +1453,28 @@ function wpforms_log( $title = '', $message = '', $args = array()  ) {
 
 /**
  * Array replace recursive, for PHP 5.2.
- *
  */
 if ( ! function_exists( 'array_replace_recursive' ) ) :
 	/**
-	* PHP-agnostic version of {@link array_replace_recursive()}.
-	*
-	* The array_replace_recursive() function is a PHP 5.3 function. WordPress
-	* currently supports down to PHP 5.2, so this method is a workaround
-	* for PHP 5.2.
-	*
-	* Note: array_replace_recursive() supports infinite arguments, but for our use-
-	* case, we only need to support two arguments.
-	*
-	* Subject to removal once WordPress makes PHP 5.3.0 the minimum requirement.
-	*
-	* @since 1.2.3
-	* @see http://php.net/manual/en/function.array-replace-recursive.php#109390
-	* @param  array $base         Array with keys needing to be replaced.
-	* @param  array $replacements Array with the replaced keys.
-	* @return array
-	*/
+	 * PHP-agnostic version of {@link array_replace_recursive()}.
+	 *
+	 * The array_replace_recursive() function is a PHP 5.3 function. WordPress
+	 * currently supports down to PHP 5.2, so this method is a workaround
+	 * for PHP 5.2.
+	 *
+	 * Note: array_replace_recursive() supports infinite arguments, but for our use-
+	 * case, we only need to support two arguments.
+	 *
+	 * Subject to removal once WordPress makes PHP 5.3.0 the minimum requirement.
+	 *
+	 * @since 1.2.3
+	 * @see http://php.net/manual/en/function.array-replace-recursive.php#109390
+	 *
+	 * @param  array $base Array with keys needing to be replaced.
+	 * @param  array $replacements Array with the replaced keys.
+	 *
+	 * @return array
+	 */
 	function array_replace_recursive( $base = array(), $replacements = array() ) {
 		// PHP 5.2-compatible version
 		// http://php.net/manual/en/function.array-replace-recursive.php#109390.
@@ -1355,6 +1496,58 @@ if ( ! function_exists( 'array_replace_recursive' ) ) :
 				}
 			} while ( count( $head_stack ) );
 		}
+
 		return $base;
 	}
 endif;
+
+/**
+ * Check whether the current page is in AMP mode or not.
+ * We need to check for specific functions, as there is no special AMP header.
+ *
+ * @since 1.4.1
+ *
+ * @return bool
+ */
+function wpforms_is_amp() {
+
+	$is_amp = false;
+
+	if (
+		// AMP by Automattic; ampforwp
+		( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) ||
+		// Better AMP
+		( function_exists( 'is_better_amp' ) && is_better_amp() )
+	) {
+		$is_amp = true;
+	}
+
+	return apply_filters( 'wpforms_is_amp', $is_amp );
+}
+
+/**
+ * Decode special characters, both alpha- (<) and numeric-based (').
+ *
+ * @since 1.4.1
+ *
+ * @param string $string
+ *
+ * @return string
+ */
+function wpforms_decode_string( $string ) {
+
+	if ( ! is_string( $string) ) {
+		return $string;
+	}
+
+	return wp_kses_decode_entities( htmlspecialchars_decode( $string ) );
+}
+
+/**
+ * Get a suffix for assets, `.min` if debug is enabled.
+ *
+ * @return string
+ */
+function wpforms_get_min_suffix() {
+	return wpforms_debug() ? '.min' : '';
+}

@@ -7,10 +7,10 @@
  * @since      1.0.0
  * @license    GPL-2.0+
  * @copyright  Copyright (c) 2016, WPForms LLC
-*/
+ */
 
 /**
- * Save a form
+ * Save a form.
  *
  * @since 1.0.0
  */
@@ -20,12 +20,14 @@ function wpforms_save_form() {
 	check_ajax_referer( 'wpforms-builder', 'nonce' );
 
 	// Check for permissions
-	if ( !current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) )
+	if ( ! current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
 		die( __( 'You do not have permission.', 'wpforms' ) );
+	}
 
 	// Check for form data
-	if ( empty( $_POST['data'] ) )
+	if ( empty( $_POST['data'] ) ) {
 		die( __( 'No data provided', 'wpforms' ) );
+	}
 
 	$form_post = json_decode( stripslashes( $_POST['data'] ) );
 	$data      = array();
@@ -46,10 +48,12 @@ function wpforms_save_form() {
 
 			// Build the new array value from leaf to trunk.
 			for ( $i = count( $array_bits ) - 1; $i >= 0; $i -- ) {
-				if ( $i == count( $array_bits ) - 1 ) {
-						$new_post_data[ $array_bits[ $i ] ] = wp_slash( $post_input_data->value );
+				if ( $i === count( $array_bits ) - 1 ) {
+					$new_post_data[ $array_bits[ $i ] ] = wp_slash( $post_input_data->value );
 				} else {
-						$new_post_data = array( $array_bits[ $i ] => $new_post_data );
+					$new_post_data = array(
+						$array_bits[ $i ] => $new_post_data,
+					);
 				}
 			}
 
@@ -62,16 +66,18 @@ function wpforms_save_form() {
 	do_action( 'wpforms_builder_save_form', $form_id, $data );
 
 	if ( ! $form_id ) {
-		die( __( 'An error occured and the form could not be saved', 'wpforms'  ) );
+		die( __( 'An error occurred and the form could not be saved', 'wpforms' ) );
 	} else {
-		$data = array(
-			'form_name' => esc_html( $data['settings']['form_title'] ),
-			'form_desc' => $data['settings']['form_desc'],
-			'redirect'  => admin_url( 'admin.php?page=wpforms-overview' ),
+		wp_send_json_success(
+			array(
+				'form_name' => esc_html( $data['settings']['form_title'] ),
+				'form_desc' => $data['settings']['form_desc'],
+				'redirect'  => admin_url( 'admin.php?page=wpforms-overview' ),
+			)
 		);
-		wp_send_json_success( $data );
 	}
 }
+
 add_action( 'wp_ajax_wpforms_save_form', 'wpforms_save_form' );
 
 /**
@@ -84,9 +90,10 @@ function wpforms_new_form() {
 	// Run a security check
 	check_ajax_referer( 'wpforms-builder', 'nonce' );
 
-	// Check for form title
-	if ( empty( $_POST['title'] ) )
-		die( __( 'No form title provided', 'wpforms' ) );
+	// Check for form name.
+	if ( empty( $_POST['title'] ) ) {
+		die( __( 'No form name provided', 'wpforms' ) );
+	}
 
 	// Create form
 	$form_title    = sanitize_text_field( $_POST['title'] );
@@ -95,25 +102,37 @@ function wpforms_new_form() {
 	$form_id       = wpforms()->form->add(
 		$form_title,
 		array(),
-		array( 'template' => $form_template )
+		array(
+			'template' => $form_template,
+		)
 	);
-	if ( NULL != $title_exists ) {
-		wp_update_post( array(
-			'ID'         => $form_id,
-			'post_title' => $form_title . ' (ID #' . $form_id . ')',
-		) );
+	if ( null !== $title_exists ) {
+		wp_update_post(
+			array(
+				'ID'         => $form_id,
+				'post_title' => $form_title . ' (ID #' . $form_id . ')',
+			)
+		);
 	}
 
 	if ( $form_id ) {
 		$data = array(
 			'id'       => $form_id,
-			'redirect' => add_query_arg( array( 'view' => 'fields', 'form_id' => $form_id, 'newform' => '1' ), admin_url( 'admin.php?page=wpforms-builder' ) ),
+			'redirect' => add_query_arg(
+				array(
+					'view'    => 'fields',
+					'form_id' => $form_id,
+					'newform' => '1',
+				),
+				admin_url( 'admin.php?page=wpforms-builder' )
+			),
 		);
 		wp_send_json_success( $data );
 	} else {
 		die( __( 'Error creating form', 'wpforms' ) );
 	}
 }
+
 add_action( 'wp_ajax_wpforms_new_form', 'wpforms_new_form' );
 
 /**
@@ -123,26 +142,38 @@ add_action( 'wp_ajax_wpforms_new_form', 'wpforms_new_form' );
  */
 function wpforms_update_form_template() {
 
-	// Run a security check
+	// Run a security check.
 	check_ajax_referer( 'wpforms-builder', 'nonce' );
 
-	// Check for form title
-	if ( empty( $_POST['form_id'] ) )
+	// Check for form name.
+	if ( empty( $_POST['form_id'] ) ) {
 		die( __( 'No form ID provided', 'wpforms' ) );
+	}
 
-	$data    = wpforms()->form->get( $_POST['form_id'], array( 'content_only' => true ) );
-	$form_id = wpforms()->form->update( $_POST['form_id'], $data, array( 'template' => $_POST['template'] ) );
+	$data    = wpforms()->form->get( $_POST['form_id'], array(
+		'content_only' => true,
+	) );
+	$form_id = wpforms()->form->update( $_POST['form_id'], $data, array(
+		'template' => $_POST['template'],
+	) );
 
 	if ( $form_id ) {
 		$data = array(
 			'id'       => $form_id,
-			'redirect' => add_query_arg( array( 'view' => 'fields', 'form_id' => $form_id ), admin_url( 'admin.php?page=wpforms-builder' ) ),
+			'redirect' => add_query_arg(
+				array(
+					'view'    => 'fields',
+					'form_id' => $form_id,
+				),
+				admin_url( 'admin.php?page=wpforms-builder' )
+			),
 		);
 		wp_send_json_success( $data );
 	} else {
 		die( __( 'Error updating form template', 'wpforms' ) );
 	}
 }
+
 add_action( 'wp_ajax_wpforms_update_form_template', 'wpforms_update_form_template' );
 
 /**
@@ -152,15 +183,15 @@ add_action( 'wp_ajax_wpforms_update_form_template', 'wpforms_update_form_templat
  */
 function wpforms_builder_increase_next_field_id() {
 
-	// Run a security check
+	// Run a security check.
 	check_ajax_referer( 'wpforms-builder', 'nonce' );
 
-	// Check for permissions
-	if ( !current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
+	// Check for permissions.
+	if ( ! current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
 		wp_send_json_error();
 	}
 
-	// Check for required items
+	// Check for required items.
 	if ( empty( $_POST['form_id'] ) ) {
 		wp_send_json_error();
 	}
@@ -169,27 +200,28 @@ function wpforms_builder_increase_next_field_id() {
 
 	wp_send_json_success();
 }
+
 add_action( 'wp_ajax_wpforms_builder_increase_next_field_id', 'wpforms_builder_increase_next_field_id' );
 
 /**
  * Form Builder Dynamic Choices option toggle.
  *
- * This can be triggered with select/radio/checkbox fileds.
+ * This can be triggered with select/radio/checkbox fields.
  *
  * @since 1.2.8
  */
 function wpforms_builder_dynamic_choices() {
 
-	// Run a security check
+	// Run a security check.
 	check_ajax_referer( 'wpforms-builder', 'nonce' );
 
-	// Check for permissions
-	if ( !current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
+	// Check for permissions.
+	if ( ! current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
 		wp_send_json_error();
 	}
 
-	// Check for valid/required items
-	if ( !isset( $_POST['field_id'] ) || empty( $_POST['type'] ) || !in_array( $_POST['type'], array( 'post_type', 'taxonomy' ) ) ) {
+	// Check for valid/required items.
+	if ( ! isset( $_POST['field_id'] ) || empty( $_POST['type'] ) || ! in_array( $_POST['type'], array( 'post_type', 'taxonomy' ), true ) ) {
 		wp_send_json_error();
 	}
 
@@ -204,50 +236,66 @@ function wpforms_builder_dynamic_choices() {
 	);
 	$option_row = $field->field_option( 'dynamic_choices_source', $field_args, array(), false );
 
-	wp_send_json_success( array(
-		'markup'  => $option_row,
-	) );
+	wp_send_json_success(
+		array(
+			'markup' => $option_row,
+		)
+	);
 }
+
 add_action( 'wp_ajax_wpforms_builder_dynamic_choices', 'wpforms_builder_dynamic_choices' );
 
 /**
  * Form Builder Dynamic Choices Source option toggle.
  *
- * This can be triggered with select/radio/checkbox fileds.
+ * This can be triggered with select/radio/checkbox fields.
  *
  * @since 1.2.8
  */
 function wpforms_builder_dynamic_source() {
 
-	// Run a security check
+	// Run a security check.
 	check_ajax_referer( 'wpforms-builder', 'nonce' );
 
-	// Check for permissions
-	if ( !current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
+	// Check for permissions.
+	if ( ! current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
 		wp_send_json_error();
 	}
 
-	// Check for required items
-	if ( !isset( $_POST['field_id'] ) || empty( $_POST['form_id'] ) || empty( $_POST['type'] ) || empty( $_POST['source'] ) ) {
+	// Check for required items.
+	if ( ! isset( $_POST['field_id'] ) || empty( $_POST['form_id'] ) || empty( $_POST['type'] ) || empty( $_POST['source'] ) ) {
 		wp_send_json_error();
 	}
 
-	$type    = esc_attr( $_POST['type'] );
-	$source  = esc_attr( $_POST['source'] );
-	$id      = absint( $_POST['field_id'] );
-	$form_id = absint( $_POST['form_id'] );
-	$items   = array();
+	$type        = esc_attr( $_POST['type'] );
+	$source      = esc_attr( $_POST['source'] );
+	$id          = absint( $_POST['field_id'] );
+	$form_id     = absint( $_POST['form_id'] );
+	$items       = array();
+	$total       = 0;
+	$source_name = '';
+	$type_name   = '';
 
-	if ( 'post_type' == $type ) {
+	if ( 'post_type' === $type ) {
 
 		$type_name   = __( 'post type', 'wpforms' );
 		$args        = array(
 			'post_type'      => $source,
-			'posts_per_page' => -1,
+			'posts_per_page' => - 1,
 			'orderby'        => 'title',
 			'order'          => 'ASC',
 		);
-		$posts       = wpforms_get_hierarchical_object( apply_filters( 'wpforms_dynamic_choice_post_type_args', $args, array( 'id' => $id ), $form_id ), true );
+		$posts       = wpforms_get_hierarchical_object(
+			apply_filters(
+				'wpforms_dynamic_choice_post_type_args',
+				$args,
+				array(
+					'id' => $id,
+				),
+				$form_id
+			),
+			true
+		);
 		$total       = wp_count_posts( $source );
 		$total       = $total->publish;
 		$pt          = get_post_type_object( $source );
@@ -256,15 +304,24 @@ function wpforms_builder_dynamic_source() {
 		foreach ( $posts as $post ) {
 			$items[] = $post->post_title;
 		}
-
-	} elseif ( 'taxonomy' == $type ) {
+	} elseif ( 'taxonomy' === $type ) {
 
 		$type_name   = __( 'taxonomy', 'wpforms' );
 		$args        = array(
 			'taxonomy'   => $source,
 			'hide_empty' => false,
 		);
-		$terms       = wpforms_get_hierarchical_object( apply_filters( 'wpforms_dynamic_choice_taxonomy_args', $args, array( 'id' => $id ), $form_id ), true );
+		$terms       = wpforms_get_hierarchical_object(
+			apply_filters(
+				'wpforms_dynamic_choice_taxonomy_args',
+				$args,
+				array(
+					'id' => $id,
+				),
+				$form_id
+			),
+			true
+		);
 		$total       = wp_count_terms( $source );
 		$tax         = get_taxonomy( $source );
 		$source_name = $tax->labels->name;
@@ -274,13 +331,16 @@ function wpforms_builder_dynamic_source() {
 		}
 	}
 
-	wp_send_json_success( array(
-		'items'       => $items,
-		'source'      => $source,
-		'source_name' => $source_name,
-		'total'       => $total,
-		'type'        => $type,
-		'type_name'   => $type_name,
-	) );
+	wp_send_json_success(
+		array(
+			'items'       => $items,
+			'source'      => $source,
+			'source_name' => $source_name,
+			'total'       => $total,
+			'type'        => $type,
+			'type_name'   => $type_name,
+		)
+	);
 }
+
 add_action( 'wp_ajax_wpforms_builder_dynamic_source', 'wpforms_builder_dynamic_source' );

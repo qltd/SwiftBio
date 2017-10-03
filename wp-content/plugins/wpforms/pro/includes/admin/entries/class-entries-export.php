@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Exports entries to CSV.
  *
@@ -72,11 +73,13 @@ class WPForms_Entries_Export {
 	 * Field types that are allowed in entry exports.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return array
 	 */
 	public function allowed_fields() {
 
-		$fields = apply_filters( 'wpforms_export_fields_allowed',
+		$fields = apply_filters(
+			'wpforms_export_fields_allowed',
 			array(
 				'text',
 				'textarea',
@@ -99,13 +102,15 @@ class WPForms_Entries_Export {
 				'signature',
 			)
 		);
+
 		return $fields;
 	}
 
 	/**
-	 * Are we exporting a single entry or multipe.
+	 * Are we exporting a single entry or multiple.
 	 *
 	 * @since 1.1.5
+	 *
 	 * @return boolean
 	 */
 	public function is_single_entry() {
@@ -147,7 +152,7 @@ class WPForms_Entries_Export {
 		// Create file pointer connected to the output stream.
 		$this->file = fopen( 'php://output', 'w' );
 
-		// Hack for MS Excel to correct read UTF8 CSVs.
+		// Hack for MS Excel to correctly read UTF8 CSVs.
 		// See https://www.skoumal.net/en/making-utf-8-csv-excel/.
 		$bom = chr( 0xEF ) . chr( 0xBB ) . chr( 0xBF );
 		fputs( $this->file, $bom );
@@ -157,6 +162,7 @@ class WPForms_Entries_Export {
 	 * Retrieve the CSV columns.
 	 *
 	 * @since 1.1.5
+	 *
 	 * @return array $cols Array of the columns
 	 */
 	public function get_csv_cols() {
@@ -168,11 +174,16 @@ class WPForms_Entries_Export {
 		// entry object. For multiple entry export we get the fields from the
 		// form.
 		if ( $this->is_single_entry() ) {
-			$this->entry     = wpforms()->entry->get( $this->entry_type );
-			$this->fields    = wpforms_decode( $this->entry->fields );
+			$this->entry  = wpforms()->entry->get( $this->entry_type );
+			$this->fields = wpforms_decode( $this->entry->fields );
 		} else {
-			$this->form_data = wpforms()->form->get( $this->form_id, array( 'content_only' => true ) );
-			$this->fields    = $this->form_data['fields'];
+			$this->form_data = wpforms()->form->get(
+				$this->form_id,
+				array(
+					'content_only' => true,
+				)
+			);
+			$this->fields = $this->form_data['fields'];
 		}
 
 		// Get field types now allowed (eg exclude page break, divider, etc).
@@ -182,9 +193,9 @@ class WPForms_Entries_Export {
 		foreach ( $this->fields as $id => $field ) {
 			if ( in_array( $field['type'], $allowed, true ) ) {
 				if ( $this->is_single_entry() ) {
-					$cols[ $field['id'] ] = sanitize_text_field( $field['name'] );
+					$cols[ $field['id'] ] = wpforms_decode_string( sanitize_text_field( $field['name'] ) );
 				} else {
-					$cols[ $field['id'] ] = sanitize_text_field( $field['label'] );
+					$cols[ $field['id'] ] = wpforms_decode_string( sanitize_text_field( $field['label'] ) );
 				}
 			}
 		}
@@ -203,7 +214,7 @@ class WPForms_Entries_Export {
 	 */
 	public function csv_cols_out() {
 
-		$sep  = apply_filters( 'wpforms_csv_export_seperator', ',' );
+		$sep  = $this->get_csv_export_separator();
 		$cols = $this->get_csv_cols();
 
 		fputcsv( $this->file, $cols, $sep );
@@ -213,6 +224,7 @@ class WPForms_Entries_Export {
 	 * Get the data being exported.
 	 *
 	 * @since 1.1.5
+	 *
 	 * @return array $data Data for Export
 	 */
 	public function get_data() {
@@ -226,7 +238,7 @@ class WPForms_Entries_Export {
 			// and no more queries are necessary.
 			foreach ( $this->fields as $id => $field ) {
 				if ( in_array( $field['type'], $allowed, true ) ) {
-					$data[1][ $field['id'] ] = $field['value'];
+					$data[1][ $field['id'] ] = wpforms_decode_string( $field['value'] );
 				}
 			}
 			$date_format         = sprintf( '%s %s', get_option( 'date_format' ), get_option( 'time_format' ) );
@@ -237,8 +249,8 @@ class WPForms_Entries_Export {
 		} else {
 
 			// All or multiple entry export.
-			$args = array(
-				'number'  => -1,
+			$args        = array(
+				'number'  => - 1,
 				//'entry_id' => is_array( $this->entry_type ) ? $this->entry_type : '', @todo
 				'form_id' => $this->form_id,
 			);
@@ -251,11 +263,11 @@ class WPForms_Entries_Export {
 
 				foreach ( $form_fields as $form_field ) {
 					if ( in_array( $form_field['type'], $allowed, true ) ) {
-						$data[ $entry->entry_id ][ $form_field['id'] ] = $fields[ $form_field['id'] ]['value'];
+						$data[ $entry->entry_id ][ $form_field['id'] ] = wpforms_decode_string( $fields[ $form_field['id'] ]['value'] );
 					}
 				}
 				$date_format                          = sprintf( '%s %s', get_option( 'date_format' ), get_option( 'time_format' ) );
-				$data[ $entry->entry_id ]['date']     = date( $date_format, strtotime( $entry->date ) + ( get_option( 'gmt_offset' ) * 3600 )  );
+				$data[ $entry->entry_id ]['date']     = date( $date_format, strtotime( $entry->date ) + ( get_option( 'gmt_offset' ) * 3600 ) );
 				$data[ $entry->entry_id ]['date_gmt'] = date( $date_format, strtotime( $entry->date ) );
 				$data[ $entry->entry_id ]['entry_id'] = absint( $entry->entry_id );
 			}
@@ -267,29 +279,46 @@ class WPForms_Entries_Export {
 	}
 
 	/**
+	 * Get a data separator, used for CSV export file.
+	 *
+	 * @since 1.4.1
+	 *
+	 * @return string
+	 */
+	public function get_csv_export_separator() {
+
+		return apply_filters_deprecated(
+			'wpforms_csv_export_seperator',
+			array( ',' ),
+			'1.4.1 of WPForms plugin',
+			'wpforms_csv_export_separator'
+		);
+	}
+
+	/**
 	 * Output the CSV rows.
 	 *
 	 * @since 1.1.5
 	 */
 	public function csv_rows_out() {
 
-		$sep  = apply_filters( 'wpforms_csv_export_seperator', ',' );
+		$sep  = $this->get_csv_export_separator();
 		$data = $this->get_data();
 		$cols = $this->get_csv_cols();
 		$rows = array();
 		$i    = 0;
 
-		// First, compile each each row.
+		// First, compile each row.
 		foreach ( $data as $row ) {
 
 			foreach ( $row as $col_id => $column ) {
 				// Make sure the column is valid.
 				if ( array_key_exists( $col_id, $cols ) ) {
-					$data = str_replace( "\n", "\r\n", trim( $column ) );
+					$data         = str_replace( "\n", "\r\n", trim( $column ) );
 					$rows[ $i ][] = $data;
 				}
 			}
-			$i++;
+			$i ++;
 		}
 
 		// Second, now write each row.
@@ -306,7 +335,13 @@ class WPForms_Entries_Export {
 	public function export() {
 
 		if ( ! current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
-			wp_die( __( 'You do not have permission to export entries.', 'wpforms' ), __( 'Error', 'wpforms' ), array( 'response' => 403 ) );
+			wp_die(
+				__( 'You do not have permission to export entries.', 'wpforms' ),
+				__( 'Error', 'wpforms' ),
+				array(
+					'response' => 403,
+				)
+			);
 		}
 
 		// Set headers.

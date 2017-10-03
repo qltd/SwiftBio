@@ -5,7 +5,7 @@
  * Description: Beginner friendly WordPress contact form plugin. Use our Drag & Drop form builder to create your WordPress forms.
  * Author:      WPForms
  * Author URI:  https://wpforms.com
- * Version:     1.4.0.1
+ * Version:     1.4.1.1
  * Text Domain: wpforms
  * Domain Path: languages
  *
@@ -55,7 +55,7 @@ if ( class_exists( 'WPForms' ) ) {
 	 */
 	function wpforms_lite_notice() {
 
-		echo '<div class="notice notice-warning"><p>' . __( 'Please deactivate WPForms Lite before activating WPForms', 'wpforms' ) . '</p></div>';
+		echo '<div class="notice notice-warning"><p>' . __( 'Please deactivate WPForms Lite before activating WPForms.', 'wpforms' ) . '</p></div>';
 
 		if ( isset( $_GET['activate'] ) ) {
 			unset( $_GET['activate'] );
@@ -69,6 +69,7 @@ if ( class_exists( 'WPForms' ) ) {
 	 * Main WPForms class.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @package WPForms
 	 */
 	final class WPForms {
@@ -77,6 +78,7 @@ if ( class_exists( 'WPForms' ) ) {
 		 * One is the loneliest number that you'll ever do.
 		 *
 		 * @since 1.0.0
+		 *
 		 * @var object
 		 */
 		private static $instance;
@@ -85,87 +87,98 @@ if ( class_exists( 'WPForms' ) ) {
 		 * Plugin version for enqueueing, etc.
 		 *
 		 * @since 1.0.0
-		 * @var sting
+		 *
+		 * @var string
 		 */
-		public $version = '1.4.0.1';
+		public $version = '1.4.1.1';
 
 		/**
 		 * The form data handler instance.
 		 *
-		 * @var object WPForms_Form_Handler
 		 * @since 1.0.0
+		 *
+		 * @var object WPForms_Form_Handler
 		 */
 		public $form;
 
 		/**
 		 * The entry data handler instance (Pro).
 		 *
-		 * @var object WPForms_Entry_Handler
 		 * @since 1.0.0
+		 *
+		 * @var object WPForms_Entry_Handler
 		 */
 		public $entry;
 
 		/**
 		 * The entry meta data handler instance (Pro).
 		 *
-		 * @var object WPForms_Entry_Meta_Handler
 		 * @since 1.1.6
+		 *
+		 * @var object WPForms_Entry_Meta_Handler
 		 */
 		public $entry_meta;
 
 		/**
 		 * The front-end instance.
 		 *
-		 * @var object WPForms_Frontend
 		 * @since 1.0.0
+		 *
+		 * @var object WPForms_Frontend
 		 */
 		public $frontend;
 
 		/**
 		 * The process instance.
 		 *
-		 * @var object WPForms_Process
 		 * @since 1.0.0
+		 *
+		 * @var object WPForms_Process
 		 */
 		public $process;
 
 		/**
 		 * The smart tags instance.
 		 *
-		 * @var object WPForms_Smart_Tags
 		 * @since 1.0.0
+		 *
+		 * @var object WPForms_Smart_Tags
 		 */
 		public $smart_tags;
 
 		/**
 		 * The Logging instance.
 		 *
-		 * @var object WPForms_Logging
 		 * @since 1.0.0
+		 *
+		 * @var object WPForms_Logging
 		 */
 		public $logs;
 
 		/**
 		 * The Preview instance.
 		 *
-		 * @var object WPForms_Preview
 		 * @since 1.1.9
+		 *
+		 * @var object WPForms_Preview
 		 */
 		public $preview;
 
 		/**
 		 * The License class instance (Pro).
 		 *
-		 * @var object WPForms_License
 		 * @since 1.0.0
+		 *
+		 * @var object WPForms_License
 		 */
 		public $license;
 
 		/**
 		 * Paid returns true, free (Lite) returns false.
 		 *
-		 * @var boolean
 		 * @since 1.3.9
+		 *
+		 * @var boolean
 		 */
 		public $pro = false;
 
@@ -176,6 +189,7 @@ if ( class_exists( 'WPForms' ) ) {
 		 * time. Also prevents needing to define globals all over the place.
 		 *
 		 * @since 1.0.0
+		 *
 		 * @return WPForms
 		 */
 		public static function instance() {
@@ -330,7 +344,10 @@ if ( class_exists( 'WPForms' ) ) {
 
 			if ( is_admin() ) {
 				new AM_Notification( WPFORMS_PLUGIN_SLUG, $this->version );
-				new AM_Deactivation_Survey( 'WPForms', basename( dirname( __FILE__ ) ) );
+
+				if ( $this->pro || ( ! $this->pro && ! file_exists( WP_PLUGIN_DIR . '/wpforms/wpforms.php' ) ) ) {
+					new AM_Deactivation_Survey( 'WPForms', basename( dirname( __FILE__ ) ) );
+				}
 			}
 
 			// Hook now that all of the WPForms stuff is loaded.

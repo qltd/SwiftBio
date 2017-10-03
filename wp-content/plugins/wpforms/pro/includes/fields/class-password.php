@@ -186,7 +186,7 @@ class WPForms_Field_Password extends WPForms_Field {
 				'slug'    => 'confirmation',
 				'value'   => isset( $field['confirmation'] ) ? '1' : '0',
 				'desc'    => __( 'Enable Password Confirmation', 'wpforms' ),
-				'tooltip' => __( 'Check this option ask the user to provide their password twice.', 'wpforms' ),
+				'tooltip' => __( 'Check this option to ask users to provide their password twice.', 'wpforms' ),
 			),
 			false
 		);
@@ -368,7 +368,7 @@ class WPForms_Field_Password extends WPForms_Field {
 
 		$form_id  = $form_data['id'];
 		$fields   = $form_data['fields'];
-		$required = apply_filters( 'wpforms_required_label', __( 'This field is required', 'wpforms' ) );
+		$required = apply_filters( 'wpforms_required_label', __( 'This field is required.', 'wpforms' ) );
 
 		// Standard configuration, confirmation disabled.
 		if ( empty( $fields[ $field_id ]['confirmation'] ) ) {

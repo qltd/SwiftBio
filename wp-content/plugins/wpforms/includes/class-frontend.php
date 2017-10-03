@@ -26,6 +26,7 @@ class WPForms_Frontend {
 	 * displaying pagebreak fields.
 	 *
 	 * @since 1.3.7
+	 *
 	 * @var array
 	 */
 	public $pages = false;
@@ -64,6 +65,7 @@ class WPForms_Frontend {
 	 * Primary function to render a form on the frontend.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param int $id
 	 * @param boolean $title
 	 * @param boolean $description
@@ -82,7 +84,7 @@ class WPForms_Frontend {
 		}
 
 		// Basic information.
-		$form_data   = wpforms_decode( $form->post_content, true );
+		$form_data   = wpforms_decode( $form->post_content );
 		$form_id     = absint( $form->ID );
 		$settings    = $form_data['settings'];
 		$action      = esc_url_raw( remove_query_arg( 'wpforms' ) );
@@ -186,6 +188,7 @@ class WPForms_Frontend {
 	 * Display form confirmation message.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $form_data
 	 */
 	function confirmation( $form_data ) {
@@ -197,7 +200,7 @@ class WPForms_Frontend {
 			return;
 		}
 
-		// Load confirmatiom specific asssets.
+		// Load confirmation specific assets.
 		$this->assets_confirmation();
 
 		$form_id  = absint( $form_data['id'] );
@@ -219,6 +222,7 @@ class WPForms_Frontend {
 	 * Form head area.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $form_data
 	 * @param null $deprecated Deprecated in v1.3.7, previously was $form object.
 	 * @param mixed $title
@@ -254,6 +258,7 @@ class WPForms_Frontend {
 	 * Form field area.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $form_data
 	 * @param null $deprecated Deprecated in v1.3.7, previously was $form object.
 	 * @param mixed $title
@@ -336,11 +341,13 @@ class WPForms_Frontend {
 
 	/**
 	 * Return base attributes for a specific field. This is deprecated and
-	 * exists for backwards-compatibility purposes. Use field proprties instead.
+	 * exists for backwards-compatibility purposes. Use field properties instead.
 	 *
 	 * @since 1.3.7
+	 *
 	 * @param array $field
 	 * @param array $form_data
+	 *
 	 * @return array
 	 */
 	public function get_field_attributes( $field, $form_data ) {
@@ -400,15 +407,17 @@ class WPForms_Frontend {
 	 * Return base properties for a specific field.
 	 *
 	 * @since 1.3.7
+	 *
 	 * @param array $field
 	 * @param array $form_data
 	 * @param array $attributes
+	 *
 	 * @return array
 	 */
 	function get_field_properties( $field, $form_data, $attributes = array() ) {
 
 		// This filter is for backwards compatibility purposes.
-		$types = array( 'text', 'textarea', 'number', 'email', 'hidden', 'url', 'html', 'divider', 'password', 'phone' );
+		$types = array( 'text', 'textarea', 'number', 'email', 'hidden', 'url', 'html', 'divider', 'password', 'phone', 'address' );
 		if ( in_array( $field['type'], $types, true ) ) {
 			$field = apply_filters( "wpforms_{$field['type']}_field_display", $field, $attributes, $form_data );
 		} elseif ( 'credit-card' === $field['type'] ) {
@@ -487,6 +496,7 @@ class WPForms_Frontend {
 	 * Display the opening container markup for each field.
 	 *
 	 * @since 1.3.7
+	 *
 	 * @param array $field
 	 * @param array $form_data
 	 */
@@ -505,6 +515,7 @@ class WPForms_Frontend {
 	 * Display the label for each field.
 	 *
 	 * @since 1.3.7
+	 *
 	 * @param array $field
 	 * @param array $form_data
 	 */
@@ -530,6 +541,7 @@ class WPForms_Frontend {
 	 * Display any errors for each field.
 	 *
 	 * @since 1.3.7
+	 *
 	 * @param array $field
 	 * @param array $form_data
 	 */
@@ -554,6 +566,7 @@ class WPForms_Frontend {
 	 * Display the description for each field.
 	 *
 	 * @since 1.3.7
+	 *
 	 * @param array $field
 	 * @param array $form_data
 	 */
@@ -589,6 +602,7 @@ class WPForms_Frontend {
 	 * Display the closing container markup for each field.
 	 *
 	 * @since 1.3.7
+	 *
 	 * @param array $field
 	 * @param array $form_data
 	 */
@@ -601,6 +615,7 @@ class WPForms_Frontend {
 	 * Anti-spam honeypot output if configured.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $form_data
 	 * @param null $deprecated Deprecated in v1.3.7, previously was $form object.
 	 * @param mixed $title
@@ -609,7 +624,10 @@ class WPForms_Frontend {
 	 */
 	public function honeypot( $form_data, $deprecated, $title, $description, $errors ) {
 
-		if ( empty( $form_data['settings']['honeypot'] ) || '1' != $form_data['settings']['honeypot'] ) {
+		if (
+			empty( $form_data['settings']['honeypot'] ) ||
+			'1' != $form_data['settings']['honeypot']
+		) {
 			return;
 		}
 
@@ -628,6 +646,7 @@ class WPForms_Frontend {
 	 * Google reCAPTCHA output if configured.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $form_data
 	 * @param null $deprecated Deprecated in v1.3.7, previously was $form object.
 	 * @param mixed $title
@@ -644,7 +663,10 @@ class WPForms_Frontend {
 		}
 
 		// Check that the recaptcha is configured for the specific form.
-		if ( ! isset( $form_data['settings']['recaptcha'] ) || '1' != $form_data['settings']['recaptcha'] ) {
+		if (
+			! isset( $form_data['settings']['recaptcha'] ) ||
+			'1' != $form_data['settings']['recaptcha']
+		) {
 			return;
 		}
 
@@ -675,9 +697,10 @@ class WPForms_Frontend {
 	}
 
 	/**
-	 * Form footer arera.
+	 * Form footer area.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $form_data
 	 * @param null $deprecated Deprecated in v1.3.7, previously was $form object.
 	 * @param mixed $title
@@ -735,10 +758,11 @@ class WPForms_Frontend {
 	}
 
 	/**
-	 * Determine if we should load assets globally. If false assets will
-	 * load conditionally (default).
+	 * Determine if we should load assets globally.
+	 * If false assets will load conditionally (default).
 	 *
 	 * @since 1.2.4
+	 *
 	 * @return bool
 	 */
 	public function assets_global() {
@@ -778,20 +802,23 @@ class WPForms_Frontend {
 		do_action( 'wpforms_frontend_css', $this->forms );
 
 		// jQuery date/time library CSS.
-		if ( $this->assets_global() || true == wpforms_has_field_type( 'date-time', $this->forms, true ) ) :
-		wp_enqueue_style(
-			'wpforms-jquery-timepicker',
-			WPFORMS_PLUGIN_URL . 'assets/css/jquery.timepicker.css',
-			array(),
-			'1.11.5'
-		);
-		wp_enqueue_style(
-			'wpforms-flatpickr',
-			WPFORMS_PLUGIN_URL . 'assets/css/flatpickr.min.css',
-			array(),
-			'2.3.4'
-		);
-		endif;
+		if (
+			$this->assets_global() ||
+			true === wpforms_has_field_type( 'date-time', $this->forms, true )
+		) {
+			wp_enqueue_style(
+				'wpforms-jquery-timepicker',
+				WPFORMS_PLUGIN_URL . 'assets/css/jquery.timepicker.css',
+				array(),
+				'1.11.5'
+			);
+			wp_enqueue_style(
+				'wpforms-flatpickr',
+				WPFORMS_PLUGIN_URL . 'assets/css/flatpickr.min.css',
+				array(),
+				'2.3.4'
+			);
+		}
 
 		// Load CSS per global setting.
 		if ( wpforms_setting( 'disable-css', '1' ) == '1' ) {
@@ -831,44 +858,53 @@ class WPForms_Frontend {
 		);
 
 		// Load jQuery date/time libraries.
-		if ( $this->assets_global() || true == wpforms_has_field_type( 'date-time', $this->forms, true ) ) :
-		wp_enqueue_script(
-			'wpforms-flatpickr',
-			WPFORMS_PLUGIN_URL . 'assets/js/flatpickr.min.js',
-			array( 'jquery' ),
-			'2.0.5',
-			true
-		);
-		wp_enqueue_script(
-			'wpforms-jquery-timepicker',
-			WPFORMS_PLUGIN_URL . 'assets/js/jquery.timepicker.min.js',
-			array( 'jquery' ),
-			'1.11.5',
-			true
-		);
-		endif;
+		if (
+			$this->assets_global() ||
+			true === wpforms_has_field_type( 'date-time', $this->forms, true )
+		) {
+			wp_enqueue_script(
+				'wpforms-flatpickr',
+				WPFORMS_PLUGIN_URL . 'assets/js/flatpickr.min.js',
+				array( 'jquery' ),
+				'2.0.5',
+				true
+			);
+			wp_enqueue_script(
+				'wpforms-jquery-timepicker',
+				WPFORMS_PLUGIN_URL . 'assets/js/jquery.timepicker.min.js',
+				array( 'jquery' ),
+				'1.11.5',
+				true
+			);
+		}
 
 		// Load jQuery input mask library - https://github.com/RobinHerbots/jquery.inputmask.
-		if ( $this->assets_global() || true == wpforms_has_field_type( array( 'phone', 'address' ), $this->forms, true ) ) :
-		wp_enqueue_script(
-			'wpforms-maskedinput',
-			WPFORMS_PLUGIN_URL . 'assets/js/jquery.inputmask.bundle.min.js',
-			array( 'jquery' ),
-			'3.2.8',
-			true
-		);
-		endif;
+		if (
+			$this->assets_global() ||
+			true === wpforms_has_field_type( array( 'phone', 'address' ), $this->forms, true )
+		) {
+			wp_enqueue_script(
+				'wpforms-maskedinput',
+				WPFORMS_PLUGIN_URL . 'assets/js/jquery.inputmask.bundle.min.js',
+				array( 'jquery' ),
+				'3.2.8',
+				true
+			);
+		}
 
 		// Load CC payment library - https://github.com/stripe/jquery.payment/.
-		if ( $this->assets_global() || true == wpforms_has_field_type( 'credit-card', $this->forms, true ) ) :
-		wp_enqueue_script(
-			'wpforms-payment',
-			WPFORMS_PLUGIN_URL . 'assets/js/jquery.payment.min.js',
-			array( 'jquery' ),
-			WPFORMS_VERSION,
-			true
-		);
-		endif;
+		if (
+			$this->assets_global() ||
+			true === wpforms_has_field_type( 'credit-card', $this->forms, true )
+		) {
+			wp_enqueue_script(
+				'wpforms-payment',
+				WPFORMS_PLUGIN_URL . 'assets/js/jquery.payment.min.js',
+				array( 'jquery' ),
+				WPFORMS_VERSION,
+				true
+			);
+		}
 
 		// Load base JS.
 		wp_enqueue_script(
@@ -960,7 +996,7 @@ class WPForms_Frontend {
 			return;
 		}
 
-		// Below we do our own implentation of wp_localize_script in an effort
+		// Below we do our own implementation of wp_localize_script in an effort
 		// to be better compatible with caching plugins which were causing
 		// conflicts.
 
@@ -1010,8 +1046,10 @@ class WPForms_Frontend {
 	 * Shortcode wrapper for the outputting a form.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $atts
-	 * @return array
+	 *
+	 * @return string
 	 */
 	public function shortcode( $atts ) {
 
@@ -1021,12 +1059,38 @@ class WPForms_Frontend {
 			'description' => false,
 		), $atts, 'output' );
 
+		// We need to stop shortcode processing in case we are on AMP page.
+		if ( wpforms_is_amp() ) {
+			$post_id = get_the_ID();
+
+			// Display our custom link to non-AMP only if we are on single post/page.
+			if ( ! empty( $post_id ) && ! empty( $atts['id'] ) ) {
+				/*
+				 * We need this get param as one of the most popular ampforwp plugin has feature
+				 * for mobile users being force-redirected to AMP version of a site.
+				 * This `nonamp` GET param will ensure they will get to the actual page.
+				 * Other plugins will ignore it.
+				 */
+				$link = trailingslashit( get_permalink( $post_id ) ) . '?nonamp=1#wpforms-' . absint( $atts['id'] );
+				$text = apply_filters(
+					'wpforms_frontend_shortcode_amp_text',
+					sprintf(
+						__( '<a href="%s">Go to the full page</a> to view and submit the form.', 'wpforms' ),
+						$link
+					)
+				);
+
+				return '<p class="wpforms-shortcode-amp-text">' . $text . '</p>';
+			}
+
+			// In case we are not on a post/page - return early with empty output.
+			return '';
+		}
+
 		ob_start();
 
 		$this->output( $atts['id'], $atts['title'], $atts['description'] );
 
-		$output = ob_get_clean();
-
-		return $output;
+		return ob_get_clean();
 	}
 }

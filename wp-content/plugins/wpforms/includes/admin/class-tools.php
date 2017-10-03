@@ -70,7 +70,7 @@ class WPForms_Tools {
 			add_action( 'wpforms_tools_init', array( $this, 'import_export_process' ) );
 			add_action( 'wpforms_admin_page', array( $this, 'output'                ) );
 
-			// Hook for add-ons.
+			// Hook for addons.
 			do_action( 'wpforms_tools_init' );
 		}
 	}
@@ -94,7 +94,11 @@ class WPForms_Tools {
 
 			<?php
 			if ( isset( $_GET['wpforms_notice'] ) && 'forms-imported' === $_GET['wpforms_notice'] ) {
-				printf( '<div class="updated notice is-dismissible"><p>%s</p></div>', __( 'Form(s) imported', 'wpforms' ) );
+				?>
+				<div class="updated notice is-dismissible">
+					<p><?php printf( __( 'Import was successfully finished. You can go and <a href="%s">check your forms</a>.', 'wpforms' ), admin_url( 'admin.php?page=wpforms-overview' ) ); ?></p>
+				</div>
+				<?php
 			}
 			?>
 

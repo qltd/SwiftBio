@@ -72,7 +72,7 @@ class WPForms_Updater {
 	 * @var bool|string
 	 */
 	public $key = false;
-	
+
 	/**
 	 * Holds the update data returned from the API.
 	 *
@@ -81,7 +81,7 @@ class WPForms_Updater {
 	 * @var bool|object
 	 */
 	public $update = false;
-	
+
 	/**
 	 * Holds the plugin info details for the update.
 	 *
@@ -174,14 +174,7 @@ class WPForms_Updater {
 	 * @return array $args Amended array of request args.
 	 */
 	public function http_request_args( $args, $url ) {
-
-		// If this is an SSL request and we are performing an upgrade routine, disable SSL verification.
-		if ( strpos( $url, 'https://' ) !== false && strpos( $url, 'tgm-updater-action=get-plugin-update' ) ) {
-			$args['sslverify'] = false;
-		}
-
 		return $args;
-
 	}
 
 	/**
@@ -285,7 +278,6 @@ class WPForms_Updater {
 		$post = array(
 			'headers'   => $headers,
 			'body'      => $body,
-			'sslverify' => false,
 		);
 
 		// Perform the query and retrieve the response.

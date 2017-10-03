@@ -55,7 +55,7 @@ class WPForms_Settings {
 			add_action( 'wpforms_admin_settings_after',  array( $this, 'captcha_addon_notice' ) );
 			add_action( 'wpforms_admin_page',            array( $this, 'output'               ) );
 
-			// Hook for add-ons.
+			// Hook for addons.
 			do_action( 'wpforms_settings_init' );
 		}
 	}
@@ -139,7 +139,7 @@ class WPForms_Settings {
 		// Save settings.
 		update_option( 'wpforms_settings', $settings );
 
-		WPForms_Admin_Notice::success( __( 'Settings saved.', 'wpforms' ) );
+		WPForms_Admin_Notice::success( __( 'Settings were successfully saved.', 'wpforms' ) );
 	}
 
 	/**
@@ -149,7 +149,7 @@ class WPForms_Settings {
 	 */
 	public function enqueues() {
 
-		// Hook for add-ons.
+		// Hook for addons.
 		do_action( 'wpforms_settings_enqueue' );
 	}
 
@@ -221,18 +221,18 @@ class WPForms_Settings {
 	 */
 	public function get_registered_settings( $view = '' ) {
 
-		// reCAPTCAH heading description is long so we define it seperately.
+		// reCAPTCAH heading description is long so we define it separately.
 		$recaptcha_desc  = '<p>' . __( 'reCAPTCHA is a free anti-spam service from Google which helps to protect your website from spam and abuse while letting real people pass through with ease.', 'wpforms' ) . '</p>';
 		$recaptcha_desc .= '<p>' . __( 'Google\'s original <a href="https://www.google.com/recaptcha/intro/" target="_blank" rel="noopener noreferrer">v2 reCAPTCHA</a> prompts users to check a box to prove they\'re human, whereas <a href="https://www.google.com/recaptcha/intro/invisible.html" target="_blank" rel="noopener noreferrer">Invisible reCAPTCHA</a> uses advanced technology to detect real users without requiring any input.', 'wpforms' ) . '</p>';
 		$recaptcha_desc .= '<p>' . __( 'Sites already using v2 reCAPTCHA will need to create new site keys before switching to the Invisible reCAPTCHA.', 'wpforms' ) . '</p>';
-		$recaptcha_desc .= '<p>' . __( '<a href="https://wpforms.com/docs/setup-captcha-wpforms/" rel="noopener noreferrer" target="_blank">Read our walk through</a> to learn more and for step-by-step directions.', 'wpforms' ) . '</p>';
+		$recaptcha_desc .= '<p>' . sprintf( __( '<a href="%s" rel="noopener noreferrer" target="_blank">Read our walk through</a> to learn more and for step-by-step directions.', 'wpforms' ), 'https://wpforms.com/docs/setup-captcha-wpforms/' ) . '</p>';
 
 		$defaults = array(
 			// General Settings tab.
 			'general' => array(
 				'license-heading' => array(
 					'id'       => 'license-heading',
-					'content'  => '<h4>' . __( 'License', 'wpforms' ) . '</h4><p>' . __( 'Your license key provides access to updates and Add-ons', 'wpforms' ) . '</p>',
+					'content'  => '<h4>' . __( 'License', 'wpforms' ) . '</h4><p>' . __( 'Your license key provides access to updates and addons.', 'wpforms' ) . '</p>',
 					'type'     => 'content',
 					'no_label' => true,
 					'class'    => array( 'section-heading' ),

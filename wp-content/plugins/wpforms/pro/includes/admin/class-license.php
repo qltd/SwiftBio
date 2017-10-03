@@ -197,7 +197,7 @@ class WPForms_License {
 			$option['is_invalid']  = true;
 			update_option( 'wpforms_license', $option );
 			if ( $ajax ) {
-				wp_send_json_error( __( '	Your license key for WPForms is invalid. The key no longer exists or the user associated with the key has been deleted. Please use a different key to continue receiving automatic updates.', 'wpforms' ) );
+				wp_send_json_error( __( 'Your license key for WPForms is invalid. The key no longer exists or the user associated with the key has been deleted. Please use a different key to continue receiving automatic updates.', 'wpforms' ) );
 			}
 			return;
 		}
@@ -460,7 +460,6 @@ class WPForms_License {
 		$post = array(
 			'headers'   => $headers,
 			'body'      => $body,
-			'sslverify' => false,
 		);
 
 		// Perform the query and retrieve the response.

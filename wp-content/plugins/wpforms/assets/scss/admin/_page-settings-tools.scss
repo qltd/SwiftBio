@@ -1,0 +1,468 @@
+// Settings - admin.php?page=wpforms-settings
+// Tools - admin.php?page=wpforms-tools
+.wpforms-admin-settings {
+
+	*,
+	*::before,
+	*::after {
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+
+	// Setting rows, eg field row.
+	.wpforms-setting-row {
+		border-bottom: 1px solid #e4e4e4;
+		padding: 30px 0;
+		font-size: 14px;
+		line-height: 1.3;
+
+		&:first-of-type {
+			padding-top: 10px !important;
+		}
+
+		@include media("<tablet") {
+			padding: 20px 0;
+		}
+
+		// Section heading.
+		&.section-heading {
+			padding: 20px 0;
+
+			&.no-desc {
+				h4 {
+					margin: 0;
+				}
+			}
+
+			.wpforms-setting-field {
+				margin: 0;
+				max-width: 1000px;
+			}
+		}
+
+		// Tools full width fields.
+		&.tools {
+
+			p,
+			p:first-of-type{
+				margin: 0 0 16px 0;
+			}
+		}
+
+		// Checkbox settings field.
+		&.wpforms-setting-row-checkbox {
+
+			input[type=checkbox] {
+				float: left;
+				margin: 1px 0 0 0;
+			}
+
+			.desc {
+				margin: 0 0 0 30px;
+			}
+		}
+
+		// License settings field.
+		&.wpforms-setting-row-license {
+
+			.wpforms-setting-label {
+				padding-top: 8px;
+			}
+
+			p.type {
+				margin-top: 12px;
+			}
+		}
+
+		// Text settings field.
+		&.wpforms-setting-row-text {
+
+			.wpforms-setting-label {
+				padding-top: 8px;
+			}
+		}
+
+		// Select settings field.
+		&.wpforms-setting-row-select {
+
+			.wpforms-setting-label {
+				padding-top: 8px;
+			}
+		}
+
+		// Radio settings field.
+		&.wpforms-setting-row-radio {
+
+			.wpforms-setting-field {
+
+				input[type=radio] {
+					margin: -3px 10px 0 0;
+				}
+
+				label {
+					margin-right: 30px;
+					display: inline-block;
+				}
+			}
+
+		}
+
+		// Email Template setting field.
+		&#wpforms-setting-row-email-template {
+
+			.wpforms-setting-field {
+
+				label:before {
+					content: " ";
+					display: block;
+					width: 155px;
+					height: 180px;
+					margin: 0 0 10px 0;
+				}
+
+				.option-default:before {
+					background: url(../images/settings-email-html.png) center center;
+				}
+
+				.option-none:before {
+					background: url(../images/settings-email-plaintext.png) center center;
+				}
+			}
+		}
+
+		// Radio settings field.
+		&.wpforms-setting-row-image {
+
+			.wpforms-setting-field {
+
+				img {
+					display: block;
+					margin: 0 0 20px 0;
+					max-width: 400px;
+				}
+			}
+		}
+
+		// Color picker settings field.
+		&.wpforms-setting-row-color {
+
+			.wpforms-color-picker {
+				padding-left: 40px;
+			}
+
+			.minicolors-input-swatch {
+				top: 7px;
+				left: 7px;
+				height: 21px;
+				width: 21px;
+				border-radius: 2px;
+			}
+		}
+
+		// General elements.
+		h4 {
+			font-size: 20px;
+			font-weight: 700;
+			margin: 0 0 6px 0;
+		}
+
+		h3 {
+			font-size: 24px;
+			font-weight: 600;
+			margin: 0 0 20px 0;
+		}
+
+		p {
+			margin: 12px 0 0;
+			font-size: 14px;
+			line-height: 1.3;
+
+			&:first-of-type {
+				margin: 8px 0 0;
+			}
+
+			&.desc {
+				font-style: italic;
+				color: #666;
+			}
+		}
+
+		// Form elements.
+		input[type=text],
+		input[type=password] {
+			background-color: #fff;
+			border: 1px solid #ddd;
+			border-radius: 3px;
+			box-shadow: none;
+			color: #333;
+			display: inline-block;
+			vertical-align: middle;
+			padding: 7px 12px;
+			margin: 0 10px 0 0;
+			width: 400px;
+			min-height: 35px;
+
+			@include media("<desktop") {
+				width: 300px;
+			}
+
+			&:focus {
+				border-color: #bbb;
+			}
+		}
+
+		textarea {
+
+		}
+
+		button {
+			margin-right: 10px;
+		}
+
+		.choicesjs-select-wrap {
+			display: block;
+			max-width: 400px;
+
+			@include media("<desktop") {
+				width: 300px;
+			}
+		}
+	}
+
+	// Row label (left).
+	.wpforms-setting-label {
+		display: block;
+		float: left;
+		width: 200px;
+		padding: 0;
+
+		@include media("<tablet") {
+			float: none;
+			width: 100%;
+			padding-bottom: 15px;
+		}
+
+		label {
+			display: block;
+			font-weight: 600;
+		}
+	}
+
+	// Row field (right).
+	.wpforms-setting-field {
+		display: block;
+		margin: 0 0 0 200px;
+		max-width: 800px;
+
+		@include media("<tablet") {
+			margin: 0;
+		}
+	}
+
+	p.submit {
+		margin: 0;
+		padding: 25px 0;
+	}
+
+	// Custom Captcha addon notice.
+	.captcha-addon-notice {
+		background-color: #fff;
+		border: 1px solid $orange;
+		border-radius: 3px;
+		padding: 30px;
+		max-width: 1000px;
+		margin: 20px 0 0 0;
+
+		img {
+			float: left;
+			max-width: 90px;
+		}
+
+		h5 {
+			margin: 0 0 10px 120px;
+			font-size: 18px;
+		}
+
+		p {
+			margin: 0 0 0 120px;
+			font-size: 14px;
+			line-height: 1.3;
+		}
+	}
+
+	// Generic info/code information.
+	.info-area {
+		display: block;
+		width: 100%;
+		max-width: 1000px;
+		height: 450px;
+		font-family: Menlo,Monaco,monospace;
+		font-size: 12px;
+		background: #fff;
+		box-shadow: none;
+		border: 1px solid #ddd;
+		white-space: pre;
+		overflow: auto;
+		padding: 20px;
+	}
+
+	// Integrations tab content.
+	// Legacy CSS and should be cleaned up when time permits.
+	#wpforms-settings-providers {
+
+		.wpforms-settings-provider {
+			border-bottom: 1px solid #ddd;
+			padding: 30px 0;
+
+			&.focus-out {
+				opacity: 0.4;
+			}
+		}
+
+		.wpforms-settings-provider-header {
+			cursor: pointer;
+			max-width: 1000px;
+		}
+
+		.wpforms-settings-provider-logo {
+			float: left;
+			position: relative;
+
+			.fa {
+				position: absolute;
+				top: 50%;
+				margin: -9px 0 0 0;
+				left: 10px;
+				color: #666;
+				font-size: 18px;
+			}
+
+			img {
+				border: 1px solid #ddd;
+				max-width: 90px;
+				display: block;
+				margin: 0 0 0 40px;
+			}
+		}
+
+		.wpforms-settings-provider-info {
+			margin: 0 0 0 160px;
+			position: relative;
+			padding: 20px 0 0;
+
+			h3 {
+				margin: 0 0 10px 0;
+				font-size: 20px;
+				font-weight: 600;
+			}
+
+			p {
+				margin: 0;
+				font-size: 14px;
+			}
+
+			.connected-indicator {
+				color: #83c11f;
+				width: 135px;
+				border: 1px solid #83c11f;
+				border-radius: 4px;
+				padding: 8px 14px;
+				font-size: 16px;
+				position: absolute;
+				top: 28px;
+				right: 0;
+				display: none;
+			}
+		}
+
+		.connected .wpforms-settings-provider-info .connected-indicator {
+			display: block;
+		}
+
+		.wpforms-settings-provider-accounts {
+			margin: 0 0 0 160px;
+			display: none;
+			max-width: 840px;
+		}
+
+		.focus-in .wpforms-settings-provider-accounts {
+			display: block;
+		}
+
+		.wpforms-settings-provider-accounts-list ul {
+			padding: 0;
+			margin: 0;
+
+			li {
+				border-bottom: 1px solid #ddd;
+				margin: 0;
+				padding: 10px 0;
+				font-size: 14px;
+
+				&:first-of-type {
+					border-top: 1px solid #ddd;
+				}
+
+				&:last-of-type {
+					margin-bottom: 16px;
+				}
+			}
+
+			span.label {
+				float: left;
+				width: 50%;
+			}
+
+			span.date {
+				color: #999;
+				float: left;
+				width: 35%;
+			}
+
+			span.remove {
+				float: right;
+				width: 15%;
+				text-align: right
+			}
+		}
+
+		.wpforms-settings-provider-accounts-connect {
+			display: none;
+			padding: 20px;
+			background-color: $lightBlue;
+			border: 1px solid $blue;
+
+			input[type=text] {
+				background-color: #fff;
+				border: 1px solid #ddd;
+				border-radius: 3px;
+				box-shadow: none;
+				color: #333;
+				display: block;
+				padding: 7px 12px;
+				margin: 5px 0;
+				width: 400px;
+				min-height: 35px;
+
+				&:focus {
+					border-color: #bbb;
+				}
+			}
+		}
+
+		.focus-in .wpforms-settings-provider-accounts-connect  {
+			display: block;
+		}
+
+		.wpforms-settings-provider-accounts-connect .fa {
+			display: none;
+		}
+
+		.wpforms-settings-provider-accounts-connect p,
+		.wpforms-settings-provider-accounts p {
+			margin: 0 0 15px 0;
+			font-size: 14px;
+		}
+	}
+}

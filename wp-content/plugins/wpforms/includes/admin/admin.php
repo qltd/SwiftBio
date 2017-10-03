@@ -111,8 +111,9 @@ function wpforms_admin_scripts() {
 		false
 	);
 
-	$dir    = ( defined( 'WPFORMS_DEVELOPMENT' ) && WPFORMS_DEVELOPMENT ) ? '/src' : '';
-	$suffix = ( defined( 'WPFORMS_DEVELOPMENT' ) && WPFORMS_DEVELOPMENT ) ? '' : '.min';
+	// TODO: we should use wpforms_get_min_suffix() here.
+	$dir    = wpforms_debug() ? '/src' : '';
+	$suffix = wpforms_debug() ? '' : '.min';
 
 	// Main admin script.
 	wp_enqueue_script(
@@ -345,10 +346,10 @@ function wpforms_check_php_version() {
 	// Display the notice, finally.
 	WPForms_Admin_Notice::error(
 		'<p>' .
+		/* translators: %1$s - WPForms plugin name; %2$s - opening a link tag; %3$s - closing a link tag. */
 		sprintf(
-			_x(
+			__(
 				'Your site is running an outdated version of PHP that is no longer supported and may cause issues with %1$s. %2$sRead more%3$s for additional information.',
-				'translators: %1$s - WPForms plugin name; %2$s - opening a link tag; %3$s - closing a link tag.',
 				'wpforms'
 			),
 			'<strong>WPForms</strong>',

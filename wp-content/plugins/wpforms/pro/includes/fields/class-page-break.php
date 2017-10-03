@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pagebreak field.
  *
@@ -10,6 +11,9 @@
  */
 class WPForms_Field_Page_Break extends WPForms_Field {
 
+	/** @var bool|array */
+	protected $pagebreak;
+
 	/**
 	 * Primary class constructor.
 	 *
@@ -18,11 +22,11 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 	public function init() {
 
 		// Define field type information.
-		$this->name     = __( 'Page Break', 'wpforms' );
-		$this->type     = 'pagebreak';
-		$this->icon     = 'fa-files-o';
-		$this->order    = 17;
-		$this->group    = 'fancy';
+		$this->name  = __( 'Page Break', 'wpforms' );
+		$this->type  = 'pagebreak';
+		$this->icon  = 'fa-files-o';
+		$this->order = 17;
+		$this->group = 'fancy';
 
 		add_filter( 'wpforms_field_preview_class',   array( $this, 'preview_field_class'    ), 10, 2 );
 		add_filter( 'wpforms_field_new_class',       array( $this, 'preview_field_class'    ), 10, 2 );
@@ -36,8 +40,10 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 	 * Adds class to the builder field preview.
 	 *
 	 * @since 1.2.0
-	 * @param sting $css
+	 *
+	 * @param string $css
 	 * @param array $field
+	 *
 	 * @return string
 	 */
 	public function preview_field_class( $css, $field ) {
@@ -62,6 +68,7 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 	 * This function was moved from class-frontend.php in v1.3.7.
 	 *
 	 * @since 1.2.1
+	 *
 	 * @param array $form_data
 	 */
 	public function display_page_indicator( $form_data ) {
@@ -124,8 +131,6 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 			$width = 100 / ( count( $pagebreak['pages'] ) ) . '%';
 			$prog  = 'style="width:' . $width . ';background-color:' . $pagebreak['color'] . ';"';
 			$names = '';
-			$step  = __( 'Step', 'wpforms' );
-			$of    = __( 'of', 'wpforms' );
 
 			foreach ( $pagebreak['pages'] as $page ) {
 				if ( ! empty( $page['title'] ) ) {
@@ -135,7 +140,13 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 			}
 			printf( '<span class="wpforms-page-indicator-page-title" %s>%s</span>', $names, $p1 );
 			printf( '<span class="wpforms-page-indicator-page-title-sep" %s> - </span>', $sep );
-			printf( '<span class="wpforms-page-indicator-steps">%s <span class="wpforms-page-indicator-steps-current">1</span> %s %d</span>', $step, $of, count( $pagebreak['pages'] ) );
+			printf(
+				/* translators: %1$s - current step in multi-page form; %2$d - total number of pages. */
+				'<span class="wpforms-page-indicator-steps">' . __( 'Step %1$s of %2$d' , 'wpforms' ) . '</span>',
+				'<span class="wpforms-page-indicator-steps-current">1</span>',
+				count( $pagebreak['pages'] )
+			);
+
 			printf( '<div class="wpforms-page-indicator-page-progress-wrap"><div class="wpforms-page-indicator-page-progress" %s></div></div>', $prog );
 		} // End if().
 
@@ -148,6 +159,7 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 	 * Display frontend markup for the beginning of the first pagebreak.
 	 *
 	 * @since 1.3.7
+	 *
 	 * @param array $form_data
 	 */
 	public function display_fields_before( $form_data ) {
@@ -168,6 +180,7 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 	 * Display frontend markup for the end of the last pagebreak.
 	 *
 	 * @since 1.3.7
+	 *
 	 * @param array $form_data
 	 */
 	public function display_fields_after( $form_data ) {
@@ -203,6 +216,7 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 	 * Display frontend markup to end current page and begin the next.
 	 *
 	 * @since 1.3.7
+	 *
 	 * @param array $field
 	 * @param array $form_data
 	 */
@@ -215,9 +229,9 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 
 			if ( ( empty( $field['position'] ) || 'top' !== $field['position'] ) && $current !== $total ) {
 
-				$next    = $current + 1;
-				$last    = $next === $total ? 'last' : '';
-				$css     = ! empty( $field['css'] ) ? $field['css'] : '';
+				$next = $current + 1;
+				$last = $next === $total ? 'last' : '';
+				$css  = ! empty( $field['css'] ) ? $field['css'] : '';
 
 				printf(
 					'</div><div class="wpforms-page wpforms-page-%s %s %s" style="display:none;">',
@@ -236,6 +250,7 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 	 * Field options panel inside the builder.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $field
 	 */
 	public function field_options( $field ) {
@@ -244,24 +259,22 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 		$position_class = ! empty( $field['position'] ) ? 'wpforms-pagebreak-' . $position : '';
 
 		// Hidden field indicating the position.
-		$args = array(
+		$this->field_element( 'text', $field, array(
 			'type'  => 'hidden',
 			'slug'  => 'position',
 			'value' => $position,
 			'class' => 'position',
-		);
-		$this->field_element( 'text', $field, $args );
+		) );
 
 		// -------------------------------------------------------------------//
 		// Basic field options.
 		// -------------------------------------------------------------------//
 
 		// Options open markup.
-		$args = array(
+		$this->field_option( 'basic-options', $field, array(
 			'markup' => 'open',
 			'class'  => $position_class,
-		);
-		$this->field_option( 'basic-options', $field, $args );
+		) );
 
 		// Options specific to the top pagebreak.
 		if ( 'top' === $position ) {
@@ -293,11 +306,10 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 				),
 				false
 			);
-			$args = array(
+			$this->field_element( 'row', $field, array(
 				'slug'    => 'indicator',
 				'content' => $lbl . $fld,
-			);
-			$this->field_element( 'row', $field, $args );
+			) );
 
 			// Indicator color picker.
 			$lbl = $this->field_element(
@@ -320,12 +332,11 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 				),
 				false
 			);
-			$args = array(
+			$this->field_element( 'row', $field, array(
 				'slug'    => 'indicator_color',
 				'content' => $lbl . $fld,
 				'class'   => 'color-picker-row',
-			);
-			$this->field_element( 'row', $field, $args );
+			) );
 		} // End if().
 
 		// Page Title, don't display for bottom pagebreaks.
@@ -349,11 +360,10 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 				),
 				false
 			);
-			$args = array(
+			$this->field_element( 'row', $field, array(
 				'slug'    => 'title',
 				'content' => $lbl . $fld,
-			);
-			$this->field_element( 'row', $field, $args );
+			) );
 		}
 
 		// Next label.
@@ -377,17 +387,16 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 				),
 				false
 			);
-			$args = array(
+			$this->field_element( 'row', $field, array(
 				'slug'    => 'next',
 				'content' => $lbl . $fld,
-			);
-			$this->field_element( 'row', $field, $args );
+			) );
 		}
 
 		// Options not available to top pagebreaks.
 		if ( 'top' !== $position ) {
 
-			// Previus button toggle.
+			// Previous button toggle.
 			$lbl  = $this->field_element(
 				'label',
 				$field,
@@ -407,13 +416,12 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 				),
 				false
 			);
-			$args = array(
+			$this->field_element( 'row', $field, array(
 				'slug'    => 'prev_toggle',
 				'content' => $lbl . $fld,
-			);
-			$this->field_element( 'row', $field, $args );
+			) );
 
-			// Previus button label.
+			// Previous button label.
 			$lbl = $this->field_element(
 				'label',
 				$field,
@@ -421,7 +429,7 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 					'slug'    => 'prev',
 					'value'   => __( 'Previous Label', 'wpforms' ),
 					'tooltip' => __( 'Enter text for Previous page navigation button.', 'wpforms' ),
-					),
+				),
 				false
 			);
 			$fld = $this->field_element(
@@ -433,19 +441,17 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 				),
 				false
 			);
-			$args = array(
+			$this->field_element( 'row', $field, array(
 				'slug'    => 'prev',
 				'content' => $lbl . $fld,
 				'class'   => empty( $field['prev_toggle'] ) ? 'wpforms-hidden' : '',
-			);
-			$this->field_element( 'row', $field, $args );
+			) );
 		} // End if().
 
 		// Options close markup.
-		$args = array(
+		$this->field_option( 'basic-options', $field, array(
 			'markup' => 'close',
-		);
-		$this->field_option( 'basic-options', $field, $args );
+		) );
 
 		// -------------------------------------------------------------------//
 		// Advanced field options.
@@ -455,11 +461,10 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 		if ( 'bottom' !== $position ) {
 
 			// Options open markup.
-			$args = array(
+			$this->field_option( 'advanced-options', $field, array(
 				'markup' => 'open',
 				'class'  => $position_class,
-			);
-			$this->field_option( 'advanced-options', $field, $args );
+			) );
 
 			// Navigation alignment, only available to the top.
 			if ( 'top' === $position ) {
@@ -487,21 +492,19 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 					),
 					false
 				);
-				$args = array(
+				$this->field_element( 'row', $field, array(
 					'slug'    => 'nav_align',
 					'content' => $lbl . $fld,
-				);
-				$this->field_element( 'row', $field, $args );
+				) );
 			}
 
 			// Custom CSS classes.
 			$this->field_option( 'css', $field );
 
 			// Options close markup.
-			$args = array(
+			$this->field_option( 'advanced-options', $field, array(
 				'markup' => 'close',
-			);
-			$this->field_option( 'advanced-options', $field, $args );
+			) );
 		} // End if().
 	}
 
@@ -509,6 +512,7 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 	 * Field preview inside the builder.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $field
 	 */
 	public function field_preview( $field ) {
@@ -525,10 +529,9 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 
 		if ( 'top' !== $position ) {
 			if ( empty( $this->form_data ) ) {
-				$args = array(
+				$this->form_data = wpforms()->form->get( $this->form_id, array(
 					'content_only' => true,
-				);
-				$this->form_data = wpforms()->form->get( $this->form_id, $args );
+				) );
 			}
 
 			if ( empty( $this->pagebreak ) ) {
@@ -572,6 +575,7 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 	 * Field display on the form front-end.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $field
 	 * @param array $field_atts
 	 * @param array $form_data
@@ -623,6 +627,7 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 	 * Formats field.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param int $field_id
 	 * @param array $field_submit
 	 * @param array $form_data
@@ -630,4 +635,5 @@ class WPForms_Field_Page_Break extends WPForms_Field {
 	public function format( $field_id, $field_submit, $form_data ) {
 	}
 }
+
 new WPForms_Field_Page_Break;

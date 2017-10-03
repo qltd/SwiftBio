@@ -482,7 +482,7 @@ class WPForms_Field_Name extends WPForms_Field {
 
 			$form_id  = $form_data['id'];
 			$format   = $form_data['fields'][ $field_id ]['format'];
-			$required = apply_filters( 'wpforms_required_label', __( 'This field is required', 'wpforms' ) );
+			$required = apply_filters( 'wpforms_required_label', __( 'This field is required.', 'wpforms' ) );
 
 			if ( 'simple' === $format && empty( $field_submit ) ) {
 				wpforms()->process->errors[ $form_id ][ $field_id ] = $required;

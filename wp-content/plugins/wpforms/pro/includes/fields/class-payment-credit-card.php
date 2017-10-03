@@ -316,11 +316,11 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 				<div class="wpforms-credit-card-expiration">
 					<label class="wpforms-sub-label"><?php esc_html_e( 'Expiration', 'wpforms' ); ?></label>
 					<div class="wpforms-credit-card-cardmonth">
-						<select disabled><option><?php esc_html_e( 'MM', 'wpforms' ); ?></option></select>
+						<select disabled><option>MM</option></select>
 					</div>
 					<span>/</span>
 					<div class="wpforms-credit-card-cardyear">
-						<select disabled><option><?php esc_html_e( 'YY', 'wpforms' ); ?></option></select>
+						<select disabled><option>YY</option></select>
 					</div>
 				</div>
 			</div>
@@ -406,8 +406,8 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 					wpforms_html_attributes( $month['id'], $month['class'], $month['data'], $month['attr'] ),
 					$month['required']
 				);
-				echo '<option class="placeholder" selected disabled>' . __( 'MM', 'wpforms' ) . '</option>';
-				foreach( range(1, 12) as $number ) {
+				echo '<option class="placeholder" selected disabled>MM</option>';
+				foreach ( range( 1, 12 ) as $number ) {
 					printf( '<option value="%d">%d</option>', $number, $number );
 				}
 				echo '</select>';
@@ -423,8 +423,8 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 					wpforms_html_attributes( $year['id'], $year['class'], $year['data'], $year['attr'] ),
 					$year['required']
 				);
-				echo '<option class="placeholder" selected disabled>' . __( 'YY', 'wpforms' ) . '</option>';
-				for( $i = date( 'y' ); $i < date( 'y' ) + 11; $i++ ) {
+				echo '<option class="placeholder" selected disabled>YY</option>';
+				for ( $i = date( 'y' ); $i < date( 'y' ) + 11; $i++ ) {
 					printf( '<option value="%d">%d</option>', $i, $i );
 				}
 				echo '</select>';

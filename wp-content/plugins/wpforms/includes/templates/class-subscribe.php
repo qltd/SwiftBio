@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Scribe to Email list form template.
  *
@@ -7,7 +8,7 @@
  * @since      1.0.0
  * @license    GPL-2.0+
  * @copyright  Copyright (c) 2016, WPForms LLC
-*/
+ */
 class WPForms_Template_Subscribe extends WPForms_Template {
 
 	/**
@@ -30,19 +31,19 @@ class WPForms_Template_Subscribe extends WPForms_Template {
 		$this->data        = array(
 			'field_id' => '2',
 			'fields'   => array(
-				'0'  => array(
-					'id'          => '0',
-					'type'        => 'name',
-					'label'       => __( 'Name', 'wpforms' ),
-					'required'    => '1',
-					'size'        => 'medium',
+				'0' => array(
+					'id'       => '0',
+					'type'     => 'name',
+					'label'    => __( 'Name', 'wpforms' ),
+					'required' => '1',
+					'size'     => 'medium',
 				),
-				'1'  => array(
-					'id'          => '1',
-					'type'        => 'email',
-					'label'       => __( 'Email', 'wpforms' ),
-					'required'    => '1',
-					'size'        => 'medium',
+				'1' => array(
+					'id'       => '1',
+					'type'     => 'email',
+					'label'    => __( 'Email', 'wpforms' ),
+					'required' => '1',
+					'size'     => 'medium',
 				),
 			),
 			'settings' => array(
@@ -61,7 +62,9 @@ class WPForms_Template_Subscribe extends WPForms_Template {
 	 * should display.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $form_data
+	 *
 	 * @return boolean
 	 */
 	function template_modal_conditional( $form_data ) {
@@ -77,4 +80,5 @@ class WPForms_Template_Subscribe extends WPForms_Template {
 		}
 	}
 }
+
 new WPForms_Template_Subscribe;

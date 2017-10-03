@@ -9,7 +9,7 @@
  * @since      1.0.0
  * @license    GPL-2.0+
  * @copyright  Copyright (c) 2016, WPForms LLC
-*/
+ */
 class WPForms_Welcome {
 
 	/**
@@ -118,7 +118,7 @@ class WPForms_Welcome {
 						<h6><?php _e( 'Thank you for choosing WPForms - the most powerful drag & drop WordPress form builder in the market.', 'wpforms' ); ?></h6>
 					</div>
 
-					<a href="#" class="play-video" title="<?php esc_attr_e( 'Watch how to create you first form', 'wpforms' ); ?>">
+					<a href="#" class="play-video" title="<?php esc_attr_e( 'Watch how to create your first form', 'wpforms' ); ?>">
 						<img src="<?php echo WPFORMS_PLUGIN_URL; ?>assets/images/welcome-video.png" alt="<?php esc_attr_e( 'Watch how to create your first form', 'wpforms' ); ?>" class="video-thumbnail">
 					</a>
 
@@ -251,7 +251,7 @@ class WPForms_Welcome {
 
 				</div>
 
-				<div class="testimonials">
+				<div class="testimonials upgrade">
 
 					<div class="block">
 
@@ -296,4 +296,5 @@ class WPForms_Welcome {
 		<?php
 	}
 }
+
 new WPForms_Welcome;

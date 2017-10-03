@@ -149,7 +149,7 @@ class WPForms_Field_Number extends WPForms_Field {
 
 		// Basic required check - If field is marked as required, check for entry data
 		if ( ! empty( $form_data['fields'][ $field_id ]['required'] ) && empty( $field_submit ) && '0' != $field_submit ) {
-			wpforms()->process->errors[ $form_id ][ $field_id ] = apply_filters( 'wpforms_required_label', __( 'This field is required', 'wpforms' ) );
+			wpforms()->process->errors[ $form_id ][ $field_id ] = apply_filters( 'wpforms_required_label', __( 'This field is required.', 'wpforms' ) );
 		}
 
 		// Check if value is numeric.

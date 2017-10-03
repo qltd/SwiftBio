@@ -124,11 +124,8 @@ class WPForms_Field_Textarea extends WPForms_Field {
 		if ( ! empty( $primary['attr']['value'] ) ) {
 			$value = $primary['attr']['value'];
 			unset( $primary['attr']['value'] );
-			if ( function_exists( 'sanitize_textarea_field' ) ) {
-				$value = sanitize_textarea_field( $value );
-			} else {
-				$value = sanitize_text_field( $value );
-			}
+
+			$value = wpforms_sanitize_textarea_field( $value );
 		}
 
 		// Primary field.

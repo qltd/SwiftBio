@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contact form template.
  *
@@ -7,7 +8,7 @@
  * @since      1.0.0
  * @license    GPL-2.0+
  * @copyright  Copyright (c) 2016, WPForms LLC
-*/
+ */
 class WPForms_Template_Contact extends WPForms_Template {
 
 	/**
@@ -27,21 +28,21 @@ class WPForms_Template_Contact extends WPForms_Template {
 		$this->data        = array(
 			'field_id' => '3',
 			'fields'   => array(
-				'0'  => array(
-					'id'          => '0',
-					'type'        => 'name',
-					'label'       => __( 'Name', 'wpforms' ),
-					'required'    => '1',
-					'size'        => 'medium',
+				'0' => array(
+					'id'       => '0',
+					'type'     => 'name',
+					'label'    => __( 'Name', 'wpforms' ),
+					'required' => '1',
+					'size'     => 'medium',
 				),
-				'1'  => array(
-					'id'          => '1',
-					'type'        => 'email',
-					'label'       => __( 'E-mail', 'wpforms' ),
-					'required'    => '1',
-					'size'        => 'medium',
+				'1' => array(
+					'id'       => '1',
+					'type'     => 'email',
+					'label'    => __( 'Email', 'wpforms' ),
+					'required' => '1',
+					'size'     => 'medium',
 				),
-				'2'  => array(
+				'2' => array(
 					'id'          => '2',
 					'type'        => 'textarea',
 					'label'       => __( 'Comment or Message', 'wpforms' ),
@@ -53,7 +54,7 @@ class WPForms_Template_Contact extends WPForms_Template {
 				),
 			),
 			'settings' => array(
-				'notifications' => array(
+				'notifications'               => array(
 					'1' => array(
 						'sender_name'    => '{field_id="0"}',
 						'sender_address' => '{field_id="1"}',
@@ -69,4 +70,5 @@ class WPForms_Template_Contact extends WPForms_Template {
 		);
 	}
 }
+
 new WPForms_Template_Contact;

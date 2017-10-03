@@ -205,7 +205,7 @@ class WPForms_Field_Email extends WPForms_Field {
 				'slug'    => 'confirmation',
 				'value'   => isset( $field['confirmation'] ) ? '1' : '0',
 				'desc'    => __( 'Enable Email Confirmation', 'wpforms' ),
-				'tooltip' => __( 'Check this option ask the user to provide their email address twice.', 'wpforms' ),
+				'tooltip' => __( 'Check this option to ask users to provide an email address twice.', 'wpforms' ),
 			),
 			false
 		);

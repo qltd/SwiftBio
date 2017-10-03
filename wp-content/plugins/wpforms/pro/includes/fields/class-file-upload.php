@@ -176,7 +176,7 @@ class WPForms_Field_File_Upload extends WPForms_Field {
 			array(
 				'slug'    => 'max_size',
 				'value'   => __( 'Max File Size', 'wpforms' ),
-				'tooltip' => __( 'Enter the max file size, in megabytyes, to allow. If left blank, the value defaults to the maximum size the server allows which is ', 'wpforms' ) . wpforms_max_upload(),
+				'tooltip' => sprintf( __( 'Enter the max file size, in megabytes, to allow. If left blank, the value defaults to the maximum size the server allows which is %s.', 'wpforms' ), wpforms_max_upload() ),
 			),
 			false
 		);
@@ -310,7 +310,7 @@ class WPForms_Field_File_Upload extends WPForms_Field {
 		if ( 0 != $_FILES[ $file_slug ]['error'] && 4 != $_FILES[ $file_slug ]['error'] ) {
 
 			$errors = array(
-				 false,
+				false,
 				__( 'The uploaded file exceeds the upload_max_filesize directive in php.ini.', 'wpforms' ),
 				__( 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.', 'wpforms' ),
 				__( 'The uploaded file was only partially uploaded.', 'wpforms' ),
@@ -320,7 +320,7 @@ class WPForms_Field_File_Upload extends WPForms_Field {
 				__( 'Failed to write file to disk.', 'wpforms' ),
 				__( 'File upload stopped by extension.', 'wpforms' ),
 			);
-			wpforms()->process->errors[ $form_id ][ $field_id ] = __( 'File upload error. ', 'wpforms' ) . $errors[ $_FILES[ $file_slug ]['error'] ];
+			wpforms()->process->errors[ $form_id ][ $field_id ] = sprintf( __( 'File upload error. %s', 'wpforms' ), $errors[ $_FILES[ $file_slug ]['error'] ] );
 			return;
 		}
 
@@ -329,7 +329,7 @@ class WPForms_Field_File_Upload extends WPForms_Field {
 		// -------------------------------------------------------------------//
 		if ( ! empty( $field['required'] ) && ( empty( $_FILES[ $file_slug ]['tmp_name'] ) || 4 == $_FILES[ $file_slug ]['error'] ) ) {
 
-			wpforms()->process->errors[ $form_id ][ $field_id ] = apply_filters( 'wpforms_required_label', __( 'This field is required', 'wpforms' ) );
+			wpforms()->process->errors[ $form_id ][ $field_id ] = apply_filters( 'wpforms_required_label', __( 'This field is required.', 'wpforms' ) );
 			return;
 		}
 

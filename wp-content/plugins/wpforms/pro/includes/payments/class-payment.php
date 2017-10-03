@@ -11,13 +11,13 @@
 abstract class WPForms_Payment {
 
 	/**
-	 * Payment add-on version.
+	 * Payment addon version.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @var string
 	 */
-	private $version;
+	protected $version;
 
 	/**
 	 * Payment name.
@@ -105,11 +105,11 @@ abstract class WPForms_Payment {
 		return $payments;
 	}
 
-	//************************************************************************//
+	// ************************************************************************ //
 	//
-	//	Builder methods - these methods _build_ the Builder.
+	// Builder methods - these methods _build_ the Builder.
 	//
-	//************************************************************************//
+	// ************************************************************************ //
 
 	/**
 	 * Fetch and store the current form data when in the builder.

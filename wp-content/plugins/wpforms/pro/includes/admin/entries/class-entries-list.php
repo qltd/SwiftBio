@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display list of all entries for a single form.
  *
@@ -14,6 +15,7 @@ class WPForms_Entries_List {
 	 * Holds admin alerts.
 	 *
 	 * @since 1.1.6
+	 *
 	 * @var array
 	 */
 	public $alerts = array();
@@ -22,6 +24,7 @@ class WPForms_Entries_List {
 	 * Abort. Bail on proceeding to process the page.
 	 *
 	 * @since 1.1.6
+	 *
 	 * @var bool
 	 */
 	public $abort = false;
@@ -30,6 +33,7 @@ class WPForms_Entries_List {
 	 * Form ID.
 	 *
 	 * @since 1.1.6
+	 *
 	 * @var int
 	 */
 	public $form_id;
@@ -38,6 +42,7 @@ class WPForms_Entries_List {
 	 * Form object.
 	 *
 	 * @since 1.1.6
+	 *
 	 * @var object
 	 */
 	public $form;
@@ -46,6 +51,7 @@ class WPForms_Entries_List {
 	 * Forms object.
 	 *
 	 * @since 1.1.6
+	 *
 	 * @var object
 	 */
 	public $forms;
@@ -54,6 +60,7 @@ class WPForms_Entries_List {
 	 * Entries object.
 	 *
 	 * @since 1.1.6
+	 *
 	 * @var object
 	 */
 	public $entries;
@@ -74,7 +81,7 @@ class WPForms_Entries_List {
 	}
 
 	/**
-	 * Determing if the user is viewing the entries list page, if so, party on.
+	 * Determine if the user is viewing the entries list page, if so, party on.
 	 *
 	 * @since 1.0.0
 	 */
@@ -100,18 +107,18 @@ class WPForms_Entries_List {
 			wpforms()->preview->form_preview_check();
 
 			// Processing and setup.
-			add_action( 'wpforms_entries_init', array( $this, 'process_export'  ),  8, 1 );
-			add_action( 'wpforms_entries_init', array( $this, 'process_read'    ),  8, 1 );
-			add_action( 'wpforms_entries_init', array( $this, 'process_columns' ),  8, 1 );
-			add_action( 'wpforms_entries_init', array( $this, 'process_delete'  ),  8, 1 );
-			add_action( 'wpforms_entries_init', array( $this, 'setup'           ), 10, 1 );
+			add_action( 'wpforms_entries_init', array( $this, 'process_export' ), 8, 1 );
+			add_action( 'wpforms_entries_init', array( $this, 'process_read' ), 8, 1 );
+			add_action( 'wpforms_entries_init', array( $this, 'process_columns' ), 8, 1 );
+			add_action( 'wpforms_entries_init', array( $this, 'process_delete' ), 8, 1 );
+			add_action( 'wpforms_entries_init', array( $this, 'setup' ), 10, 1 );
 
 			// Output.
-			add_action( 'wpforms_admin_page',       array( $this, 'list_all'             )        );
-			add_action( 'wpforms_admin_page',       array( $this, 'field_column_setting' )        );
-			add_action( 'wpforms_entry_list_title', array( $this, 'list_form_actions'    ), 10, 1 );
+			add_action( 'wpforms_admin_page', array( $this, 'list_all' ) );
+			add_action( 'wpforms_admin_page', array( $this, 'field_column_setting' ) );
+			add_action( 'wpforms_entry_list_title', array( $this, 'list_form_actions' ), 10, 1 );
 
-			// Provide hook for add-ons.
+			// Provide hook for addons.
 			do_action( 'wpforms_entries_init', 'list' );
 		}
 	}
@@ -143,9 +150,11 @@ class WPForms_Entries_List {
 	 * Entries table per-page screen option value
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param mixed $status
 	 * @param string $option
 	 * @param mixed $value
+	 *
 	 * @return mixed
 	 */
 	public function screen_options_set( $status, $option, $value ) {
@@ -164,7 +173,7 @@ class WPForms_Entries_List {
 	 */
 	public function enqueues() {
 
-		// Hook for add-ons
+		// Hook for addons
 		do_action( 'wpforms_entries_enqueue', 'list' );
 	}
 
@@ -187,7 +196,7 @@ class WPForms_Entries_List {
 
 		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/admin/entries/class-entries-export.php';
 
-		$export = new WPForms_Entries_Export();
+		$export             = new WPForms_Entries_Export();
 		$export->entry_type = 'all';
 		$export->form_id    = absint( $_GET['form_id'] );
 		$export->export();
@@ -271,7 +280,7 @@ class WPForms_Entries_List {
 
 		$this->alerts[] = array(
 			'type'    => 'success',
-			'message' => __( 'All entries deleted.', 'wpforms' ),
+			'message' => __( 'All entries for the currently selected form were successfully deleted.', 'wpforms' ),
 			'dismiss' => true,
 		);
 	}
@@ -286,7 +295,13 @@ class WPForms_Entries_List {
 	public function setup() {
 
 		// Fetch all forms
-		$this->forms = wpforms()->form->get( '',  array( 'orderby' => 'ID', 'order' => 'ASC' ) );
+		$this->forms = wpforms()->form->get(
+			'',
+			array(
+				'orderby' => 'ID',
+				'order'   => 'ASC',
+			)
+		);
 
 		// Check that that user has created at least one form
 		if ( empty( $this->forms ) ) {
@@ -321,10 +336,11 @@ class WPForms_Entries_List {
 			$this->display_alerts();
 			if ( $this->abort ) {
 				echo '</div>'; // close wrap
+
 				return;
 			}
 
-			$this->entries = new WPForms_Entries_Table;
+			$this->entries            = new WPForms_Entries_Table;
 			$this->entries->form_id   = $this->form_id;
 			$this->entries->form_data = $form_data;
 			$this->entries->prepare_items();
@@ -335,12 +351,12 @@ class WPForms_Entries_List {
 
 				<form id="wpforms-entries-table" method="get" action="<?php echo admin_url( 'admin.php?page=wpforms-entries' ); ?>">
 
-						<input type="hidden" name="page" value="wpforms-entries" />
-						<input type="hidden" name="view" value="list" />
-						<input type="hidden" name="form_id" value="<?php echo $this->form_id; ?>" />
+					<input type="hidden" name="page" value="wpforms-entries"/>
+					<input type="hidden" name="view" value="list"/>
+					<input type="hidden" name="form_id" value="<?php echo $this->form_id; ?>"/>
 
-						<?php $this->entries->views(); ?>
-						<?php $this->entries->display(); ?>
+					<?php $this->entries->views(); ?>
+					<?php $this->entries->display(); ?>
 
 				</form>
 
@@ -362,14 +378,14 @@ class WPForms_Entries_List {
 		<div id="wpforms-field-column-select" style="display:none;">
 
 			<form method="post" action="<?php echo admin_url( 'admin.php?page=wpforms-entries&view=list&form_id=' . $this->form_id ); ?>" style="display:none;">
-				<input type="hidden" name="action" value="list-columns" />
-				<input type="hidden" name="form_id" value="<?php echo $this->form_id; ?>" />
+				<input type="hidden" name="action" value="list-columns"/>
+				<input type="hidden" name="form_id" value="<?php echo $this->form_id; ?>"/>
 				<input type="hidden" name="_wpnonce" value="<?php echo wp_create_nonce( 'wpforms_entry_list_columns' ); ?>">
 				<p>
 					<?php
-					_e( 'Select the fields to show when viewing the entries list for this form. ', 'wpforms' );
+					_e( 'Select the fields to show when viewing the entries list for this form.', 'wpforms' );
 					if ( empty( $form_data['meta']['entry_columns'] ) ) {
-						 _e( 'Currently columns have not been configured, so we\'re showing the first 3 fields.', 'wpforms' );
+						echo ' ' . __( 'Currently columns have not been configured, so we\'re showing the first 3 fields.', 'wpforms' );
 					}
 					?>
 				</p>
@@ -386,11 +402,14 @@ class WPForms_Entries_List {
 						}
 					}
 					foreach ( $form_data['fields'] as $id => $field ) {
-						if ( ! empty( $form_data['meta']['entry_columns'] ) && in_array( $id, $form_data['meta']['entry_columns'] ) ) {
+						if (
+							! empty( $form_data['meta']['entry_columns'] ) &&
+							in_array( $id, $form_data['meta']['entry_columns'], true )
+						) {
 							continue;
 						}
 						$disallow = apply_filters( 'wpforms_entries_table_fields_disallow', array( 'divider', 'html', 'pagebreak', 'captcha' ) );
-						if ( ! in_array( $field['type'], $disallow ) ) {
+						if ( ! in_array( $field['type'], $disallow, true ) ) {
 							$name = ! empty( $field['label'] ) ? wp_strip_all_tags( $field['label'] ) : __( 'Field', 'wpforms' );
 							printf( '<option value="%d">%s</option>', $id, $name );
 						}
@@ -407,6 +426,7 @@ class WPForms_Entries_List {
 	 * Entry list form actions.
 	 *
 	 * @since 1.1.6
+	 *
 	 * @param array $form_data
 	 */
 	public function list_form_actions( $form_data ) {
@@ -426,7 +446,7 @@ class WPForms_Entries_List {
 				'page'    => 'wpforms-builder',
 				'view'    => 'fields',
 				'form_id' => absint( $this->form_id ),
-			 ),
+			),
 			admin_url( 'admin.php' )
 		);
 
@@ -534,6 +554,9 @@ class WPForms_Entries_List {
 	 *
 	 * @since 1.1.6
 	 * @todo Refactor or eliminate this
+	 *
+	 * @param string $display
+	 * @param bool $wrap
 	 */
 	function display_alerts( $display = '', $wrap = false ) {
 
@@ -554,7 +577,7 @@ class WPForms_Entries_List {
 
 				if ( in_array( $type, $display, true ) ) {
 					$class  = 'notice-' . $type;
-					$class .= ! empty( $alert['dismiss'] ) ? ' is-dismissible' : '';
+					$class  .= ! empty( $alert['dismiss'] ) ? ' is-dismissible' : '';
 					$output = '<div class="notice ' . $class . '"><p>' . $alert['message'] . '</p></div>';
 					if ( $wrap ) {
 						echo '<div class="wrap">' . $output . '</div>';
@@ -570,4 +593,5 @@ class WPForms_Entries_List {
 		}
 	}
 }
+
 new WPForms_Entries_List;

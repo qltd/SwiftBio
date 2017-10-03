@@ -25,7 +25,7 @@ class WPForms_Preview {
 	}
 
 	/**
-	 * Determing if the user should see a preview page, if so, party on.
+	 * Determining if the user should see a preview page, if so, party on.
 	 *
 	 * @since 1.1.5
 	 */
@@ -68,7 +68,12 @@ class WPForms_Preview {
 		}
 
 		// Get form details.
-		$form_data = wpforms()->form->get( $entry->form_id, array( 'content_only' => true ) );
+		$form_data = wpforms()->form->get(
+			$entry->form_id,
+			array(
+				'content_only' => true,
+			)
+		);
 
 		// Double check that we found a valid entry.
 		if ( empty( $form_data ) ) {
@@ -76,7 +81,12 @@ class WPForms_Preview {
 		}
 
 		// Check for entry notes.
-		$entry->entry_notes = wpforms()->entry_meta->get_meta( array( 'entry_id' => $entry->entry_id, 'type' => 'note' ) );
+		$entry->entry_notes = wpforms()->entry_meta->get_meta(
+			array(
+				'entry_id' => $entry->entry_id,
+				'type'     => 'note',
+			)
+		);
 
 		?>
 		<!doctype html>
@@ -153,7 +163,7 @@ class WPForms_Preview {
 				</h1>
 				<div class="actions">
 					<a href="#" class="toggle-empty"><?php _e( 'Show empty fields', 'wpforms' ); ?></a> &bull;
-					<?php echo ! empty( $entry->entry_notes ) ? '<a href="#" class="toggle-notes">' . __( 'Show note', 'wpforms' ) . '</a> &bull;' : ''; ?>
+					<?php echo ! empty( $entry->entry_notes ) ? '<a href="#" class="toggle-notes">' . __( 'Show notes', 'wpforms' ) . '</a> &bull;' : ''; ?>
 					<a href="#" class="toggle-view"><?php _e( 'Compact view', 'wpforms' ); ?></a>
 				</div>
 				<?php
@@ -178,6 +188,7 @@ class WPForms_Preview {
 						echo '<div class="field ' . $field_class . '">';
 
 							echo '<p class="field-name">';
+								/* translators: %d - field ID */
 								echo ! empty( $field['name'] ) ? wp_strip_all_tags( $field['name'] ) : sprintf( __( 'Field ID #%d', 'wpforms' ), absint( $field['id'] ) );
 							echo '</p>';
 
@@ -202,15 +213,12 @@ class WPForms_Preview {
 						$user        = get_userdata( $note->user_id );
 						$user_name   = esc_html( ! empty( $user->display_name ) ? $user->display_name : $user->user_login );
 						$date_format = sprintf( '%s %s', get_option( 'date_format' ), get_option( 'time_format' ) );
-						$date        = date( $date_format, strtotime( $note->date ) + ( get_option( 'gmt_offset' ) * 3600 ) );
+						$date        = date_i18n( $date_format, strtotime( $note->date ) + ( get_option( 'gmt_offset' ) * 3600 ) );
 
 						echo '<div class="note">';
 							echo '<div class="note-byline">';
-								printf(
-									__( 'Added by %s on %s', 'wpforms' ),
-									$user_name,
-									$date
-								);
+								/* translators: %1$s - user name; %2$s - date */
+								printf( __( 'Added by %1$s on %2$s', 'wpforms' ), $user_name, $date );
 							echo '</div>';
 							echo '<div class="note-text">' . wp_kses_post( $note->data ) . '</div>';
 						echo '</div>';
@@ -247,6 +255,7 @@ class WPForms_Preview {
 			if ( ! empty( $preview_page ) && 'private' !== $preview_page->post_status ) {
 				$preview_page->post_status = 'private';
 				wp_update_post( $preview_page );
+
 				return;
 			} elseif ( ! empty( $preview_page ) ) {
 				return;
@@ -254,17 +263,18 @@ class WPForms_Preview {
 		}
 
 		// Create the custom preview page
-		$content  = '<p>' . __( 'This is the WPForms preview page. All your form previews will be handled on this page.', 'wpforms' ) . '</p>';
+		$content = '<p>' . __( 'This is the WPForms preview page. All your form previews will be handled on this page.', 'wpforms' ) . '</p>';
 		$content .= '<p>' . __( 'The page is set to private, so it is not publicly accessible. Please do not delete this page :) .', 'wpforms' ) . '</p>';
-		$args = array(
-			'post_type'		 => 'page',
-			'post_name'		 => 'wpforms-preview',
-			'post_author'	 => 1,
-			'post_title'	 => __( 'WPForms Preview', 'wpforms' ),
-			'post_status'	 => 'private',
-			'post_content'	 => $content,
+		$args    = array(
+			'post_type'      => 'page',
+			'post_name'      => 'wpforms-preview',
+			'post_author'    => 1,
+			'post_title'     => __( 'WPForms Preview', 'wpforms' ),
+			'post_status'    => 'private',
+			'post_content'   => $content,
 			'comment_status' => 'closed',
 		);
+
 		$id = wp_insert_post( $args );
 		if ( $id ) {
 			update_option( 'wpforms_preview_page', $id );
@@ -275,7 +285,9 @@ class WPForms_Preview {
 	 * Preview page URL.
 	 *
 	 * @since 1.1.9
+	 *
 	 * @param int $form_id
+	 *
 	 * @return string
 	 */
 	public function form_preview_url( $form_id ) {
@@ -292,7 +304,13 @@ class WPForms_Preview {
 			return home_url();
 		}
 
-		return add_query_arg( array( 'wpforms_preview' => 'form', 'form_id' => absint( $form_id ) ), $url );
+		return add_query_arg(
+			array(
+				'wpforms_preview' => 'form',
+				'form_id'         => absint( $form_id ),
+			),
+			$url
+		);
 	}
 
 	/**
@@ -309,8 +327,10 @@ class WPForms_Preview {
 	 * Tweak the page content for form preview page requests.
 	 *
 	 * @since 1.1.9
+	 *
 	 * @param array $posts
-	 * @param object $query
+	 * @param WP_Query $query
+	 *
 	 * @return array
 	 */
 	public function form_preview_query( $posts, $query ) {
@@ -328,12 +348,22 @@ class WPForms_Preview {
 		// If our queried object ID does not match the preview page ID, return early.
 		$preview_id = absint( get_option( 'wpforms_preview_page' ) );
 		$queried    = $query->get_queried_object_id();
-		if ( $queried && $queried != $preview_id && isset( $query->query_vars['page_id'] ) && $preview_id != $query->query_vars['page_id'] ) {
+		if (
+			$queried &&
+			$queried !== $preview_id &&
+			isset( $query->query_vars['page_id'] ) &&
+			$preview_id != $query->query_vars['page_id']
+		) {
 			return $posts;
 		}
 
 		// Get the form details
-		$form = wpforms()->form->get( absint( $_GET['form_id'] ), array( 'content_only' => true ) );
+		$form = wpforms()->form->get(
+			absint( $_GET['form_id'] ),
+			array(
+				'content_only' => true,
+			)
+		);
 
 		if ( ! $form || empty( $form ) ) {
 			return $posts;
@@ -346,7 +376,7 @@ class WPForms_Preview {
 		if ( ! empty( $_GET['new_window'] ) ) {
 			$content .= ' <a href="javascript:window.close();">' . __( 'Close this window', 'wpforms' ) . '.</a>';
 		}
-		$posts[0]->post_title   = $title . __( ' Preview', 'wpforms' );
+		$posts[0]->post_title   = sprintf( _x( '%s Preview', 'Form name', 'wpforms' ), $title );
 		$posts[0]->post_content = $content . $shortcode;
 		$posts[0]->post_status  = 'public';
 
@@ -357,17 +387,24 @@ class WPForms_Preview {
 	 * Hide the preview page from admin
 	 *
 	 * @since 1.2.3
-	 * @param object $query
+	 *
+	 * @param WP_Query $query
 	 */
 	function form_preview_hide( $query ) {
 
-		if ( $query->is_main_query() && is_admin() && isset( $query->query_vars['post_type'] ) && 'page' == $query->query_vars['post_type'] ) {
+		if (
+			$query->is_main_query() &&
+			is_admin() &&
+			isset( $query->query_vars['post_type'] ) &&
+			'page' === $query->query_vars['post_type']
+		) {
 			$wpforms_preview = intval( get_option( 'wpforms_preview_page' ) );
+
 			if ( $wpforms_preview ) {
-				$exclude = $query->query_vars['post__not_in'];
+				$exclude   = $query->query_vars['post__not_in'];
 				$exclude[] = $wpforms_preview;
 				$query->set( 'post__not_in', $exclude );
-			 }
+			}
 		}
 	}
 }

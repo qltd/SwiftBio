@@ -361,7 +361,7 @@ class WPForms_Conditional_Logic_Fields {
 		// If preventing the notification, log it.
 		if ( ! $process ) {
 			wpforms_log(
-				__( 'Entry Notification stopped by conditional logic', 'wpforms' ),
+				__( 'Entry Notification stopped by conditional logic.', 'wpforms' ),
 				$settings['notifications'][ $id ],
 				array(
 					'type'    => array( 'entry', 'conditional_logic' ),

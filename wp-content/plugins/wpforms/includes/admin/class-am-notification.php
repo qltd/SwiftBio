@@ -64,8 +64,8 @@ if ( ! class_exists( 'AM_Notification' ) ) {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param string $plugin  The plugin slug.
-		 * @param string $version The version of the plugin.
+		 * @param string $plugin The plugin slug.
+		 * @param mixed $version The version of the plugin.
 		 */
 		public function __construct( $plugin = '', $version = 0 ) {
 			$this->plugin         = $plugin;
@@ -84,7 +84,7 @@ if ( ! class_exists( 'AM_Notification' ) ) {
 		 */
 		public function custom_post_type() {
 			register_post_type( 'amn_' . $this->plugin, array(
-				'supports' => false
+				'supports' => false,
 			) );
 		}
 
@@ -94,28 +94,27 @@ if ( ! class_exists( 'AM_Notification' ) ) {
 		 * @since 1.0.0
 		 */
 		public function get_remote_notifications() {
-			$last_checked  = get_option( '_amn_' . $this->plugin . '_last_checked', strtotime( '-1 week' ) );
+			$last_checked = get_option( '_amn_' . $this->plugin . '_last_checked', strtotime( '-1 week' ) );
 
 			if ( $last_checked < strtotime( 'today midnight' ) ) {
 
 				$plugin_notifications = $this->get_plugin_notifications( 1 );
 
 				$notification_id = null;
-				if ( ! empty( $plugin_notifications) ) {
+				if ( ! empty( $plugin_notifications ) ) {
 					// Unset it from the array.
 					$notification    = $plugin_notifications[0];
 					$notification_id = get_post_meta( $notification->ID, 'notification_id', true );
 				}
 
 				$response = wp_remote_retrieve_body( wp_remote_post( $this->api_url, array(
-					'sslverify' => false,
-					'body' => array(
+					'body'      => array(
 						'slug'              => $this->plugin,
 						'version'           => $this->plugin_version,
 						'last_notification' => $notification_id,
 						'plugins'           => $this->get_plugins_list(),
-						'themes'            => $this->get_themes_list()
-					)
+						'themes'            => $this->get_themes_list(),
+					),
 				) ) );
 
 				$data = json_decode( $response );
@@ -124,20 +123,25 @@ if ( ! class_exists( 'AM_Notification' ) ) {
 
 					$notifications = array();
 					foreach ( (array) $data->slugs as $slug ) {
-						$notifications = array_merge( $notifications, (array) get_posts( array(
-							'post_type'  => 'amn_' . $slug,
-							'post_status' => 'all',
-							'meta_key' => 'notification_id',
-							'meta_value' => $data->id
-						) ) );
+						$notifications = array_merge(
+							$notifications,
+							(array) get_posts(
+								array(
+									'post_type'   => 'amn_' . $slug,
+									'post_status' => 'all',
+									'meta_key'    => 'notification_id',
+									'meta_value'  => $data->id,
+								)
+							)
+						);
 					}
 
 					if ( empty( $notifications ) ) {
 
 						$new_notification_id = wp_insert_post( array(
-							'post_content' => $data->content,
-							'post_type'    => 'amn_' . $this->plugin
-						) );
+							                                       'post_content' => $data->content,
+							                                       'post_type'    => 'amn_' . $this->plugin,
+						                                       ) );
 
 						update_post_meta( $new_notification_id, 'notification_id', $data->id );
 						update_post_meta( $new_notification_id, 'type', $data->type );
@@ -148,7 +152,6 @@ if ( ! class_exists( 'AM_Notification' ) ) {
 						update_post_meta( $new_notification_id, 'version', $data->version );
 						update_post_meta( $new_notification_id, 'viewed', 0 );
 					}
-
 				}
 
 				// Set the option now so we can't run this again until after 24 hours.
@@ -162,14 +165,17 @@ if ( ! class_exists( 'AM_Notification' ) ) {
 		 * @since 1.0.0
 		 *
 		 * @param  integer $limit Set the limit for how many posts to retrieve.
-		 * @param  array   $args  Any top-level arguments to add to the array.
-		 * @return object         WP_Posts that match the query.
+		 * @param  array $args Any top-level arguments to add to the array.
+		 *
+		 * @return WP_Post[] WP_Post that match the query.
 		 */
-		public function get_plugin_notifications( $limit = -1, $args = array() ) {
-			return get_posts( array(
+		public function get_plugin_notifications( $limit = - 1, $args = array() ) {
+			return get_posts(
+				array(
 					'showposts' => $limit,
-					'post_type' => 'amn_' . $this->plugin
-			) + $args );
+					'post_type' => 'amn_' . $this->plugin,
+				) + $args
+			);
 		}
 
 		/**
@@ -195,7 +201,7 @@ if ( ! class_exists( 'AM_Notification' ) ) {
 					'slug'    => $slug,
 					'name'    => $plugin['Name'],
 					'version' => $plugin['Version'],
-					'active'  => is_plugin_active( $slug )
+					'active'  => is_plugin_active( $slug ),
 				);
 			}
 
@@ -221,7 +227,7 @@ if ( ! class_exists( 'AM_Notification' ) ) {
 					'slug'    => $slug,
 					'name'    => $theme->Name,
 					'version' => $theme->Version,
-					'active'  => (string) wp_get_theme() == $theme->Name
+					'active'  => (string) wp_get_theme() === $theme->Name,
 				);
 			}
 
@@ -239,10 +245,10 @@ if ( ! class_exists( 'AM_Notification' ) ) {
 				return;
 			}
 
-			$plugin_notifications = $this->get_plugin_notifications( -1, array(
+			$plugin_notifications = $this->get_plugin_notifications( - 1, array(
 				'post_status' => 'all',
-				'meta_key' => 'viewed',
-				'meta_value' => '0'
+				'meta_key'    => 'viewed',
+				'meta_value'  => '0',
 			) );
 
 			$plugin_notifications = $this->validate_notifications( $plugin_notifications );
@@ -256,16 +262,17 @@ if ( ! class_exists( 'AM_Notification' ) ) {
 						<?php echo $notification->post_content; ?>
 					</div>
 					<script type="text/javascript">
-						jQuery(document).ready( function($) {
-							$(document).on('click', '.am-notification-<?php echo $notification->ID; ?> button.notice-dismiss', function( event ) {
-								$.post( ajaxurl, {
+						jQuery(document).ready(function ($) {
+							$(document).on('click', '.am-notification-<?php echo $notification->ID; ?> button.notice-dismiss', function (event) {
+								$.post(ajaxurl, {
 									action: 'am_notification_dismiss',
 									notification_id: '<?php echo $notification->ID; ?>'
 								});
 							});
 						});
 					</script>
-				<?php }
+					<?php
+				}
 			}
 		}
 
@@ -275,6 +282,7 @@ if ( ! class_exists( 'AM_Notification' ) ) {
 		 * @since 1.0.0
 		 *
 		 * @param  array $plugin_notifications An array of plugin notifications.
+		 *
 		 * @return array                       A filtered array of plugin notifications.
 		 */
 		public function validate_notifications( $plugin_notifications ) {
@@ -283,12 +291,12 @@ if ( ! class_exists( 'AM_Notification' ) ) {
 				// Location validation.
 				$location = (array) json_decode( get_post_meta( $notification->ID, 'location', true ) );
 				$continue = false;
-				if ( ! in_array( 'everywhere', $location ) ) {
-					if ( in_array( 'index.php', $location ) && 'index.php' == $pagenow ) {
+				if ( ! in_array( 'everywhere', $location, true ) ) {
+					if ( in_array( 'index.php', $location, true ) && 'index.php' === $pagenow ) {
 						$continue = true;
 					}
 
-					if ( in_array( 'plugins.php', $location ) && 'plugins.php' == $pagenow ) {
+					if ( in_array( 'plugins.php', $location, true ) && 'plugins.php' === $pagenow ) {
 						$continue = true;
 					}
 
@@ -314,7 +322,7 @@ if ( ! class_exists( 'AM_Notification' ) ) {
 
 				// Theme validation.
 				$theme    = get_post_meta( $notification->ID, 'theme', true );
-				$continue = (string) wp_get_theme() == $theme;
+				$continue = (string) wp_get_theme() === $theme;
 
 				if ( ! empty( $theme ) && ! $continue ) {
 					unset( $plugin_notifications[ $key ] );
@@ -332,7 +340,6 @@ if ( ! class_exists( 'AM_Notification' ) ) {
 						unset( $plugin_notifications[ $key ] );
 					}
 				}
-
 			}
 
 			return $plugin_notifications;
@@ -348,6 +355,5 @@ if ( ! class_exists( 'AM_Notification' ) ) {
 			update_post_meta( $notification_id, 'viewed', 1 );
 			die;
 		}
-
 	}
 }

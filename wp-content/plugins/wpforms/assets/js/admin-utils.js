@@ -270,7 +270,7 @@ var wpf = {
 	 */
 	getQueryString: function(name) {
 
-		var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+		var match = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
 		return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
 	},
 
@@ -343,26 +343,26 @@ var wpf = {
 	 */
 	numberFormat: function (number, decimals, decimalSep, thousandsSep) {
 
-		number = (number + '').replace(/[^0-9+\-Ee.]/g, '')
-		var n = !isFinite(+number) ? 0 : +number
-		var prec = !isFinite(+decimals) ? 0 : Math.abs(decimals)
-		var sep = (typeof thousandsSep === 'undefined') ? ',' : thousandsSep
-		var dec = (typeof decimalSep === 'undefined') ? '.' : decimalSep
-		var s = ''
+		number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
+		var n = !isFinite(+number) ? 0 : +number;
+		var prec = !isFinite(+decimals) ? 0 : Math.abs(decimals);
+		var sep = (typeof thousandsSep === 'undefined') ? ',' : thousandsSep;
+		var dec = (typeof decimalSep === 'undefined') ? '.' : decimalSep;
+		var s = '';
 
 		var toFixedFix = function (n, prec) {
-			var k = Math.pow(10, prec)
+			var k = Math.pow(10, prec);
 			return '' + (Math.round(n * k) / k).toFixed(prec)
-		}
+		};
 
 		// @todo: for IE parseFloat(0.55).toFixed(0) = 0;
-		s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.')
+		s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
 		if (s[0].length > 3) {
 			s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep)
 		}
 		if ((s[1] || '').length < prec) {
-			s[1] = s[1] || ''
-			s[1] += new Array(prec - s[1].length + 1).join('0')
+			s[1] = s[1] || '';
+			s[1] += new Array(prec - s[1].length + 1).join('0');
 		}
 
 		return s.join(dec)
@@ -376,35 +376,35 @@ var wpf = {
 	 */
 	empty: function(mixedVar) {
 
-		var undef
-		var key
-		var i
-		var len
-		var emptyValues = [undef, null, false, 0, '', '0']
+		var undef;
+		var key;
+		var i;
+		var len;
+		var emptyValues = [undef, null, false, 0, '', '0'];
 
 		for (i = 0, len = emptyValues.length; i < len; i++) {
 			if (mixedVar === emptyValues[i]) {
-				return true
+				return true;
 			}
 		}
 
 		if (typeof mixedVar === 'object') {
 			for (key in mixedVar) {
 				if (mixedVar.hasOwnProperty(key)) {
-					return false
+					return false;
 				}
 			}
-			return true
+			return true;
 		}
 
-		return false
+		return false;
 	},
 
 	/**
 	 * Debug output helper.
 	 *
 	 * @since 1.3.8
-	 * @param mixed msg
+	 * @param msg
 	 */
 	debug: function( msg ) {
 
@@ -426,6 +426,17 @@ var wpf = {
 	isDebug: function() {
 
 		return ( ( window.location.hash && '#wpformsdebug' === window.location.hash ) || wpforms_builder.debug );
+	},
+
+	/**
+	 * Focus the input/textarea and put the caret at the end of the text.
+	 *
+	 * @since 1.4.1
+	 */
+	focusCaretToEnd: function(el ) {
+		el.focus();
+		var $thisVal = el.val();
+		el.val('').val($thisVal);
 	}
-}
+};
 wpf.init();

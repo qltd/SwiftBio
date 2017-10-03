@@ -75,17 +75,18 @@ class WPForms_Builder_Panel_Setup extends WPForms_Builder_Panel {
 
 			<p class="wpforms-setup-desc additional">
 				<?php
+				/* translators: %1$s - opening tag, %2$s - closing tag, %3$s - opening tag, %4$s - closing tag. */
 				printf(
-					_x(
+					__(
 						'Have a suggestion for a new template? %1$sWe\'d love to hear it%2$s. Also, you can %3$screate your own templates%4$s!',
-						'translators:%1$s - opening tag, %2$s - close tag, %3$s - opening tag, %4$s - close tag',
 						'wpforms'
 					),
 					'<a href="https://wpforms.com/form-template-suggestion/" target="_blank" rel="noopener noreferrer">',
 					'</a>',
 					'<a href="https://wpforms.com/docs/how-to-create-a-custom-form-template/" target="_blank" rel="noopener noreferrer">',
 					'</a>'
-				); ?>
+				);
+				?>
 			</p>
 
 			<div class="wpforms-setup-template-search-wrap">
@@ -98,17 +99,18 @@ class WPForms_Builder_Panel_Setup extends WPForms_Builder_Panel {
 
 			<p class="wpforms-setup-desc additional">
 				<?php
+				/* translators:%1$s - opening a tag, %2$s - close tag, %3$s - opening tag, %4$s - close tag. */
 				printf(
-					_x(
+					__(
 						'More are available in the %1$sForm Templates Pack addon%2$s or by %3$screating your own%4$s.',
-						'translators:%1$s - opening a tag, %2$s - close tag, %3$s - opening tag, %4$s - close tag',
 						'wpforms'
 					),
 					'<a href="https://wpforms.com/addons/form-templates-pack-addon/" target="_blank" rel="noopener noreferrer">',
 					'</a>',
 					'<a href="https://wpforms.com/docs/how-to-create-a-custom-form-template/" target="_blank" rel="noopener noreferrer">',
 					'</a>'
-				); ?>
+				);
+				?>
 			</p>
 
 		<?php
@@ -152,7 +154,7 @@ class WPForms_Builder_Panel_Setup extends WPForms_Builder_Panel {
 							<?php endif; ?>
 
 							<div class="wpforms-template-overlay">
-								<a href="#" class="wpforms-template-select" data-template-name-raw="<?php echo esc_attr( $template['name'] ); ?>" data-template-name="<?php echo esc_attr( $template['name'] ); ?> <?php _e( 'template', 'wpforms' ); ?>" data-template="<?php echo esc_attr( $template['slug'] ); ?>"><?php printf( __( 'Create a %s', 'wpforms' ), esc_html( $template['name'] ) ); ?></a>
+								<a href="#" class="wpforms-template-select" data-template-name-raw="<?php echo esc_attr( $template['name'] ); ?>" data-template-name="<?php printf( _x( '%s template', 'Template name', 'wpforms' ), esc_attr( $template['name'] ) ); ?>" data-template="<?php echo esc_attr( $template['slug'] ); ?>"><?php printf( _x( 'Create a %s', 'Template name', 'wpforms' ), esc_html( $template['name'] ) ); ?></a>
 							</div>
 
 						</div>
