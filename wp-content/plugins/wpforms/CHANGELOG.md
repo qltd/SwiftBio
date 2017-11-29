@@ -1,6 +1,24 @@
 # Change Log
 All notable changes to this project will be documented in this file, formatted via [this recommendation](http://keepachangelog.com/).
 
+## [1.4.2] - 2017-10-25
+### Added
+- Import your old Ninja Forms or Contact Form 7 forms! (WPForms > Tools > Import)
+
+### Changed
+- Date i18n improvements
+- Dropdown/Checkbox/Multiple Choice "Show Values" setting has been hidden by default to avoid confusion, can be re-enabled using the `wpforms_fields_show_options_setting` filter
+- Date Time field inputs break into separate lines on mobile to prevent Date picker from going off screen in some scenarioes
+
+### Fixed
+- reCAPTCHA now showing in the Form Builder preview when enabled
+- Encoded/escaped entities in email notifications
+- German translation issue
+
+## [1.4.1.2] - 2017-10-03
+### Fixed
+- New CSV separator filter introduced 1.4.1 not correctly running
+
 ## [1.4.1.1] - 2017-09-29
 ### Changed
 - Improved the loading order of javascript files for forms builder

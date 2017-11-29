@@ -6,9 +6,9 @@ Tags: Google Analytics, Universal Analytics, Enhanced E-commerce, E-commerce, e-
 Author URI: http://www.tatvic.com/
 Author: Tatvic
 Requires at least: 3.6
-Tested up to: 4.8
-Stable tag: 1.1.2
-Version: 1.1.2
+Tested up to: 4.9
+Stable tag: 1.2.0.1
+Version: 1.2.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -111,9 +111,19 @@ Reason :
 
 You can Find all The Enhanced Ecommerce Reports in your Analytics Account under Conversions --> Ecommerce.
 
-= Products with Multi variant not getting recorded in GA =
+= Since I have Implemented "gtag.js", I didn't enable Add Universal Analytics Tracking Code option, but seems that it is not working. =
 
-Currently our plugin does not support products with multiple variant & hence you may not see their transaction data in GA. Additionally, we have planned to add the same feature in our upcoming release.
+Reason :
+
+* Our Plugin’s script works/fetches the data based on the GA’s default tracker (‘ga’ in the case of Universal Analytics script used in our plugin). While you implement the UA tracking script from gtag.js, the script in your store may not be able to initialize the tracker, which in turn will hinder the plugin from populating insights in your Analytics account.
+
+Solution:
+
+* Remove "gtag.js" since some functionality of analytics.js is still not available in it (we’ll include it soon).
+
+= Products with variant not getting recorded in GA =
+
+Currently our plugin does not support products with variant & hence you may not see their transaction data in GA. This feature is only available with the <a href="https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552?ref=tatvic" target="_blank">premium version</a> of our plugin.
 
 = I have noticed that some transactions are missing in my GA account, compared to my Woocmmerce backend (Orders) =
 
@@ -238,5 +248,12 @@ Important Note: When you update the plugin, please save your settings again.
  = 1.1.1 - 04/09/2017 =
  * Minor Optimization on Order-Received Page.
 
- = 1.1.2 - 05/09/2017 =
+ = 1.1.2 - 04/09/2017 =
  * Quick Fix of Minor Bugs.
+
+ = 1.2.0 - 17/10/2017 =
+ * Compatibility with Woocommerce 3.2
+ * Minor Bug Fixes & Optimization.
+
+  = 1.2.0.1 - 06/11/2017 =
+ * Quick Bug Fixes.

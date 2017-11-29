@@ -1543,6 +1543,8 @@ function wpforms_decode_string( $string ) {
 	return wp_kses_decode_entities( htmlspecialchars_decode( $string ) );
 }
 
+add_filter( 'wpforms_email_message', 'wpforms_decode_string' );
+
 /**
  * Get a suffix for assets, `.min` if debug is enabled.
  *

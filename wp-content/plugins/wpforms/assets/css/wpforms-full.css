@@ -998,6 +998,16 @@ div.wpforms-container-full .wpforms-form .wpforms-field-hidden {
 		display: none;
 	}
 
+	/* Date-Time field */
+	div.wpforms-container-full .wpforms-form .wpforms-field-date-time .wpforms-one-half {
+		width: 100%;
+		margin-left: 0;
+		float: none;
+	}
+	div.wpforms-container-full .wpforms-form .wpforms-field-date-time .wpforms-one-half:first-of-type {
+		margin-bottom: 8px;
+	}
+
 	/* Preset layout - single line */
 	div.wpforms-container-full.inline-fields .wpforms-form .wpforms-field-container,
 	div.wpforms-container-full.inline-fields .wpforms-form .wpforms-field {

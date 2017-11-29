@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the WPForms package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WPForms 1.4.1.1\n"
+"Project-Id-Version: WPForms 1.4.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpforms\n"
-"POT-Creation-Date: 2017-09-29 15:25:06+00:00\n"
+"POT-Creation-Date: 2017-10-25 18:46:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,7 +12,8 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: includes/admin/admin.php:128 pro/includes/admin/class-addons.php:241
+#: includes/admin/admin.php:128 includes/admin/admin.php:156
+#: pro/includes/admin/class-addons.php:241
 msgid "Activate"
 msgstr ""
 
@@ -105,33 +106,53 @@ msgstr ""
 msgid "Heads up!"
 msgstr ""
 
-#: includes/admin/admin.php:151 includes/admin/builder/class-builder.php:288
+#: includes/admin/admin.php:150
+msgid "Please select at least one form to import."
+msgstr ""
+
+#: includes/admin/admin.php:153 includes/admin/builder/class-builder.php:288
 msgid "OK"
 msgstr ""
 
-#: includes/admin/admin.php:152
-msgid "Are you sure you want to disconnect this account?"
-msgstr ""
-
-#: includes/admin/admin.php:153
-msgid "Could not authenticate with the provider."
-msgstr ""
-
 #: includes/admin/admin.php:154
-msgid "Save and Refresh"
+msgid "Install and Activate"
 msgstr ""
 
 #: includes/admin/admin.php:155
+msgid ""
+"needs to be installed and activated to import its forms. Would you like us "
+"to install and activate it for you?"
+msgstr ""
+
+#: includes/admin/admin.php:157
+msgid ""
+"needs to be activated to import its forms. Would you like us to activate it "
+"for you?."
+msgstr ""
+
+#: includes/admin/admin.php:158
+msgid "Are you sure you want to disconnect this account?"
+msgstr ""
+
+#: includes/admin/admin.php:159
+msgid "Could not authenticate with the provider."
+msgstr ""
+
+#: includes/admin/admin.php:160
+msgid "Save and Refresh"
+msgstr ""
+
+#: includes/admin/admin.php:161
 msgid "Upload or Choose Your Image"
 msgstr ""
 
-#: includes/admin/admin.php:156
+#: includes/admin/admin.php:162
 msgid "Use Image"
 msgstr ""
 
 #. translators: %1$s - WPForms plugin name; %2$s - opening a link tag; %3$s -
 #. closing a link tag.
-#: includes/admin/admin.php:351
+#: includes/admin/admin.php:357
 msgid ""
 "Your site is running an outdated version of PHP that is no longer supported "
 "and may cause issues with %1$s. %2$sRead more%3$s for additional information."
@@ -510,6 +531,7 @@ msgid "Preview Form"
 msgstr ""
 
 #: includes/admin/builder/class-builder.php:471
+#: includes/admin/class-tools.php:389
 #: includes/admin/overview/class-overview-table.php:182
 msgid "Preview"
 msgstr ""
@@ -550,6 +572,8 @@ msgstr ""
 
 #: includes/admin/builder/panels/class-fields.php:123
 #: includes/admin/builder/panels/class-settings.php:130
+#: includes/admin/importers/class-contact-form-7.php:106
+#: includes/admin/importers/class-ninja-forms.php:123
 msgid "Submit"
 msgstr ""
 
@@ -756,6 +780,8 @@ msgid "Confirmation Message"
 msgstr ""
 
 #: includes/admin/builder/panels/class-settings.php:211
+#: includes/admin/importers/class-contact-form-7.php:123
+#: includes/admin/importers/class-ninja-forms.php:140
 msgid "Thanks for contacting us! We will be in touch with you shortly."
 msgstr ""
 
@@ -857,9 +883,9 @@ msgid ""
 "a>?"
 msgstr ""
 
-#. #-#-#-#-#  wpforms.pot (WPForms 1.4.1.1)  #-#-#-#-#
+#. #-#-#-#-#  wpforms.pot (WPForms 1.4.2)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
-#. #-#-#-#-#  wpforms.pot (WPForms 1.4.1.1)  #-#-#-#-#
+#. #-#-#-#-#  wpforms.pot (WPForms 1.4.2)  #-#-#-#-#
 #. Author of the plugin/theme
 #: includes/admin/class-menu.php:39 includes/admin/class-menu.php:40
 #: includes/admin/class-menu.php:51 includes/admin/class-menu.php:103
@@ -1207,107 +1233,233 @@ msgstr ""
 msgid "Click here to Upgrade"
 msgstr ""
 
-#: includes/admin/class-tools.php:89
-msgid "Import/Export"
+#: includes/admin/class-tools.php:118 includes/admin/class-tools.php:177
+#: includes/admin/class-tools.php:217 includes/admin/class-tools.php:280
+msgid "Import"
 msgstr ""
 
-#: includes/admin/class-tools.php:90
+#: includes/admin/class-tools.php:119 includes/admin/class-tools.php:460
+msgid "Export"
+msgstr ""
+
+#: includes/admin/class-tools.php:120
 msgid "System Info"
 msgstr ""
 
-#: includes/admin/class-tools.php:99
+#: includes/admin/class-tools.php:129
 msgid ""
 "Import was successfully finished. You can go and <a href=\"%s\">check your "
 "forms</a>."
 msgstr ""
 
-#: includes/admin/class-tools.php:130
-msgid "Form Import"
+#: includes/admin/class-tools.php:162
+msgid "WPForms Import"
 msgstr ""
 
-#: includes/admin/class-tools.php:131
-msgid "Select an export file."
+#: includes/admin/class-tools.php:163
+msgid "Select a WPForms export file."
 msgstr ""
 
-#: includes/admin/class-tools.php:136
+#: includes/admin/class-tools.php:169
 msgid "No file chosen"
 msgstr ""
 
-#: includes/admin/class-tools.php:138
+#: includes/admin/class-tools.php:171
 msgid "Choose a file&hellip;"
 msgstr ""
 
-#: includes/admin/class-tools.php:144
-msgid "Import"
+#: includes/admin/class-tools.php:183
+msgid "Import from Other Form Plugins"
 msgstr ""
 
-#: includes/admin/class-tools.php:150
+#: includes/admin/class-tools.php:184
+msgid "Not happy with other WordPress contact form plugins?"
+msgstr ""
+
+#: includes/admin/class-tools.php:185
+msgid ""
+"WPForms makes it easy for you to switch by allowing you import your third-"
+"party forms with a single click."
+msgstr ""
+
+#: includes/admin/class-tools.php:189
+msgid "No form importers are currently enabled."
+msgstr ""
+
+#: includes/admin/class-tools.php:194
+msgid "Select previous contact form plugin..."
+msgstr ""
+
+#: includes/admin/class-tools.php:199 pro/includes/admin/class-addons.php:201
+msgid "Not Installed"
+msgstr ""
+
+#: includes/admin/class-tools.php:201
+msgid "Not Active"
+msgstr ""
+
+#: includes/admin/class-tools.php:238
+msgid "Form Import"
+msgstr ""
+
+#: includes/admin/class-tools.php:244
+msgid "Select the forms you would like to import."
+msgstr ""
+
+#: includes/admin/class-tools.php:248
+msgid "Available Forms"
+msgstr ""
+
+#: includes/admin/class-tools.php:253
+msgid "No forms found."
+msgstr ""
+
+#: includes/admin/class-tools.php:267
+msgid "Select All"
+msgstr ""
+
+#: includes/admin/class-tools.php:272
+msgid "Forms to Import"
+msgstr ""
+
+#. translators: %1$s - current forms counter; %2$s - total forms counter; %3$s
+#. - provider name.
+#: includes/admin/class-tools.php:291
+msgid "Analyzing %1$s of %2$s forms from %3$s."
+msgstr ""
+
+#: includes/admin/class-tools.php:299
+msgid "Heads Up!"
+msgstr ""
+
+#: includes/admin/class-tools.php:300
+msgid ""
+"One or more of your forms contain fields that are not available in WPForms "
+"Lite. To properly impor tthese fields, we recommend upgrading to WPForms Pro."
+msgstr ""
+
+#: includes/admin/class-tools.php:301
+msgid ""
+"You can continue with the import without upgrading, and we will do our best "
+"to match the fields. However, some of them will be omitted due to "
+"compatibility issues."
+msgstr ""
+
+#: includes/admin/class-tools.php:303 includes/admin/class-welcome.php:285
+msgid "Upgrade to WPForms Pro"
+msgstr ""
+
+#: includes/admin/class-tools.php:304
+msgid "Continue Import without Upgrading"
+msgstr ""
+
+#: includes/admin/class-tools.php:307
+msgid "Below are the list of form fields that may be impacted:"
+msgstr ""
+
+#. translators: %1$s - current forms counter; %2$s - total forms counter; %3$s
+#. - provider name.
+#: includes/admin/class-tools.php:318
+msgid "Importing %1$s of %2$s forms from %3$s."
+msgstr ""
+
+#. translators: %s - number of imported forms.
+#: includes/admin/class-tools.php:330
+msgid ""
+"Congrats, the import process has finished! We have successfully imported %s "
+"forms. You can review the results below."
+msgstr ""
+
+#: includes/admin/class-tools.php:387
+#: includes/admin/overview/class-overview-table.php:160
+msgid "Edit"
+msgstr ""
+
+#: includes/admin/class-tools.php:393
+msgid "The following fields are available in PRO and were not imported:"
+msgstr ""
+
+#: includes/admin/class-tools.php:401
+msgid ""
+"The following fields are available in PRO and were imported as text fields:"
+msgstr ""
+
+#: includes/admin/class-tools.php:409
+msgid "The following fields are not supported and were not imported:"
+msgstr ""
+
+#: includes/admin/class-tools.php:418
+msgid "Upgrade to the PRO plan to import these fields."
+msgstr ""
+
+#: includes/admin/class-tools.php:420 includes/admin/class-welcome.php:247
+#: pro/includes/admin/class-addons.php:249
+msgid "Upgrade Now"
+msgstr ""
+
+#: includes/admin/class-tools.php:439
 msgid "Form Export"
 msgstr ""
 
-#: includes/admin/class-tools.php:151
+#: includes/admin/class-tools.php:441
 msgid ""
 "Form exports files can be used to create a backup of your forms or to import "
 "forms into another site."
 msgstr ""
 
-#: includes/admin/class-tools.php:156
+#: includes/admin/class-tools.php:447
 msgid "Select form(s)"
 msgstr ""
 
-#: includes/admin/class-tools.php:163
+#: includes/admin/class-tools.php:454
 msgid "You need to create a form before you can use form export."
 msgstr ""
 
-#: includes/admin/class-tools.php:169
-msgid "Export"
-msgstr ""
-
-#: includes/admin/class-tools.php:174
+#: includes/admin/class-tools.php:466
 msgid "Form Template Export"
 msgstr ""
 
-#: includes/admin/class-tools.php:177
+#: includes/admin/class-tools.php:470
 msgid ""
 "The following code can be used to register your custom form template. Copy "
 "and paste the following code to your theme's functions.php file or include "
 "it within an external file."
 msgstr ""
 
-#: includes/admin/class-tools.php:178
+#: includes/admin/class-tools.php:471
 msgid ""
 "For more information <a href=\"%s\" target=\"blank\" rel=\"noopener "
 "noreferrer\">see our documentation</a>."
 msgstr ""
 
-#: includes/admin/class-tools.php:182
+#: includes/admin/class-tools.php:476
 msgid ""
 "Select a form to generate PHP code that can be used to register a custom "
 "form template."
 msgstr ""
 
-#: includes/admin/class-tools.php:194
+#: includes/admin/class-tools.php:489
 msgid "You need to create a form before you can generate a template."
 msgstr ""
 
-#: includes/admin/class-tools.php:200
+#: includes/admin/class-tools.php:495
 msgid "Export Template"
 msgstr ""
 
-#: includes/admin/class-tools.php:215
+#: includes/admin/class-tools.php:510
 msgid "System Information"
 msgstr ""
 
-#: includes/admin/class-tools.php:277
+#: includes/admin/class-tools.php:577
 msgid "Please upload a valid .json form export file."
 msgstr ""
 
-#: includes/admin/class-tools.php:278
-#: pro/includes/admin/entries/class-entries-export.php:340
+#: includes/admin/class-tools.php:578
+#: pro/includes/admin/entries/class-entries-export.php:342
 msgid "Error"
 msgstr ""
 
-#: includes/admin/class-tools.php:402 includes/admin/class-tools.php:406
+#: includes/admin/class-tools.php:704 includes/admin/class-tools.php:708
 #: pro/includes/admin/entries/class-entries-single.php:733
 #: pro/includes/admin/entries/class-entries-single.php:1087
 msgid "M j, Y @ g:ia"
@@ -1501,10 +1653,6 @@ msgstr ""
 msgid "per year"
 msgstr ""
 
-#: includes/admin/class-welcome.php:247 pro/includes/admin/class-addons.php:249
-msgid "Upgrade Now"
-msgstr ""
-
 #: includes/admin/class-welcome.php:258
 msgid "Testimonials"
 msgstr ""
@@ -1525,8 +1673,54 @@ msgid ""
 "investment."
 msgstr ""
 
-#: includes/admin/class-welcome.php:285
-msgid "Upgrade to WPForms Pro"
+#: includes/admin/importers/class-base.php:114
+msgid "There was an error while creating a new form."
+msgstr ""
+
+#: includes/admin/importers/class-contact-form-7.php:107
+#: includes/admin/importers/class-ninja-forms.php:124
+msgid "Sending"
+msgstr ""
+
+#: includes/admin/importers/class-contact-form-7.php:112
+#: includes/admin/importers/class-ninja-forms.php:129
+msgid "Notification 1"
+msgstr ""
+
+#. translators: %s - Contact Form 7 form name.
+#. translators: %s - Ninja Forms form name.
+#: includes/admin/importers/class-contact-form-7.php:115
+#: includes/admin/importers/class-contact-form-7.php:400
+#: includes/admin/importers/class-ninja-forms.php:132
+#: includes/admin/importers/class-ninja-forms.php:404
+msgid "New Entry: %s"
+msgstr ""
+
+#: includes/admin/importers/class-contact-form-7.php:134
+#: includes/admin/importers/class-ninja-forms.php:151
+msgid "No form fields found."
+msgstr ""
+
+#: includes/admin/importers/class-contact-form-7.php:302
+msgid "Acceptance Field"
+msgstr ""
+
+#: includes/admin/importers/class-contact-form-7.php:397
+msgid "Notification 2"
+msgstr ""
+
+#. translators: %1$s - field type; %2$s - field name if available.
+#: includes/admin/importers/class-contact-form-7.php:490
+msgid "%1$s Field%2$s"
+msgstr ""
+
+#: includes/admin/importers/class-ninja-forms.php:227
+msgid "Single Checkbox Field"
+msgstr ""
+
+#: includes/admin/importers/class-ninja-forms.php:401
+#: includes/admin/importers/class-ninja-forms.php:417
+msgid "Notification"
 msgstr ""
 
 #: includes/admin/overview/class-overview-table.php:53
@@ -1551,10 +1745,6 @@ msgstr ""
 #: includes/admin/overview/class-overview-table.php:142
 #: includes/admin/overview/class-overview-table.php:159
 msgid "Edit this form"
-msgstr ""
-
-#: includes/admin/overview/class-overview-table.php:160
-msgid "Edit"
 msgstr ""
 
 #: includes/admin/overview/class-overview-table.php:173
@@ -1965,8 +2155,8 @@ msgid ""
 msgstr ""
 
 #: includes/emails/class-emails.php:472 includes/emails/class-emails.php:495
-#: includes/fields/class-checkbox.php:193 includes/fields/class-radio.php:193
-#: includes/fields/class-select.php:199
+#: includes/fields/class-checkbox.php:194 includes/fields/class-radio.php:194
+#: includes/fields/class-select.php:200
 msgid "(empty)"
 msgstr ""
 
@@ -2180,17 +2370,17 @@ msgstr ""
 msgid "Third Choice"
 msgstr ""
 
-#: includes/fields/class-checkbox.php:89 includes/fields/class-radio.php:89
-#: includes/fields/class-select.php:89
-msgid "Check this to manually set form field values."
-msgstr ""
-
 #: includes/fields/class-checkbox.php:97 includes/fields/class-radio.php:97
 #: includes/fields/class-select.php:97
 msgid "Show Values"
 msgstr ""
 
-#: includes/fields/class-checkbox.php:211 includes/fields/class-radio.php:211
+#: includes/fields/class-checkbox.php:98 includes/fields/class-radio.php:98
+#: includes/fields/class-select.php:98
+msgid "Check this to manually set form field values."
+msgstr ""
+
+#: includes/fields/class-checkbox.php:212 includes/fields/class-radio.php:212
 msgid ""
 "Showing the first 20 choices.<br> All %d choices will be displayed when "
 "viewing the form."
@@ -2955,8 +3145,8 @@ msgstr ""
 msgid "Addon installed."
 msgstr ""
 
-#: pro/includes/admin/ajax-actions.php:225
-#: pro/includes/admin/ajax-actions.php:270
+#: pro/includes/admin/ajax-actions.php:224
+#: pro/includes/admin/ajax-actions.php:269
 msgid "Please enter a license key."
 msgstr ""
 
@@ -3030,10 +3220,6 @@ msgid ""
 "following extensions."
 msgstr ""
 
-#: pro/includes/admin/class-addons.php:201
-msgid "Not Installed"
-msgstr ""
-
 #: pro/includes/admin/class-addons.php:225
 #: pro/includes/admin/entries/class-entries-list-table.php:162
 msgid "Status"
@@ -3100,7 +3286,7 @@ msgstr ""
 msgid "ID"
 msgstr ""
 
-#: pro/includes/admin/entries/class-entries-export.php:339
+#: pro/includes/admin/entries/class-entries-export.php:341
 msgid "You do not have permission to export entries."
 msgstr ""
 
@@ -4112,9 +4298,9 @@ msgstr ""
 msgid "Please deactivate WPForms Lite before activating WPForms."
 msgstr ""
 
-#. #-#-#-#-#  wpforms.pot (WPForms 1.4.1.1)  #-#-#-#-#
+#. #-#-#-#-#  wpforms.pot (WPForms 1.4.2)  #-#-#-#-#
 #. Plugin URI of the plugin/theme
-#. #-#-#-#-#  wpforms.pot (WPForms 1.4.1.1)  #-#-#-#-#
+#. #-#-#-#-#  wpforms.pot (WPForms 1.4.2)  #-#-#-#-#
 #. Author URI of the plugin/theme
 msgid "https://wpforms.com"
 msgstr ""

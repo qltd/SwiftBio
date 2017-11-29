@@ -1,6 +1,6 @@
 <?php
 /*
-Copyright 2013-2016 Yellow Tree, Siegen, Germany
+Copyright 2013-2017 Yellow Tree, Siegen, Germany
 Author: Benjamin Pick (info@yellowtree.de)
 
 This program is free software; you can redistribute it and/or modify
@@ -132,7 +132,8 @@ HTML;
 		}
 		
 		if (!file_exists($data_filename)) {
-			$data_filename = '';
+			// Maybe site root changed?
+			$data_filename = $this->maxmindValidateFilename(get_option('geoip-detect-manual_file'));
 		}
 		
 		$data_filename = apply_filters('geoip_detect_get_abs_db_filename', $data_filename);

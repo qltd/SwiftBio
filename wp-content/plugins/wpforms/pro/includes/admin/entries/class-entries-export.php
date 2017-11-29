@@ -287,12 +287,14 @@ class WPForms_Entries_Export {
 	 */
 	public function get_csv_export_separator() {
 
-		return apply_filters_deprecated(
+		$separator = apply_filters_deprecated(
 			'wpforms_csv_export_seperator',
 			array( ',' ),
 			'1.4.1 of WPForms plugin',
 			'wpforms_csv_export_separator'
 		);
+
+		return apply_filters( 'wpforms_csv_export_separator', $separator );
 	}
 
 	/**

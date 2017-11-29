@@ -465,4 +465,255 @@
 			font-size: 14px;
 		}
 	}
+
+	// Checkbox multi-select columns.
+	.checkbox-multiselect-columns {
+		max-width: 600px;
+		position: relative;
+
+		&:after {
+			content: ".";
+			display: block;
+			height: 0;
+			line-height: 0;
+			font-size: 0;
+			clear: both;
+			min-height: 0;
+			visibility: hidden;
+		}
+
+		&:before {
+			content: "\f0ec";
+			color: #999;
+			font: normal normal normal 20px/1 FontAwesome;
+			text-rendering: auto;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			position: absolute;
+			top: 130px;
+			left: 50%;
+			margin: 0 0 0 -10px;
+		}
+
+		.header {
+			font-weight: 600;
+			font-size: 13px;
+			margin: 0;
+			padding: 0 0 5px 0;
+			text-align: center;
+		}
+
+		.first-column,
+		.second-column {
+			width: 45%;
+			float: left;
+		}
+
+		.first-column {
+
+		}
+
+		.second-column {
+			float: right;
+
+			ul {
+				li {
+					padding: 10px;
+				}
+			}
+		}
+
+		ul {
+			background-color: #fff;
+			border: 1px solid #ddd;
+			border-radius: 3px;
+			position: relative;
+			height: 250px;
+			padding: 0;
+			overflow-y: auto;
+			margin: 0;
+			list-style-type: none;
+
+			li {
+				border-bottom: 1px #eee solid;
+				margin: 0;
+				font-size: 14px;
+
+				label {
+					display: block;
+					padding: 10px 10px 10px 32px;
+					position: relative;
+					vertical-align: baseline;
+
+					&:hover {
+						background-color: $orange;
+						color: #fff;
+					}
+
+					&:before {
+						content: "\f0c8";
+						color: #ddd;
+						font: normal normal normal 16px/1 FontAwesome;
+						text-rendering: auto;
+						-webkit-font-smoothing: antialiased;
+						-moz-osx-font-smoothing: grayscale;
+						position: absolute;
+						top: 12px;
+						left: 10px;
+					}
+
+					&.checked {
+						opacity: 0.6;
+
+						&:before {
+							content: "\f14a";
+							color: $green;
+						}
+					}
+				}
+
+				input {
+					display: none;
+				}
+			}
+		}
+
+		.all {
+			color: #999;
+			display: inline-block;
+			font-size: 13px;
+			margin: 10px 0 0;
+		}
+	}
+
+	// Other Importers. (Tools)
+	#wpforms-importer-analyze {
+		display: none;
+
+		.process-count,
+		p {
+			font-size: 14px;
+		}
+
+		.upgrade {
+			display: none;
+			font-size: 14px;
+
+			h5 {
+				font-size: 18px;
+				font-weight: 600;
+				padding: 0;
+				margin: 30px 0 20px 0;
+			}
+
+			hr {
+				border: none;
+				border-bottom: 1px solid #e4e4e4;
+				margin: 40px 0;
+			}
+
+			.wpforms-btn {
+				margin-right: 10px;
+			}
+
+			ul {
+				li {
+					list-style-type: disc;
+					margin-left: 14px;
+
+					&.form {
+						list-style-type: none;
+						margin-left: 0;
+						font-weight: 700;
+					}
+				}
+			}
+		}
+	}
+
+	#wpforms-importer-process {
+		display: none;
+
+		.process-count,
+		.process-completed {
+			font-size: 14px;
+		}
+
+		.process-completed {
+			display: none;
+		}
+
+		.status {
+			margin: 20px 0 30px;
+			background-color: #fff;
+			border-radius: 3px;
+			border: 1px solid #ddd;
+			max-height: 800px;
+			overflow-y: scroll;
+			display: none;
+
+			.item-wrap {
+
+			}
+
+			.item {
+				border-bottom: 1px solid #ddd;
+				padding: 20px;
+
+				&:last-of-type {
+					border: none;
+				}
+
+				p {
+					font-size: 13px;
+					margin: 12px 0 0;
+				}
+
+				ul {
+					font-size: 13px;
+					margin: 12px 0 0 16px;
+
+					li {
+						list-style: disc;
+					}
+				}
+
+				.status-icon {
+					display: inline-block;
+					margin: 0 10px 0 0;
+
+					&.fa-info-circle {
+						color: #00a0d2
+					}
+
+					&.fa-check {
+						color: #46b450
+					}
+
+					&.fa-exclamation-triangle {
+						color: #ffb900
+					}
+
+					&.fa-times,
+					&.fa-exclamation-circle {
+						color: red;
+					}
+				}
+
+				.name {
+					font-size: 14px;
+					float: left;
+				}
+
+				.actions {
+					font-size: 14px;
+					float: right;
+
+					.sep {
+						color: #ddd;
+					}
+				}
+			}
+		}
+	}
 }

@@ -85,24 +85,25 @@ class WPForms_Field_Checkbox extends WPForms_Field {
 			'markup' => 'open',
 		) );
 
-		// Show Values toggle option
-		$tooltip     = __( 'Check this to manually set form field values.', 'wpforms' );
-		$show_values = isset( $field['show_values'] ) ? $field['show_values'] : '0';
-		$show_values = $this->field_element(
-			'checkbox',
-			$field,
-			array(
-				'slug' => 'show_values',
-				'value' => $show_values,
-				'desc' => __( 'Show Values', 'wpforms' ),
-				'tooltip' => $tooltip,
-			),
-			false
-		);
-		$this->field_element( 'row', $field, array(
-			'slug' => 'show_values',
-			'content' => $show_values,
-		) );
+		// Show Values toggle option. This option will only show if already used
+		// or if manually enabled by a filter.
+		if ( ! empty( $field['show_values'] ) || apply_filters( 'wpforms_fields_show_options_setting', false ) ) {
+			$show_values = $this->field_element(
+				'checkbox',
+				$field,
+				array(
+					'slug'    => 'show_values',
+					'value'   => isset( $field['show_values'] ) ? $field['show_values'] : '0',
+					'desc'    => __( 'Show Values', 'wpforms' ),
+					'tooltip' => __( 'Check this to manually set form field values.', 'wpforms' ),
+				),
+				false
+			);
+			$this->field_element( 'row', $field, array(
+				'slug'    => 'show_values',
+				'content' => $show_values,
+			) );
+		}
 
 		// Input columns
 		$this->field_option( 'input_columns', $field );

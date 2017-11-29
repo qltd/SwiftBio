@@ -114,7 +114,6 @@ function wpforms_install_addon() {
 
 	wp_send_json_error( __( 'Could not install addon. Please download from wpforms.com and install manually.', 'wpforms' ) );
 }
-
 add_action( 'wp_ajax_wpforms_install_addon', 'wpforms_install_addon' );
 
 /**

@@ -132,7 +132,7 @@ class WPForms_Addons {
 						$this->addon_grid( $this->addons, $type, array( 'plus' ) );
 						$this->addon_grid( $this->addons, $type, array( 'pro' ), true );
 
-					elseif ( 'ultimate' === $type || 'pro' === $type ) :
+					elseif ( 'agency' === $type || 'ultimate' === $type || 'pro' === $type ) :
 
 						$this->addon_grid( $this->addons, $type, array( 'basic', 'plus', 'pro' ) );
 

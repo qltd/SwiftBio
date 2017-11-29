@@ -12,13 +12,13 @@
 class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
 
     /**
-     * Init and hook in the integration tab.
+     * Init and hook in the integration.
      *
      * @access public
      * @return void
      */
     //set plugin version
-    public $tvc_eeVer = '1.1.2';
+    public $tvc_eeVer = '1.2.0.1';
     public function __construct() {
         
          //Set Global Variables
@@ -28,7 +28,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
         //define plugin ID       
         $this->id = "enhanced_ecommerce_google_analytics";
         $this->method_title = __("Enhanced Ecommerce Google Analytics", "enhanced-e-commerce-for-woocommerce-store");
-        $this->method_description = __("Enhanced Ecommerce is a new feature of Universal Analytics that generates detailed statistics about the users journey from product page to thank you page on your e-store. <br/><a href='http://www.tatvic.com/blog/enhanced-ecommerce/' target='_blank'>Know more about Enhanced Ecommerce.</a><br/><br/><b>Quick Tip:</b> We recently launched an Advanced Google Analytics Plugin for WooCommerce! The plugin offers tracking of 9 Reports of Enhanced Ecommerce, User ID Tracking, 15+ Custom Dimenensions & Metrics, Content Grouping & much more. <a href='https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552' target='_blank'>Learn More</a>", "woocommerce");
+        $this->method_description = __("Enhanced Ecommerce is a new feature of Universal Analytics that generates detailed statistics about the users journey from product page to thank you page on your e-store. <br/><a href='http://www.tatvic.com/blog/enhanced-ecommerce/' target='_blank'>Know more about Enhanced Ecommerce.</a><br/><br/><b>Quick Tip:</b> We also have an Advanced Google Analytics Plugin for WooCommerce! The plugin offers tracking of 9 Reports of Enhanced Ecommerce, User ID Tracking, Add Google Optimize Snippet, 15+ Custom Dimenensions & Metrics, Content Grouping & much more. <a href='https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552?ref=tatvic' target='_blank'>Learn More</a>", "woocommerce");
 
         //session for product position count
         //session_start removed bcoz it gives warning
@@ -39,7 +39,8 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
         //load all the settings
         $this->init_settings();
 
-            // Define user set variables -- Always use short names    
+            // Define user set variables -- Always use short names   
+             $this->tvc_aga = $this->get_option("tvc_aga"); 
         $this->ga_id = $this->get_option("ga_id");
         $this->ga_Dname = $this->get_option("ga_Dname");
         $this->ga_LC = get_woocommerce_currency(); //Local Currency yuppi! Got from Back end 
@@ -94,7 +95,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
      * @return void
      */
     function tvc_store_meta_data() {
-        //only fires on home page
+        //only on home page
         global $woocommerce;
         $tvc_sMetaData = array();
 
@@ -155,10 +156,10 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
                     }                 }
                    });
                 
-            //Pugin Promotion
-            jQuery("h1.screen-reader-text").before("<a href=https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552?ref=tatvic target=_blank><img src='.plugins_url( '/woo_plugin_promotion.png' , __FILE__ ).' title=Actionable Google Analytics Plugin by Tatvic alt=Actionable Google Analytics Plugin by Tatvic></a>");
-            jQuery("form#mainform").after("<a href=https://www.tatvic.com/contact/?utm_source=mage-uaee-owox&utm_medium=banner&utm_campaign=owox%20banner target=_blank><img src='.plugins_url( '/owox_banner_700_150.png' , __FILE__ ).' title=Owox Banner Ad alt=Owox Banner Ad></a>");
-            </script>';
+               //Pugin Promotion
+                jQuery("h1.screen-reader-text").before("<a href=https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552?ref=tatvic target=_blank><img src='.plugins_url( '/aga_woo_1000_200.png' , __FILE__ ).' title=Actionable Google Analytics Plugin by Tatvic alt=Actionable Google Analytics Plugin by Tatvic></a>");
+                jQuery("form#mainform").after("<a href=https://www.tatvic.com/contact/?utm_source=woocommerce_ee_plugin&utm_medium=wordpress_admin&utm_campaign=plugin_promotion target=_blank><img src='.plugins_url( '/owox_banner_700_150.png' , __FILE__ ).' title=Owox Banner Ad alt=Owox Banner Ad></a>");
+                </script>';
         }
     }
 
@@ -232,12 +233,9 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
                         ' . $ga_display_feature_code . '
                       
                         ga("send", "pageview");';
-
-        //include this on all pages except order confirmation page.
-        if (!is_order_received_page()) {
+ 
             echo "<script>" . $code . "</script>";
         }
-    }
 
     /**
      * Initialise Settings Form Fields
@@ -357,23 +355,6 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
             $ga_display_feature_code = "";
         }
 
-        //add Pageview on order page if user checked Add Standard UA code
-        if ($this->ga_ST) {
-            $ga_pageview = 'ga("send", "pageview");';
-        } else {
-            $ga_pageview = "";
-        }
-        $code = '(function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,"script","//www.google-analytics.com/analytics.js","ga");
-                        
-            ga("create", "' . esc_js($tracking_id) . '", "' . $set_domain_name . '");
-                        ' . $ga_display_feature_code . '
-            ga("require", "ec", "ec.js");
-                        ' . $ga_pageview . '
-                        ';
-
         // Order items
         if ($order->get_items()) {
             foreach ($order->get_items() as $item) {
@@ -442,7 +423,8 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
                  //make json for trans data on order page
            $this->wc_version_compare("tvc_td=" . json_encode($orderpage_trans_Array) . ";");
 
-         $code.='
+         $code='
+                 ga("require", "ec", "ec.js");
                 //set local currencies
             ga("set", "&cu", tvc_lc);  
             for(var t_item in tvc_oc){

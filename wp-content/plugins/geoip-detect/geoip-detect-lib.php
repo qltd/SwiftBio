@@ -1,6 +1,6 @@
 <?php
 /*
-Copyright 2013-2016 Yellow Tree, Siegen, Germany
+Copyright 2013-2017 Yellow Tree, Siegen, Germany
 Author: Benjamin Pick (info@yellowtree.de)
 
 This program is free software; you can redistribute it and/or modify
@@ -213,7 +213,7 @@ function _geoip_detect2_record_enrich_data($record, $ip, $sourceId, $error) {
  * @param array $record
  */
 function _geoip_detect2_try_to_fix_timezone($data) {
-	if (!empty($data['location']['timezone']))
+	if (!empty($data['location']['time_zone']))
 		return $data;
 
 	if (!function_exists('_geoip_detect_get_time_zone')) {
@@ -221,7 +221,7 @@ function _geoip_detect2_try_to_fix_timezone($data) {
 	}
 
 	if (!empty($data['country']['iso_code'])) {
-		$data['location']['time_zone'] = _geoip_detect_get_time_zone($data['country']['iso_code'], @$data['subdivisions'][0]['iso_code']);
+		$data['location']['time_zone'] = _geoip_detect_get_time_zone($data['country']['iso_code'], isset($data['subdivisions'][0]['iso_code']) ? $data['subdivisions'][0]['iso_code'] : null);
 	} else {
 		$data['location']['time_zone'] = null;
 	}

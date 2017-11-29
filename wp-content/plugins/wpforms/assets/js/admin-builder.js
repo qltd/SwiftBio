@@ -2033,7 +2033,7 @@
 			});
 
 			// Toggle form reCAPTCHA setting
-			$(document).on('change', '#wpforms-settings-recaptcha', function() {
+			$(document).on('change', '#wpforms-panel-field-settings-recaptcha', function() {
 				WPFormsBuilder.recaptchaToggle();
 			});
 
@@ -2111,7 +2111,7 @@
 		 */
 		recaptchaToggle: function() {
 
-			if ($('#wpforms-settings-recaptcha').is(':checked')) {
+			if ($('#wpforms-panel-field-settings-recaptcha').is(':checked')) {
 				$('.wpforms-field-recaptcha').show();
 			} else {
 				$('.wpforms-field-recaptcha').hide();

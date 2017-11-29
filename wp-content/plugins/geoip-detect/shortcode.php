@@ -1,6 +1,6 @@
 <?php
 /*
-Copyright 2013-2016 Yellow Tree, Siegen, Germany
+Copyright 2013-2017 Yellow Tree, Siegen, Germany
 Author: Benjamin Pick (info@yellowtree.de)
 
 This program is free software; you can redistribute it and/or modify
@@ -248,7 +248,7 @@ add_shortcode('geoip_detect2_countries', 'geoip_detect2_shortcode_country_select
  *
  */
 function geoip_detect2_shortcode_country_select_wpcf7($tag) {
-	$tag = new WPCF7_Shortcode( $tag );
+	$tag = new WPCF7_FormTag( $tag );
 	
 	$default = (string) reset( $tag->values );
 	$default = $tag->get_default_option($default, array('multiple' => false));

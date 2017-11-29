@@ -342,5 +342,23 @@ function wpforms_builder_dynamic_source() {
 		)
 	);
 }
-
 add_action( 'wp_ajax_wpforms_builder_dynamic_source', 'wpforms_builder_dynamic_source' );
+
+/**
+ * Install or activate a plugin to be used for importing.
+ *
+ * @since 1.4.2
+ */
+function wpforms_tools_import_form() {
+
+	// Run a security check.
+	check_ajax_referer( 'wpforms-admin', 'nonce' );
+
+	// // Check for permissions.
+	if ( ! current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
+		wp_send_json_error();
+	}
+
+	// stuff
+}
+add_action( 'wp_ajax_wpforms_tools_import_form', 'wpforms_tools_import_form' );

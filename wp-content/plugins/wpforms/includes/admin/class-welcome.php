@@ -218,7 +218,7 @@ class WPForms_Welcome {
 
 				</div><!-- /.features -->
 
-				<div class="upgrade">
+				<div class="upgrade-cta upgrade">
 
 					<div class="block wpforms-clear">
 

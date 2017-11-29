@@ -1,3 +1,23 @@
+# 1.5.3 (2017-11-17)
+* Fix total calculations for origin and modified-origin based states
+
+# 1.5.2 (2017-11-14)
+* Recalculate totals in WooCommerce 3.2 instead of updating grand total
+* Update "tested up to" for WordPress 4.8.2
+* Update integration title
+
+# 1.5.1 (2017-10-22)
+* Fix totals calculation issue with WooCommerce 3.2
+* Fix plugin action links filter issue with conflicting plugins
+
+# 1.5.0 (2017-10-10)
+* WooCommerce 3.2 compatibility
+* Improve tax rate override notice under WooCommerce > Settings > Tax
+* Improve plugin intro copy for support under "TaxJar Integration"
+* Fix "limit usage to X items" discounts in WooCommerce 3.1
+* Fix `get_id` method error for discounts in WooCommerce 2.6
+* Fix product tax class parsing for multi-word categories such as "Food & Groceries"
+
 # 1.4.0 (2017-08-17)
 * Support backend order calculations for both WooCommerce 2.6.x and 3.x
 * Fix backend rate display for orders with multiple tax classes
@@ -93,7 +113,7 @@
 # 1.0.5 (2014-09-26)
 ## Updated
 * New way of handling taxes on orders compatible with WooCommerce 2.2
-* Uses new API (with support for Canada): [read the docs](http://www.taxjar.com/api/docs/)
+* Uses new API (with support for Canada): [read the docs](https://www.taxjar.com/api/docs/)
 
 ## New
 * Ability to download orders easily into TaxJar
