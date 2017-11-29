@@ -10,20 +10,28 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see 	https://docs.woocommerce.com/document/template-structure/
+ * @see     https://docs.woocommerce.com/document/template-structure/
  * @author  WooThemes
  * @package WooCommerce/Templates
- * @version 3.0.0
+ * @version 3.2.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+    exit;
+}
+if ( ! $order = wc_get_order( $order_id ) ) {
+    return;
 }
 
-$order = wc_get_order( $order_id );
-
+$order_items           = $order->get_items( apply_filters( 'woocommerce_purchase_order_item_types', 'line_item' ) );
 $show_purchase_note    = $order->has_status( apply_filters( 'woocommerce_purchase_note_order_statuses', array( 'completed', 'processing' ) ) );
 $show_customer_details = is_user_logged_in() && $order->get_user_id() === get_current_user_id();
+$downloads             = $order->get_downloadable_items();
+$show_downloads        = $order->has_downloadable_item() && $order->is_download_permitted();
+
+if ( $show_downloads ) {
+    wc_get_template( 'order/order-downloads.php', array( 'downloads' => $downloads, 'show_title' => true ) );
+}
 ?>
 
 <section class="woocommerce-order-details">
@@ -41,7 +49,7 @@ $show_customer_details = is_user_logged_in() && $order->get_user_id() === get_cu
 
 		<tbody>
 			<?php
-				foreach ( $order->get_items() as $item_id => $item ) {
+				foreach ( $order_items as $item_id => $item ) {
 					$product = apply_filters( 'woocommerce_order_item_product', $item->get_product(), $item );
 
 					wc_get_template( 'order/order-details-item.php', array(
@@ -58,41 +66,48 @@ $show_customer_details = is_user_logged_in() && $order->get_user_id() === get_cu
 		</tbody>
 
 		<tfoot>
-			<?php
-                                            if( $order->get_used_coupons() ) {
-
-                                                $coupons_count = count( $order->get_used_coupons() );
-                                                $i = 1;
-                                                $coupon_text = false;
-                                                foreach( $order->get_used_coupons() as $coupon) {
-                                                    $coupon_text .= $coupon;
-                                                    if( $i < $coupons_count )
-                                                        $coupon_text .= ', ';
-                                                    $i++;
-                                                }
-                                            }
-
+			<?php /** Q CHANGES **/
+            if( $order->get_used_coupons() ) {
+                $coupons_count = count( $order->get_used_coupons() );
+                $i = 1;
+                $coupon_text = false;
+                foreach( $order->get_used_coupons() as $coupon) {
+                    $coupon_text .= $coupon;
+                    if( $i < $coupons_count )
+                            $coupon_text .= ', ';
+                        $i++;
+                    }
+                }
+                /** END Q CHANGES */
 				foreach ( $order->get_order_item_totals() as $key => $total ) {
 					?>
 					<tr>
-						<th scope="row"><?php if ($total['label'] == 'Discount:'): ?>
-                                                                            <?php echo "Discount (" . $coupon_text . "):"; ?>
-                                                                        <?php else: ?>
-                                                                            <?php echo $total['label']; ?>
-                                                                        <?php endif; ?></th>
+						<?php /* Q CHANGES */ ?>
+                        <th scope="row">
+                            <?php if ($total['label'] == 'Discount:'): ?>
+                                <?php echo "Discount (" . $coupon_text . "):"; ?>
+                            <?php else: ?>
+                                <?php echo $total['label']; ?>
+                            <?php endif; ?></th>
 						<td><?php echo $total['value']; ?></td>
 					</tr>
-					<?php
+					<?php /* END Q Changes */
 				}
 			?>
+            <?php if ( $order->get_customer_note() ) : ?>
+                <tr>
+                    <th><?php _e( 'Note:', 'woocommerce' ); ?></th>
+                    <td><?php echo wptexturize( $order->get_customer_note() ); ?></td>
+                </tr>
+            <?php endif; ?>
 		</tfoot>
-
 	</table>
 
 	<?php do_action( 'woocommerce_order_details_after_order_table', $order ); ?>
 
-	<?php if ( $show_customer_details ) : ?>
-		<?php wc_get_template( 'order/order-details-customer.php', array( 'order' => $order ) ); ?>
-	<?php endif; ?>
-
 </section>
+
+<?php
+if ( $show_customer_details ) {
+    wc_get_template( 'order/order-details-customer.php', array( 'order' => $order ) );
+}
