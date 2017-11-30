@@ -52,10 +52,17 @@ bgOverlay[0].addEventListener("click", function(){ toggleNav() });
     }
 
 
+
     $("#sf-form, #shipping-form, #library-form, #data-analysis-form").each(function(){
         $(this).validate({
             ignore: ".ignore",
             messages: {
+                "00N44000005ysAI": {
+                    required: "This field is required."
+               },
+               "00N44000005ysA8": {
+                    required: "This field is required."
+               },
                "hiddenRecaptcha": {
                     required: "Verify you are a human."
                },
@@ -64,6 +71,16 @@ bgOverlay[0].addEventListener("click", function(){ toggleNav() });
                }
             },
             rules: {
+                "00N44000005ysA8": {
+                    required: function(element){
+                        return $("#00N44000005ysA8").val() != 'Please choose';
+                    }
+                },
+                "00N44000005ysAI": {
+                    required: function(element){
+                        return $("#00N44000005ysA8").val()=='Other';
+                    }
+                },
                 "hiddenRecaptcha": {
                      required: function() {
                          if(grecaptcha.getResponse() == '') {
