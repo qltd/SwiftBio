@@ -70,13 +70,31 @@ if ( $show_downloads ) {
 
 		<tfoot>
 			<?php
+                /** Q CHANGES **/
+                if( $order->get_used_coupons() ) {
+                    $coupons_count = count( $order->get_used_coupons() );
+                    $i = 1;
+                    $coupon_text = false;
+                    foreach( $order->get_used_coupons() as $coupon) {
+                        $coupon_text .= $coupon;
+                        if( $i < $coupons_count ) $coupon_text .= ', ';
+                        $i++;
+                        }
+                }
+                    /** END Q CHANGES */
 				foreach ( $order->get_order_item_totals() as $key => $total ) {
 					?>
 					<tr>
-						<th scope="row"><?php echo $total['label']; ?></th>
-						<td><?php echo $total['value']; ?></td>
-					</tr>
-					<?php
+					<?php /* Q CHANGES */ ?>
+                        <th scope="row">
+                            <?php if ($total['label'] == 'Discount:'): ?>
+                                <?php echo "Discount (" . $coupon_text . "):"; ?>
+                            <?php else: ?>
+                                <?php echo $total['label']; ?>
+                            <?php endif; ?></th>
+                        <td><?php echo $total['value']; ?></td>
+                    </tr>
+                    <?php /* END Q Changes */
 				}
 			?>
 			<?php if ( $order->get_customer_note() ) : ?>
