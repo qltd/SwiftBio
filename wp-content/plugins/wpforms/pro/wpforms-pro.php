@@ -17,18 +17,18 @@ class WPForms_Pro {
 		$this->constants();
 		$this->includes();
 
-		add_action( 'wpforms_loaded',                      array( $this, 'objects'                        ), 1     );
-		add_action( 'wpforms_loaded',                      array( $this, 'updater'                        ), 30    );
-		add_action( 'wpforms_install',                     array( $this, 'install'                        ), 10    );
-		add_filter( 'wpforms_settings_tabs',               array( $this, 'register_settings_tabs'         ), 5,  1 );
-		add_filter( 'wpforms_settings_defaults',           array( $this, 'register_settings_fields'       ), 5,  1 );
-		add_action( 'wpforms_process_entry_save',          array( $this, 'entry_save'                     ), 10, 4 );
-		add_action( 'wpforms_form_settings_general',       array( $this, 'form_settings_general'          ), 10    );
-		add_filter( 'wpforms_overview_table_columns',      array( $this, 'form_table_columns'             ), 10, 1 );
-		add_filter( 'wpforms_overview_table_column_value', array( $this, 'form_table_columns_value'       ), 10, 3 );
-		add_action( 'wpforms_form_settings_notifications', array( $this, 'form_settings_notifications'    ),  8, 1 );
-		add_filter( 'wpforms_builder_strings',             array( $this, 'form_builder_strings'           ), 10, 2 );
-		add_action( 'admin_notices',                       array( $this, 'conditional_logic_addon_notice' )        );
+		add_action( 'wpforms_loaded', array( $this, 'objects' ), 1 );
+		add_action( 'wpforms_loaded', array( $this, 'updater' ), 30 );
+		add_action( 'wpforms_install', array( $this, 'install' ), 10 );
+		add_filter( 'wpforms_settings_tabs', array( $this, 'register_settings_tabs' ), 5, 1 );
+		add_filter( 'wpforms_settings_defaults', array( $this, 'register_settings_fields' ), 5, 1 );
+		add_action( 'wpforms_process_entry_save', array( $this, 'entry_save' ), 10, 4 );
+		add_action( 'wpforms_form_settings_general', array( $this, 'form_settings_general' ), 10 );
+		add_filter( 'wpforms_overview_table_columns', array( $this, 'form_table_columns' ), 10, 1 );
+		add_filter( 'wpforms_overview_table_column_value', array( $this, 'form_table_columns_value' ), 10, 3 );
+		add_action( 'wpforms_form_settings_notifications', array( $this, 'form_settings_notifications' ), 8, 1 );
+		add_filter( 'wpforms_builder_strings', array( $this, 'form_builder_strings' ), 10, 2 );
+		add_action( 'admin_notices', array( $this, 'conditional_logic_addon_notice' ) );
 	}
 
 	/**
@@ -40,6 +40,7 @@ class WPForms_Pro {
 
 		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/class-db.php';
 		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/class-entry.php';
+		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/class-entry-fields.php';
 		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/class-entry-meta.php';
 		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/class-conditional-logic-fields.php';
 		require_once WPFORMS_PLUGIN_DIR . 'pro/includes/payments/class-payment.php';
@@ -63,12 +64,13 @@ class WPForms_Pro {
 	 */
 	public function objects() {
 
-		// Global objects
+		// Global objects.
 		wpforms()->entry        = new WPForms_Entry_Handler;
+		wpforms()->entry_fields = new WPForms_Entry_Fields_Handler;
 		wpforms()->entry_meta   = new WPForms_Entry_Meta_Handler;
 
 		if ( is_admin() ) {
-			wpforms()->license  = new WPForms_License;
+			wpforms()->license = new WPForms_License;
 		}
 	}
 
@@ -79,7 +81,7 @@ class WPForms_Pro {
 	 */
 	public function constants() {
 
-		// Plugin Updater API
+		// Plugin Updater API.
 		if ( ! defined( 'WPFORMS_UPDATER_API' ) ) {
 			define( 'WPFORMS_UPDATER_API', 'https://wpforms.com/' );
 		}
@@ -126,12 +128,14 @@ class WPForms_Pro {
 	 */
 	public function install() {
 
-		$wpforms_install             = new stdClass();
-		$wpforms_install->entry      = new WPForms_Entry_Handler;
-		$wpforms_install->entry_meta = new WPForms_Entry_Meta_Handler;
+		$wpforms_install               = new stdClass();
+		$wpforms_install->entry        = new WPForms_Entry_Handler;
+		$wpforms_install->entry_fields = new WPForms_Entry_Fields_Handler;
+		$wpforms_install->entry_meta   = new WPForms_Entry_Meta_Handler;
 
-		// Entry tables
+		// Entry tables.
 		$wpforms_install->entry->create_table();
+		$wpforms_install->entry_fields->create_table();
 		$wpforms_install->entry_meta->create_table();
 	}
 
@@ -149,9 +153,9 @@ class WPForms_Pro {
 		// Add Payments tab.
 		$payments = array(
 			'payments' => array(
-				'name'   => __( 'Payments', 'wpforms' ),
+				'name'   => esc_html__( 'Payments', 'wpforms' ),
 				'form'   => true,
-				'submit' => __( 'Save Settings', 'wpforms' ),
+				'submit' => esc_html__( 'Save Settings', 'wpforms' ),
 			),
 		);
 
@@ -182,52 +186,52 @@ class WPForms_Pro {
 		// Validation settings for fields only available in Pro.
 		$settings['validation']['validation-fileextension']   = array(
 			'id'      => 'validation-fileextension',
-			'name'    => __( 'File Extension', 'wpforms' ),
+			'name'    => esc_html__( 'File Extension', 'wpforms' ),
 			'type'    => 'text',
-			'default' => __( 'File type is not allowed.', 'wpforms' ),
+			'default' => esc_html__( 'File type is not allowed.', 'wpforms' ),
 		);
 		$settings['validation']['validation-filesize']        = array(
 			'id'      => 'validation-filesize',
-			'name'    => __( 'File Size', 'wpforms' ),
+			'name'    => esc_html__( 'File Size', 'wpforms' ),
 			'type'    => 'text',
-			'default' => __( 'File exceeds max size allowed.', 'wpforms' ),
+			'default' => esc_html__( 'File exceeds max size allowed.', 'wpforms' ),
 		);
 		$settings['validation']['validation-time12h']         = array(
 			'id'      => 'validation-time12h',
-			'name'    => __( 'Time (12 hour)', 'wpforms' ),
+			'name'    => esc_html__( 'Time (12 hour)', 'wpforms' ),
 			'type'    => 'text',
-			'default' => __( 'Please enter time in 12-hour AM/PM format (eg 8:45 AM).', 'wpforms' ),
+			'default' => esc_html__( 'Please enter time in 12-hour AM/PM format (eg 8:45 AM).', 'wpforms' ),
 		);
 		$settings['validation']['validation-time24h']         = array(
 			'id'      => 'validation-time24h',
-			'name'    => __( 'Time (24 hour)', 'wpforms' ),
+			'name'    => esc_html__( 'Time (24 hour)', 'wpforms' ),
 			'type'    => 'text',
-			'default' => __( 'Please enter time in 24-hour format (eg 22:45).', 'wpforms' ),
+			'default' => esc_html__( 'Please enter time in 24-hour format (eg 22:45).', 'wpforms' ),
 		);
 		$settings['validation']['validation-requiredpayment'] = array(
 			'id'      => 'validation-requiredpayment',
-			'name'    => __( 'Payment Required', 'wpforms' ),
+			'name'    => esc_html__( 'Payment Required', 'wpforms' ),
 			'type'    => 'text',
-			'default' => __( 'Payment is required.', 'wpforms' ),
+			'default' => esc_html__( 'Payment is required.', 'wpforms' ),
 		);
 		$settings['validation']['validation-creditcard']      = array(
 			'id'      => 'validation-creditcard',
-			'name'    => __( 'Credit Card', 'wpforms' ),
+			'name'    => esc_html__( 'Credit Card', 'wpforms' ),
 			'type'    => 'text',
-			'default' => __( 'Please enter a valid credit card number.', 'wpforms' ),
+			'default' => esc_html__( 'Please enter a valid credit card number.', 'wpforms' ),
 		);
 
 		// Payment settings.
 		$settings['payments']['payments-heading'] = array(
 			'id'       => 'payments-heading',
-			'content'  => '<h4>' . __( 'Payments', 'wpforms' ) . '</h4>',
+			'content'  => '<h4>' . esc_html__( 'Payments', 'wpforms' ) . '</h4>',
 			'type'     => 'content',
 			'no_label' => true,
 			'class'    => array( 'section-heading', 'no-desc' ),
 		);
 		$settings['payments']['currency']         = array(
 			'id'        => 'currency',
-			'name'      => __( 'Currency', 'wpforms' ),
+			'name'      => esc_html__( 'Currency', 'wpforms' ),
 			'type'      => 'select',
 			'choicesjs' => true,
 			'search'    => true,
@@ -250,12 +254,12 @@ class WPForms_Pro {
 	 */
 	public function entry_save( $fields, $entry, $form_id, $form_data = '' ) {
 
-		// Check if form has entries disabled
+		// Check if form has entries disabled.
 		if ( isset( $form_data['settings']['disable_entries'] ) ) {
 			return;
 		}
 
-		// Provide the opportunity to override via a filter
+		// Provide the opportunity to override via a filter.
 		if ( ! apply_filters( 'wpforms_entry_save', true, $fields, $entry, $form_data ) ) {
 			return;
 		}
@@ -265,18 +269,39 @@ class WPForms_Pro {
 		$user_ip    = wpforms_get_ip();
 		$user_agent = ! empty( $_SERVER['HTTP_USER_AGENT'] ) ? substr( $_SERVER['HTTP_USER_AGENT'], 0, 256 ) : '';
 		$user_uuid  = ! empty( $_COOKIE['_wpfuuid'] ) ? $_COOKIE['_wpfuuid'] : '';
+		$date       = date( 'Y-m-d H:i:s' );
+		$entry_id   = false;
 
-		// Essential data
-		$data = array(
+		// Create entry.
+		$entry_id = wpforms()->entry->add( array(
 			'form_id'    => absint( $form_id ),
 			'user_id'    => absint( $user_id ),
 			'fields'     => wp_json_encode( $fields ),
 			'ip_address' => sanitize_text_field( $user_ip ),
 			'user_agent' => sanitize_text_field( $user_agent ),
+			'date'       => $date,
 			'user_uuid'  => sanitize_text_field( $user_uuid ),
-		);
+		) );
 
-		wpforms()->process->entry_id = wpforms()->entry->add( $data );
+		// Create fields.
+		if ( $entry_id ) {
+			foreach ( $fields as $field ) {
+
+				$field = apply_filters( 'wpforms_entry_save_fields', $field, $form_data, $entry_id );
+
+				if ( isset( $field['value'] ) && '' !== $field['value'] ) {
+					wpforms()->entry_fields->add( array(
+						'entry_id' => $entry_id,
+						'form_id'  => absint( $form_id ),
+						'field_id' => absint( $field['id'] ),
+						'value'    => $field['value'],
+						'date'     => $date,
+					) );
+				}
+			}
+		}
+
+		wpforms()->process->entry_id = $entry_id;
 	}
 
 	/**
@@ -304,7 +329,7 @@ class WPForms_Pro {
 			'settings',
 			'disable_entries',
 			$instance->form_data,
-			__( 'Disable storing entry information in WordPress', 'wpforms' )
+			esc_html__( 'Disable storing entry information in WordPress', 'wpforms' )
 		);
 	}
 
@@ -319,7 +344,7 @@ class WPForms_Pro {
 	 */
 	public function form_table_columns( $columns ) {
 
-		$columns['entries'] = __( 'Entries', 'wpforms' );
+		$columns['entries'] = esc_html__( 'Entries', 'wpforms' );
 
 		return $columns;
 	}
@@ -371,21 +396,23 @@ class WPForms_Pro {
 
 		$cc = wpforms_setting( 'email-carbon-copy', false );
 
-		// Fetch next ID and handle backwards compatibility
+		// Fetch next ID and handle backwards compatibility.
 		if ( ! empty( $settings->form_data['settings']['notifications'] ) ) {
 			$next_id = max( array_keys( $settings->form_data['settings']['notifications'] ) ) + 1;
 		} else {
-			$next_id                                                               = 2;
+			$next_id = 2;
+
+			/* translators: %s - form name. */
+			$settings->form_data['settings']['notifications'][1]['subject']        = ! empty( $settings->form_data['settings']['notification_subject'] ) ? $settings->form_data['settings']['notification_subject'] : sprintf( esc_html__( 'New %s Entry', 'wpforms' ), $settings->form->post_title );
 			$settings->form_data['settings']['notifications'][1]['email']          = ! empty( $settings->form_data['settings']['notification_email'] ) ? $settings->form_data['settings']['notification_email'] : '{admin_email}';
-			$settings->form_data['settings']['notifications'][1]['subject']        = ! empty( $settings->form_data['settings']['notification_subject'] ) ? $settings->form_data['settings']['notification_subject'] : sprintf( _x( 'New %s Entry', 'Form name', 'wpforms ' ), $settings->form->post_title );
 			$settings->form_data['settings']['notifications'][1]['sender_name']    = ! empty( $settings->form_data['settings']['notification_fromname'] ) ? $settings->form_data['settings']['notification_fromname'] : get_bloginfo( 'name' );
 			$settings->form_data['settings']['notifications'][1]['sender_address'] = ! empty( $settings->form_data['settings']['notification_fromaddress'] ) ? $settings->form_data['settings']['notification_fromaddress'] : '{admin_email}';
 			$settings->form_data['settings']['notifications'][1]['replyto']        = ! empty( $settings->form_data['settings']['notification_replyto'] ) ? $settings->form_data['settings']['notification_replyto'] : '';
 		}
 
 		echo '<div class="wpforms-panel-content-section-title">';
-			_e( 'Notifications', 'wpforms' );
-			echo '<button class="wpforms-notifications-add" data-next-id="' . $next_id . '">' . __( 'Add New Notification', 'wpforms' ) . '</button>';
+			esc_html_e( 'Notifications', 'wpforms' );
+			echo '<button class="wpforms-notifications-add" data-next-id="' . $next_id . '">' . esc_html__( 'Add New Notification', 'wpforms' ) . '</button>';
 		echo '</div>';
 
 		wpforms_panel_field(
@@ -393,23 +420,23 @@ class WPForms_Pro {
 			'settings',
 			'notification_enable',
 			$settings->form_data,
-			__( 'Notifications', 'wpforms' ),
+			esc_html__( 'Notifications', 'wpforms' ),
 			array(
 				'default' => '1',
 				'options' => array(
-					'1' => __( 'On', 'wpforms' ),
-					'0' => __( 'Off', 'wpforms' ),
+					'1' => esc_html__( 'On', 'wpforms' ),
+					'0' => esc_html__( 'Off', 'wpforms' ),
 				),
 			)
 		);
 
 		foreach ( $settings->form_data['settings']['notifications'] as $id => $notification ) {
 
-			$name         = ! empty( $notification['notification_name'] ) ? $notification['notification_name'] : __( 'Default Notification', 'wpforms' );
+			$name         = ! empty( $notification['notification_name'] ) ? $notification['notification_name'] : esc_html__( 'Default Notification', 'wpforms' );
 			$closed_state = '';
 			$toggle_state = '<i class="fa fa-chevron-up"></i>';
 
-			if ( wpforms_builder_notification_get_state( $settings->form_data['id'], $id ) === 'closed' ) {
+			if ( ! empty( $settings->form_data['id'] ) && wpforms_builder_notification_get_state( $settings->form_data['id'], $id ) === 'closed' ) {
 				$closed_state = 'style="display:none"';
 				$toggle_state = '<i class="fa fa-chevron-down"></i>';
 			}
@@ -418,18 +445,20 @@ class WPForms_Pro {
 			<div class="wpforms-notification">
 
 				<div class="wpforms-notification-header">
-					<span class="wpforms-notification-name"><?php echo $name; ?></span>
-
-					<div class="wpforms-notification-name-edit">
-						<input type="text" name="settings[notifications][<?php echo $id; ?>][notification_name]" value="<?php echo esc_attr( $name ); ?>">
-					</div>
-
 					<div class="wpforms-notification-actions">
 						<?php do_action( 'wpforms_form_settings_notifications_single_action', $id, $notification, $settings ); ?>
 
 						<button class="wpforms-notification-edit"><i class="fa fa-pencil"></i></button>
 						<button class="wpforms-notification-toggle"><?php echo $toggle_state; ?></button>
 						<button class="wpforms-notification-delete"><i class="fa fa-times-circle"></i></button>
+					</div>
+
+					<div class="wpforms-notification-name-holder">
+						<span class="wpforms-notification-name"><?php echo $name; ?></span>
+
+						<div class="wpforms-notification-name-edit">
+							<input type="text" name="settings[notifications][<?php echo $id; ?>][notification_name]" value="<?php echo esc_attr( $name ); ?>">
+						</div>
 					</div>
 
 				</div>
@@ -442,10 +471,10 @@ class WPForms_Pro {
 						'notifications',
 						'email',
 						$settings->form_data,
-						__( 'Send To Email Address', 'wpforms' ),
+						esc_html__( 'Send To Email Address', 'wpforms' ),
 						array(
 							'default'    => '{admin_email}',
-							'tooltip'    => __( 'Enter the email address to receive form entry notifications. For multiple notifications, separate email addresses with a comma.', 'wpforms' ),
+							'tooltip'    => esc_html__( 'Enter the email address to receive form entry notifications. For multiple notifications, separate email addresses with a comma.', 'wpforms' ),
 							'smarttags'  => array(
 								'type'   => 'fields',
 								'fields' => 'email',
@@ -461,7 +490,7 @@ class WPForms_Pro {
 							'notifications',
 							'carboncopy',
 							$settings->form_data,
-							__( 'CC', 'wpforms' ),
+							esc_html__( 'CC', 'wpforms' ),
 							array(
 								'smarttags'  => array(
 									'type'   => 'fields',
@@ -477,11 +506,12 @@ class WPForms_Pro {
 						'notifications',
 						'subject',
 						$settings->form_data,
-						__( 'Email Subject', 'wpforms' ),
+						esc_html__( 'Email Subject', 'wpforms' ),
 						array(
-							'default'    => sprintf( _x( 'New Entry: %s', 'Form name', 'wpforms' ), $settings->form->post_title ),
+							/* translators: %s - form name. */
+							'default'    => sprintf( esc_html__( 'New Entry: %s', 'wpforms' ), $settings->form->post_title ),
 							'smarttags'  => array(
-								'type'   => 'all',
+								'type' => 'all',
 							),
 							'parent'     => 'settings',
 							'subsection' => $id,
@@ -492,7 +522,7 @@ class WPForms_Pro {
 						'notifications',
 						'sender_name',
 						$settings->form_data,
-						__( 'From Name', 'wpforms' ),
+						esc_html__( 'From Name', 'wpforms' ),
 						array(
 							'default'    => sanitize_text_field( get_option( 'blogname' ) ),
 							'smarttags'  => array(
@@ -508,7 +538,7 @@ class WPForms_Pro {
 						'notifications',
 						'sender_address',
 						$settings->form_data,
-						__( 'From Email', 'wpforms' ),
+						esc_html__( 'From Email', 'wpforms' ),
 						array(
 							'default'    => '{admin_email}',
 							'smarttags'  => array(
@@ -524,7 +554,7 @@ class WPForms_Pro {
 						'notifications',
 						'replyto',
 						$settings->form_data,
-						__( 'Reply-To', 'wpforms' ),
+						esc_html__( 'Reply-To', 'wpforms' ),
 						array(
 							'smarttags'  => array(
 								'type'   => 'fields',
@@ -539,21 +569,22 @@ class WPForms_Pro {
 						'notifications',
 						'message',
 						$settings->form_data,
-						__( 'Message', 'wpforms' ),
+						esc_html__( 'Message', 'wpforms' ),
 						array(
 							'rows'       => 6,
 							'default'    => '{all_fields}',
 							'smarttags'  => array(
-								'type'   => 'all',
+								'type' => 'all',
 							),
 							'parent'     => 'settings',
 							'subsection' => $id,
 							'class'      => 'email-msg',
-							'after'      => '<p class="note">' . __( 'To display all form fields, use the <code>{all_fields}</code> Smart Tag.', 'wpforms' ) . '</p>',
+							/* translators: %s - all fields smart tag. */
+							'after'      => '<p class="note">' . sprintf( esc_html__( 'To display all form fields, use the %s Smart Tag.', 'wpforms' ), '<code>{all_fields}</code>' ) . '</p>',
 						)
 					);
 
-					// Conditional Logic, if addon is activated
+					// Conditional Logic, if addon is activated.
 					if ( function_exists( 'wpforms_conditional_logic' ) ) {
 						wpforms_conditional_logic()->conditionals_block( array(
 							'form'        => $settings->form_data,
@@ -562,18 +593,32 @@ class WPForms_Pro {
 							'parent'      => 'settings',
 							'subsection'  => $id,
 							'actions'     => array(
-								'go'    => __( 'Send', 'wpforms' ),
-								'stop'  => __( 'Don\'t send', 'wpforms' ),
+								'go'   => esc_html__( 'Send', 'wpforms' ),
+								'stop' => esc_html__( 'Don\'t send', 'wpforms' ),
 							),
-							'action_desc' => __( 'this notification if', 'wpforms' ),
-							'reference'   => __( 'Email notifications', 'wpforms' ),
+							'action_desc' => esc_html__( 'this notification if', 'wpforms' ),
+							'reference'   => esc_html__( 'Email notifications', 'wpforms' ),
 						) );
 					} else {
 						/* translators: %s - Addons page URL in site admin area. */
-						echo '<p class="note" style="padding:0 20px;">' . sprintf( __( 'Install the <a href="%s">Conditional Logic addon</a> to enable conditional logic for Email Notifications.', 'wpforms' ), admin_url( 'admin.php?page=wpforms-addons' ) ) . '</p>';
+						echo
+							'<p class="note" style="padding:0 20px;">' .
+							sprintf(
+								wp_kses(
+									/* translators: %s - admin area Addons page URL. */
+									__( 'Install the <a href="%s">Conditional Logic addon</a> to enable conditional logic for Email Notifications.', 'wpforms' ),
+									array(
+										'a' => array(
+											'href' => array(),
+										),
+									)
+								),
+								admin_url( 'admin.php?page=wpforms-addons' )
+							) .
+							'</p>';
 					}
 
-					// Hook for addons
+					// Hook for addons.
 					do_action( 'wpforms_form_settings_notifications_single_after', $settings, $id );
 					?>
 
@@ -620,8 +665,20 @@ class WPForms_Pro {
 
 		if ( file_exists( WP_PLUGIN_DIR . '/wpforms-conditional-logic/wpforms-conditional-logic.php' ) && ! defined( 'WPFORMS_DEBUG' ) ) {
 			echo '<div class="notice notice-info"><p>';
-			/* translators: %s - URL to an announcement page. */
-			printf( __( 'Conditional logic functionality is now included in the core WPForms plugin! The WPForms Conditional Logic addon can be removed without affecting your forms. For more details <a href="%s" target="_blank" rel="noopener noreferrer">read our announcement</a>.', 'wpforms' ), 'https://wpforms.com/announcing-wpforms-1-3-8/' );
+			printf(
+				wp_kses(
+					/* translators: %s - WPForms.com announcement page URL. */
+					__( 'Conditional logic functionality is now included in the core WPForms plugin! The WPForms Conditional Logic addon can be removed without affecting your forms. For more details <a href="%s" target="_blank" rel="noopener noreferrer">read our announcement</a>.', 'wpforms' ),
+					array(
+						'a' => array(
+							'href'   => array(),
+							'target' => array(),
+							'rel'    => array(),
+						),
+					)
+				),
+				'https://wpforms.com/announcing-wpforms-1-3-8/'
+			);
 			echo '</p></div>';
 		}
 	}

@@ -1,6 +1,6 @@
 <?php
 /*
-Copyright 2013-2017 Yellow Tree, Siegen, Germany
+Copyright 2013-2018 Yellow Tree, Siegen, Germany
 Author: Benjamin Pick (info@yellowtree.de)
 
 This program is free software; you can redistribute it and/or modify
@@ -235,11 +235,11 @@ function _geoip_detect2_add_geonames_data($data) {
 	if (is_null($countryInfo))
 		$countryInfo = new \YellowTree\GeoipDetect\Geonames\CountryInformation;
 	
-	if (!empty($data['country']['iso_code']) && empty($data['country']['names']['de'])) {
+	if (!empty($data['country']['iso_code'])) {
 		$geonamesData = $countryInfo->getInformationAboutCountry($data['country']['iso_code']);
 		$data = array_replace_recursive($geonamesData, $data);
 	}
-	
+
 	return $data;
 }
 add_filter('geoip_detect2_record_data', '_geoip_detect2_add_geonames_data');

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Updater class.
  *
@@ -7,7 +8,7 @@
  * @since      1.0.0
  * @license    GPL-2.0+
  * @copyright  Copyright (c) 2016, WPForms LLC
-*/
+ */
 class WPForms_Updater {
 
 	/**
@@ -108,18 +109,17 @@ class WPForms_Updater {
 			'plugin_url',
 			'remote_url',
 			'version',
-			'key'
+			'key',
 		);
+
 		foreach ( $accepted_args as $arg ) {
-			$this->$arg = $config[$arg];
+			$this->$arg = $config[ $arg ];
 		}
 
 		// If the user cannot update plugins, stop processing here.
 		if ( ! current_user_can( 'update_plugins' ) ) {
 			return;
 		}
-
-		//echo '<pre>' . print_r( $config, true ) . '</pre>';
 
 		// Load the updater hooks and filters.
 		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'update_plugins_filter' ) );
@@ -135,7 +135,8 @@ class WPForms_Updater {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param object $value  The WordPress update object.
+	 * @param object $value The WordPress update object.
+	 *
 	 * @return object $value Amended WordPress update object on success, default if object is empty.
 	 */
 	public function update_plugins_filter( $value ) {
@@ -150,6 +151,7 @@ class WPForms_Updater {
 			$this->update = $this->perform_remote_request( 'get-plugin-update', array( 'tgm-updater-plugin' => $this->plugin_slug ) );
 			if ( ! $this->update || ! empty( $this->update->error ) ) {
 				$this->update = false;
+
 				return $value;
 			}
 		}
@@ -157,7 +159,7 @@ class WPForms_Updater {
 		// Infuse the update object with our data if the version from the remote API is newer.
 		if ( isset( $this->update->new_version ) && version_compare( $this->version, $this->update->new_version, '<' ) ) {
 			// The $plugin_update object contains new_version, package, slug and last_update keys.
-			$value->response[$this->plugin_path] = $this->update;
+			$value->response[ $this->plugin_path ] = $this->update;
 		}
 
 		// Return the update object.
@@ -169,8 +171,9 @@ class WPForms_Updater {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array $args  Array of request args.
-	 * @param string $url  The URL to be pinged.
+	 * @param array $args Array of request args.
+	 * @param string $url The URL to be pinged.
+	 *
 	 * @return array $args Amended array of request args.
 	 */
 	public function http_request_args( $args, $url ) {
@@ -183,14 +186,15 @@ class WPForms_Updater {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param object $api    The original plugins_api object.
+	 * @param object $api The original plugins_api object.
 	 * @param string $action The action sent by plugins_api.
-	 * @param array $args    Additional args to send to plugins_api.
+	 * @param array $args Additional args to send to plugins_api.
+	 *
 	 * @return object $api   New stdClass with plugin information on success, default response on failure.
 	 */
 	public function plugins_api( $api, $action = '', $args = null ) {
 
-		$plugin = ( 'plugin_information' == $action ) && isset( $args->slug ) && ( $this->plugin_slug == $args->slug );
+		$plugin = ( 'plugin_information' === $action ) && isset( $args->slug ) && ( $this->plugin_slug === $args->slug );
 
 		// If our plugin matches the request, set our own plugin data, else return the default response.
 		if ( $plugin ) {
@@ -198,7 +202,6 @@ class WPForms_Updater {
 		} else {
 			return $api;
 		}
-
 	}
 
 	/**
@@ -207,6 +210,7 @@ class WPForms_Updater {
 	 * @since 2.0.0
 	 *
 	 * @param object $default_api The default API object.
+	 *
 	 * @return object $api        Return custom plugin information to plugins_api.
 	 */
 	public function set_plugins_api( $default_api ) {
@@ -216,28 +220,29 @@ class WPForms_Updater {
 			$this->info = $this->perform_remote_request( 'get-plugin-info', array( 'tgm-updater-plugin' => $this->plugin_slug ) );
 			if ( ! $this->info || ! empty( $this->info->error ) ) {
 				$this->info = false;
+
 				return $default_api;
 			}
 		}
 
 		// Create a new stdClass object and populate it with our plugin information.
 		$api                        = new stdClass;
-		$api->name                  = isset( $this->info->name )           ? $this->info->name            : '';
-		$api->slug                  = isset( $this->info->slug )           ? $this->info->slug            : '';
-		$api->version               = isset( $this->info->version )        ? $this->info->version         : '';
-		$api->author                = isset( $this->info->author )         ? $this->info->author          : '';
-		$api->author_profile        = isset( $this->info->author_profile ) ? $this->info->author_profile  : '';
-		$api->requires              = isset( $this->info->requires )       ? $this->info->requires        : '';
-		$api->tested                = isset( $this->info->tested )         ? $this->info->tested          : '';
-		$api->last_updated          = isset( $this->info->last_updated )   ? $this->info->last_updated    : '';
-		$api->homepage              = isset( $this->info->homepage )       ? $this->info->homepage        : '';
-		$api->sections['changelog'] = isset( $this->info->changelog )      ? $this->info->changelog       : '';
-		$api->download_link         = isset( $this->info->download_link )  ? $this->info->download_link   : '';
-		$api->banners               = isset( $this->info->banners )        ? (array) $this->info->banners : '';
+		$api->name                  = isset( $this->info->name ) ? $this->info->name : '';
+		$api->slug                  = isset( $this->info->slug ) ? $this->info->slug : '';
+		$api->version               = isset( $this->info->version ) ? $this->info->version : '';
+		$api->author                = isset( $this->info->author ) ? $this->info->author : '';
+		$api->author_profile        = isset( $this->info->author_profile ) ? $this->info->author_profile : '';
+		$api->requires              = isset( $this->info->requires ) ? $this->info->requires : '';
+		$api->tested                = isset( $this->info->tested ) ? $this->info->tested : '';
+		$api->last_updated          = isset( $this->info->last_updated ) ? $this->info->last_updated : '';
+		$api->homepage              = isset( $this->info->homepage ) ? $this->info->homepage : '';
+		$api->sections['changelog'] = isset( $this->info->changelog ) ? $this->info->changelog : '';
+		$api->download_link         = isset( $this->info->download_link ) ? $this->info->download_link : '';
+		$api->active_installs       = isset( $this->info->active_installs ) ? $this->info->active_installs : '';
+		$api->banners               = isset( $this->info->banners ) ? (array) $this->info->banners : '';
 
 		// Return the new API object with our custom data.
 		return $api;
-
 	}
 
 	/**
@@ -245,10 +250,11 @@ class WPForms_Updater {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string $action        The name of the $_POST action var.
-	 * @param array $body           The content to retrieve from the remote URL.
-	 * @param array $headers        The headers to send to the remote URL.
+	 * @param string $action The name of the $_POST action var.
+	 * @param array $body The content to retrieve from the remote URL.
+	 * @param array $headers The headers to send to the remote URL.
 	 * @param string $return_format The format for returning content from the remote URL.
+	 *
 	 * @return string|bool          Json decoded response on success, false on failure.
 	 */
 	public function perform_remote_request( $action, $body = array(), $headers = array(), $return_format = 'json' ) {
@@ -260,7 +266,7 @@ class WPForms_Updater {
 				'tgm-updater-action'     => $action,
 				'tgm-updater-key'        => $this->key,
 				'tgm-updater-wp-version' => get_bloginfo( 'version' ),
-				'tgm-updater-referer'    => site_url()
+				'tgm-updater-referer'    => site_url(),
 			)
 		);
 		$body = http_build_query( $body, '', '&' );
@@ -270,14 +276,14 @@ class WPForms_Updater {
 			$headers,
 			array(
 				'Content-Type'   => 'application/x-www-form-urlencoded',
-				'Content-Length' => strlen( $body )
+				'Content-Length' => strlen( $body ),
 			)
 		);
 
 		// Setup variable for wp_remote_post.
 		$post = array(
-			'headers'   => $headers,
-			'body'      => $body,
+			'headers' => $headers,
+			'body'    => $body,
 		);
 
 		// Perform the query and retrieve the response.
@@ -286,12 +292,24 @@ class WPForms_Updater {
 		$response_body = wp_remote_retrieve_body( $response );
 
 		// Bail out early if there are any errors.
-		if ( 200 != $response_code || is_wp_error( $response_body ) ) {
+		if ( 200 !== $response_code || is_wp_error( $response_body ) ) {
 			return false;
 		}
 
-		// Return the json decoded content.
-		return json_decode( $response_body );
+		$response_body = json_decode( $response_body );
 
+		// A few items need to be converted from an object to an array as that
+		// is what WordPress expects.
+		if ( ! empty( $response_body->package ) ) {
+			if ( ! empty ( $response_body->icons ) ) {
+				$response_body->icons = (array) $response_body->icons;
+			}
+			if ( ! empty ( $response_body->banners ) ) {
+				$response_body->banners = (array) $response_body->banners;
+			}
+		}
+
+		// Return the json decoded content.
+		return $response_body;
 	}
 }

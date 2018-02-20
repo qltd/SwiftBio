@@ -1,4 +1,5 @@
 <?php
+
 /**
  * WordPress class extended for on-the-fly addon installations.
  *
@@ -7,13 +8,14 @@
  * @since      1.0.0
  * @license    GPL-2.0+
  * @copyright  Copyright (c) 2016, WPForms LLC
-*/
+ */
 class WPForms_Install_Skin extends WP_Upgrader_Skin {
 
 	/**
 	 * Primary class constructor.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $args Empty array of args (we will use defaults).
 	 */
 	public function __construct( $args = array() ) {
@@ -25,6 +27,7 @@ class WPForms_Install_Skin extends WP_Upgrader_Skin {
 	 * Set the upgrader object and store it as a property in the parent class.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param object $upgrader The upgrader object (passed by reference).
 	 */
 	public function set_upgrader( &$upgrader ) {
@@ -38,6 +41,7 @@ class WPForms_Install_Skin extends WP_Upgrader_Skin {
 	 * Set the upgrader result and store it as a property in the parent class.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param object $result The result of the install process.
 	 */
 	public function set_result( $result ) {
@@ -51,23 +55,26 @@ class WPForms_Install_Skin extends WP_Upgrader_Skin {
 	 *
 	 * @since 1.0.0
 	 */
-	public function header() {}
+	public function header() {
+	}
 
 	/**
 	 * Empty out the footer of its HTML contents.
 	 *
 	 * @since 1.0.0
 	 */
-	function footer() {}
+	public function footer() {
+	}
 
 	/**
 	 * Instead of outputting HTML for errors, json_encode the errors and send them
 	 * back to the Ajax script for processing.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $errors Array of errors with the install process.
 	 */
-	function error( $errors ) {
+	public function error( $errors ) {
 
 		if ( ! empty( $errors ) ) {
 			wp_send_json_error( $errors );
@@ -80,7 +87,9 @@ class WPForms_Install_Skin extends WP_Upgrader_Skin {
 	 * is progressing.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param string $string The feedback string.
 	 */
-	function feedback( $string ) {}
+	public function feedback( $string ) {
+	}
 }

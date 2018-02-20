@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Name text field.
  *
@@ -17,15 +18,15 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 	 */
 	public function init() {
 
-		// Define field type information
-		$this->name  = __( 'Credit Card', 'wpforms' );
+		// Define field type information.
+		$this->name  = esc_html__( 'Credit Card', 'wpforms' );
 		$this->type  = 'credit-card';
 		$this->icon  = 'fa-credit-card';
 		$this->order = 9;
 		$this->group = 'payment';
 
 		// Define additional field properties.
-		add_filter( 'wpforms_field_properties_credit-card' , array( $this, 'field_properties' ), 5, 3 );
+		add_filter( 'wpforms_field_properties_credit-card', array( $this, 'field_properties' ), 5, 3 );
 
 		// Set field to required by default.
 		add_filter( 'wpforms_field_new_required', array( $this, 'default_required' ), 10, 2 );
@@ -35,9 +36,11 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 	 * Define additional field properties.
 	 *
 	 * @since 1.3.8
+	 *
 	 * @param array $properties
 	 * @param array $field
 	 * @param array $form_data
+	 *
 	 * @return array
 	 */
 	public function field_properties( $properties, $field, $form_data ) {
@@ -48,7 +51,7 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 		$form_id  = absint( $form_data['id'] );
 		$field_id = absint( $field['id'] );
 
-		$props = array(
+		$props      = array(
 			'inputs' => array(
 				'number' => array(
 					'attr'     => array(
@@ -70,11 +73,11 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 					'required' => ! empty( $field['required'] ) ? 'required' : '',
 					'sublabel' => array(
 						'hidden'   => ! empty( $field['sublabel_hide'] ),
-						'value'    => __( 'Card Number', 'wpforms' ),
+						'value'    => esc_html__( 'Card Number', 'wpforms' ),
 						'position' => 'before',
 					),
 				),
-				'cvc' => array(
+				'cvc'    => array(
 					'attr'     => array(
 						'name'         => '',
 						'value'        => '',
@@ -93,11 +96,11 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 					'required' => ! empty( $field['required'] ) ? 'required' : '',
 					'sublabel' => array(
 						'hidden'   => ! empty( $field['sublabel_hide'] ),
-						'value'    => __( 'Security Code', 'wpforms' ),
+						'value'    => esc_html__( 'Security Code', 'wpforms' ),
 						'position' => 'before',
 					),
 				),
-				'name' => array(
+				'name'   => array(
 					'attr'     => array(
 						'name'        => '',
 						'value'       => '',
@@ -114,11 +117,11 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 					'required' => ! empty( $field['required'] ) ? 'required' : '',
 					'sublabel' => array(
 						'hidden'   => ! empty( $field['sublabel_hide'] ),
-						'value'    => __( 'Name on Card', 'wpforms' ),
+						'value'    => esc_html__( 'Name on Card', 'wpforms' ),
 						'position' => 'before',
 					),
 				),
-				'month'        => array(
+				'month'  => array(
 					'attr'     => array(),
 					'class'    => array(
 						'wpforms-field-credit-card-cardmonth',
@@ -128,11 +131,11 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 					'required' => ! empty( $field['required'] ) ? 'required' : '',
 					'sublabel' => array(
 						'hidden'   => ! empty( $field['sublabel_hide'] ),
-						'value'    => __( 'Expiration', 'wpforms' ),
+						'value'    => esc_html__( 'Expiration', 'wpforms' ),
 						'position' => 'before',
 					),
 				),
-				'year'     => array(
+				'year'   => array(
 					'attr'     => array(),
 					'class'    => array(
 						'wpforms-field-credit-card-cardyear',
@@ -175,8 +178,10 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 	 * Default to required.
 	 *
 	 * @since 1.0.9
+	 *
 	 * @param bool $field_required
 	 * @param array $field
+	 *
 	 * @return bool
 	 */
 	public function default_required( $field_required, $field ) {
@@ -184,6 +189,7 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 		if ( 'credit-card' === $field['type'] ) {
 			return true;
 		}
+
 		return $field_required;
 	}
 
@@ -191,13 +197,13 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 	 * Field options panel inside the builder.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $field
 	 */
 	public function field_options( $field ) {
-
-		// -------------------------------------------------------------------//
-		// Basic field options.
-		// -------------------------------------------------------------------//
+		/*
+		 * Basic field options.
+		 */
 
 		// Options open markup.
 		$args = array(
@@ -220,9 +226,9 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 		);
 		$this->field_option( 'basic-options', $field, $args );
 
-		// -------------------------------------------------------------------//
-		// Advanced field options
-		// -------------------------------------------------------------------//
+		/*
+		 * Advanced field options
+		 */
 
 		// Options open markup.
 		$args = array(
@@ -236,7 +242,7 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 		// Card Number.
 		$cardnumber_placeholder = ! empty( $field['cardnumber_placeholder'] ) ? esc_attr( $field['cardnumber_placeholder'] ) : '';
 		printf( '<div class="wpforms-clear wpforms-field-option-row wpforms-field-option-row-cardnumber" id="wpforms-field-option-row-%d-cardnumber" data-subfield="cardnumber" data-field-id="%d">', $field['id'], $field['id'] );
-			$this->field_element( 'label', $field, array( 'slug' => 'cardnumber_placeholder', 'value' => __( 'Card Number Placeholder Text', 'wpforms' ) ) );
+			$this->field_element( 'label', $field, array( 'slug' => 'cardnumber_placeholder', 'value' => esc_html__( 'Card Number Placeholder Text', 'wpforms' ) ) );
 			echo '<div class="placeholder">';
 				printf( '<input type="text" class="placeholder-update" id="wpforms-field-option-%d-cardnumber_placeholder" name="fields[%d][cardnumber_placeholder]" value="%s" data-field-id="%d" data-subfield="credit-card-cardnumber">', $field['id'], $field['id'], $cardnumber_placeholder, $field['id'] );
 			echo '</div>';
@@ -245,7 +251,7 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 		// CVC/Secuity Code.
 		$cardcvc_placeholder = ! empty( $field['cardcvc_placeholder'] ) ? esc_attr( $field['cardcvc_placeholder'] ) : '';
 		printf( '<div class="wpforms-clear wpforms-field-option-row wpforms-field-option-row-cvc" id="wpforms-field-option-row-%d-cvc" data-subfield="cvc" data-field-id="%d">', $field['id'], $field['id'] );
-			$this->field_element( 'label', $field, array( 'slug' => 'cardcvc_placeholder', 'value' => __( 'Security Code Placeholder Text', 'wpforms' ) ) );
+			$this->field_element( 'label', $field, array( 'slug' => 'cardcvc_placeholder', 'value' => esc_html__( 'Security Code Placeholder Text', 'wpforms' ) ) );
 			echo '<div class="placeholder">';
 				printf( '<input type="text" class="placeholder-update" id="wpforms-field-option-%d-cardcvc_placeholder" name="fields[%d][cardcvc_placeholder]" value="%s" data-field-id="%d" data-subfield="credit-card-cardcvc">', $field['id'], $field['id'], $cardcvc_placeholder, $field['id'] );
 			echo '</div>';
@@ -254,7 +260,7 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 		// Card Name.
 		$cardname_placeholder = ! empty( $field['cardname_placeholder'] ) ? esc_attr( $field['cardname_placeholder'] ) : '';
 		printf( '<div class="wpforms-clear wpforms-field-option-row wpforms-field-option-row-cardname" id="wpforms-field-option-row-%d-cardname" data-subfield="cardname" data-field-id="%d">', $field['id'], $field['id'] );
-			$this->field_element( 'label', $field, array( 'slug' => 'cardname_placeholder', 'value' => __( 'Name on Card Placeholder Text', 'wpforms' ) ) );
+			$this->field_element( 'label', $field, array( 'slug' => 'cardname_placeholder', 'value' => esc_html__( 'Name on Card Placeholder Text', 'wpforms' ) ) );
 			echo '<div class="placeholder">';
 				printf( '<input type="text" class="placeholder-update" id="wpforms-field-option-%d-cardname_placeholder" name="fields[%d][cardname_placeholder]" value="%s" data-field-id="%d" data-subfield="credit-card-cardname">', $field['id'], $field['id'], $cardname_placeholder, $field['id'] );
 			echo '</div>';
@@ -280,6 +286,7 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 	 * Field preview inside the builder.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $field
 	 */
 	public function field_preview( $field ) {
@@ -298,29 +305,33 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 			<div class="wpforms-field-row">
 				<div class="wpforms-credit-card-cardnumber">
 					<label class="wpforms-sub-label"><?php esc_html_e( 'Card Number', 'wpforms' ); ?></label>
-					<input type="text" placeholder="<?php echo $number_placeholder; ?>" disabled>
+					<input type="text" placeholder="<?php echo esc_attr( $number_placeholder ); ?>" disabled>
 				</div>
 
 				<div class="wpforms-credit-card-cardcvc">
 					<label class="wpforms-sub-label"><?php esc_html_e( 'Security Code', 'wpforms' ); ?></label>
-					<input type="text" placeholder="" disabled>
+					<input type="text" placeholder="<?php echo esc_attr( $cvc_placeholder ); ?>" disabled>
 				</div>
 			</div>
 
 			<div class="wpforms-field-row">
 				<div class="wpforms-credit-card-cardname">
 					<label class="wpforms-sub-label"><?php esc_html_e( 'Name on Card', 'wpforms' ); ?></label>
-					<input type="text" placeholder="<?php echo $name_placeholder; ?>" disabled>
+					<input type="text" placeholder="<?php echo esc_attr( $name_placeholder ); ?>" disabled>
 				</div>
 
 				<div class="wpforms-credit-card-expiration">
 					<label class="wpforms-sub-label"><?php esc_html_e( 'Expiration', 'wpforms' ); ?></label>
 					<div class="wpforms-credit-card-cardmonth">
-						<select disabled><option>MM</option></select>
+						<select disabled>
+							<option>MM</option>
+						</select>
 					</div>
 					<span>/</span>
 					<div class="wpforms-credit-card-cardyear">
-						<select disabled><option>YY</option></select>
+						<select disabled>
+							<option>YY</option>
+						</select>
 					</div>
 				</div>
 			</div>
@@ -336,6 +347,7 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 	 * Field display on the form front-end.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $field
 	 * @param array $deprecated
 	 * @param array $form_data
@@ -343,16 +355,16 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 	public function field_display( $field, $deprecated, $form_data ) {
 
 		// Define data.
-		$number  = ! empty( $field['properties']['inputs']['number'] ) ? $field['properties']['inputs']['number'] : '';
-		$cvc     = ! empty( $field['properties']['inputs']['cvc'] ) ? $field['properties']['inputs']['cvc'] : '';
-		$name    = ! empty( $field['properties']['inputs']['name'] ) ? $field['properties']['inputs']['name'] : '';
-		$month   = ! empty( $field['properties']['inputs']['month'] ) ? $field['properties']['inputs']['month'] : '';
-		$year    = ! empty( $field['properties']['inputs']['year'] ) ? $field['properties']['inputs']['year'] : '';
+		$number = ! empty( $field['properties']['inputs']['number'] ) ? $field['properties']['inputs']['number'] : array();
+		$cvc    = ! empty( $field['properties']['inputs']['cvc'] ) ? $field['properties']['inputs']['cvc'] : array();
+		$name   = ! empty( $field['properties']['inputs']['name'] ) ? $field['properties']['inputs']['name'] : array();
+		$month  = ! empty( $field['properties']['inputs']['month'] ) ? $field['properties']['inputs']['month'] : array();
+		$year   = ! empty( $field['properties']['inputs']['year'] ) ? $field['properties']['inputs']['year'] : array();
 
 		// Display warning for non SSL pages.
 		if ( ! is_ssl() ) {
 			echo '<div class="wpforms-cc-warning wpforms-error-alert">';
-			_e( 'This page is insecure. Credit Card field should be used for testing purposes only.', 'wpforms' );
+			esc_html_e( 'This page is insecure. Credit Card field should be used for testing purposes only.', 'wpforms' );
 			echo '</div>';
 		}
 
@@ -362,7 +374,8 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 			// Card number.
 			echo '<div ' . wpforms_html_attributes( false, $number['block'] ) . '>';
 				$this->field_display_sublabel( 'number', 'before', $field );
-				printf( '<input type="text" %s %s>',
+				printf(
+					'<input type="text" %s %s>',
 					wpforms_html_attributes( $number['id'], $number['class'], $number['data'], $number['attr'] ),
 					$number['required']
 				);
@@ -373,7 +386,8 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 			// CVC.
 			echo '<div ' . wpforms_html_attributes( false, $cvc['block'] ) . '>';
 				$this->field_display_sublabel( 'cvc', 'before', $field );
-				printf( '<input type="text" %s %s>',
+				printf(
+					'<input type="text" %s %s>',
 					wpforms_html_attributes( $cvc['id'], $cvc['class'], $cvc['data'], $cvc['attr'] ),
 					$cvc['required']
 				);
@@ -437,24 +451,24 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 	}
 
 	/**
-	 * Validates field on form submit.
+	 * Currently validation happens on the front end. We do not do
+	 * generic server-side validation because we do not allow the card
+	 * details to POST to the server.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param int $field_id
 	 * @param array $field_submit
 	 * @param array $form_data
 	 */
 	public function validate( $field_id, $field_submit, $form_data ) {
-
-		// Currently validation happens on the front end. We do not do
-		// generic server-side validaton because we do not allow the card
-		// details to POST to the server.
 	}
 
 	/**
 	 * Formats field.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param int $field_id
 	 * @param array $field_submit
 	 * @param array $form_data
@@ -466,11 +480,12 @@ class WPForms_Field_CreditCard extends WPForms_Field {
 
 		// Set final field details.
 		wpforms()->process->fields[ $field_id ] = array(
-			'name'     => sanitize_text_field( $name ),
-			'value'    => '',
-			'id'       => absint( $field_id ),
-			'type'     => $this->type,
+			'name'  => sanitize_text_field( $name ),
+			'value' => '',
+			'id'    => absint( $field_id ),
+			'type'  => $this->type,
 		);
 	}
 }
+
 new WPForms_Field_CreditCard;

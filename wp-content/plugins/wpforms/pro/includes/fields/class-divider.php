@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Seciton Divider field.
  *
@@ -17,25 +18,25 @@ class WPForms_Field_Divider extends WPForms_Field {
 	 */
 	public function init() {
 
-		// Define field type information
-		$this->name     = __( 'Section Divider', 'wpforms' );
-		$this->type     = 'divider';
-		$this->icon     = 'fa-arrows-h';
-		$this->order    = 19;
-		$this->group    = 'fancy';
+		// Define field type information.
+		$this->name  = esc_html__( 'Section Divider', 'wpforms' );
+		$this->type  = 'divider';
+		$this->icon  = 'fa-arrows-h';
+		$this->order = 19;
+		$this->group = 'fancy';
 	}
 
 	/**
 	 * Field options panel inside the builder.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $field
 	 */
 	public function field_options( $field ) {
-
-		// -------------------------------------------------------------------//
-		// Basic field options.
-		// -------------------------------------------------------------------//
+		/*
+		 * Basic field options.
+		 */
 
 		// Options open markup.
 		$args = array(
@@ -55,7 +56,7 @@ class WPForms_Field_Divider extends WPForms_Field {
 			'slug'  => 'label_disable',
 			'value' => '1',
 		);
-		$this->field_element( 'text',  $field, $args );
+		$this->field_element( 'text', $field, $args );
 
 		// Options close markup.
 		$args = array(
@@ -63,9 +64,9 @@ class WPForms_Field_Divider extends WPForms_Field {
 		);
 		$this->field_option( 'basic-options', $field, $args );
 
-		// -------------------------------------------------------------------//
-		// Advanced field options.
-		// -------------------------------------------------------------------//
+		/*
+		 * Advanced field options.
+		 */
 
 		// Options open markup.
 		$args = array(
@@ -87,6 +88,7 @@ class WPForms_Field_Divider extends WPForms_Field {
 	 * Field preview inside the builder.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $field
 	 */
 	public function field_preview( $field ) {
@@ -102,6 +104,7 @@ class WPForms_Field_Divider extends WPForms_Field {
 	 * Field display on the form front-end.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $field
 	 * @param array $deprecated
 	 * @param array $form_data
@@ -126,6 +129,7 @@ class WPForms_Field_Divider extends WPForms_Field {
 	 * Formats field.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param int $field_id
 	 * @param array $field_submit
 	 * @param array $form_data
@@ -133,4 +137,5 @@ class WPForms_Field_Divider extends WPForms_Field {
 	public function format( $field_id, $field_submit, $form_data ) {
 	}
 }
+
 new WPForms_Field_Divider;

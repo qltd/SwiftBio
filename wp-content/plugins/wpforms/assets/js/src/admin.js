@@ -1,4 +1,4 @@
-/* global wp, wpforms_admin, jconfirm, wpCookies, Choices */
+/* global wp, _, wpforms_admin, jconfirm, wpCookies, Choices */
 
 ;(function($) {
 
@@ -52,6 +52,9 @@
 
 			// Tools.
 			WPFormsAdmin.initTools();
+
+			// Upgrades (Tools view).
+			WPFormsAdmin.initUpgrades();
 		},
 
 		/**
@@ -111,6 +114,25 @@
 				boxWidth: '400px'
 			};
 
+			// Upgrade information modal for upgrade links.
+			$( document ).on( 'click', '.wpforms-upgrade-modal', function() {
+
+				$.alert({
+					title: false,
+					content: wpforms_admin.upgrade_modal,
+					icon: 'fa fa-info-circle',
+					type: 'blue',
+					boxWidth: '565px',
+					buttons: {
+						confirm: {
+							text: wpforms_admin.ok,
+							btnClass: 'btn-confirm',
+							keys: [ 'enter' ]
+						}
+					}
+				});
+			});
+
 			// Action available for each binding.
 			$( document ).trigger( 'wpformsReady' );
 		},
@@ -132,6 +154,9 @@
 				if ( $this.data( 'placeholder' ) ) {
 					args.placeholderValue = $this.data( 'placeholder' );
 				}
+				if ( $this.data( 'sorting' ) === 'off' ) {
+					args.shouldSort = false;
+				}
 				if ( $this.data( 'search' ) ) {
 					args.searchEnabled = true;
 				}
@@ -146,7 +171,7 @@
 		 */
 		initCheckboxMultiselectColumns: function() {
 
-			$( document ).on( 'change', '.checkbox-multiselect-columns input', function( event ) {
+			$( document ).on( 'change', '.checkbox-multiselect-columns input', function() {
 
 				var $this      = $( this ),
 					$parent    = $this.parent(),
@@ -213,7 +238,7 @@
 						},
 						cancel: {
 							text: wpforms_admin.cancel,
-							keys: [ 'esc' ],
+							keys: [ 'esc' ]
 						}
 					}
 				});
@@ -263,7 +288,7 @@
 						},
 						cancel: {
 							text: wpforms_admin.cancel,
-							keys: [ 'esc' ],
+							keys: [ 'esc' ]
 						}
 					}
 				});
@@ -283,7 +308,7 @@
 				event.preventDefault();
 
 				// Handle cookie.
-				if ( wpCookies.get( 'wpforms_entry_hide_empty' ) == 'true') {
+				if ( wpCookies.get( 'wpforms_entry_hide_empty' ) === 'true') {
 
 					// User was hiding empty fields, so now display them.
 					wpCookies.remove('wpforms_entry_hide_empty');
@@ -341,7 +366,7 @@
 						},
 						cancel: {
 							text: wpforms_admin.cancel,
-							keys: [ 'esc' ],
+							keys: [ 'esc' ]
 						}
 					}
 				});
@@ -430,7 +455,7 @@
 						},
 						cancel: {
 							text: wpforms_admin.cancel,
-							keys: [ 'esc' ],
+							keys: [ 'esc' ]
 						}
 					}
 				});
@@ -463,7 +488,7 @@
 					action  : 'wpforms_entry_list_star',
 					nonce   : wpforms_admin.nonce,
 					entry_id: id
-				}
+				};
 				$.post( wpforms_admin.ajax_url, data );
 			});
 
@@ -494,7 +519,7 @@
 					action  : 'wpforms_entry_list_read',
 					nonce   : wpforms_admin.nonce,
 					entry_id: id
-				}
+				};
 				$.post( wpforms_admin.ajax_url, data );
 			});
 
@@ -524,7 +549,7 @@
 						},
 						cancel: {
 							text: wpforms_admin.cancel,
-							keys: [ 'esc' ],
+							keys: [ 'esc' ]
 						}
 					}
 				});
@@ -559,7 +584,7 @@
 
 					$( '.jconfirm-content-pane, .jconfirm-box' ).css( 'overflow','visible' );
 
-					choices.passedElement.addEventListener( 'change', function( event ) {
+					choices.passedElement.addEventListener( 'change', function() {
 						choices.hideDropdown();
 					}, false );
 				},
@@ -574,7 +599,7 @@
 					},
 					cancel: {
 						text: wpforms_admin.cancel,
-						keys: [ 'esc' ],
+						keys: [ 'esc' ]
 					}
 				}
 			});
@@ -688,15 +713,15 @@
 				action: action,
 				nonce : wpforms_admin.nonce,
 				plugin: plugin
-			}
+			};
 			$.post( wpforms_admin.ajax_url, data, function( res ) {
 
 				if ( res.success ){
 					if ( 'wpforms_install_addon' === action ) {
 						$this.attr( 'data-plugin', res.data.basename );
-						var successText = res.data.msg;
+						successText = res.data.msg;
 					} else {
-						var successText = res.data;
+						successText = res.data;
 					}
 					$addon.find( '.actions' ).append( '<div class="msg success">'+successText+'</div>' );
 					$addon.find( 'span.status-label' ).removeClass( 'status-active status-inactive status-download' ).addClass( cssClass ).text( statusText );
@@ -1055,7 +1080,7 @@
 				} else {
 					var msg = wpforms_admin.provider_auth_error;
 					if ( res.data.error_msg ) {
-						msg += "\n"+res.data.error_msg;
+						msg += "\n" + res.data.error_msg; // jshint ignore:line
 					}
 					$.alert({
 						title: false,
@@ -1121,7 +1146,7 @@
 					},
 					cancel: {
 						text: wpforms_admin.cancel,
-						keys: [ 'esc' ],
+						keys: [ 'esc' ]
 					}
 				}
 			});
@@ -1247,7 +1272,7 @@
 						s.analyzeUpgrade.push({
 							name:   res.data.name,
 							fields: _.union( res.data.upgrade_omit, res.data.upgrade_plain )
-						})
+						});
 					}
 
 					// Remove this form ID from the queue.
@@ -1271,7 +1296,7 @@
 					} else {
 						// Analyze next form in the queue.
 						$analyzeSettings.find( '.form-current' ).text( s.analyzed+1 );
-						WPFormsAdmin.analyzeForm()
+						WPFormsAdmin.analyzeForm();
 					}
 				}
 			});
@@ -1324,11 +1349,12 @@
 			$.post( wpforms_admin.ajax_url, data, function( res ) {
 
 				if ( res.success ){
+					var statusUpdate;
 
 					if ( res.data.error ) {
-						var statusUpdate = wp.template( 'wpforms-importer-status-error' );
+						statusUpdate = wp.template( 'wpforms-importer-status-error' );
 					} else {
-						var statusUpdate = wp.template( 'wpforms-importer-status-update' );
+						statusUpdate = wp.template( 'wpforms-importer-status-update' );
 					}
 
 					$processSettings.find( '.status' ).prepend( statusUpdate( res.data ) );
@@ -1346,6 +1372,98 @@
 						// Import next form in the queue.
 						$processSettings.find( '.form-current' ).text( s.imported+1 );
 						WPFormsAdmin.importForm();
+					}
+				}
+			});
+		},
+
+		//--------------------------------------------------------------------//
+		// Upgrades (Tabs view).
+		//--------------------------------------------------------------------//
+
+		/**
+		 * Element bindings for Tools page.
+		 *
+		 * @since 1.4.3
+		 */
+		initUpgrades: function() {
+
+			// Prepare to run the v1.4.3 upgrade routine.
+			$( document ).on( 'click', '#wpforms-upgrade-143 button', function( event ) {
+
+				event.preventDefault();
+
+				var $this       = $( this ),
+					buttonWidth = $this.outerWidth(),
+					$status     = $( '#wpforms-upgrade-143 .status' ),
+					data        = {
+						action:    'wpforms_upgrade_143',
+						nonce:      wpforms_admin.nonce,
+						init:       true,
+						incomplete: $this.data( 'incomplete' )
+					};
+
+				// Change the button to indicate we are doing initial processing.
+				$this.html( s.iconSpinner ).css( 'width', buttonWidth ).prop( 'disabled', true );
+
+				// Get the total number of entries, then kick off the routine.
+				$.post( wpforms_admin.ajax_url, data, function( res ) {
+					if ( res.success ){
+
+						// Set initial values.
+						s.upgraded     = Number( res.data.upgraded );
+						s.upgradeTotal = Number( res.data.total );
+						var percent    = Math.round( ( Number( s.upgraded ) / Number( s.upgradeTotal ) ) * 100 );
+
+						// Show the status area.
+						$this.remove();
+						$status.find( '.bar' ).css( 'width', percent + '%' );
+						$status.show().find( '.total' ).text( s.upgradeTotal );
+						$status.find( '.current' ).text( s.upgraded );
+						$status.find( '.percent' ).text( percent + '%' );
+
+						// Begin the actual upgrade routine.
+						WPFormsAdmin.upgrade143();
+					}
+				});
+			});
+		},
+
+		/**
+		 * The v1.4.3 entry fields upgrade routine.
+		 *
+		 * @since 1.4.3
+		 */
+		upgrade143: function() {
+
+			var $status     = $( '#wpforms-upgrade-143 .status' ),
+				data        = {
+					action:   'wpforms_upgrade_143',
+					nonce:    wpforms_admin.nonce,
+					upgraded: s.upgraded
+				};
+
+			// Get the total number of entries, then kick off the routine.
+			$.post( wpforms_admin.ajax_url, data, function( res ) {
+				if ( res.success ){
+
+					s.upgraded  = Number( s.upgraded ) + Number( res.data.count );
+					var percent = Math.round( ( Number( s.upgraded ) / Number( s.upgradeTotal ) ) * 100 );
+
+					// Update progress bar.
+					$status.find( '.bar' ).css( 'width',  percent + '%' );
+
+					if ( Number( res.data.count ) < 10 ) {
+						// This batch completed the upgrade routine.
+						$status.find( '.progress-bar' ).addClass( 'complete' );
+						$status.find( '.msg' ).text( wpforms_admin.upgrade_completed );
+					} else {
+
+						$status.find( '.current' ).text( s.upgraded );
+						$status.find( '.percent' ).text( percent + '%' );
+
+						// Batch the next round of entries.
+						WPFormsAdmin.upgrade143();
 					}
 				}
 			});
@@ -1381,8 +1499,38 @@
 			var match = new RegExp( '[?&]' + name + '=([^&]*)' ).exec( window.location.search );
 			return match && decodeURIComponent( match[1].replace(/\+/g, ' ') );
 		},
-	}
+
+		/**
+		 * Debug output helper.
+		 *
+		 * @since 1.4.4
+		 * @param msg
+		 */
+		debug: function( msg ) {
+
+			if ( WPFormsAdmin.isDebug() ) {
+				if ( typeof msg === 'object' || msg.constructor === Array ) {
+					console.log( 'WPForms Debug:' );
+					console.log( msg );
+				} else {
+					console.log( 'WPForms Debug: ' + msg );
+				}
+			}
+		},
+
+		/**
+		 * Is debug mode.
+		 *
+		 * @since 1.4.4
+		 */
+		isDebug: function() {
+
+			return ( window.location.hash && '#wpformsdebug' === window.location.hash );
+		}
+	};
 
 	WPFormsAdmin.init();
+
+	window.WPFormsAdmin = WPFormsAdmin;
 
 })( jQuery );

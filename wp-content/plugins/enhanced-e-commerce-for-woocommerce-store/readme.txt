@@ -1,4 +1,4 @@
-﻿===  Enhanced Ecommerce Google Analytics Plugin for WooCommerce ===
+===  Enhanced Ecommerce Google Analytics Plugin for WooCommerce ===
 Contributors: Tatvic
 Plugin Name: Enhanced Ecommerce for Woocommerce store
 Plugin URI: http://wordpress.org/plugins/enhanced-e-commerce-for-woocommerce-store/
@@ -7,8 +7,8 @@ Author URI: http://www.tatvic.com/
 Author: Tatvic
 Requires at least: 3.6
 Tested up to: 4.9
-Stable tag: 1.2.0.1
-Version: 1.2.0.1
+Stable tag: 1.2.2
+Version: 1.2.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -58,7 +58,7 @@ We have recently launched an Advanced Google Analytics Plugin for WooCommerce wh
 * Product types other than Simple Product
 * Store with the Subscription product for Orders.
 * Ecommerce Pages with Shortcodes
-* For the Child theme support; kindly contact us at analytics2(at)tatvic(dot)com
+* Not fully compatible with the child/custom Theme
 
 == Installation ==
 1. Download the plugin file to your computer and unzip it
@@ -111,16 +111,6 @@ Reason :
 
 You can Find all The Enhanced Ecommerce Reports in your Analytics Account under Conversions --> Ecommerce.
 
-= Since I have Implemented "gtag.js", I didn't enable Add Universal Analytics Tracking Code option, but seems that it is not working. =
-
-Reason :
-
-* Our Plugin’s script works/fetches the data based on the GA’s default tracker (‘ga’ in the case of Universal Analytics script used in our plugin). While you implement the UA tracking script from gtag.js, the script in your store may not be able to initialize the tracker, which in turn will hinder the plugin from populating insights in your Analytics account.
-
-Solution:
-
-* Remove "gtag.js" since some functionality of analytics.js is still not available in it (we’ll include it soon).
-
 = Products with variant not getting recorded in GA =
 
 Currently our plugin does not support products with variant & hence you may not see their transaction data in GA. This feature is only available with the <a href="https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552?ref=tatvic" target="_blank">premium version</a> of our plugin.
@@ -151,7 +141,7 @@ Configuring goals are out of the scope of our plugin. Our plugin is designed to 
 
 = Does your Plugin support Product Refund? =
 
-Our existing plugin does not track product refund data, however you can buy our <a href="https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552?ref=tatvic" target="_blank">paid plugin</a> to get access to product Refund data 
+Our existing plugin does not track product refund data, however you can buy our <a href="https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552?ref=tatvic" target="_blank">premium plugin</a> to get access to product Refund data 
 
 = Does your plugin supports Multilingual Wordpress site? =
 
@@ -159,7 +149,7 @@ Our plugin does not support Multilingual Wordpress site.
 
 = Does your plugin supports Child/Custom Theme? =
 
-For the Child/Custom theme support; kindly contact us at analytics2(at)tatvic(dot)com.
+The free version of our plugin is not fully compatible with the child/custom theme. Request you to go through the <a href="https://codecanyon.net/item/actionable-google-analytics-for-woocommerce/9899552?ref=tatvic" target="_blank">premium version</a> of our plugin which is fully compatible with the child/custom theme. For more information kindly contact us at analytics2(at)tatvic(dot)com.
 
 = How to verify if you have implemented the Plugin well? =
 
@@ -255,5 +245,20 @@ Important Note: When you update the plugin, please save your settings again.
  * Compatibility with Woocommerce 3.2
  * Minor Bug Fixes & Optimization.
 
-  = 1.2.0.1 - 06/11/2017 =
+ = 1.2.0.1 - 06/11/2017 =
  * Quick Bug Fixes.
+
+ = 1.2.1 - 12/12/2017 =
+ * Improvisation for Product Page
+ * Minor Bug Fixes
+
+ = 1.2.1.1 - 20/12/2017 =
+ * Quick Fixes for Product Page & ATC
+ * Minor Bug Fixes
+
+ = 1.2.1.2 - 26/12/2017 =
+ * Minor Fixes
+
+ = 1.2.2 - 31/01/2018 =
+ * Compatibility with Woocommerce 3.3
+ * Minor Bug Fixes & Optimization.

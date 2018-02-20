@@ -140,7 +140,7 @@
 
 							rule.value = '';
 
-							if ( rule.type === 'radio' || rule.type === 'checkbox' || rule.type === 'payment-multiple' ) {
+							if ( rule.type === 'radio' || rule.type === 'checkbox' || rule.type === 'payment-multiple' || rule.type === 'rating' ) {
 								$check = $form.find('#wpforms-'+formID+'-field_'+rule.field+'-container input:checked');
 								if ($check.length) {
 									val = true;
@@ -154,7 +154,7 @@
 
 						} else {
 
-							if ( rule.type === 'radio' || rule.type === 'checkbox' || rule.type === 'payment-multiple' ) {
+							if ( rule.type === 'radio' || rule.type === 'checkbox' || rule.type === 'payment-multiple' || rule.type === 'rating' ) {
 								$check = $form.find('#wpforms-'+formID+'-field_'+rule.field+'-container input:checked');
 								if ($check.length) {
 									$.each($check, function() {

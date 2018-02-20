@@ -1,6 +1,6 @@
 <?php
 /*
-Copyright 2013-2017 Yellow Tree, Siegen, Germany
+Copyright 2013-2018 Yellow Tree, Siegen, Germany
 Author: Benjamin Pick (info@yellowtree.de)
 
 This program is free software; you can redistribute it and/or modify
@@ -46,6 +46,15 @@ function geoip_detect_do_upgrade($old_version) {
 	if (version_compare('2.5.0', $old_version, '=')) {
 		if (get_option('geoip-detect-source') === '1') {
 			update_option('geoip-detect-source', 'hostinfo');
+		}
+	}
+
+	// Fix auto update hook (re-schedule if necessary)
+	if (version_compare('2.8.2', $old_version, '>')) {
+		$source = new \YellowTree\GeoipDetect\DataSources\Auto\AutoDataSource;
+		$source->deactivate();
+		if (get_option('geoip-detect-source') == 'auto') {
+			$source->activate();
 		}
 	}
 }

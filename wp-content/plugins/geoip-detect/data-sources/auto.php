@@ -1,6 +1,6 @@
 <?php
 /*
-Copyright 2013-2017 Yellow Tree, Siegen, Germany
+Copyright 2013-2018 Yellow Tree, Siegen, Germany
 Author: Benjamin Pick (info@yellowtree.de)
 
 This program is free software; you can redistribute it and/or modify
@@ -91,34 +91,71 @@ HTML;
 		return $filename;
 	}
 	
+	protected function download_url($url, $modified = 0) {
+		// Similar to wordpress download_url, but with custom UA
+		$url_filename = basename( parse_url( $url, PHP_URL_PATH ) );
+ 
+		$tmpfname = wp_tempnam( $url_filename );
+		if ( ! $tmpfname )
+			return new \WP_Error('http_no_file', __('Could not create Temporary file.'));
+		
+		$headers = array();
+		$headers['User-Agent'] = GEOIP_DETECT_USER_AGENT;
+		if ($modified) {
+			$headers['If-Modified-Since'] = date('r', $modified);
+		}
+		
+		$response = wp_safe_remote_get( $url, array('timeout' => 300, 'stream' => true, 'filename' => $tmpfname, 'headers' => $headers ) );
+		$http_response_code = wp_remote_retrieve_response_code( $response );
+		if (304 === $http_response_code) {
+			return new \WP_Error( 'http_304', __('It has not changed since last update.', 'geoip-detect') );
+		}
+		if (is_wp_error( $response ) || 200 !=  $http_response_code) {
+			unlink($tmpfname);
+			$body = wp_remote_retrieve_body($response);
+			return new \WP_Error( 'http_404', $http_response_code . ': ' . trim( wp_remote_retrieve_response_message( $response ) ) . ' ' . $body );
+		}
+		
+		return $tmpfname;
+	}
+	
 	public function maxmindUpdate()
 	{	
 		require_once(ABSPATH.'/wp-admin/includes/file.php');
 		
-		$download_url = 'http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz';
+		$download_url = 'http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz';
+		//$download_url = 'http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz';
 		$download_url = apply_filters('geoip_detect2_download_url', $download_url);
 	
 		$outFile = $this->maxmindGetUploadFilename();
-	
+		$modified = @filemtime($outFile);
 		// Download
-		$tmpFile = download_url($download_url);
-		if (is_wp_error($tmpFile))
+		$tmpFile = $this->download_url($download_url, $modified);
+ 
+		if (is_wp_error($tmpFile)) {
 			return $tmpFile->get_error_message();
+		}
 	
 		// Ungzip File
-		$zh = gzopen($tmpFile, 'r');
-		$h = fopen($outFile, 'w');
-	
-		if (!$zh)
+		if (!file_exists($tmpFile))
 			return __('Downloaded file could not be opened for reading.', 'geoip-detect');
-		if (!$h)
+		$dir = @scandir('phar://' . $tmpFile)[0];
+		if (!$dir)
+			return __('Downloaded file could not be opened for reading.', 'geoip-detect');
+
+		$in = fopen('phar://' . $tmpFile . '/' . $dir . '/GeoLite2-City.mmdb', 'r');
+		$out = fopen($outFile, 'w');
+	
+		if (!$in)
+			return __('Downloaded file could not be opened for reading.', 'geoip-detect');
+		if (!$out)
 			return sprintf(__('Database could not be written (%s).', 'geoip-detect'), $outFile);
 	
-		while ( ($string = gzread($zh, 4096)) != false )
-			fwrite($h, $string, strlen($string));
+		while ( ($string = fread($in, 4096)) != false )
+			fwrite($out, $string, strlen($string));
 	
-		gzclose($zh);
-		fclose($h);
+		fclose($in);
+		fclose($out);
 	
 		unlink($tmpFile);
 	
@@ -153,6 +190,7 @@ HTML;
 	public function schedule_next_cron_run() {
 		// The Lite databases are updated on the first tuesday of each month. Maybe not at midnight, so we schedule it for the night afterwards.
 		$next = strtotime('first tuesday of next month + 1 day');
+		$next += mt_rand(1, WEEK_IN_SECONDS);
 		wp_schedule_single_event($next, 'geoipdetectupdate');
 	}
 	
@@ -162,7 +200,7 @@ HTML;
 		
 	public function deactivate()
 	{
-		//wp_clear_scheduled_hook('geoipdetectupdate');
+		wp_clear_scheduled_hook('geoipdetectupdate');
 	}
 }
 

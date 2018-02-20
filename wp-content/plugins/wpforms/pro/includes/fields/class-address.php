@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Address text field.
  *
@@ -26,38 +27,38 @@ class WPForms_Field_Address extends WPForms_Field {
 	public function init() {
 
 		// Define field type information.
-		$this->name    = __( 'Address', 'wpforms' );
-		$this->type    = 'address';
-		$this->icon    = 'fa-map-marker';
-		$this->order   = 7;
-		$this->group   = 'fancy';
+		$this->name  = esc_html__( 'Address', 'wpforms' );
+		$this->type  = 'address';
+		$this->icon  = 'fa-map-marker';
+		$this->order = 7;
+		$this->group = 'fancy';
 
 		// Allow for additional or customizing address schemes.
 		$this->schemes = apply_filters( 'wpforms_address_schemes', array(
-			'us' => array(
-				'label'          => __( 'US', 'wpforms' ),
-				'address1_label' => __( 'Address Line 1', 'wpforms' ),
-				'address2_label' => __( 'Address Line 2', 'wpforms' ),
-				'city_label'     => __( 'City', 'wpforms' ),
-				'postal_label'   => __( 'Zip Code', 'wpforms' ),
-				'state_label'    => __( 'State', 'wpforms' ),
+			'us'            => array(
+				'label'          => esc_html__( 'US', 'wpforms' ),
+				'address1_label' => esc_html__( 'Address Line 1', 'wpforms' ),
+				'address2_label' => esc_html__( 'Address Line 2', 'wpforms' ),
+				'city_label'     => esc_html__( 'City', 'wpforms' ),
+				'postal_label'   => esc_html__( 'Zip Code', 'wpforms' ),
+				'state_label'    => esc_html__( 'State', 'wpforms' ),
 				'states'         => wpforms_us_states(),
 			),
 			'international' => array(
-				'label'          => __( 'International', 'wpforms' ),
-				'address1_label' => __( 'Address Line 1', 'wpforms' ),
-				'address2_label' => __( 'Address Line 2', 'wpforms' ),
-				'city_label'     => __( 'City', 'wpforms' ),
-				'postal_label'   => __( 'Postal Code', 'wpforms' ),
-				'state_label'    => __( 'State / Province / Region', 'wpforms' ),
+				'label'          => esc_html__( 'International', 'wpforms' ),
+				'address1_label' => esc_html__( 'Address Line 1', 'wpforms' ),
+				'address2_label' => esc_html__( 'Address Line 2', 'wpforms' ),
+				'city_label'     => esc_html__( 'City', 'wpforms' ),
+				'postal_label'   => esc_html__( 'Postal Code', 'wpforms' ),
+				'state_label'    => esc_html__( 'State / Province / Region', 'wpforms' ),
 				'states'         => '',
-				'country_label'  => __( 'Country', 'wpforms' ),
+				'country_label'  => esc_html__( 'Country', 'wpforms' ),
 				'countries'      => wpforms_countries(),
 			),
 		) );
 
 		// Define additional field properties.
-		add_filter( 'wpforms_field_properties_address' , array( $this, 'field_properties' ), 5, 3 );
+		add_filter( 'wpforms_field_properties_address', array( $this, 'field_properties' ), 5, 3 );
 	}
 
 	/**
@@ -90,7 +91,7 @@ class WPForms_Field_Address extends WPForms_Field {
 		$field_id = absint( $field['id'] );
 
 		// Properties shared by both core schemes.
-		$props = array(
+		$props      = array(
 			'inputs' => array(
 				'address1' => array(
 					'attr'     => array(
@@ -106,8 +107,8 @@ class WPForms_Field_Address extends WPForms_Field {
 					'id'       => "wpforms-{$form_id}-field_{$field_id}",
 					'required' => ! empty( $field['required'] ) ? 'required' : '',
 					'sublabel' => array(
-						'hidden'   => ! empty( $field['sublabel_hide'] ),
-						'value'    => isset( $this->schemes[ $scheme ]['address1_label'] ) ? $this->schemes[ $scheme ]['address1_label'] : '',
+						'hidden' => ! empty( $field['sublabel_hide'] ),
+						'value'  => isset( $this->schemes[ $scheme ]['address1_label'] ) ? $this->schemes[ $scheme ]['address1_label'] : '',
 					),
 				),
 				'address2' => array(
@@ -125,11 +126,11 @@ class WPForms_Field_Address extends WPForms_Field {
 					'id'       => "wpforms-{$form_id}-field_{$field_id}-address2",
 					'required' => '',
 					'sublabel' => array(
-						'hidden'   => ! empty( $field['sublabel_hide'] ),
-						'value'    => isset( $this->schemes[ $scheme ]['address2_label'] ) ? $this->schemes[ $scheme ]['address2_label'] : '',
+						'hidden' => ! empty( $field['sublabel_hide'] ),
+						'value'  => isset( $this->schemes[ $scheme ]['address2_label'] ) ? $this->schemes[ $scheme ]['address2_label'] : '',
 					),
 				),
-				'city' => array(
+				'city'     => array(
 					'attr'     => array(
 						'name'        => "wpforms[fields][{$field_id}][city]",
 						'value'       => ! empty( $field['city_default'] ) ? apply_filters( 'wpforms_process_smart_tags', $field['city_default'], $form_data ) : '',
@@ -147,11 +148,11 @@ class WPForms_Field_Address extends WPForms_Field {
 					'id'       => "wpforms-{$form_id}-field_{$field_id}-city",
 					'required' => ! empty( $field['required'] ) ? 'required' : '',
 					'sublabel' => array(
-						'hidden'   => ! empty( $field['sublabel_hide'] ),
-						'value'    => isset( $this->schemes[ $scheme ]['city_label'] ) ? $this->schemes[ $scheme ]['city_label'] : '',
+						'hidden' => ! empty( $field['sublabel_hide'] ),
+						'value'  => isset( $this->schemes[ $scheme ]['city_label'] ) ? $this->schemes[ $scheme ]['city_label'] : '',
 					),
 				),
-				'state' => array(
+				'state'    => array(
 					'attr'     => array(
 						'name'        => "wpforms[fields][{$field_id}][state]",
 						'value'       => ! empty( $field['state_default'] ) ? apply_filters( 'wpforms_process_smart_tags', $field['state_default'], $form_data ) : '',
@@ -169,11 +170,11 @@ class WPForms_Field_Address extends WPForms_Field {
 					'options'  => isset( $this->schemes[ $scheme ]['states'] ) ? $this->schemes[ $scheme ]['states'] : '',
 					'required' => ! empty( $field['required'] ) ? 'required' : '',
 					'sublabel' => array(
-						'hidden'   => ! empty( $field['sublabel_hide'] ),
-						'value'    => isset( $this->schemes[ $scheme ]['state_label'] ) ? $this->schemes[ $scheme ]['state_label'] : '',
+						'hidden' => ! empty( $field['sublabel_hide'] ),
+						'value'  => isset( $this->schemes[ $scheme ]['state_label'] ) ? $this->schemes[ $scheme ]['state_label'] : '',
 					),
 				),
-				'postal' => array(
+				'postal'   => array(
 					'attr'     => array(
 						'name'        => "wpforms[fields][{$field_id}][postal]",
 						'value'       => ! empty( $field['postal_default'] ) ? apply_filters( 'wpforms_process_smart_tags', $field['postal_default'], $form_data ) : '',
@@ -192,11 +193,11 @@ class WPForms_Field_Address extends WPForms_Field {
 					'id'       => "wpforms-{$form_id}-field_{$field_id}-postal",
 					'required' => ! empty( $field['required'] ) ? 'required' : '',
 					'sublabel' => array(
-						'hidden'   => ! empty( $field['sublabel_hide'] ),
-						'value'    => isset( $this->schemes[ $scheme ]['postal_label'] ) ? $this->schemes[ $scheme ]['postal_label'] : '',
+						'hidden' => ! empty( $field['sublabel_hide'] ),
+						'value'  => isset( $this->schemes[ $scheme ]['postal_label'] ) ? $this->schemes[ $scheme ]['postal_label'] : '',
 					),
 				),
-				'country' => array(
+				'country'  => array(
 					'attr'     => array(
 						'name'        => "wpforms[fields][{$field_id}][country]",
 						'value'       => ! empty( $field['country_default'] ) ? apply_filters( 'wpforms_process_smart_tags', $field['country_default'], $form_data ) : '',
@@ -215,8 +216,8 @@ class WPForms_Field_Address extends WPForms_Field {
 					'options'  => isset( $this->schemes[ $scheme ]['countries'] ) ? $this->schemes[ $scheme ]['countries'] : '',
 					'required' => ! empty( $field['required'] ) ? 'required' : '',
 					'sublabel' => array(
-						'hidden'   => ! empty( $field['sublabel_hide'] ),
-						'value'    => isset( $this->schemes[ $scheme ]['country_label'] ) ? $this->schemes[ $scheme ]['country_label'] : '',
+						'hidden' => ! empty( $field['sublabel_hide'] ),
+						'value'  => isset( $this->schemes[ $scheme ]['country_label'] ) ? $this->schemes[ $scheme ]['country_label'] : '',
 					),
 				),
 			),
@@ -251,10 +252,9 @@ class WPForms_Field_Address extends WPForms_Field {
 	 * @param array $field
 	 */
 	public function field_options( $field ) {
-
-		// ------------------------------------------------------------------//
-		// Basic field options.
-		// ------------------------------------------------------------------//
+		/*
+		 * Basic field options.
+		 */
 
 		// Options open markup.
 		$this->field_option( 'basic-options', $field, array(
@@ -264,19 +264,19 @@ class WPForms_Field_Address extends WPForms_Field {
 		// Label.
 		$this->field_option( 'label', $field );
 
-		// Address Scheme - was "format" key prior to 1.2.7
+		// Address Scheme - was "format" key prior to 1.2.7.
 		$scheme = ! empty( $field['scheme'] ) ? esc_attr( $field['scheme'] ) : 'us';
 		if ( empty( $scheme ) && ! empty( $field['format'] ) ) {
 			$scheme = esc_attr( $field['format'] );
 		}
-		$tooltip = __( 'Select scheme format for the address field.', 'wpforms' );
+		$tooltip = esc_html__( 'Select scheme format for the address field.', 'wpforms' );
 		$options = array();
 		foreach ( $this->schemes as $slug => $s ) {
 			$options[ $slug ] = $s['label'];
 		}
-		$output = $this->field_element( 'label', $field, array(
+		$output  = $this->field_element( 'label', $field, array(
 			'slug'    => 'scheme',
-			'value'   => __( 'Scheme', 'wpforms' ),
+			'value'   => esc_html__( 'Scheme', 'wpforms' ),
 			'tooltip' => $tooltip,
 		), false );
 		$output .= $this->field_element( 'select', $field, array(
@@ -300,11 +300,11 @@ class WPForms_Field_Address extends WPForms_Field {
 			'markup' => 'close',
 		) );
 
-		// ------------------------------------------------------------------//
-		// Advanced field options.
-		// ------------------------------------------------------------------//
+		/*
+		 * Advanced field options.
+		 */
 
-		// Options open markup
+		// Options open markup.
 		$this->field_option( 'advanced-options', $field, array(
 			'markup' => 'open',
 		) );
@@ -318,15 +318,15 @@ class WPForms_Field_Address extends WPForms_Field {
 		printf( '<div class="wpforms-clear wpforms-field-option-row wpforms-field-option-row-address1" id="wpforms-field-option-row-%d-address1" data-subfield="address-1" data-field-id="%d">', $field['id'], $field['id'] );
 			$this->field_element( 'label', $field, array(
 				'slug'  => 'address1_placeholder',
-				'value' => __( 'Address Line 1', 'wpforms' ),
+				'value' => esc_html__( 'Address Line 1', 'wpforms' ),
 			) );
 			echo '<div class="placeholder">';
 				printf( '<input type="text" class="placeholder" id="wpforms-field-option-%d-address1_placeholder" name="fields[%d][address1_placeholder]" value="%s">', $field['id'], $field['id'], $address1_placeholder );
-				printf( '<label for="wpforms-field-option-%d-address1_placeholder" class="sub-label">%s</label>', $field['id'], __( 'Placeholder', 'wpforms' ) );
+				printf( '<label for="wpforms-field-option-%d-address1_placeholder" class="sub-label">%s</label>', $field['id'], esc_html__( 'Placeholder', 'wpforms' ) );
 			echo '</div>';
 			echo '<div class="default">';
 				printf( '<input type="text" class="default" id="wpforms-field-option-%d-address1_default" name="fields[%d][address1_default]" value="%s">', $field['id'], $field['id'], $address1_default );
-				printf( '<label for="wpforms-field-option-%d-address1_default" class="sub-label">%s</label>', $field['id'], __( 'Default Value', 'wpforms' ) );
+				printf( '<label for="wpforms-field-option-%d-address1_default" class="sub-label">%s</label>', $field['id'], esc_html__( 'Default Value', 'wpforms' ) );
 			echo '</div>';
 		echo '</div>';
 
@@ -337,15 +337,15 @@ class WPForms_Field_Address extends WPForms_Field {
 		printf( '<div class="wpforms-clear wpforms-field-option-row wpforms-field-option-row-address2" id="wpforms-field-option-row-%d-address2" data-subfield="address-2" data-field-id="%d">', $field['id'], $field['id'] );
 			$this->field_element( 'label', $field, array(
 				'slug'  => 'address2_placeholder',
-				'value' => __( 'Address Line 2', 'wpforms' ),
+				'value' => esc_html__( 'Address Line 2', 'wpforms' ),
 			) );
 			echo '<div class="placeholder">';
 				printf( '<input type="text" class="placeholder" id="wpforms-field-option-%d-address2_placeholder" name="fields[%d][address2_placeholder]" value="%s">', $field['id'], $field['id'], $address2_placeholder );
-				printf( '<label for="wpforms-field-option-%d-address2_placeholder" class="sub-label">%s</label>', $field['id'], __( 'Placeholder', 'wpforms' ) );
+				printf( '<label for="wpforms-field-option-%d-address2_placeholder" class="sub-label">%s</label>', $field['id'], esc_html__( 'Placeholder', 'wpforms' ) );
 			echo '</div>';
 			echo '<div class="default">';
 				printf( '<input type="text" class="default" id="wpforms-field-option-%d-address2_default" name="fields[%d][address2_default]" value="%s">', $field['id'], $field['id'], $address2_default );
-				printf( '<label for="wpforms-field-option-%d-address2_default" class="sub-label">%s</label>', $field['id'], __( 'Default Value', 'wpforms' ) );
+				printf( '<label for="wpforms-field-option-%d-address2_default" class="sub-label">%s</label>', $field['id'], esc_html__( 'Default Value', 'wpforms' ) );
 			echo '</div>';
 			echo '<div class="hide">';
 				printf( ' <input type="checkbox" class="hide" name="fields[%d][address2_hide]" value="1" %s>', $field['id'], checked( true, $address2_hide, false ) );
@@ -357,16 +357,16 @@ class WPForms_Field_Address extends WPForms_Field {
 		$city_default     = ! empty( $field['city_default'] ) ? esc_attr( $field['city_default'] ) : '';
 		printf( '<div class="wpforms-clear wpforms-field-option-row wpforms-field-option-row-city" id="wpforms-field-option-row-%d-city" data-subfield="city" data-field-id="%d">', $field['id'], $field['id'] );
 			$this->field_element( 'label', $field, array(
-				'slug' => 'city_placeholder',
-				'value' => __( 'City', 'wpforms' ),
+				'slug'  => 'city_placeholder',
+				'value' => esc_html__( 'City', 'wpforms' ),
 			) );
 			echo '<div class="placeholder">';
 				printf( '<input type="text" class="placeholder" id="wpforms-field-option-%d-city_placeholder" name="fields[%d][city_placeholder]" value="%s">', $field['id'], $field['id'], $city_placeholder );
-				printf( '<label for="wpforms-field-option-%d-city_placeholder" class="sub-label">%s</label>', $field['id'], __( 'Placeholder', 'wpforms' ) );
+				printf( '<label for="wpforms-field-option-%d-city_placeholder" class="sub-label">%s</label>', $field['id'], esc_html__( 'Placeholder', 'wpforms' ) );
 			echo '</div>';
 			echo '<div class="default">';
 				printf( '<input type="text" class="default" id="wpforms-field-option-%d-city_default" name="fields[%d][city_default]" value="%s">', $field['id'], $field['id'], $city_default );
-				printf( '<label for="wpforms-field-option-%d-city_default" class="sub-label">%s</label>', $field['id'], __( 'Default Value', 'wpforms' ) );
+				printf( '<label for="wpforms-field-option-%d-city_default" class="sub-label">%s</label>', $field['id'], esc_html__( 'Default Value', 'wpforms' ) );
 			echo '</div>';
 		echo '</div>';
 
@@ -376,15 +376,15 @@ class WPForms_Field_Address extends WPForms_Field {
 		printf( '<div class="wpforms-clear wpforms-field-option-row wpforms-field-option-row-state" id="wpforms-field-option-row-%d-state" data-subfield="state" data-field-id="%d">', $field['id'], $field['id'] );
 			$this->field_element( 'label', $field, array(
 				'slug'  => 'state_placeholder',
-				'value' => __( 'State / Province / Region', 'wpforms' ),
+				'value' => esc_html__( 'State / Province / Region', 'wpforms' ),
 			) );
 			echo '<div class="placeholder">';
 				printf( '<input type="text" class="placeholder" id="wpforms-field-option-%d-state_placeholder" name="fields[%d][state_placeholder]" value="%s">', $field['id'], $field['id'], $state_placeholder );
-				printf( '<label for="wpforms-field-option-%d-state_placeholder" class="sub-label">%s</label>', $field['id'], __( 'Placeholder', 'wpforms' ) );
+				printf( '<label for="wpforms-field-option-%d-state_placeholder" class="sub-label">%s</label>', $field['id'], esc_html__( 'Placeholder', 'wpforms' ) );
 			echo '</div>';
 			echo '<div class="default">';
 				printf( '<input type="text" class="default" id="wpforms-field-option-%d-state_default" name="fields[%d][state_default]" value="%s">', $field['id'], $field['id'], $state_default );
-				printf( '<label for="wpforms-field-option-%d-state_default" class="sub-label">%s</label>', $field['id'], __( 'Default Value', 'wpforms' ) );
+				printf( '<label for="wpforms-field-option-%d-state_default" class="sub-label">%s</label>', $field['id'], esc_html__( 'Default Value', 'wpforms' ) );
 			echo '</div>';
 		echo '</div>';
 
@@ -396,15 +396,15 @@ class WPForms_Field_Address extends WPForms_Field {
 		printf( '<div class="wpforms-clear wpforms-field-option-row wpforms-field-option-row-postal %s" id="wpforms-field-option-row-%d-postal" data-subfield="postal" data-field-id="%d">', $postal_visibility, $field['id'], $field['id'] );
 			$this->field_element( 'label', $field, array(
 				'slug'  => 'postal_placeholder',
-				'value' => __( 'ZIP / Postal', 'wpforms' ),
+				'value' => esc_html__( 'ZIP / Postal', 'wpforms' ),
 			) );
 			echo '<div class="placeholder">';
 				printf( '<input type="text" class="placeholder" id="wpforms-field-option-%d-postal_placeholder" name="fields[%d][postal_placeholder]" value="%s">', $field['id'], $field['id'], $postal_placeholder );
-				printf( '<label for="wpforms-field-option-%d-postal_placeholder" class="sub-label">%s</label>', $field['id'], __( 'Placeholder', 'wpforms' ) );
+				printf( '<label for="wpforms-field-option-%d-postal_placeholder" class="sub-label">%s</label>', $field['id'], esc_html__( 'Placeholder', 'wpforms' ) );
 			echo '</div>';
 			echo '<div class="default">';
 				printf( '<input type="text" class="default" id="wpforms-field-option-%d-postal_default" name="fields[%d][postal_default]" value="%s">', $field['id'], $field['id'], $postal_default );
-				printf( '<label for="wpforms-field-option-%d-postal_default" class="sub-label">%s</label>', $field['id'], __( 'Default Value', 'wpforms' ) );
+				printf( '<label for="wpforms-field-option-%d-postal_default" class="sub-label">%s</label>', $field['id'], esc_html__( 'Default Value', 'wpforms' ) );
 			echo '</div>';
 			echo '<div class="hide">';
 				printf( ' <input type="checkbox" class="hide" name="fields[%d][postal_hide]" value="1" %s>', $field['id'], checked( true, $postal_hide, false ) );
@@ -420,15 +420,15 @@ class WPForms_Field_Address extends WPForms_Field {
 		printf( '<div class="wpforms-clear wpforms-field-option-row wpforms-field-option-row-country %s" id="wpforms-field-option-row-%d-country" data-subfield="country" data-field-id="%d">', $country_visibility, $field['id'], $field['id'] );
 			$this->field_element( 'label', $field, array(
 				'slug'  => 'country_placeholder',
-				'value' => __( 'Country', 'wpforms' ),
+				'value' => esc_html__( 'Country', 'wpforms' ),
 			) );
 			echo '<div class="placeholder">';
 				printf( '<input type="text" class="placeholder" id="wpforms-field-option-%d-country_placeholder" name="fields[%d][country_placeholder]" value="%s">', $field['id'], $field['id'], $country_placeholder );
-				printf( '<label for="wpforms-field-option-%d-country_placeholder" class="sub-label">%s</label>', $field['id'], __( 'Placeholder', 'wpforms' ) );
+				printf( '<label for="wpforms-field-option-%d-country_placeholder" class="sub-label">%s</label>', $field['id'], esc_html__( 'Placeholder', 'wpforms' ) );
 			echo '</div>';
 			echo '<div class="default">';
 				printf( '<input type="text" class="default" id="wpforms-field-option-%d-country_default" name="fields[%d][country_default]" value="%s">', $field['id'], $field['id'], $country_default );
-				printf( '<label for="wpforms-field-option-%d-country_default" class="sub-label">%s</label>', $field['id'], __( 'Default Value', 'wpforms' ) );
+				printf( '<label for="wpforms-field-option-%d-country_default" class="sub-label">%s</label>', $field['id'], esc_html__( 'Default Value', 'wpforms' ) );
 			echo '</div>';
 			echo '<div class="hide">';
 				printf( ' <input type="checkbox" class="hide" name="fields[%d][country_hide]" value="1" %s>', $field['id'], checked( '1', $country_hide, false ) );
@@ -732,7 +732,7 @@ class WPForms_Field_Address extends WPForms_Field {
 								}
 								foreach ( $country['options'] as $country_key => $country_label ) {
 									$select = false;
-									if ( ! empty( $country['attr']['value'] ) && ( $country_key === $country['attr']['value'] || $country_label === $country['attr']['value']) ) {
+									if ( ! empty( $country['attr']['value'] ) && ( $country_key === $country['attr']['value'] || $country_label === $country['attr']['value'] ) ) {
 										$select = true;
 									}
 									printf( '<option value="%s" %s>%s</option>',
@@ -764,7 +764,7 @@ class WPForms_Field_Address extends WPForms_Field {
 	public function validate( $field_id, $field_submit, $form_data ) {
 
 		$form_id  = $form_data['id'];
-		$required = apply_filters( 'wpforms_required_label', __( 'This field is required.', 'wpforms' ) );
+		$required = wpforms_get_required_label();
 		$scheme   = ! empty( $form_data['fields'][ $field_id ]['scheme'] ) ? $form_data['fields'][ $field_id ]['scheme'] : $form_data['fields'][ $field_id ]['format'];
 
 		// Extended required validation needed for the different address fields.
@@ -828,7 +828,7 @@ class WPForms_Field_Address extends WPForms_Field {
 		}
 		$value .= ! empty( $postal ) ? "$postal\n" : '';
 		$value .= ! empty( $country ) ? "$country\n" : '';
-		$value = wpforms_sanitize_textarea_field( $value );
+		$value  = wpforms_sanitize_textarea_field( $value );
 
 		if ( empty( $city ) && empty( $address1 ) ) {
 			$value = '';

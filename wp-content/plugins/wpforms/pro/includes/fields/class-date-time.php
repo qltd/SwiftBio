@@ -18,14 +18,14 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 	 */
 	public function init() {
 
-		// Define field type information
-		$this->name  = __( 'Date / Time', 'wpforms' );
+		// Define field type information.
+		$this->name  = esc_html__( 'Date / Time', 'wpforms' );
 		$this->type  = 'date-time';
 		$this->icon  = 'fa-calendar-o';
 		$this->order = 11;
 		$this->group = 'fancy';
 
-		// Set custom option wrapper classes
+		// Set custom option wrapper classes.
 		add_filter( 'wpforms_builder_field_option_class', array( $this, 'field_option_class' ), 10, 2 );
 	}
 
@@ -37,28 +37,27 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 	 * @param array $field
 	 */
 	public function field_options( $field ) {
+		/*
+		 * Basic field options
+		 */
 
-		// --------------------------------------------------------------------//
-		// Basic field options
-		// --------------------------------------------------------------------//
-
-		// Options open markup
+		// Options open markup.
 		$this->field_option( 'basic-options', $field, array(
 			'markup' => 'open',
 		) );
 
-		// Label
+		// Label.
 		$this->field_option( 'label', $field );
 
-		// Format option
+		// Format option.
 		$format        = ! empty( $field['format'] ) ? esc_attr( $field['format'] ) : 'date-time';
 		$format_label  = $this->field_element(
 			'label',
 			$field,
 			array(
 				'slug'    => 'format',
-				'value'   => __( 'Format', 'wpforms' ),
-				'tooltip' => __( 'Select format for the date field.', 'wpforms' ),
+				'value'   => esc_html__( 'Format', 'wpforms' ),
+				'tooltip' => esc_html__( 'Select format for the date field.', 'wpforms' ),
 			),
 			false
 		);
@@ -69,9 +68,9 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 				'slug'    => 'format',
 				'value'   => $format,
 				'options' => array(
-					'date-time' => __( 'Date and Time', 'wpforms' ),
-					'date'      => __( 'Date', 'wpforms' ),
-					'time'      => __( 'Time', 'wpforms' ),
+					'date-time' => esc_html__( 'Date and Time', 'wpforms' ),
+					'date'      => esc_html__( 'Date', 'wpforms' ),
+					'time'      => esc_html__( 'Time', 'wpforms' ),
 				),
 			),
 			false
@@ -81,37 +80,37 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 			'content' => $format_label . $format_select,
 		) );
 
-		// Description
+		// Description.
 		$this->field_option( 'description', $field );
 
-		// Required toggle
+		// Required toggle.
 		$this->field_option( 'required', $field );
 
-		// Options close markup
+		// Options close markup.
 		$this->field_option( 'basic-options', $field, array(
 			'markup' => 'close',
 		) );
 
-		// --------------------------------------------------------------------//
-		// Advanced field options
-		// --------------------------------------------------------------------//
+		/*
+		 * Advanced field options
+		 */
 
-		// Options open markup
+		// Options open markup.
 		$this->field_option( 'advanced-options', $field, array(
 			'markup' => 'open',
 		) );
 
-		// Size
+		// Size.
 		$this->field_option( 'size', $field );
 
-		// Custom options
+		// Custom options.
 		echo '<div class="format-selected-' . $format . ' format-selected">';
 
-		// Date
+		// Date.
 		$date_placeholder = ! empty( $field['date_placeholder'] ) ? esc_attr( $field['date_placeholder'] ) : '';
 		$date_format      = ! empty( $field['date_format'] ) ? esc_attr( $field['date_format'] ) : 'm/d/Y';
 		$date_type        = ! empty( $field['date_type'] ) ? esc_attr( $field['date_type'] ) : 'datepicker';
-		// Backwards compatibility with old datepicker format
+		// Backwards compatibility with old datepicker format.
 		if ( 'mm/dd/yyyy' === $date_format ) {
 			$date_format = 'm/d/Y';
 		} elseif ( 'dd/mm/yyyy' === $date_format ) {
@@ -127,12 +126,12 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 		printf( '<div class="wpforms-clear wpforms-field-option-row wpforms-field-option-row-date" id="wpforms-field-option-row-%d-date" data-subfield="date" data-field-id="%d">', $field['id'], $field['id'] );
 		$this->field_element( 'label', $field, array(
 			'slug'    => 'date_placeholder',
-			'value'   => __( 'Date', 'wpforms' ),
-			'tooltip' => __( 'Advanced date options.', 'wpforms' ),
+			'value'   => esc_html__( 'Date', 'wpforms' ),
+			'tooltip' => esc_html__( 'Advanced date options.', 'wpforms' ),
 		) );
 		echo '<div class="placeholder">';
 		printf( '<input type="text" class="placeholder" id="wpforms-field-option-%d-date_placeholder" name="fields[%d][date_placeholder]" value="%s">', $field['id'], $field['id'], $date_placeholder );
-		printf( '<label for="wpforms-field-option-%d-date_placeholder" class="sub-label">%s</label>', $field['id'], __( 'Placeholder', 'wpforms' ) );
+		printf( '<label for="wpforms-field-option-%d-date_placeholder" class="sub-label">%s</label>', $field['id'], esc_html__( 'Placeholder', 'wpforms' ) );
 		echo '</div>';
 		echo '<div class="format">';
 		printf( '<select id="wpforms-field-option-%d-date_format" name="fields[%d][date_format]">', $field['id'], $field['id'] );
@@ -144,18 +143,18 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 			}
 		}
 		echo '</select>';
-		printf( '<label for="wpforms-field-option-%d-date_format" class="sub-label">%s</label>', $field['id'], __( 'Format', 'wpforms' ) );
+		printf( '<label for="wpforms-field-option-%d-date_format" class="sub-label">%s</label>', $field['id'], esc_html__( 'Format', 'wpforms' ) );
 		echo '</div>';
 		echo '<div class="type">';
 		printf( '<select id="wpforms-field-option-%d-date_type" name="fields[%d][date_type]">', $field['id'], $field['id'] );
-		printf( '<option value="datepicker" %s>%s</option>', selected( $date_type, 'datepicker', false ), __( 'Date Picker', 'wpforms' ) );
-		printf( '<option value="dropdown" %s>%s</option>', selected( $date_type, 'dropdown', false ), __( 'Date Dropdown', 'wpforms' ) );
+		printf( '<option value="datepicker" %s>%s</option>', selected( $date_type, 'datepicker', false ), esc_html__( 'Date Picker', 'wpforms' ) );
+		printf( '<option value="dropdown" %s>%s</option>', selected( $date_type, 'dropdown', false ), esc_html__( 'Date Dropdown', 'wpforms' ) );
 		echo '</select>';
-		printf( '<label for="wpforms-field-option-%d-date_type" class="sub-label">%s</label>', $field['id'], __( 'Type', 'wpforms' ) );
+		printf( '<label for="wpforms-field-option-%d-date_type" class="sub-label">%s</label>', $field['id'], esc_html__( 'Type', 'wpforms' ) );
 		echo '</div>';
 		echo '</div>';
 
-		// Time
+		// Time.
 		$time_placeholder = ! empty( $field['time_placeholder'] ) ? esc_attr( $field['time_placeholder'] ) : '';
 		$time_format      = ! empty( $field['time_format'] ) ? esc_attr( $field['time_format'] ) : 'g:i A';
 		$time_formats     = array(
@@ -164,19 +163,19 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 		);
 		$time_interval    = ! empty( $field['time_interval'] ) ? esc_attr( $field['time_interval'] ) : '30';
 		$time_intervals   = array(
-			'15' => __( '15 minutes' ),
-			'30' => __( '30 minute' ),
-			'60' => __( '1 hour' ),
+			'15' => esc_html__( '15 minutes' ),
+			'30' => esc_html__( '30 minute' ),
+			'60' => esc_html__( '1 hour' ),
 		);
 		printf( '<div class="wpforms-clear wpforms-field-option-row wpforms-field-option-row-time" id="wpforms-field-option-row-%d-time" data-subfield="time" data-field-id="%d">', $field['id'], $field['id'] );
 		$this->field_element( 'label', $field, array(
 			'slug'    => 'time_placeholder',
-			'value'   => __( 'Time', 'wpforms' ),
-			'tooltip' => __( 'Advanced time options', 'wpforms' ),
+			'value'   => esc_html__( 'Time', 'wpforms' ),
+			'tooltip' => esc_html__( 'Advanced time options', 'wpforms' ),
 		) );
 		echo '<div class="placeholder">';
 		printf( '<input type="text"" class="placeholder" id="wpforms-field-option-%d-time_placeholder" name="fields[%d][time_placeholder]" value="%s">', $field['id'], $field['id'], $time_placeholder );
-		printf( '<label for="wpforms-field-option-%d-time_placeholder" class="sub-label">%s</label>', $field['id'], __( 'Placeholder', 'wpforms' ) );
+		printf( '<label for="wpforms-field-option-%d-time_placeholder" class="sub-label">%s</label>', $field['id'], esc_html__( 'Placeholder', 'wpforms' ) );
 		echo '</div>';
 		echo '<div class="format">';
 		printf( '<select id="wpforms-field-option-%d-time_format" name="fields[%d][time_format]">', $field['id'], $field['id'] );
@@ -184,7 +183,7 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 			printf( '<option value="%s" %s>%s</option>', $key, selected( $time_format, $key, false ), $value );
 		}
 		echo '</select>';
-		printf( '<label for="wpforms-field-option-%d-time_format" class="sub-label">%s</label>', $field['id'], __( 'Format', 'wpforms' ) );
+		printf( '<label for="wpforms-field-option-%d-time_format" class="sub-label">%s</label>', $field['id'], esc_html__( 'Format', 'wpforms' ) );
 		echo '</div>';
 		echo '<div class="interval">';
 		printf( '<select id="wpforms-field-option-%d-time_interval" name="fields[%d][time_interval]">', $field['id'], $field['id'] );
@@ -192,22 +191,22 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 			printf( '<option value="%s" %s>%s</option>', $key, selected( $time_interval, $key, false ), $value );
 		}
 		echo '</select>';
-		printf( '<label for="wpforms-field-option-%d-time_interval" class="sub-label">%s</label>', $field['id'], __( 'Interval', 'wpforms' ) );
+		printf( '<label for="wpforms-field-option-%d-time_interval" class="sub-label">%s</label>', $field['id'], esc_html__( 'Interval', 'wpforms' ) );
 		echo '</div>';
 		echo '</div>';
 
 		echo '</div>';
 
-		// Hide label
+		// Hide label.
 		$this->field_option( 'label_hide', $field );
 
-		// Hide sublabels
+		// Hide sublabels.
 		$this->field_option( 'sublabel_hide', $field );
 
-		// Custom CSS classes
+		// Custom CSS classes.
 		$this->field_option( 'css', $field );
 
-		// Options close markup
+		// Options close markup.
 		$this->field_option( 'advanced-options', $field, array(
 			'markup' => 'close',
 		) );
@@ -223,7 +222,7 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 	 *
 	 * @return string
 	 */
-	function field_option_class( $class, $field ) {
+	public function field_option_class( $class, $field ) {
 
 		if ( 'date-time' === $field['type'] ) {
 
@@ -257,16 +256,16 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 			$date_second_select = 'MM';
 		}
 
-		// Label
+		// Label.
 		$this->field_preview_option( 'label', $field );
 
 		echo '<div class="format-selected-' . $format . ' format-selected">';
 
-		// Date
+		// Date.
 		printf( '<div class="wpforms-date wpforms-date-type-%s">', $date_type );
 		echo '<div class="wpforms-date-datepicker">';
 		printf( '<input type="text" placeholder="%s" class="primary-input" disabled>', $date_placeholder );
-		printf( '<label class="wpforms-sub-label">%s</label>', __( 'Date', 'wpforms' ) );
+		printf( '<label class="wpforms-sub-label">%s</label>', esc_html__( 'Date', 'wpforms' ) );
 		echo '</div>';
 		echo '<div class="wpforms-date-dropdown">';
 		printf( '<select disabled class="first"><option>%s</option></select>', $date_first_select );
@@ -274,18 +273,18 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 		printf( '<select disabled class="second"><option>%s</option></select>', $date_second_select );
 		echo '<span>/</span>';
 		echo '<select disabled><option>YYYY</option></select>';
-		printf( '<label class="wpforms-sub-label">%s</label>', __( 'Date', 'wpforms' ) );
+		printf( '<label class="wpforms-sub-label">%s</label>', esc_html__( 'Date', 'wpforms' ) );
 		echo '</div>';
 		echo '</div>';
 
-		// Time
+		// Time.
 		echo '<div class="wpforms-time">';
 		printf( '<input type="text" placeholder="%s" class="primary-input" disabled>', $time_placeholder );
-		printf( '<label class="wpforms-sub-label">%s</label>', __( 'Time', 'wpforms' ) );
+		printf( '<label class="wpforms-sub-label">%s</label>', esc_html__( 'Time', 'wpforms' ) );
 		echo '</div>';
 		echo '</div>';
 
-		// Description
+		// Description.
 		$this->field_preview_option( 'description', $field );
 	}
 
@@ -300,7 +299,7 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 	 */
 	public function field_display( $field, $field_atts, $form_data ) {
 
-		// Setup and sanitize the necessary data
+		// Setup and sanitize the necessary data.
 		$field            = apply_filters( 'wpforms_datetime_field_display', $field, $field_atts, $form_data );
 		$field_required   = ! empty( $field['required'] ) ? ' required' : '';
 		$field_format     = ! empty( $field['format'] ) ? $field['format'] : 'date-time';
@@ -324,7 +323,7 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 			$time_validation = 'time12h';
 		}
 
-		// Backwards compatibility with old datepicker format
+		// Backwards compatibility with old datepicker format.
 		if ( 'mm/dd/yyyy' === $date_format ) {
 			$date_format = 'm/d/Y';
 		} elseif ( 'dd/mm/yyyy' === $date_format ) {
@@ -333,7 +332,7 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 			$date_format = 'F j, Y';
 		}
 
-		// Date and Time format fields
+		// Date and Time format fields.
 		if ( 'date-time' === $field_format ) :
 
 			printf( '<div class="wpforms-field-row %s">', $field_class );
@@ -346,7 +345,7 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 
 			} else {
 
-				$date_class = 'wpforms-field-date-time-date wpforms-datepicker';
+				$date_class  = 'wpforms-field-date-time-date wpforms-datepicker';
 				$date_class .= ! empty( $field_required ) ? ' wpforms-field-required' : '';
 				$date_class .= ! empty( wpforms()->process->errors[ $form_id ][ $field['id'] ]['date'] ) ? ' wpforms-error' : '';
 
@@ -365,13 +364,13 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 				printf( '<label id="wpforms-%d-field_%d-error" class="wpforms-error" for="wpforms-field_%d">%s</label>', $form_id, $field['id'], $field['id'], esc_html( wpforms()->process->errors[ $form_id ][ $field['id'] ]['date'] ) );
 			}
 
-			printf( '<label for="wpforms-%d-field_%d" class="wpforms-field-sublabel %s">%s</label>', $form_id, $field['id'], $field_sublabel, __( 'Date', 'wpforms' ) );
+			printf( '<label for="wpforms-%d-field_%d" class="wpforms-field-sublabel %s">%s</label>', $form_id, $field['id'], $field_sublabel, esc_html__( 'Date', 'wpforms' ) );
 
 			echo '</div>';
 
 			echo '<div class="wpforms-field-row-block wpforms-one-half">';
 
-			$time_class = 'wpforms-field-date-time-time wpforms-timepicker';
+			$time_class  = 'wpforms-field-date-time-time wpforms-timepicker';
 			$time_class .= ! empty( $field_required ) ? ' wpforms-field-required' : '';
 			$time_class .= ! empty( wpforms()->process->errors[ $form_id ][ $field['id'] ]['time'] ) ? ' wpforms-error' : '';
 
@@ -391,13 +390,13 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 				printf( '<label id="wpforms-%d-field_%d-error" class="wpforms-error" for="wpforms-field_%d">%s</label>', $form_id, $field['id'], $field['id'], esc_html( wpforms()->process->errors[ $form_id ][ $field['id'] ]['time'] ) );
 			}
 
-			printf( '<label for="wpforms-%d-field_%d" class="wpforms-field-sublabel %s">%s</label>', $form_id, $field['id'], $field_sublabel, __( 'Time', 'wpforms' ) );
+			printf( '<label for="wpforms-%d-field_%d" class="wpforms-field-sublabel %s">%s</label>', $form_id, $field['id'], $field_sublabel, esc_html__( 'Time', 'wpforms' ) );
 
 			echo '</div>';
 
 			echo '</div>';
 
-		// Date only field
+		// Date only field.
 		elseif ( 'date' === $field_format ) :
 
 			if ( 'dropdown' === $date_type ) {
@@ -418,7 +417,7 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 
 			}
 
-		// Time only field
+		// Time only field.
 		else :
 
 			printf(
@@ -445,12 +444,18 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 	 * @param string $field_required
 	 * @param int $form_id
 	 */
-	function field_display_date_dropdowns( $format, $field, $field_required, $form_id ) {
+	public function field_display_date_dropdowns( $format, $field, $field_required, $form_id ) {
+
+		$ranges = apply_filters( 'wpforms_datetime_date_dropdowns', array(
+			'months' => range( 1, 12 ),
+			'days'   => range( 1, 31 ),
+			'years'  => range( date( 'Y' ), 1920 ),
+		) );
 
 		if ( 'm/d/Y' === $format ) {
 
-			// Month
-			$month_class = 'wpforms-field-date-time-date-month';
+			// Month.
+			$month_class  = 'wpforms-field-date-time-date-month';
 			$month_class .= ! empty( $field_required ) ? ' wpforms-field-required' : '';
 			$month_class .= ! empty( wpforms()->process->errors[ $form_id ][ $field['id'] ]['date'] ) ? ' wpforms-error' : '';
 			printf(
@@ -461,34 +466,15 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 				$field_required
 			);
 			echo '<option class="placeholder" selected disabled>MM</option>';
-			for ( $i = 1; $i <= 12; $i ++ ) {
-				printf( '<option value="%d">%d</option>', $i, $i );
+			foreach ( $ranges['months'] as $month ) {
+				printf( '<option value="%d">%d</option>', $month, $month );
 			}
 			echo '</select>';
 
 			echo '<span class="wpforms-field-date-time-date-sep">/</span>';
 
-			// Day
-			$day_class = 'wpforms-field-date-time-date-day';
-			$day_class .= ! empty( $field_required ) ? ' wpforms-field-required' : '';
-			$day_class .= ! empty( wpforms()->process->errors[ $form_id ][ $field['id'] ]['date'] ) ? ' wpforms-error' : '';
-			printf(
-				'<select name="wpforms[fields][%d][date][d]" id="%s" class="%s" %s>',
-				$field['id'],
-				"wpforms-field_{$field['id']}-day",
-				$month_class,
-				$field_required
-			);
-			echo '<option class="placeholder" selected disabled>DD</option>';
-			for ( $i = 1; $i <= 31; $i ++ ) {
-				printf( '<option value="%d">%d</option>', $i, $i );
-			}
-			echo '</select>';
-
-		} else {
-
-			// Day
-			$day_class = 'wpforms-field-date-time-date-day';
+			// Day.
+			$day_class  = 'wpforms-field-date-time-date-day';
 			$day_class .= ! empty( $field_required ) ? ' wpforms-field-required' : '';
 			$day_class .= ! empty( wpforms()->process->errors[ $form_id ][ $field['id'] ]['date'] ) ? ' wpforms-error' : '';
 			printf(
@@ -499,15 +485,34 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 				$field_required
 			);
 			echo '<option class="placeholder" selected disabled>DD</option>';
-			for ( $i = 1; $i <= 31; $i ++ ) {
-				printf( '<option value="%d">%d</option>', $i, $i );
+			foreach ( $ranges['days'] as $day ) {
+				printf( '<option value="%d">%d</option>', $day, $day );
+			}
+			echo '</select>';
+
+		} else {
+
+			// Day.
+			$day_class  = 'wpforms-field-date-time-date-day';
+			$day_class .= ! empty( $field_required ) ? ' wpforms-field-required' : '';
+			$day_class .= ! empty( wpforms()->process->errors[ $form_id ][ $field['id'] ]['date'] ) ? ' wpforms-error' : '';
+			printf(
+				'<select name="wpforms[fields][%d][date][d]" id="%s" class="%s" %s>',
+				$field['id'],
+				"wpforms-field_{$field['id']}-day",
+				$day_class,
+				$field_required
+			);
+			echo '<option class="placeholder" selected disabled>DD</option>';
+			foreach ( $ranges['days'] as $day ) {
+				printf( '<option value="%d">%d</option>', $day, $day );
 			}
 			echo '</select>';
 
 			echo '<span class="wpforms-field-date-time-date-sep">/</span>';
 
-			// Month
-			$month_class = 'wpforms-field-date-time-date-month';
+			// Month.
+			$month_class  = 'wpforms-field-date-time-date-month';
 			$month_class .= ! empty( $field_required ) ? ' wpforms-field-required' : '';
 			$month_class .= ! empty( wpforms()->process->errors[ $form_id ][ $field['id'] ]['date'] ) ? ' wpforms-error' : '';
 			printf(
@@ -518,16 +523,16 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 				$field_required
 			);
 			echo '<option class="placeholder" selected disabled>MM</option>';
-			for ( $i = 1; $i <= 12; $i ++ ) {
-				printf( '<option value="%d">%d</option>', $i, $i );
+			foreach ( $ranges['months'] as $month ) {
+				printf( '<option value="%d">%d</option>', $month, $month );
 			}
 			echo '</select>';
 		}
 
 		echo '<span class="wpforms-field-date-time-date-sep">/</span>';
 
-		// Year
-		$year_class = 'wpforms-field-date-time-date-year';
+		// Year.
+		$year_class  = 'wpforms-field-date-time-date-year';
 		$year_class .= ! empty( $field_required ) ? ' wpforms-field-required' : '';
 		$year_class .= ! empty( wpforms()->process->errors[ $form_id ][ $field['id'] ]['date'] ) ? ' wpforms-error' : '';
 		printf(
@@ -538,8 +543,8 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 			$field_required
 		);
 		echo '<option class="placeholder" selected disabled>YYYY</option>';
-		for ( $i = date( 'Y' ); $i >= 1920; $i -- ) {
-			printf( '<option value="%d">%d</option>', $i, $i );
+		foreach ( $ranges['years'] as $year ) {
+			printf( '<option value="%d">%d</option>', $year, $year );
 		}
 		echo '</select>';
 	}
@@ -555,12 +560,12 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 	 */
 	public function validate( $field_id, $field_submit, $form_data ) {
 
-		// Extended validation needed for the different address fields
+		// Extended validation needed for the different address fields.
 		if ( ! empty( $form_data['fields'][ $field_id ]['required'] ) ) {
 
 			$form_id  = $form_data['id'];
 			$format   = $form_data['fields'][ $field_id ]['format'];
-			$required = apply_filters( 'wpforms_required_label', __( 'This field is required.', 'wpforms' ) );
+			$required = wpforms_get_required_label();
 
 			if (
 				! empty( $form_data['fields'][ $field_id ]['date_type'] ) &&
@@ -652,21 +657,22 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 			$value = $time;
 		}
 
-		// Always store the raw time in 12H format
+		// Always store the raw time in 12H format.
 		if ( ( 'H:i A' === $time_format || 'H:i' === $time_format ) && ! empty( $time ) ) {
 			$time = date( 'g:i A', strtotime( $time ) );
 		}
 
-		// Always store the date in m/d/Y format so it is `strtotime()` compatible
+		// Always store the date in m/d/Y format so it is `strtotime()` compatible.
 		if (
 			( 'dd/mm/yyyy' === $date_format || 'd/m/Y' === $date_format ) &&
 			! empty( $date )
 		) {
 			list( $d, $m, $y ) = explode( '/', $date );
+
 			$date = "$m/$d/$y";
 		}
 
-		// Calculate unix time if we have a date
+		// Calculate unix time if we have a date.
 		if ( ! empty( $date ) ) {
 			$unix = strtotime( trim( "$date $time" ) );
 		}

@@ -2,7 +2,7 @@
 Contributors: benjaminpick
 Tags: geoip, maxmind, geolocation, locator
 Requires at least: 3.5
-Tested up to: 4.8
+Tested up to: 4.9
 Requires PHP: 5.4
 Stable tag: trunk
 License: GPLv3 or later
@@ -97,6 +97,10 @@ Does `geoip_detect2_get_info_from_current_ip()` return the same country, regardl
 
 == Upgrade Notice == 
 
+= 2.8.2 =
+
+This plugin version is compatible with PHP 7.2 and adapted the automatic update code.
+
 = 2.8.0 =
 
 Warning: This bugfix version of the plugin requires PHP 5.4.
@@ -171,6 +175,16 @@ Fixing automatic weekly updates.
 
 
 == Changelog ==
+
+= 2.8.2 =
+* Maxmind vendor code was updated to the current version (2.7.0).
+* FIX: There was a fatal error when using PHP 7.2 (thx jj-dev)
+* FIX: The automatic update of Maxmind Geoip2 Lite City database was fixed.
+* FIX: Always try to fill in more information into the country information from the GeoNames-DB.
+
+= 2.8.1 =
+
+(Was not released on wordpress.org)
 
 = 2.8.0 =
 

@@ -1,6 +1,6 @@
 <?php
 /*
-Copyright 2013-2017 Yellow Tree, Siegen, Germany
+Copyright 2013-2018 Yellow Tree, Siegen, Germany
 Author: Benjamin Pick (info@yellowtree.de)
 
 This program is free software; you can redistribute it and/or modify
@@ -104,7 +104,7 @@ function geoip_detect_option_page() {
 				if ($ret === true)
 					$message .= __('Updated successfully.', 'geoip-detect');
 				else
-					$message .= __('Update failed.', 'geoip-detect') .' '. $ret;
+					$message .= __('File was not updated', 'geoip-detect') .': '. $ret;
 		
 				break;
 	

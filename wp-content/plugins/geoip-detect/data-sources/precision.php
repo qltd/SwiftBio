@@ -1,6 +1,6 @@
 <?php
 /*
-Copyright 2013-2017 Yellow Tree, Siegen, Germany
+Copyright 2013-2018 Yellow Tree, Siegen, Germany
 Author: Benjamin Pick (info@yellowtree.de)
 
 This program is free software; you can redistribute it and/or modify
@@ -37,7 +37,7 @@ class PrecisionReader extends \GeoIp2\WebService\Client implements \YellowTree\G
 		parent::__construct($userId, $licenseKey, array('en'), $options);
 	}
 	
-	public function city($ip) {
+	public function city($ip = 'me') {
 		$method = get_option('geoip-detect-precision_api_type', 'city');
 		
 		$ret = null;

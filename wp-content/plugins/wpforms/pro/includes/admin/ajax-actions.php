@@ -16,14 +16,14 @@
  */
 function wpforms_deactivate_addon() {
 
-	// Run a security check
+	// Run a security check.
 	check_ajax_referer( 'wpforms-admin', 'nonce' );
 
 	if ( isset( $_POST['plugin'] ) ) {
 		deactivate_plugins( $_POST['plugin'] );
-		wp_send_json_success( __( 'Addon deactivated.', 'wpforms' ) );
+		wp_send_json_success( esc_html__( 'Addon deactivated.', 'wpforms' ) );
 	} else {
-		wp_send_json_error( __( 'Could not deactivate addon. Please deacticate from the Plugins page.', 'wpforms' ) );
+		wp_send_json_error( esc_html__( 'Could not deactivate addon. Please deactivate from the Plugins page.', 'wpforms' ) );
 	}
 }
 
@@ -36,7 +36,7 @@ add_action( 'wp_ajax_wpforms_deactivate_addon', 'wpforms_deactivate_addon' );
  */
 function wpforms_activate_addon() {
 
-	// Run a security check
+	// Run a security check.
 	check_ajax_referer( 'wpforms-admin', 'nonce' );
 
 	if ( isset( $_POST['plugin'] ) ) {
@@ -44,11 +44,11 @@ function wpforms_activate_addon() {
 		$activate = activate_plugins( $_POST['plugin'] );
 
 		if ( ! is_wp_error( $activate ) ) {
-			wp_send_json_success( __( 'Addon activated.', 'wpforms' ) );
+			wp_send_json_success( esc_html__( 'Addon activated.', 'wpforms' ) );
 		}
 	}
 
-	wp_send_json_error( __( 'Could not activate addon. Please activate from the Plugins page.', 'wpforms' ) );
+	wp_send_json_error( esc_html__( 'Could not activate addon. Please activate from the Plugins page.', 'wpforms' ) );
 }
 
 add_action( 'wp_ajax_wpforms_activate_addon', 'wpforms_activate_addon' );
@@ -60,11 +60,11 @@ add_action( 'wp_ajax_wpforms_activate_addon', 'wpforms_activate_addon' );
  */
 function wpforms_install_addon() {
 
-	// Run a security check
+	// Run a security check.
 	check_ajax_referer( 'wpforms-admin', 'nonce' );
 
 	if ( empty( $_POST['plugin'] ) ) {
-		wp_send_json_error( __( 'Could not install addon. Please download from wpforms.com and install manually.', 'wpforms' ) );
+		wp_send_json_error( esc_html__( 'Could not install addon. Please download from wpforms.com and install manually.', 'wpforms' ) );
 	}
 
 	// Set the current screen to avoid undefined notices.
@@ -81,12 +81,15 @@ function wpforms_install_addon() {
 		)
 	);
 
-	// Check for file system permissions
-	if ( false === ( $creds = request_filesystem_credentials( $url, '', false, false, null ) ) ) {
-		wp_send_json_error( __( 'Could not install addon. Please download from wpforms.com and install manually.', 'wpforms' ) );
+	$creds = request_filesystem_credentials( $url, '', false, false, null );
+
+	// Check for file system permissions.
+	if ( false === $creds ) {
+		wp_send_json_error( esc_html__( 'Could not install addon. Please download from wpforms.com and install manually.', 'wpforms' ) );
 	}
+
 	if ( ! WP_Filesystem( $creds ) ) {
-		wp_send_json_error( __( 'Could not install addon. Please download from wpforms.com and install manually.', 'wpforms' ) );
+		wp_send_json_error( esc_html__( 'Could not install addon. Please download from wpforms.com and install manually.', 'wpforms' ) );
 	}
 
 	// We do not need any extra credentials if we have gotten this far, so let's install the plugin.
@@ -106,14 +109,15 @@ function wpforms_install_addon() {
 
 		wp_send_json_success(
 			array(
-				'msg'      => __( 'Addon installed.', 'wpforms' ),
+				'msg'      => esc_html__( 'Addon installed.', 'wpforms' ),
 				'basename' => $plugin_basename,
 			)
 		);
 	}
 
-	wp_send_json_error( __( 'Could not install addon. Please download from wpforms.com and install manually.', 'wpforms' ) );
+	wp_send_json_error( esc_html__( 'Could not install addon. Please download from wpforms.com and install manually.', 'wpforms' ) );
 }
+
 add_action( 'wp_ajax_wpforms_install_addon', 'wpforms_install_addon' );
 
 /**
@@ -123,11 +127,11 @@ add_action( 'wp_ajax_wpforms_install_addon', 'wpforms_install_addon' );
  */
 function wpforms_entry_list_star() {
 
-	// Run a security check
+	// Run a security check.
 	check_ajax_referer( 'wpforms-admin', 'nonce' );
 
-	// Check for permissions
-	if ( ! current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
+	// Check for permissions.
+	if ( ! wpforms_current_user_can() ) {
 		wp_send_json_error();
 	}
 
@@ -167,11 +171,11 @@ add_action( 'wp_ajax_wpforms_entry_list_star', 'wpforms_entry_list_star' );
  */
 function wpforms_entry_list_read() {
 
-	// Run a security check
+	// Run a security check.
 	check_ajax_referer( 'wpforms-admin', 'nonce' );
 
-	// Check for permissions
-	if ( ! current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
+	// Check for permissions.
+	if ( ! wpforms_current_user_can() ) {
 		wp_send_json_error();
 	}
 
@@ -215,13 +219,13 @@ function wpforms_verify_license() {
 	check_ajax_referer( 'wpforms-admin', 'nonce' );
 
 	// Check for permissions.
-	if ( ! current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
+	if ( ! wpforms_current_user_can() ) {
 		wp_send_json_error();
 	}
 
 	// Check for license key.
 	if ( empty( $_POST['license'] ) ) {
-		wp_send_json_error( __( 'Please enter a license key.', 'wpforms' ) );
+		wp_send_json_error( esc_html__( 'Please enter a license key.', 'wpforms' ) );
 	}
 
 	wpforms()->license->verify_key( $_POST['license'], true );
@@ -240,7 +244,7 @@ function wpforms_deactivate_license() {
 	check_ajax_referer( 'wpforms-admin', 'nonce' );
 
 	// Check for permissions.
-	if ( ! current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
+	if ( ! wpforms_current_user_can() ) {
 		wp_send_json_error();
 	}
 
@@ -260,13 +264,13 @@ function wpforms_refresh_license() {
 	check_ajax_referer( 'wpforms-admin', 'nonce' );
 
 	// Check for permissions.
-	if ( ! current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
+	if ( ! wpforms_current_user_can() ) {
 		wp_send_json_error();
 	}
 
 	// Check for license key.
 	if ( empty( $_POST['license'] ) ) {
-		wp_send_json_error( __( 'Please enter a license key.', 'wpforms' ) );
+		wp_send_json_error( esc_html__( 'Please enter a license key.', 'wpforms' ) );
 	}
 
 	wpforms()->license->validate_key( $_POST['license'], true, true );
@@ -281,7 +285,7 @@ add_action( 'wp_ajax_wpforms_refresh_license', 'wpforms_refresh_license' );
  */
 function wpforms_builder_notification_state_save() {
 
-	// Run a security check
+	// Run a security check.
 	check_ajax_referer( 'wpforms-builder', 'nonce' );
 
 	if ( empty( $_POST ) ) {
@@ -318,7 +322,7 @@ add_action( 'wp_ajax_wpforms_builder_notification_state_save', 'wpforms_builder_
  */
 function wpforms_builder_notification_state_remove() {
 
-	// Run a security check
+	// Run a security check.
 	check_ajax_referer( 'wpforms-builder', 'nonce' );
 
 	if ( empty( $_POST ) ) {

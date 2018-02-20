@@ -105,11 +105,9 @@
 
 			// Load match heights
 			$('.wpforms-setup-templates.core .wpforms-template-inner').matchHeight({
-				property: 'min-height',
 				byRow: false
 			});
 			$('.wpforms-setup-templates.additional .wpforms-template-inner').matchHeight({
-				property: 'min-height',
 				byRow: false
 			});
 
@@ -129,9 +127,6 @@
 
 			// Hide/Show reCAPTCHA in form
 			WPFormsBuilder.recaptchaToggle();
-
-			// Hide/Show title area
-			WPFormsBuilder.titleAreaToggle();
 
 			// Confirmation settings
 			WPFormsBuilder.confirmationToggle();
@@ -853,6 +848,74 @@
 			$(document).on('click', '.layout-selector-display-columns span', function(e) {
 				e.preventDefault();
 				WPFormsBuilder.fieldLayoutSelectorInsert(this);
+			});
+
+			// Real-time updates for Rating field scale option.
+			$( document ).on( 'change', '.wpforms-field-option-row-scale select', function() {
+
+				var $this  = $( this ),
+					value  = $this.val(),
+					id     = $this.parent().data( 'field-id' ),
+					$icons = $( '#wpforms-field-'+id +' .rating-icon' ),
+					x      = 1;
+
+				$icons.each( function( index ) {;
+					if ( x <= value ) {
+						$( this ).show();
+					} else {
+						$( this ).hide();
+					}
+					x++;
+				});
+			});
+
+			// Real-time updates for Rating field icon option.
+			$( document ).on( 'change', '.wpforms-field-option-row-icon select', function() {
+
+				var $this     = $( this ),
+					value     = $this.val(),
+					id        = $this.parent().data( 'field-id' ),
+					$icons    = $( '#wpforms-field-'+id +' .rating-icon' ),
+					iconClass = 'fa-star';
+
+				if ( 'heart' === value ) {
+					iconClass = 'fa-heart';
+				} else if ( 'thumb' === value ) {
+					iconClass = 'fa-thumbs-up';
+				} else if ( 'smiley' === value ) {
+					iconClass = 'fa-smile-o';
+				}
+
+				$icons.removeClass( 'fa-star fa-heart fa-thumbs-up fa-smile-o' ).addClass( iconClass );
+			});
+
+			// Real-time updates for Rating field icon size option.
+			$( document ).on( 'change', '.wpforms-field-option-row-icon_size select', function() {
+
+				var $this     = $( this ),
+					value     = $this.val(),
+					id        = $this.parent().data( 'field-id' ),
+					$icons    = $( '#wpforms-field-'+id +' .rating-icon' );
+					fontSize  = '28';
+
+				if ( 'small' === value ) {
+					fontSize = '18';
+				} else if ( 'large' === value ) {
+					fontSize = '38';
+				}
+
+				$icons.css( 'font-size', fontSize + 'px' );
+			});
+
+			// Real-time updates for Rating field icon color option.
+			$( document ).on( 'input', '.wpforms-field-option-row-icon_color input.wpforms-color-picker', function() {
+
+				var $this     = $( this ),
+					value     = $this.val(),
+					id        = $this.closest( '.wpforms-field-option-row' ).data( 'field-id' ),
+					$icons    = $( '#wpforms-field-'+id +' i.fa' );
+
+				$icons.css( 'color', value );
 			});
 		},
 
@@ -2037,11 +2100,6 @@
 				WPFormsBuilder.recaptchaToggle();
 			});
 
-			// Toggle form title area
-			$(document).on('change', '#wpforms-panel-field-settings-hide_title_desc', function() {
-				WPFormsBuilder.titleAreaToggle();
-			});
-
 			// Toggle form confirmation setting fields
 			$(document).on('change', '#wpforms-panel-field-settings-confirmation_type', function() {
 				WPFormsBuilder.confirmationToggle();
@@ -2115,20 +2173,6 @@
 				$('.wpforms-field-recaptcha').show();
 			} else {
 				$('.wpforms-field-recaptcha').hide();
-			}
-		},
-
-		/**
-		 * Toggle displaying the form title area.
-		 *
-		 * @since 1.0.0
-		 */
-		titleAreaToggle: function() {
-
-			if ($('#wpforms-panel-field-settings-hide_title_desc').is(':checked')) {
-				$('.wpforms-title-desc').hide();
-			} else {
-				$('.wpforms-title-desc').show();
 			}
 		},
 

@@ -59,7 +59,6 @@ abstract class WPForms_DB {
 	 * @return array List of columns.
 	 */
 	public function get_columns() {
-
 		return array();
 	}
 
@@ -72,7 +71,6 @@ abstract class WPForms_DB {
 	 * @return array All defined column defaults.
 	 */
 	public function get_column_defaults() {
-
 		return array();
 	}
 
@@ -105,7 +103,7 @@ abstract class WPForms_DB {
 	 * @param string $column Column name.
 	 * @param int|string $row_id Row ID.
 	 *
-	 * @return object|null|bool Database query result object or null on failure
+	 * @return object|null|bool Database query result, object or null on failure.
 	 */
 	public function get_by( $column, $row_id ) {
 
@@ -131,7 +129,7 @@ abstract class WPForms_DB {
 	 * @param string $column Column name.
 	 * @param int|string $row_id Row ID.
 	 *
-	 * @return string|null Database query result (as string), or null on failure
+	 * @return string|null Database query result (as string), or null on failure.
 	 */
 	public function get_column( $column, $row_id ) {
 
@@ -158,7 +156,7 @@ abstract class WPForms_DB {
 	 * @param string $column_where Column to match against in the WHERE clause.
 	 * @param string $column_value Value to match to the column in the WHERE clause.
 	 *
-	 * @return string|null Database query result (as string), or null on failure
+	 * @return string|null Database query result (as string), or null on failure.
 	 */
 	public function get_column_by( $column, $column_where, $column_value ) {
 
@@ -186,33 +184,31 @@ abstract class WPForms_DB {
 	 * @param array $data Column data.
 	 * @param string $type Optional. Data type context.
 	 *
-	 * @return int ID for the newly inserted record
+	 * @return int ID for the newly inserted record.
 	 */
 	public function add( $data, $type = '' ) {
 
 		global $wpdb;
 
-		// Set default values
+		// Set default values.
 		$data = wp_parse_args( $data, $this->get_column_defaults() );
 
 		do_action( 'wpforms_pre_insert_' . $type, $data );
 
-		// Initialise column format array
+		// Initialise column format array.
 		$column_formats = $this->get_columns();
 
-		// Force fields to lower case
+		// Force fields to lower case.
 		$data = array_change_key_case( $data );
 
-		// White list columns
+		// White list columns.
 		$data = array_intersect_key( $data, $column_formats );
 
-		// Reorder $column_formats to match the order of columns given in $data
+		// Reorder $column_formats to match the order of columns given in $data.
 		$data_keys      = array_keys( $data );
 		$column_formats = array_merge( array_flip( $data_keys ), $column_formats );
 
 		$wpdb->insert( $this->table_name, $data, $column_formats );
-
-		wp_cache_flush();
 
 		do_action( 'wpforms_post_insert_' . $type, $wpdb->insert_id, $data );
 
@@ -228,7 +224,7 @@ abstract class WPForms_DB {
 	 *
 	 * @param array $data Column data.
 	 *
-	 * @return int ID for the newly inserted record
+	 * @return int ID for the newly inserted record.
 	 */
 	public function insert( $data ) {
 
@@ -254,7 +250,7 @@ abstract class WPForms_DB {
 
 		global $wpdb;
 
-		// Row ID must be positive integer
+		// Row ID must be positive integer.
 		$row_id = absint( $row_id );
 
 		if ( empty( $row_id ) ) {
@@ -265,24 +261,22 @@ abstract class WPForms_DB {
 			$where = $this->primary_key;
 		}
 
-		// Initialise column format array
+		// Initialise column format array.
 		$column_formats = $this->get_columns();
 
-		// Force fields to lower case
+		// Force fields to lower case.
 		$data = array_change_key_case( $data );
 
-		// White list columns
+		// White list columns.
 		$data = array_intersect_key( $data, $column_formats );
 
-		// Reorder $column_formats to match the order of columns given in $data
+		// Reorder $column_formats to match the order of columns given in $data.
 		$data_keys      = array_keys( $data );
 		$column_formats = array_merge( array_flip( $data_keys ), $column_formats );
 
 		if ( false === $wpdb->update( $this->table_name, $data, array( $where => $row_id ), $column_formats ) ) {
 			return false;
 		}
-
-		wp_cache_flush();
 
 		do_action( 'wpforms_post_update_' . $type, $data );
 
@@ -304,7 +298,7 @@ abstract class WPForms_DB {
 
 		global $wpdb;
 
-		// Row ID must be positive integer
+		// Row ID must be positive integer.
 		$row_id = absint( $row_id );
 
 		if ( empty( $row_id ) ) {
@@ -314,8 +308,6 @@ abstract class WPForms_DB {
 		if ( false === $wpdb->query( $wpdb->prepare( "DELETE FROM $this->table_name WHERE $this->primary_key = %d", $row_id ) ) ) {
 			return false;
 		}
-
-		wp_cache_flush();
 
 		do_action( 'wpforms_post_delete', $row_id );
 
@@ -346,8 +338,6 @@ abstract class WPForms_DB {
 			return false;
 		}
 
-		wp_cache_flush();
-
 		do_action( 'wpforms_post_delete', $row_id );
 
 		return true;
@@ -369,6 +359,6 @@ abstract class WPForms_DB {
 
 		$table = sanitize_text_field( $table );
 
-		return $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE '%s'", $table ) ) === $table;
+		return $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) === $table;
 	}
 }

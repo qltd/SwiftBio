@@ -200,9 +200,9 @@ class WPForms_Entries_Export {
 			}
 		}
 
-		$cols['date']     = __( 'Date', 'wpforms' );
-		$cols['date_gmt'] = __( 'Date GMT', 'wpforms' );
-		$cols['entry_id'] = __( 'ID', 'wpforms' );
+		$cols['date']     = esc_html__( 'Date', 'wpforms' );
+		$cols['date_gmt'] = esc_html__( 'Date GMT', 'wpforms' );
+		$cols['entry_id'] = esc_html__( 'ID', 'wpforms' );
 
 		return $cols;
 	}
@@ -242,8 +242,8 @@ class WPForms_Entries_Export {
 				}
 			}
 			$date_format         = sprintf( '%s %s', get_option( 'date_format' ), get_option( 'time_format' ) );
-			$data[1]['date']     = date( $date_format, strtotime( $this->entry->date ) + ( get_option( 'gmt_offset' ) * 3600 ) );
-			$data[1]['date_gmt'] = date( $date_format, strtotime( $this->entry->date ) );
+			$data[1]['date']     = date_i18n( $date_format, strtotime( $this->entry->date ) + ( get_option( 'gmt_offset' ) * 3600 ) );
+			$data[1]['date_gmt'] = date_i18n( $date_format, strtotime( $this->entry->date ) );
 			$data[1]['entry_id'] = absint( $this->entry->entry_id );
 
 		} else {
@@ -267,8 +267,8 @@ class WPForms_Entries_Export {
 					}
 				}
 				$date_format                          = sprintf( '%s %s', get_option( 'date_format' ), get_option( 'time_format' ) );
-				$data[ $entry->entry_id ]['date']     = date( $date_format, strtotime( $entry->date ) + ( get_option( 'gmt_offset' ) * 3600 ) );
-				$data[ $entry->entry_id ]['date_gmt'] = date( $date_format, strtotime( $entry->date ) );
+				$data[ $entry->entry_id ]['date']     = date_i18n( $date_format, strtotime( $entry->date ) + ( get_option( 'gmt_offset' ) * 3600 ) );
+				$data[ $entry->entry_id ]['date_gmt'] = date_i18n( $date_format, strtotime( $entry->date ) );
 				$data[ $entry->entry_id ]['entry_id'] = absint( $entry->entry_id );
 			}
 		} // End if().
@@ -336,10 +336,10 @@ class WPForms_Entries_Export {
 	 */
 	public function export() {
 
-		if ( ! current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
+		if ( ! wpforms_current_user_can() ) {
 			wp_die(
-				__( 'You do not have permission to export entries.', 'wpforms' ),
-				__( 'Error', 'wpforms' ),
+				esc_html__( 'You do not have permission to export entries.', 'wpforms' ),
+				esc_html__( 'Error', 'wpforms' ),
 				array(
 					'response' => 403,
 				)
