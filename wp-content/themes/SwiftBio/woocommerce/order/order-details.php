@@ -13,7 +13,7 @@
  * @see     https://docs.woocommerce.com/document/template-structure/
  * @author  WooThemes
  * @package WooCommerce/Templates
- * @version 3.2.0
+ * @version 3.3.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -33,78 +33,80 @@ if ( $show_downloads ) {
     wc_get_template( 'order/order-downloads.php', array( 'downloads' => $downloads, 'show_title' => true ) );
 }
 ?>
-
 <section class="woocommerce-order-details">
+    <?php do_action( 'woocommerce_order_details_before_order_table', $order ); ?>
 
-	<h2 class="woocommerce-order-details__title"><?php _e( 'Order details', 'woocommerce' ); ?></h2>
+    <h2 class="woocommerce-order-details__title"><?php _e( 'Order details', 'woocommerce' ); ?></h2>
 
-	<table class="woocommerce-table woocommerce-table--order-details shop_table order_details">
+    <table class="woocommerce-table woocommerce-table--order-details shop_table order_details">
 
-		<thead>
-			<tr>
-				<th class="woocommerce-table__product-name product-name"><?php _e( 'Product', 'woocommerce' ); ?></th>
-				<th class="woocommerce-table__product-table product-total"><?php _e( 'Total', 'woocommerce' ); ?></th>
-			</tr>
-		</thead>
+        <thead>
+            <tr>
+                <th class="woocommerce-table__product-name product-name"><?php _e( 'Product', 'woocommerce' ); ?></th>
+                <th class="woocommerce-table__product-table product-total"><?php _e( 'Total', 'woocommerce' ); ?></th>
+            </tr>
+        </thead>
 
-		<tbody>
-			<?php
-				foreach ( $order_items as $item_id => $item ) {
-					$product = apply_filters( 'woocommerce_order_item_product', $item->get_product(), $item );
+        <tbody>
+            <?php
+            do_action( 'woocommerce_order_details_before_order_table_items', $order );
 
-					wc_get_template( 'order/order-details-item.php', array(
-						'order'			     => $order,
-						'item_id'		     => $item_id,
-						'item'			     => $item,
-						'show_purchase_note' => $show_purchase_note,
-						'purchase_note'	     => $product ? $product->get_purchase_note() : '',
-						'product'	         => $product,
-					) );
-				}
-			?>
-			<?php do_action( 'woocommerce_order_items_table', $order ); ?>
-		</tbody>
+            foreach ( $order_items as $item_id => $item ) {
+                $product = $item->get_product();
 
-		<tfoot>
-			<?php /** Q CHANGES **/
-            if( $order->get_used_coupons() ) {
-                $coupons_count = count( $order->get_used_coupons() );
-                $i = 1;
-                $coupon_text = false;
-                foreach( $order->get_used_coupons() as $coupon) {
-                    $coupon_text .= $coupon;
-                    if( $i < $coupons_count )
-                            $coupon_text .= ', ';
+                wc_get_template( 'order/order-details-item.php', array(
+                    'order'              => $order,
+                    'item_id'            => $item_id,
+                    'item'               => $item,
+                    'show_purchase_note' => $show_purchase_note,
+                    'purchase_note'      => $product ? $product->get_purchase_note() : '',
+                    'product'            => $product,
+                ) );
+            }
+
+            do_action( 'woocommerce_order_details_after_order_table_items', $order );
+            ?>
+        </tbody>
+
+        <tfoot>
+            <?php
+                /** Q CHANGES **/
+                if( $order->get_used_coupons() ) {
+                    $coupons_count = count( $order->get_used_coupons() );
+                    $i = 1;
+                    $coupon_text = false;
+                    foreach( $order->get_used_coupons() as $coupon) {
+                        $coupon_text .= $coupon;
+                        if( $i < $coupons_count ) $coupon_text .= ', ';
                         $i++;
-                    }
+                        }
                 }
-                /** END Q CHANGES */
-				foreach ( $order->get_order_item_totals() as $key => $total ) {
-					?>
-					<tr>
-						<?php /* Q CHANGES */ ?>
+                    /** END Q CHANGES */
+                foreach ( $order->get_order_item_totals() as $key => $total ) {
+                    ?>
+                    <tr>
+                    <?php /* Q CHANGES */ ?>
                         <th scope="row">
                             <?php if ($total['label'] == 'Discount:'): ?>
                                 <?php echo "Discount (" . $coupon_text . "):"; ?>
                             <?php else: ?>
                                 <?php echo $total['label']; ?>
                             <?php endif; ?></th>
-						<td><?php echo $total['value']; ?></td>
-					</tr>
-					<?php /* END Q Changes */
-				}
-			?>
+                        <td><?php echo $total['value']; ?></td>
+                    </tr>
+                    <?php /* END Q Changes */
+                }
+            ?>
             <?php if ( $order->get_customer_note() ) : ?>
                 <tr>
                     <th><?php _e( 'Note:', 'woocommerce' ); ?></th>
                     <td><?php echo wptexturize( $order->get_customer_note() ); ?></td>
                 </tr>
             <?php endif; ?>
-		</tfoot>
-	</table>
+        </tfoot>
+    </table>
 
-	<?php do_action( 'woocommerce_order_details_after_order_table', $order ); ?>
-
+    <?php do_action( 'woocommerce_order_details_after_order_table', $order ); ?>
 </section>
 
 <?php
