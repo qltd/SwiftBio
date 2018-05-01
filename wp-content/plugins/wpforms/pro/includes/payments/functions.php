@@ -378,6 +378,30 @@ function wpforms_has_payment( $type = 'entry', $data = '' ) {
 }
 
 /**
+ * Checks to see if a form has an active payment gateway configured.
+ *
+ * @since 1.4.5
+ *
+ * @param array $form_data Form data.
+ *
+ * @return bool
+ */
+function wpforms_has_payment_gateway( $form_data ) {
+
+	// PayPal Standard check.
+	if ( ! empty( $form_data['payments']['paypal_standard']['enable'] ) ) {
+		return true;
+	}
+
+	// Stripe Check.
+	if ( ! empty( $form_data['payments']['stripe']['enable'] ) ) {
+		return true;
+	}
+
+	return apply_filters( 'wpforms_has_payment_gateway', false, $form_data );
+}
+
+/**
  * Get payment total amount from entry.
  *
  * @since 1.0.0

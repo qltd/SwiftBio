@@ -63,6 +63,13 @@ class WPForms_Addons {
 			'0.7.0',
 			false
 		);
+
+		wp_enqueue_script(
+			'listjs',
+			WPFORMS_PLUGIN_URL . 'assets/js/list.min.js',
+			array( 'jquery' ),
+			'1.5.0'
+		);
 	}
 
 	/**
@@ -83,12 +90,13 @@ class WPForms_Addons {
 			<h1 class="page-title">
 				<?php _e( 'WPForms Addons', 'wpforms' ); ?>
 				<a href="<?php echo esc_url_raw( add_query_arg( array( 'wpforms_refresh_addons' => '1' ) ) ); ?> " class="add-new-h2 wpforms-btn-orange"><?php _e( 'Refresh Addons', 'wpforms' ); ?></a>
+				<input type="search" placeholder="<?php esc_html_e( 'Search Addons', 'wpforms' ); ?>" id="wpforms-admin-addons-search">
 			</h1>
 
 			<?php if ( empty( $this->addons ) ) : ?>
 
 				<div class="error notice">
-					<p><?php _e( 'There was an issue retrieving the addons for this site. Please click on the button above the refresh the addons data.', 'wpforms' ); ?></p>
+					<p><?php _e( 'There was an issue retrieving Addons for this site. Please click on the button above the refresh.', 'wpforms' ); ?></p>
 				</div>
 
 			<?php elseif ( ! empty( $errors ) ) : ?>
@@ -135,23 +143,27 @@ class WPForms_Addons {
 
 					echo '<h4>' . esc_html__( 'Available Addons', 'wpforms' ) . '</h4>';
 
-					echo '<div class="addons-container">';
+					echo '<div class="addons-container" id="wpforms-admin-addons-list">';
 
-					if ( 'basic' === $type ) :
+						echo '<div class="list">';
 
-						$this->addon_grid( $this->addons, $type, array( 'basic' )  );
-						$this->addon_grid( $this->addons, $type, array( 'plus', 'pro' ), true );
+							if ( 'basic' === $type ) :
 
-					elseif ( 'plus' === $type ) :
+								$this->addon_grid( $this->addons, $type, array( 'basic' )  );
+								$this->addon_grid( $this->addons, $type, array( 'plus', 'pro' ), true );
 
-						$this->addon_grid( $this->addons, $type, array( 'plus' ) );
-						$this->addon_grid( $this->addons, $type, array( 'pro' ), true );
+							elseif ( 'plus' === $type ) :
 
-					elseif ( 'agency' === $type || 'ultimate' === $type || 'pro' === $type ) :
+								$this->addon_grid( $this->addons, $type, array( 'plus' ) );
+								$this->addon_grid( $this->addons, $type, array( 'pro' ), true );
 
-						$this->addon_grid( $this->addons, $type, array( 'basic', 'plus', 'pro' ) );
+							elseif ( 'agency' === $type || 'ultimate' === $type || 'pro' === $type ) :
 
-					endif;
+								$this->addon_grid( $this->addons, $type, array( 'basic', 'plus', 'pro' ) );
+
+							endif;
+
+						echo '</div>';
 
 					echo '</div>';
 
@@ -245,8 +257,8 @@ class WPForms_Addons {
 
 					echo '<div class="details wpforms-clear">';
 						echo '<img src="' . esc_url( $image ) . '">';
-						echo '<h5>' . esc_html( $addon['title'] ) . '</h5>';
-						echo '<p>' . esc_html( $addon['excerpt'] ) . '</p>';
+						echo '<h5 class="addon-name">' . esc_html( $addon['title'] ) . '</h5>';
+						echo '<p class="addon-desc">' . esc_html( $addon['excerpt'] ) . '</p>';
 					echo '</div>';
 
 					echo '<div class="actions wpforms-clear">';
@@ -294,7 +306,7 @@ class WPForms_Addons {
 			}
 		}
 
-		echo '<div style="clear:both;"></div>';
+		//echo '<div style="clear:both;"></div>';
 	}
 
 	/**

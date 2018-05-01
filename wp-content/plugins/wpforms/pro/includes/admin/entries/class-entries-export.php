@@ -95,6 +95,8 @@ class WPForms_Entries_Export {
 				'phone',
 				'number',
 				'file-upload',
+				'rating',
+				'likert_scale',
 				'payment-single',
 				'payment-multiple',
 				'payment-select',

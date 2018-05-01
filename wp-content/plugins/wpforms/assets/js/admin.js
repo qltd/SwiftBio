@@ -1,4 +1,4 @@
-/* global wp, _, wpforms_admin, jconfirm, wpCookies, Choices */
+/* global wp, _, wpforms_admin, jconfirm, wpCookies, Choices, List */
 
 ;(function($) {
 
@@ -111,7 +111,8 @@
 				animationBounce: 1,
 				useBootstrap: false,
 				theme: 'modern',
-				boxWidth: '400px'
+				boxWidth: '400px',
+				animateFromElement: false
 			};
 
 			// Upgrade information modal for upgrade links.
@@ -643,6 +644,26 @@
 		 */
 		initAddons: function() {
 
+			// Some actions have to be delayed to document.ready.
+			$( document ).on( 'wpformsReady', function() {
+
+				// Only run on the addons page.
+				if ( $( '#wpforms-admin-addons' ).length ) {
+
+					// Display all addon boxes as the same height.
+					$( '.addon-item .details' ).matchHeight( { byrow: false, property: 'height' } );
+
+					// Addons searching.
+					var addonSearch = new List('wpforms-admin-addons-list', {
+						valueNames: [ 'addon-name' ]
+					});
+
+					$( '#wpforms-admin-addons-search' ).on( 'keyup', function() {
+						addonSearch.search( $( this ).val() );
+					});
+				}
+			});
+
 			// Display all addon boxes as the same height.
 			$( document ).on( 'wpformsReady', function() {
 
@@ -1135,7 +1156,7 @@
 						action: function(){
 							$.post( wpforms_admin.ajax_url, data, function( res ) {
 								if ( res.success ){
-									$this.parent().remove();
+									$this.parent().parent().remove();
 								} else {
 									console.log( res );
 								}
@@ -1162,6 +1183,14 @@
 		 * @since 1.4.2
 		 */
 		initTools: function() {
+
+			// Run import for a specific provider.
+			$( document ).on( 'click', '#wpforms-ssl-verify', function( event ) {
+
+				event.preventDefault();
+
+				WPFormsAdmin.verifySSLConnection();
+			});
 
 			// Run import for a specific provider.
 			$( document ).on( 'click', '#wpforms-importer-forms-submit', function( event ) {
@@ -1210,6 +1239,44 @@
 				event.preventDefault();
 
 				WPFormsAdmin.importForms( s.formIDs );
+			});
+		},
+
+		/**
+		 * Perform test connection to verify that the current web host
+		 * can successfully make outbound SSL connections.
+		 *
+		 * @since 1.4.5
+		 */
+		verifySSLConnection: function() {
+
+			var $btn      = $( '#wpforms-ssl-verify' ),
+				btnLabel  = $btn.text(),
+				btnWidth  = $btn.outerWidth(),
+				$settings = $btn.parent(),
+				data      = {
+					action: 'wpforms_verify_ssl',
+					nonce:   wpforms_admin.nonce
+				};
+
+			$btn.css( 'width', btnWidth ).prop( 'disabled', true ).text( wpforms_admin.testing );
+
+			// Trigger AJAX to test connection
+			$.post( wpforms_admin.ajax_url, data, function( res ) {
+
+				console.log( res );
+
+				// Remove any previous alerts.
+				$settings.find( '.wpforms-alert, .wpforms-ssl-error' ).remove();
+
+				if ( res.success ){
+					$btn.before( '<div class="wpforms-alert wpforms-alert-success">' + res.data.msg + '</div>' );
+				} else {
+					$btn.before( '<div class="wpforms-alert wpforms-alert-danger">' + res.data.msg + '</div>' );
+					$btn.before( '<div class="wpforms-ssl-error pre-error">' + res.data.debug + '</div>' );
+				}
+
+				$btn.css( 'width', btnWidth ).prop( 'disabled', false ).text( btnLabel );
 			});
 		},
 

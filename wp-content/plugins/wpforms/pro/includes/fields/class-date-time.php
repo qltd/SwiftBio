@@ -450,7 +450,7 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 			'months' => range( 1, 12 ),
 			'days'   => range( 1, 31 ),
 			'years'  => range( date( 'Y' ), 1920 ),
-		) );
+		), $form_id, $field );
 
 		if ( 'm/d/Y' === $format ) {
 

@@ -159,7 +159,7 @@ class WPForms_Entry_Meta_Handler extends WPForms_DB {
 
 		global $wpdb;
 
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
 		$charset_collate = '';
 

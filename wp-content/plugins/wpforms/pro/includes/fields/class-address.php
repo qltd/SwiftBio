@@ -241,6 +241,13 @@ class WPForms_Field_Address extends WPForms_Field {
 			}
 		}
 
+		// Add Postal code input mask for US address.
+		if ( 'us' === $scheme ) {
+			$properties['inputs']['postal']['class'][]                  = 'wpforms-masked-input';
+			$properties['inputs']['postal']['data']['inputmask-mask']   = '99999[-9999]';
+			$properties['inputs']['postal']['data']['inputmask-greedy'] = 'false';
+		}
+
 		return $properties;
 	}
 

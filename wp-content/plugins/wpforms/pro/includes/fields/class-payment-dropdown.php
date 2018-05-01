@@ -169,6 +169,10 @@ class WPForms_Field_Payment_Select extends WPForms_Field {
 			}
 		}
 
+		if ( ! empty( $field_required ) ) {
+			$field_class = ! empty( $field_class ) ? $field_class . ' wpforms-field-required' : 'wpforms-field-required';
+		}
+
 		// Primary select field.
 		printf(
 			'<select name="wpforms[fields][%d]" id="%s" class="wpforms-payment-price %s" %s %s>',

@@ -4,11 +4,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Compatibility class for Subscriptions and Pre-Orders.
+ * Compatibility class for Subscriptions.
  *
  * @extends WC_Gateway_Stripe
  */
-class WC_Stripe_Compat extends WC_Gateway_Stripe {
+class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 	/**
 	 * Constructor
 	 */
@@ -28,12 +28,16 @@ class WC_Stripe_Compat extends WC_Gateway_Stripe {
 			add_filter( 'woocommerce_subscription_payment_meta', array( $this, 'add_subscription_payment_meta' ), 10, 2 );
 			add_filter( 'woocommerce_subscription_validate_payment_meta', array( $this, 'validate_subscription_payment_meta' ), 10, 2 );
 			add_filter( 'wc_stripe_display_save_payment_method_checkbox', array( $this, 'maybe_hide_save_checkbox' ) );
-			add_filter( 'wc_stripe_payment_metadata', array( $this, 'add_subscription_meta_data' ), 10, 2 );
 		}
+	}
 
-		if ( class_exists( 'WC_Pre_Orders_Order' ) ) {
-			add_action( 'wc_pre_orders_process_pre_order_completion_payment_' . $this->id, array( $this, 'process_pre_order_release_payment' ) );
-		}
+	/**
+	 * Handles the return from processing the payment for Stripe Checkout.
+	 *
+	 * @since 4.1.0
+	 */
+	public function stripe_checkout_return_handler() {
+		return parent::stripe_checkout_return_handler();
 	}
 
 	/**
@@ -71,15 +75,6 @@ class WC_Stripe_Compat extends WC_Gateway_Stripe {
 	}
 
 	/**
-	 * Is $order_id a pre-order?
-	 * @param  int  $order_id
-	 * @return boolean
-	 */
-	public function is_pre_order( $order_id ) {
-		return ( class_exists( 'WC_Pre_Orders_Order' ) && WC_Pre_Orders_Order::order_contains_pre_order( $order_id ) );
-	}
-
-	/**
 	 * Process the payment method change for subscriptions.
 	 *
 	 * @since 4.0.4
@@ -88,15 +83,13 @@ class WC_Stripe_Compat extends WC_Gateway_Stripe {
 	public function change_subs_payment_method( $order_id ) {
 		try {
 			$subscription    = wc_get_order( $order_id );
-			$source_object   = $this->get_source_object();
-			$prepared_source = $this->prepare_source( $source_object, get_current_user_id(), true );
+			$prepared_source = $this->prepare_source( get_current_user_id(), true );
+			$source_object   = $prepared_source->source_object;
 
 			// Check if we don't allow prepaid credit cards.
-			if ( ! apply_filters( 'wc_stripe_allow_prepaid_card', true ) ) {
-				if ( $source_object && 'token' === $source_object->object && 'prepaid' === $source_object->card->funding ) {
-					$localized_message = __( 'Sorry, we\'re not accepting prepaid cards at this time. Your credit card has not been charge. Please try with alternative payment method.', 'woocommerce-gateway-stripe' );
-					throw new WC_Stripe_Exception( print_r( $source_object, true ), $localized_message );
-				}
+			if ( ! apply_filters( 'wc_stripe_allow_prepaid_card', true ) && $this->is_prepaid_card( $source_object ) ) {
+				$localized_message = __( 'Sorry, we\'re not accepting prepaid cards at this time. Your credit card has not been charge. Please try with alternative payment method.', 'woocommerce-gateway-stripe' );
+				throw new WC_Stripe_Exception( print_r( $source_object, true ), $localized_message );
 			}
 
 			if ( empty( $prepared_source->source ) ) {
@@ -156,37 +149,125 @@ class WC_Stripe_Compat extends WC_Gateway_Stripe {
 	 * @param  int $order_id
 	 * @return array
 	 */
-	public function process_payment( $order_id, $retry = true, $force_save_source = false ) {
+	public function process_payment( $order_id, $retry = true, $force_save_source = false, $previous_error = false ) {
 		if ( $this->has_subscription( $order_id ) ) {
 			if ( $this->is_subs_change_payment() ) {
 				return $this->change_subs_payment_method( $order_id );
 			}
 
 			// Regular payment with force customer enabled
-			return parent::process_payment( $order_id, true, true );
-		} elseif ( $this->is_pre_order( $order_id ) ) {
-			return $this->process_pre_order( $order_id, $retry, $force_save_source );
+			return parent::process_payment( $order_id, $retry, true, $previous_error );
 		} else {
-			return parent::process_payment( $order_id, $retry, $force_save_source );
+			return parent::process_payment( $order_id, $retry, $force_save_source, $previous_error );
 		}
 	}
 
 	/**
-	 * Adds subscription related meta data on charge request.
+	 * Scheduled_subscription_payment function.
 	 *
-	 * @since 4.0.0
-	 * @param array $metadata
-	 * @param object $order
+	 * @param $amount_to_charge float The amount to charge.
+	 * @param $renewal_order WC_Order A WC_Order object created to record the renewal payment.
 	 */
-	public function add_subscription_meta_data( $metadata, $order ) {
-		if ( ! $this->has_subscription( WC_Stripe_Helper::is_pre_30() ? $order->id : $order->get_id() ) ) {
-			return $metadata;
-		}
+	public function scheduled_subscription_payment( $amount_to_charge, $renewal_order ) {
+		$this->process_subscription_payment( $amount_to_charge, $renewal_order, true, false );
+	}
 
-		return $metadata += array(
-			'payment_type'   => 'recurring',
-			'site_url'       => esc_url( get_site_url() ),
-		);
+	/**
+	 * Process_subscription_payment function.
+	 *
+	 * @since 3.0
+	 * @since 4.0.4 Add third parameter flag to retry.
+	 * @since 4.1.0 Add fourth parameter to log previous errors.
+	 * @param float $amount
+	 * @param mixed $renewal_order
+	 * @param bool $retry Should we retry the process?
+	 * @param object $previous_error
+	 */
+	public function process_subscription_payment( $amount = 0.0, $renewal_order, $retry = true, $previous_error ) {
+		try {
+			if ( $amount * 100 < WC_Stripe_Helper::get_minimum_amount() ) {
+				/* translators: minimum amount */
+				return new WP_Error( 'stripe_error', sprintf( __( 'Sorry, the minimum allowed order total is %1$s to use this payment method.', 'woocommerce-gateway-stripe' ), wc_price( WC_Stripe_Helper::get_minimum_amount() / 100 ) ) );
+			}
+
+			$order_id = WC_Stripe_Helper::is_pre_30() ? $renewal_order->id : $renewal_order->get_id();
+
+			// Get source from order
+			$prepared_source = $this->prepare_order_source( $renewal_order );
+			$source_object   = $prepared_source->source_object;
+
+			if ( ! $prepared_source->customer ) {
+				return new WP_Error( 'stripe_error', __( 'Customer not found', 'woocommerce-gateway-stripe' ) );
+			}
+
+			WC_Stripe_Logger::log( "Info: Begin processing subscription payment for order {$order_id} for the amount of {$amount}" );
+
+			/* If we're doing a retry and source is chargeable, we need to pass
+			 * a different idempotency key and retry for success.
+			 */
+			if ( is_object( $source_object ) && empty( $source_object->error ) && $this->need_update_idempotency_key( $source_object, $previous_error ) ) {
+				add_filter( 'wc_stripe_idempotency_key', array( $this, 'change_idempotency_key' ), 10, 2 );
+			}
+
+			if ( ( $this->is_no_such_source_error( $previous_error ) || $this->is_no_linked_source_error( $previous_error ) ) && apply_filters( 'wc_stripe_use_default_customer_source', true ) ) {
+				// Passing empty source will charge customer default.
+				$prepared_source->source = '';
+			}
+
+			$request            = $this->generate_payment_request( $renewal_order, $prepared_source );
+			$request['capture'] = 'true';
+			$request['amount']  = WC_Stripe_Helper::get_stripe_amount( $amount, $request['currency'] );
+			$response           = WC_Stripe_API::request( $request );
+
+			if ( ! empty( $response->error ) ) {
+				// We want to retry.
+				if ( $this->is_retryable_error( $response->error ) ) {
+					if ( $retry ) {
+						// Don't do anymore retries after this.
+						if ( 5 <= $this->retry_interval ) {
+							return $this->process_subscription_payment( $amount, $renewal_order, false, $response->error );
+						}
+
+						sleep( $this->retry_interval );
+
+						$this->retry_interval++;
+
+						return $this->process_subscription_payment( $amount, $renewal_order, true, $response->error );
+					} else {
+						$localized_message = __( 'Sorry, we are unable to process your payment at this time. Please retry later.', 'woocommerce-gateway-stripe' );
+						$renewal_order->add_order_note( $localized_message );
+						throw new WC_Stripe_Exception( print_r( $response, true ), $localized_message );
+					}
+				}
+
+				$localized_messages = WC_Stripe_Helper::get_localized_messages();
+
+				if ( 'card_error' === $response->error->type ) {
+					$localized_message = isset( $localized_messages[ $response->error->code ] ) ? $localized_messages[ $response->error->code ] : $response->error->message;
+				} else {
+					$localized_message = isset( $localized_messages[ $response->error->type ] ) ? $localized_messages[ $response->error->type ] : $response->error->message;
+				}
+
+				$renewal_order->add_order_note( $localized_message );
+
+				throw new WC_Stripe_Exception( print_r( $response, true ), $localized_message );
+			}
+
+			do_action( 'wc_gateway_stripe_process_payment', $response, $renewal_order );
+
+			$this->process_response( $response, $renewal_order );
+		} catch ( WC_Stripe_Exception $e ) {
+			WC_Stripe_Logger::log( 'Error: ' . $e->getMessage() );
+
+			do_action( 'wc_gateway_stripe_process_payment_error', $e, $renewal_order );
+
+			/* translators: error message */
+			$renewal_order->update_status( 'failed' );
+
+			if ( $renewal_order->has_status( array( 'pending', 'failed' ) ) ) {
+				$this->send_failed_order_email( $order_id );
+			}
+		}
 	}
 
 	/**
@@ -217,58 +298,6 @@ class WC_Stripe_Compat extends WC_Gateway_Stripe {
 	}
 
 	/**
-	 * Process_subscription_payment function.
-	 *
-	 * @since 3.0
-	 * @since 4.0.4 Add third parameter flag to retry.
-	 * @param float $amount
-	 * @param mixed $renewal_order
-	 * @param bool $is_retry Is this a retry process.
-	 */
-	public function process_subscription_payment( $amount = 0.0, $renewal_order, $is_retry = false ) {
-		if ( $amount * 100 < WC_Stripe_Helper::get_minimum_amount() ) {
-			/* translators: minimum amount */
-			return new WP_Error( 'stripe_error', sprintf( __( 'Sorry, the minimum allowed order total is %1$s to use this payment method.', 'woocommerce-gateway-stripe' ), wc_price( WC_Stripe_Helper::get_minimum_amount() / 100 ) ) );
-		}
-
-		$order_id = WC_Stripe_Helper::is_pre_30() ? $renewal_order->id : $renewal_order->get_id();
-
-		// Get source from order
-		$prepared_source = $this->prepare_order_source( $renewal_order );
-
-		if ( ! $prepared_source->customer ) {
-			return new WP_Error( 'stripe_error', __( 'Customer not found', 'woocommerce-gateway-stripe' ) );
-		}
-
-		WC_Stripe_Logger::log( "Info: Begin processing subscription payment for order {$order_id} for the amount of {$amount}" );
-
-		if ( $is_retry ) {
-			// Passing empty source with charge customer default.
-			$prepared_source->source = '';
-		}
-
-		$request            = $this->generate_payment_request( $renewal_order, $prepared_source );
-		$request['capture'] = 'true';
-		$request['amount']  = WC_Stripe_Helper::get_stripe_amount( $amount, $request['currency'] );
-		$response           = WC_Stripe_API::request( $request );
-
-		if ( ! empty( $response->error ) || is_wp_error( $response ) ) {
-			if ( $is_retry ) {
-				/* translators: error message */
-				$renewal_order->update_status( 'failed', sprintf( __( 'Stripe Transaction Failed (%s)', 'woocommerce-gateway-stripe' ), $response->error->message ) );
-			}
-
-			return $response; // Default catch all errors.
-		}
-
-		$this->process_response( $response, $renewal_order );
-
-		if ( ! $is_retry ) {
-			return $response;
-		}
-	}
-
-	/**
 	 * Don't transfer Stripe customer/token meta to resubscribe orders.
 	 * @param int $resubscribe_order The order created for the customer to resubscribe to the old expired/cancelled subscription
 	 */
@@ -285,54 +314,10 @@ class WC_Stripe_Compat extends WC_Gateway_Stripe {
 	 * @param int $resubscribe_order The order created for the customer to resubscribe to the old expired/cancelled subscription
 	 */
 	public function delete_renewal_meta( $renewal_order ) {
-		delete_post_meta( ( WC_Stripe_Helper::is_pre_30() ? $renewal_order->id : $renewal_order->get_id() ), 'Stripe Fee' );
-		delete_post_meta( ( WC_Stripe_Helper::is_pre_30() ? $renewal_order->id : $renewal_order->get_id() ), 'Net Revenue From Stripe' );
+		WC_Stripe_Helper::delete_stripe_fee( $renewal_order );
+		WC_Stripe_Helper::delete_stripe_net( $renewal_order );
+
 		return $renewal_order;
-	}
-
-	/**
-	 * Scheduled_subscription_payment function.
-	 *
-	 * @param $amount_to_charge float The amount to charge.
-	 * @param $renewal_order WC_Order A WC_Order object created to record the renewal payment.
-	 */
-	public function scheduled_subscription_payment( $amount_to_charge, $renewal_order ) {
-		$response = $this->process_subscription_payment( $amount_to_charge, $renewal_order );
-
-		if ( is_wp_error( $response ) ) {
-			/* translators: error message */
-			$renewal_order->update_status( 'failed', sprintf( __( 'Stripe Transaction Failed (%s)', 'woocommerce-gateway-stripe' ), $response->get_error_message() ) );
-		}
-
-		if ( ! empty( $response->error ) ) {
-			// This is a very generic error to listen for but worth a retry before total fail.
-			if ( isset( $response->error->type ) && 'invalid_request_error' === $response->error->type && apply_filters( 'wc_stripe_use_default_customer_source', true ) ) {
-				$this->process_subscription_payment( $amount_to_charge, $renewal_order, true );
-			} else {
-				/* translators: error message */
-				$renewal_order->update_status( 'failed', sprintf( __( 'Stripe Transaction Failed (%s)', 'woocommerce-gateway-stripe' ), $response->error->message ) );
-			}
-		}
-	}
-
-	/**
-	 * Remove order meta
-	 * @param object $order
-	 */
-	public function remove_order_source_before_retry( $order ) {
-		$order_id = WC_Stripe_Helper::is_pre_30() ? $order->id : $order->get_id();
-		delete_post_meta( $order_id, '_stripe_source_id' );
-		// For BW compat will remove in the future.
-		delete_post_meta( $order_id, '_stripe_card_id' );
-	}
-
-	/**
-	 * Remove order meta
-	 * @param  object $order
-	 */
-	public function remove_order_customer_before_retry( $order ) {
-		$order_id = WC_Stripe_Helper::is_pre_30() ? $order->id : $order->get_id();
-		delete_post_meta( $order_id, '_stripe_customer_id' );
 	}
 
 	/**
@@ -483,6 +468,7 @@ class WC_Stripe_Compat extends WC_Gateway_Stripe {
 		$sources = $stripe_customer->get_sources();
 
 		if ( $sources ) {
+			$card         = false;
 			$found_source = false;
 			foreach ( $sources as $source ) {
 				if ( isset( $source->type ) && 'card' === $source->type ) {
@@ -519,93 +505,5 @@ class WC_Stripe_Compat extends WC_Gateway_Stripe {
 		}
 
 		return $payment_method_to_display;
-	}
-
-	/**
-	 * Process the pre-order
-	 * @param int $order_id
-	 * @return array
-	 */
-	public function process_pre_order( $order_id, $retry, $force_save_source ) {
-		if ( WC_Pre_Orders_Order::order_requires_payment_tokenization( $order_id ) ) {
-			try {
-				$order = wc_get_order( $order_id );
-
-				if ( $order->get_total() * 100 < WC_Stripe_Helper::get_minimum_amount() ) {
-					/* translators: minimum amount */
-					throw new Exception( sprintf( __( 'Sorry, the minimum allowed order total is %1$s to use this payment method.', 'woocommerce-gateway-stripe' ), wc_price( WC_Stripe_Helper::get_minimum_amount() / 100 ) ) );
-				}
-
-				$source = $this->prepare_source( $this->get_source_object(), get_current_user_id(), true );
-
-				// We need a source on file to continue.
-				if ( empty( $source->customer ) || empty( $source->source ) ) {
-					throw new Exception( __( 'Unable to store payment details. Please try again.', 'woocommerce-gateway-stripe' ) );
-				}
-
-				$this->save_source_to_order( $order, $source );
-
-				// Remove cart
-				WC()->cart->empty_cart();
-
-				// Is pre ordered!
-				WC_Pre_Orders_Order::mark_order_as_pre_ordered( $order );
-
-				// Return thank you page redirect
-				return array(
-					'result'   => 'success',
-					'redirect' => $this->get_return_url( $order ),
-				);
-			} catch ( Exception $e ) {
-				wc_add_notice( $e->getMessage(), 'error' );
-				return;
-			}
-		} else {
-			return parent::process_payment( $order_id, $retry, $force_save_source );
-		}
-	}
-
-	/**
-	 * Process a pre-order payment when the pre-order is released
-	 * @param WC_Order $order
-	 * @return void
-	 */
-	public function process_pre_order_release_payment( $order ) {
-		try {
-			// Define some callbacks if the first attempt fails.
-			$retry_callbacks = array(
-				'remove_order_source_before_retry',
-				'remove_order_customer_before_retry',
-			);
-
-			while ( 1 ) {
-				$source   = $this->prepare_order_source( $order );
-				$response = WC_Stripe_API::request( $this->generate_payment_request( $order, $source ) );
-
-				if ( ! empty( $response->error ) ) {
-					if ( 0 === sizeof( $retry_callbacks ) ) {
-						throw new Exception( $response->error->message );
-					} else {
-						$retry_callback = array_shift( $retry_callbacks );
-						call_user_func( array( $this, $retry_callback ), $order );
-					}
-				} else {
-					// Successful
-					$this->process_response( $response, $order );
-					break;
-				}
-			}
-		} catch ( Exception $e ) {
-			/* translators: error message */
-			$order_note = sprintf( __( 'Stripe Transaction Failed (%s)', 'woocommerce-gateway-stripe' ), $e->getMessage() );
-
-			// Mark order as failed if not already set,
-			// otherwise, make sure we add the order note so we can detect when someone fails to check out multiple times
-			if ( ! $order->has_status( 'failed' ) ) {
-				$order->update_status( 'failed', $order_note );
-			} else {
-				$order->add_order_note( $order_note );
-			}
-		}
 	}
 }

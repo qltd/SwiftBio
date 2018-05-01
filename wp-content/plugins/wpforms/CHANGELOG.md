@@ -1,6 +1,56 @@
 # Change Log
 All notable changes to this project will be documented in this file, formatted via [this recommendation](http://keepachangelog.com/).
 
+## [1.4.5.3] - 2018-04-03
+### Changed
+- Use minified admin assets when appropriate.
+- Show helpful doc link in form embed modal.
+- Minor improvements with complex conditional logic rule processing.
+
+### Fixed
+- Rating and Likert fields missing from CSV exports.
+- reCAPTCHA v2 showing in form builder when using Invisible reCAPTCHA.
+- Conditional logic rules inception.
+- Conditional logic rules with Radio and Checkbox choices not updating until save.
+- Remove jQuery shorthand references in `admin-utils` to prevent conflicts.
+- Issue with form return hash not processing correctly in some scenarios.
+
+## [1.4.5.2] - 2018-03-20
+### Fixed
+- Checkbox and Multiple choice fields not validating when inside pagebreaks.
+- Incorrect documenation link for Input Mask.
+- Input Mask value disappearing when form builder is refreshed.
+
+## [1.4.5.1] - 2018-03-20
+### Fixed
+- Dynamic choices not displaying correctly for Multiple Choice and Checkbox fields.
+
+## [1.4.5] - 2018-03-15
+### Added
+- Image choices feature with Checkbox, Multiple Choice and Multiple Payments fields; Images can now be uploaded and displayed with your choices!
+- Custom input masks for Single Line Text fields (Advanced Options).
+- No-Conflict Mode for Google reCAPTCHA (Settings > reCAPTCHA). Removes other reCAPTCHA occurrences, to prevent conflicts.
+- SSL Connection Test (Tools > System Info). Quicky verify that your web host correct supports SSL connections.
+- `{user_full_name}` Smart Tag, displays users first and last name.
+- Discalimer / Terms of Service Display formatting option for Checkbox fields (Advanced Options).
+- Basic CSS styling for `disabled` fields.
+- Uninstall routine, available from Settings > Misc.
+- Form builder performance improvements. Editing a form with hundreds of fields is now 500%+ faster!
+- Search field on Addons page to quickly search available Addons.
+
+### Changed
+- New Settings tab: Misc, moved Hide Annoucements option to new tab.
+- "Total" entries column only displays if the form has a gateway configured and enabled.
+- `{user_display}` Smart Tag diplays user's display name (in most cases, this is the user's name).
+- All `<form>` attributes can now be changed via `wpforms_frontend_form_atts` filter.
+
+### Fixed
+- Processing and validation of return hashes (primarily used with PayPal Standard addon).
+- Smart Tag usage in confirmation messages displayed from return hashes (primarily used with PayPal Standard addon).
+- Form builder tab icon alignment conflicts with third party plugin CSS.
+- Smart Tag dropdown display issues in the form builder.
+- Form builder drag and drop area disappearing if all fields are removed from a form.
+
 ## [1.4.4.1] - 2018-02-13
 ### Changed
 - Textdomain loading to a later priority.

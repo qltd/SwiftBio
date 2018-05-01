@@ -5,7 +5,7 @@
  * Description: Beginner friendly WordPress contact form plugin. Use our Drag & Drop form builder to create your WordPress forms.
  * Author:      WPForms
  * Author URI:  https://wpforms.com
- * Version:     1.4.4.1
+ * Version:     1.4.5.3
  * Text Domain: wpforms
  * Domain Path: languages
  *
@@ -92,7 +92,7 @@ if ( class_exists( 'WPForms' ) ) {
 		 *
 		 * @var string
 		 */
-		public $version = '1.4.4.1';
+		public $version = '1.4.5.3';
 
 		/**
 		 * The form data handler instance.
@@ -212,7 +212,7 @@ if ( class_exists( 'WPForms' ) ) {
 				self::$instance->conditional_logic_addon_check();
 				self::$instance->includes();
 
-				// Load Pro or Lite specific files
+				// Load Pro or Lite specific files.
 				if ( self::$instance->pro ) {
 					require_once WPFORMS_PLUGIN_DIR . 'pro/wpforms-pro.php';
 				} else {
@@ -283,8 +283,8 @@ if ( class_exists( 'WPForms' ) ) {
 			if ( function_exists( 'wpforms_conditional_logic' ) ) {
 
 				// Load core files needed to activate deactivate_plugins().
-				require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-				require_once( ABSPATH . 'wp-includes/pluggable.php' );
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
+				require_once ABSPATH . 'wp-includes/pluggable.php';
 
 				// Deactivate Conditional Logic addon.
 				deactivate_plugins( 'wpforms-conditional-logic/wpforms-conditional-logic.php' );

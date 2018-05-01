@@ -143,6 +143,7 @@ class WPForms_Entries_Table extends WP_List_Table {
 	public function get_columns() {
 
 		$has_payments  = wpforms_has_payment( 'form', $this->form_data );
+		$has_gateway   = wpforms_has_payment_gateway( $this->form_data );
 		$field_columns = $has_payments ? 2 : 3;
 
 		$columns               = array();
@@ -151,7 +152,7 @@ class WPForms_Entries_Table extends WP_List_Table {
 		$columns               = $this->get_columns_form_fields( $columns, $field_columns );
 
 		// Additional columns for forms that contain payments.
-		if ( $has_payments ) {
+		if ( $has_payments && $has_gateway ) {
 			$columns['payment_total'] = esc_html__( 'Total', 'wpforms' );
 		}
 
