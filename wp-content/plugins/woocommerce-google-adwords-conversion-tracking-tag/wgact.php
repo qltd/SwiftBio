@@ -5,11 +5,11 @@
  * Description:  Google AdWords dynamic conversion value tracking for WooCommerce.
  * Author:       Wolf+Bär Agency
  * Author URI:   https://wolfundbaer.ch
- * Version:      1.4.7
+ * Version:      1.4.8
  * License:      GPLv2 or later
  * Text Domain:  woocommerce-google-adwords-conversion-tracking-tag
  * WC requires at least: 2.6.0
- * WC tested up to: 3.2.1
+ * WC tested up to: 3.4.0
  **/
 
 // TODO add validation for the input fields. Try to use jQuery validation in the form.
@@ -427,9 +427,11 @@ class WGACT {
 	        $options             = get_option( 'wgact_plugin_options' );
 	        $order_total_setting = $options['order_total_logic'];
 	        $order_total         = 0 == $order_total_setting ? $order->get_subtotal() : $order->get_total();
+	        $order_total         = $order_total - $order->get_total_discount();
 
 	        // use the right function to get the currency depending on the WooCommerce version
 	        $order_currency = $this->woocommerce_3_and_above() ? $order->get_currency() : $order->get_order_currency();
+
 
 	        // the filter is deprecated
 	        // $order_total_filtered = apply_filters( 'wgact_conversion_value_filter', $order_total, $order );

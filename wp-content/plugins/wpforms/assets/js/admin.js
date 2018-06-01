@@ -748,7 +748,11 @@
 					$addon.find( 'span.status-label' ).removeClass( 'status-active status-inactive status-download' ).addClass( cssClass ).text( statusText );
 					$this.removeClass( 'status-active status-inactive status-download' ).addClass( cssClass ).html( buttonText );
 				} else {
-					$addon.find( '.actions' ).append( '<div class="msg error">'+res.data+'</div>' );
+					if ( 'download_failed' === res.data[0].code ) {
+						$addon.find( '.actions' ).append( '<div class="msg error">'+wpforms_admin.addon_error+'</div>' );
+					} else {
+						$addon.find( '.actions' ).append( '<div class="msg error">'+res.data+'</div>' );
+					}
 					$this.html( errorText );
 				}
 
@@ -775,8 +779,7 @@
 		 */
 		initSettings: function() {
 
-			// Watch for hashes and scroll to if found.
-			// Display all addon boxes as the same height.
+			// On ready events.
 			$( document ).on( 'wpformsReady', function() {
 
 				// Only proceed if we're on the settings page.
@@ -784,6 +787,8 @@
 					return;
 				}
 
+				// Watch for hashes and scroll to if found.
+				// Display all addon boxes as the same height.
 				var integrationFocus = WPFormsAdmin.getQueryString( 'wpforms-integration' ),
 					jumpTo           = WPFormsAdmin.getQueryString( 'jump' );
 
@@ -796,6 +801,29 @@
 						scrollTop: $( '#'+jumpTo ).offset().top
 					}, 1000 );
 				}
+
+				// Settings conditional logic.
+				$( '.wpforms-admin-settings-form' ).conditions( [
+					// Misc > Disable User Cookies visibility.
+					{
+						conditions: {
+							element:  '#wpforms-setting-gdpr',
+							type:     'checked',
+							operator: 'is'
+						},
+						actions: {
+							if: {
+								element: '#wpforms-setting-row-gdpr-disable-uuid,#wpforms-setting-row-gdpr-disable-details',
+								action:	 'show'
+							},
+							else : {
+								element: '#wpforms-setting-row-gdpr-disable-uuid,#wpforms-setting-row-gdpr-disable-details',
+								action:	 'hide'
+							}
+						},
+						effect: 'appear'
+					}
+				] );
 			});
 
 			// Image upload fields.

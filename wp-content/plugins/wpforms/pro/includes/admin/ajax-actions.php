@@ -26,7 +26,6 @@ function wpforms_deactivate_addon() {
 		wp_send_json_error( esc_html__( 'Could not deactivate addon. Please deactivate from the Plugins page.', 'wpforms' ) );
 	}
 }
-
 add_action( 'wp_ajax_wpforms_deactivate_addon', 'wpforms_deactivate_addon' );
 
 /**
@@ -50,7 +49,6 @@ function wpforms_activate_addon() {
 
 	wp_send_json_error( esc_html__( 'Could not activate addon. Please activate from the Plugins page.', 'wpforms' ) );
 }
-
 add_action( 'wp_ajax_wpforms_activate_addon', 'wpforms_activate_addon' );
 
 /**
@@ -63,16 +61,17 @@ function wpforms_install_addon() {
 	// Run a security check.
 	check_ajax_referer( 'wpforms-admin', 'nonce' );
 
+	$error = esc_html__( 'Could not install addon. Please download from wpforms.com and install manually.', 'wpforms' );
+
 	if ( empty( $_POST['plugin'] ) ) {
-		wp_send_json_error( esc_html__( 'Could not install addon. Please download from wpforms.com and install manually.', 'wpforms' ) );
+		wp_send_json_error(  );
 	}
 
 	// Set the current screen to avoid undefined notices.
 	set_current_screen();
 
 	// Prepare variables.
-	$download_url = $_POST['plugin'];
-	$url          = esc_url_raw(
+	$url = esc_url_raw(
 		add_query_arg(
 			array(
 				'page' => 'wpforms-addons',
@@ -85,11 +84,11 @@ function wpforms_install_addon() {
 
 	// Check for file system permissions.
 	if ( false === $creds ) {
-		wp_send_json_error( esc_html__( 'Could not install addon. Please download from wpforms.com and install manually.', 'wpforms' ) );
+		wp_send_json_error( $error );
 	}
 
 	if ( ! WP_Filesystem( $creds ) ) {
-		wp_send_json_error( esc_html__( 'Could not install addon. Please download from wpforms.com and install manually.', 'wpforms' ) );
+		wp_send_json_error( $error );
 	}
 
 	// We do not need any extra credentials if we have gotten this far, so let's install the plugin.
@@ -98,6 +97,14 @@ function wpforms_install_addon() {
 
 	// Create the plugin upgrader with our custom skin.
 	$installer = new Plugin_Upgrader( new WPForms_Install_Skin() );
+
+	// Error check.
+	if ( ! method_exists( $installer, 'install' ) || empty( $_POST['plugin'] ) ) {
+		wp_send_json_error( $error );
+	}
+
+	$download_url = $_POST['plugin'];
+
 	$installer->install( $download_url );
 
 	// Flush the cache and return the newly installed plugin basename.
@@ -115,9 +122,8 @@ function wpforms_install_addon() {
 		);
 	}
 
-	wp_send_json_error( esc_html__( 'Could not install addon. Please download from wpforms.com and install manually.', 'wpforms' ) );
+	wp_send_json_error( $error );
 }
-
 add_action( 'wp_ajax_wpforms_install_addon', 'wpforms_install_addon' );
 
 /**
@@ -161,7 +167,6 @@ function wpforms_entry_list_star() {
 
 	$is_success ? wp_send_json_success() : wp_send_json_error();
 }
-
 add_action( 'wp_ajax_wpforms_entry_list_star', 'wpforms_entry_list_star' );
 
 /**
@@ -205,7 +210,6 @@ function wpforms_entry_list_read() {
 
 	$is_success ? wp_send_json_success() : wp_send_json_error();
 }
-
 add_action( 'wp_ajax_wpforms_entry_list_read', 'wpforms_entry_list_read' );
 
 /**
@@ -230,7 +234,6 @@ function wpforms_verify_license() {
 
 	wpforms()->license->verify_key( $_POST['license'], true );
 }
-
 add_action( 'wp_ajax_wpforms_verify_license', 'wpforms_verify_license' );
 
 /**
@@ -250,7 +253,6 @@ function wpforms_deactivate_license() {
 
 	wpforms()->license->deactivate_key( true );
 }
-
 add_action( 'wp_ajax_wpforms_deactivate_license', 'wpforms_deactivate_license' );
 
 /**
@@ -275,7 +277,6 @@ function wpforms_refresh_license() {
 
 	wpforms()->license->validate_key( $_POST['license'], true, true );
 }
-
 add_action( 'wp_ajax_wpforms_refresh_license', 'wpforms_refresh_license' );
 
 /**
@@ -312,7 +313,6 @@ function wpforms_builder_notification_state_save() {
 
 	wp_send_json_success();
 }
-
 add_action( 'wp_ajax_wpforms_builder_notification_state_save', 'wpforms_builder_notification_state_save' );
 
 /**
@@ -348,6 +348,4 @@ function wpforms_builder_notification_state_remove() {
 
 	wp_send_json_error();
 }
-
 add_action( 'wp_ajax_wpforms_builder_notification_state_remove', 'wpforms_builder_notification_state_remove' );
-

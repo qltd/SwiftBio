@@ -163,9 +163,9 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 		);
 		$time_interval    = ! empty( $field['time_interval'] ) ? esc_attr( $field['time_interval'] ) : '30';
 		$time_intervals   = array(
-			'15' => esc_html__( '15 minutes' ),
-			'30' => esc_html__( '30 minute' ),
-			'60' => esc_html__( '1 hour' ),
+			'15' => esc_html__( '15 minutes', 'wpforms' ),
+			'30' => esc_html__( '30 minutes', 'wpforms' ),
+			'60' => esc_html__( '1 hour', 'wpforms' ),
 		);
 		printf( '<div class="wpforms-clear wpforms-field-option-row wpforms-field-option-row-time" id="wpforms-field-option-row-%d-time" data-subfield="time" data-field-id="%d">', $field['id'], $field['id'] );
 		$this->field_element( 'label', $field, array(

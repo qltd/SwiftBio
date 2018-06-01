@@ -236,7 +236,7 @@ class WPForms_Process {
 
 			// Logs spam entry depending on log levels set.
 			wpforms_log(
-				'Spam Entry',
+				'Spam Entry ' . uniqid(),
 				array( $honeypot, $entry ),
 				array(
 					'type'    => array( 'spam' ),

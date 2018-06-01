@@ -18,7 +18,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
      * @return void
      */
     //set plugin version
-    public $tvc_eeVer = '2.0.1';
+    public $tvc_eeVer = '2.0.2';
     public function __construct() {
         
          //Set Global Variables
@@ -55,8 +55,9 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
         $this->ga_eeT = $this->get_option("ga_eeT");
         $this->ga_DF = $this->get_option("ga_DF") == "yes" ? true : false;
         $this->ga_imTh = $this->get_option("ga_imTh") == "" ? 6 : $this->get_option("ga_imTh"); 
-
-               
+        $this->ga_OPTOUT = $this->get_option("ga_OPTOUT") == "yes" ? true : false; //Google Analytics Opt Out
+        $this->ga_PrivacyPolicy = $this->get_option("ga_PrivacyPolicy") == "yes" ? true : false;
+        $this->ga_IPA = $this->get_option("ga_IPA") == "yes" ? true : false; //IP Anony.
         //Save Changes action for admin settings
         add_action("woocommerce_update_options_integration_" . $this->id, array($this, "process_admin_options"));
         
@@ -207,7 +208,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
         }
         $tracking_id = $this->ga_id;
 
-        if (!$tracking_id) {
+        if (!$tracking_id || !$this->ga_PrivacyPolicy) {
             return;
         }
         //common validation----end
@@ -217,16 +218,42 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
         } else {
             $set_domain_name = "auto";
         }
-
+        // IP Anonymization
+        if ($this->ga_IPA) {
+            $ga_ip_anonymization = 'gtag("config", "'.$tracking_id.'", { "anonymize_ip": true });';
+        } else {
+            $ga_ip_anonymization = '';
+        }
+        if($this->ga_OPTOUT) {
+                echo '<script>
+                // Set to the same value as the web property used on the site
+                var gaProperty = "'.$tracking_id.'";
+        
+                // Disable tracking if the opt-out cookie exists.
+                var disableStr = "ga-disable-" + gaProperty;
+                if (document.cookie.indexOf(disableStr + "=true") > -1) {
+                  window[disableStr] = true;
+                }
+        
+                // Opt-out function
+                function gaOptout() {
+                var expDate = new Date;
+                expDate.setMonth(expDate.getMonth() + 26);
+                  document.cookie = disableStr + "=true; expires="+expDate.toGMTString();+"path=/";
+                  window[disableStr] = true;
+                }
+                </script>';
+        }
         $code = '<script async src="https://www.googletagmanager.com/gtag/js?id='.esc_js($tracking_id).'"></script>
                 <script>
                   window.dataLayer = window.dataLayer || [];
                   function gtag(){dataLayer.push(arguments);}
                   gtag("js", new Date());
+                  '.$ga_ip_anonymization.'
                   gtag("config", "'.esc_js($tracking_id).'",{"cookie_domain":"'.$set_domain_name.'"});
                 </script>
                 ';
-            echo  $code;
+            echo $code;
         }
 
     /**
@@ -288,7 +315,34 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
                 'min' => "1",
                 ),
                 "default" => get_option("ga_imTh") ? get_option("ga_imTh") : "6"  // Backwards compat
-            ),          
+            ),
+            "ga_IPA" => array(
+                "title" => __("IP Anonymization", "woocommerce"),
+                "label" => __("Enable IP Anonymization (Optional)", "woocommerce"),
+                "type" => "checkbox",
+                "checkboxgroup" => "",
+                "description" => sprintf(__("Use this feature to anonymize (or stop collecting) the I.P Address of your users in Google Analytics. Be in legal compliance by using I.P Anonymization which is important for EU countries As per the GDPR compliance", "woocommerce")),
+                "default" => get_option("ga_IPA") ? get_option("ga_IPA") : "no"  // Backwards compat
+            ),
+            "ga_OPTOUT" => array(
+                "title" => __("Google Analytics Opt Out", "woocommerce"),
+                "label" => __("Enable Google Analytics Opt Out (Optional)", "woocommerce"),
+                "type" => "checkbox",
+                "checkboxgroup" => "",
+                "description" => sprintf(__("Use this feature to provide website visitors the ability to prevent their data from being used by Google Analytics As per the GDPR compliance.Click here to check the setup", "woocommerce")),
+                "default" => get_option("ga_OPTOUT") ? get_option("ga_OPTOUT") : "no"  // Backwards compat
+            ),
+            "ga_PrivacyPolicy" => array(
+                "title" => __("Privacy Policy", "woocommerce"),
+                "label" => __("Accept Privacy Policy of Plugin", "woocommerce"),
+                "type" => "checkbox",
+                "checkboxgroup" => "",
+                'custom_attributes' => array(
+                    'required' => "required",
+                ),
+                "description" => sprintf(__("By using Tatvic Plugin, you agree to Tatvic plugin's <a href='https://www.tatvic.com/privacy-policy/?ref=plugin_policy&utm_source=plugin_backend&utm_medium=woocommerce_free_plugin&utm_campaign=GDPR_complaince_ecomm_plugins' target='_blank'>Privacy Policy</a>", "woocommerce")),
+                "default" => get_option("ga_PrivacyPolicy") ? get_option("ga_PrivacyPolicy") : "no"  // Backwards compat
+            ),
         );
     }
    

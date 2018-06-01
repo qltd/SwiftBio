@@ -28,6 +28,7 @@ class WPForms_Pro {
 		add_filter( 'wpforms_overview_table_column_value', array( $this, 'form_table_columns_value' ), 10, 3 );
 		add_action( 'wpforms_form_settings_notifications', array( $this, 'form_settings_notifications' ), 8, 1 );
 		add_filter( 'wpforms_builder_strings', array( $this, 'form_builder_strings' ), 10, 2 );
+		add_filter( 'wpforms_frontend_strings', array( $this, 'frontend_strings' ) );
 		add_action( 'admin_notices', array( $this, 'conditional_logic_addon_notice' ) );
 	}
 
@@ -239,6 +240,26 @@ class WPForms_Pro {
 			'options'   => $currency_option,
 		);
 
+		// Additional GDPR related options.
+		$settings['general'] = wpforms_array_insert(
+			$settings['general'],
+			array(
+				'gdpr-disable-uuid' => array(
+					'id'   => 'gdpr-disable-uuid',
+					'name' => esc_html__( 'Disable User Cookies', 'wpforms' ),
+					'desc' => esc_html__( 'Check this to disable user tracking cookies (UUIDs). This will disable the Related Entries feature and the Form Abandonment/Geolocation addons.', 'wpforms' ),
+					'type' => 'checkbox',
+				),
+				'gdpr-disable-details' => array(
+					'id'   => 'gdpr-disable-details',
+					'name' => esc_html__( 'Disable User Details', 'wpforms' ),
+					'desc' => esc_html__( 'Check this to disable storing the IP address and User Agent on all forms. If unchecked this can be managed on a form by form basis inside the form settings.', 'wpforms' ),
+					'type' => 'checkbox',
+				),
+			),
+			'gdpr'
+		);
+
 		return $settings;
 	}
 
@@ -271,6 +292,19 @@ class WPForms_Pro {
 		$user_uuid  = ! empty( $_COOKIE['_wpfuuid'] ) ? $_COOKIE['_wpfuuid'] : '';
 		$date       = date( 'Y-m-d H:i:s' );
 		$entry_id   = false;
+
+		// If GDPR enhancements are enabled and user details are disabled
+		// globally or in the form settings, discard the IP and UA.
+		if (
+			wpforms_setting( 'gdpr', false ) &&
+			(
+				wpforms_setting( 'gdpr-disable-details', false ) ||
+				! empty( $form_data['settings']['disable_ip'] )
+			)
+		) {
+			$user_agent = '';
+			$user_ip    = '';
+		}
 
 		// Create entry.
 		$entry_id = wpforms()->entry->add( array(
@@ -313,24 +347,34 @@ class WPForms_Pro {
 	 */
 	public function form_settings_general( $instance ) {
 
-		// Don't provide this option if the user has configured payments.
+		// Only provide this option if the user has configured payments.
 		if (
 			(
-				! empty( $instance->form_data['payments']['paypal_standard']['enable'] ) ||
-				! empty( $instance->form_data['payments']['stripe']['enable'] )
-			) &&
-			! isset( $instance->form_data['settings']['disable_entries'] )
+				empty( $instance->form_data['payments']['paypal_standard']['enable'] ) ||
+				empty( $instance->form_data['payments']['stripe']['enable'] )
+			) ||
+			isset( $instance->form_data['settings']['disable_entries'] )
 		) {
-			return;
+			wpforms_panel_field(
+				'checkbox',
+				'settings',
+				'disable_entries',
+				$instance->form_data,
+				esc_html__( 'Disable storing entry information in WordPress', 'wpforms' )
+			);
 		}
 
-		wpforms_panel_field(
-			'checkbox',
-			'settings',
-			'disable_entries',
-			$instance->form_data,
-			esc_html__( 'Disable storing entry information in WordPress', 'wpforms' )
-		);
+		// Only provide this option if GDPR enhancements are enabled and user
+		// details are not disabled globally.
+		if ( wpforms_setting( 'gdpr', false ) && ! wpforms_setting( 'gdpr-disable-details', false ) ) {
+			wpforms_panel_field(
+				'checkbox',
+				'settings',
+				'disable_ip',
+				$instance->form_data,
+				esc_html__( 'Disable storing user details (IP address and user agent)', 'wpforms' )
+			);
+		}
 	}
 
 	/**
@@ -651,6 +695,24 @@ class WPForms_Pro {
 		$strings['currency_thousands']  = sanitize_text_field( $currencies[ $currency ]['thousands_separator'] );
 		$strings['currency_symbol']     = sanitize_text_field( $currencies[ $currency ]['symbol'] );
 		$strings['currency_symbol_pos'] = sanitize_text_field( $currencies[ $currency ]['symbol_pos'] );
+
+		return $strings;
+	}
+
+	/**
+	 * Modify javascript `wpforms_settings` properties on site front end.
+	 *
+	 * @since 1.4.6
+	 *
+	 * @param array $strings Array wpforms_setting properties.
+	 *
+	 * @return array
+	 */
+	public function frontend_strings( $strings ) {
+
+		// If the user has GDPR enhancements enabled and has disabled UUID,
+		// disable the the setting, otherwise enable it.
+		$strings['uuid_cookie'] = ! wpforms_setting( 'gdpr-disable-uuid', false );
 
 		return $strings;
 	}

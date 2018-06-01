@@ -3,7 +3,7 @@
  * Plugin Name: TaxJar - Sales Tax Automation for WooCommerce
  * Plugin URI: https://www.taxjar.com/woocommerce-sales-tax-plugin/
  * Description: Save hours every month by putting your sales tax on autopilot. Automated, multi-state sales tax calculation, collection, and filing.
- * Version: 1.6.1
+ * Version: 1.7.0
  * Author: TaxJar
  * Author URI: https://www.taxjar.com
  * WC requires at least: 2.6.0
@@ -43,12 +43,9 @@ final class WC_Taxjar {
 	 * Initialize the plugin.
 	 */
 	public function init() {
-		global $woocommerce;
-
 		// Checks if WooCommerce is installed.
 		if ( class_exists( 'WC_Integration' ) ) {
 			// Include our integration class and WP_User for wp_delete_user()
-			include_once 'includes/tlc-transients/tlc-transients.php';
 			include_once ABSPATH . 'wp-admin/includes/user.php';
 			include_once 'includes/class-wc-taxjar-ajax.php';
 			include_once 'includes/class-wc-taxjar-nexus.php';

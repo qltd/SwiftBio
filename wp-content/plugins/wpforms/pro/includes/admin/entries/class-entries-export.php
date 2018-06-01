@@ -86,6 +86,7 @@ class WPForms_Entries_Export {
 				'select',
 				'radio',
 				'checkbox',
+				'gdpr-checkbox',
 				'email',
 				'address',
 				'url',

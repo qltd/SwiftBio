@@ -3,8 +3,8 @@ Contributors: alekv
 Donate link: http://www.wolfundbaer.ch/donations/
 Tags: woocommerce, woocommerce conversion tracking, google adwords, adwords, conversion, conversion value, conversion tag, conversion pixel, conversion value tracking, conversion tracking, conversion tracking adwords, conversion tracking pixel, conversion tracking script, track conversions, tracking code manager
 Requires at least: 3.7
-Tested up to: 4.8.2
-Stable tag: 1.4.7
+Tested up to: 4.9.6
+Stable tag: 1.4.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -43,13 +43,13 @@ If you like this plugin you might like that one too: [WooCommerce AdWords Dynami
 1. Log out of the shop.
 2. Search for one of your keywords and click on one of your ads.
 3. Purchase an item from your shop.
-4. Wait until the conversion shows up in AdWords.
+4. Wait up to 48 hours until the conversion shows up in AdWords.
 
 With the Google Tag Assistant you will also be able to see the tag fired on the thankyou page.
 
 = I get a fatal error and I am running old versions of WordPress and/or WooCommerce. What can I do? =
 
-As this is a free plugin we don't support old version of WordPress and WooCommerce. You will have to update your installation.
+As this is a free plugin we don't support old versions of WordPress and WooCommerce. You will have to update your installation.
 
 = I am using an offsite payment gateway and the conversions are not being tracked. What can I do? =
 
@@ -65,6 +65,8 @@ You can send the link to the front page of your shop too if you think it would b
 
 == Changelog ==
 
+= 1.4.8 =
+* Tweak: Added discounts into order value calculation
 = 1.4.7 =
 * New: Switched over to the newest version of the AdWords conversion tracking pixel
 = 1.4.6 =

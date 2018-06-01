@@ -326,7 +326,7 @@ class WPForms_Builder_Panel_Fields extends WPForms_Builder_Panel {
 						<# } else { #>
 							<input class="wpforms-screen-reader-element" type="{{ data.type }}" disabled<# if ( 1 === data.settings.choices[choiceID].default ) { print( ' checked' ); } #>>
 						<# } #>
-						<span class="wpforms-image-choices-label">{{ data.settings.choices[choiceID].label }}</span>
+						<span class="wpforms-image-choices-label">{{{ data.settings.choices[choiceID].label }}}</span>
 					</label>
 				</li>
 				<# }) #>
@@ -335,7 +335,7 @@ class WPForms_Builder_Panel_Fields extends WPForms_Builder_Panel {
 			<ul class="primary-input">
 				<# _.each( data.order, function( choiceID, key ) {  #>
 				<li>
-					<input type="{{ data.type }}" disabled<# if ( 1 === data.settings.choices[choiceID].default ) { print( ' checked' ); } #>>{{ data.settings.choices[choiceID].label }}
+					<input type="{{ data.type }}" disabled<# if ( 1 === data.settings.choices[choiceID].default ) { print( ' checked' ); } #>>{{{ data.settings.choices[choiceID].label }}}
 				</li>
 				<# }) #>
 			</ul>

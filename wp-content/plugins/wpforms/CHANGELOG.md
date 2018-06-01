@@ -1,6 +1,28 @@
 # Change Log
 All notable changes to this project will be documented in this file, formatted via [this recommendation](http://keepachangelog.com/).
 
+## [1.4.6] - 2018-05-14
+### Added
+- GDPR Enhancements plugin setting [doc](https://wpforms.com/how-to-create-gdpr-compliant-forms/).
+- GDPR Enhancement: Disable User Cookies plugin setting.
+- GDPR Enhancement: Disable User Details (IP and User Agent) plugin setting.
+- GDPR Enhancement: Disable Storing User Details form setting.
+- GDPR Enhancement: User Agreement form field.
+- Page break, section divider, and HTML fields can now be enabled in email notifications with a filter [doc](https://developers.wpforms.com/docs/filter-reference-wpforms_email_display_other_fields).
+
+### Changed
+- Hide credit card field unless enabled by a payment addon or with a filter [doc](https://developers.wpforms.com/docs/enable-credit-card-field-without-stripe-addon/).
+- PHP warning that alerts users support for PHP 5.4 and below will be dropped this summer.
+- Spam logging, to improve performance.
+
+### Fixed
+- Rating and Likert Scale not included in CSV exports.
+- Typo in base form CSS.
+- Stripping HTML from the checkbox, mulitple choice, and multiple payment choice labels in the form builder.
+- Unreadable errors if 1-click addon install fails.
+- Date and Time field time interval labels not translatable.
+- Form builder icon visibility when field labels are hidden.
+
 ## [1.4.5.3] - 2018-04-03
 ### Changed
 - Use minified admin assets when appropriate.
