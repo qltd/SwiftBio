@@ -68,6 +68,8 @@ function buckets_init()
         'show_in_nav_menu' => true,
         'publicly_queryable' => false,
     ));
+
+
 }
 
 function bucket_columns($columns)
@@ -178,8 +180,17 @@ function include_field_types_buckets()
     global $acf_version;
     remove_post_type_support('buckets', 'editor');
     include_once WP_PLUGIN_DIR.'/buckets/fields/acf-buckets-v'.$acf_version.'.php';
-    create_bucket_field_groups($acf_version);
+
 }
+
+function buckets_activate_field_groups(){
+  global $acf_version;
+  if (isset($acf_version)){
+    create_bucket_field_groups($acf_version);
+  }
+}
+register_activation_hook( __FILE__, 'buckets_activate_field_groups' );
+
 // If ACF is loaded
 if (is_plugin_active('advanced-custom-fields-pro/acf.php')) {
     add_action('acf/include_field_types', 'include_field_types_buckets');
