@@ -207,7 +207,7 @@ class WPForms_Entries_Export {
 		$cols['date_gmt'] = esc_html__( 'Date GMT', 'wpforms' );
 		$cols['entry_id'] = esc_html__( 'ID', 'wpforms' );
 
-		return $cols;
+		return apply_filters( 'wpforms_export_get_csv_cols', $cols, $this->entry_type );
 	}
 
 	/**

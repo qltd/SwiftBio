@@ -16,7 +16,6 @@ class WPForms_Smart_Tags {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-
 		add_filter( 'wpforms_process_smart_tags', array( $this, 'process' ), 10, 4 );
 	}
 
@@ -25,7 +24,7 @@ class WPForms_Smart_Tags {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $return
+	 * @param string $return Type of data to return.
 	 *
 	 * @return string|array
 	 */
@@ -81,16 +80,16 @@ class WPForms_Smart_Tags {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $content
-	 * @param array $form_data
-	 * @param string|array $fields
-	 * @param int|string $entry_id
+	 * @param string $content The string to preprocess.
+	 * @param array $form_data Array of the form data.
+	 * @param string|array $fields Form fields.
+	 * @param int|string $entry_id Entry ID.
 	 *
 	 * @return string
 	 */
 	public function process( $content, $form_data, $fields = '', $entry_id = '' ) {
 
-		// Basic smart tags
+		// Basic smart tags.
 		preg_match_all( "/\{(.+?)\}/", $content, $tags );
 
 		if ( ! empty( $tags[1] ) ) {
@@ -104,7 +103,7 @@ class WPForms_Smart_Tags {
 						break;
 
 					case 'entry_id':
-						$content = str_replace( '{' . $tag . '}', sanitize_text_field( $entry_id ), $content );
+						$content = str_replace( '{' . $tag . '}', absint( $entry_id ), $content );
 						break;
 
 					case 'form_id':

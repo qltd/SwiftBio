@@ -110,7 +110,7 @@ abstract class WPForms_Analytics_Integration {
 	 */
 	public function builder_form_data() {
 
-		$this->form_data = WPForms_Builder->form_data;
+		$this->form_data = WPForms_Builder::instance()->form_data;
 	}
 
 	/**

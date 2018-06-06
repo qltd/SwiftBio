@@ -7,8 +7,8 @@ Author URI: http://www.tatvic.com/
 Author: Tatvic
 Requires at least: 3.6
 Tested up to: 4.9
-Stable tag: 2.0.2
-Version: 2.0.2
+Stable tag: 2.0.3
+Version: 2.0.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -67,8 +67,6 @@ We have an Advanced Google Analytics Plugin for WooCommerce which includes track
 2. Using an FTP program, or your hosting control panel, upload the unzipped plugin folder to your WordPress installation’s wp-content/plugins/ directory
 3. Activate the plugin from the Plugins menu within the WordPress admin
 4. Enter your Universal Analytics ID for the plugin to enable the tracking code
-5. Enable the required features
-5. Accept the Privacy Policy of the Plugin
 
 == Screenshots ==
 1. Enable Enhanced E-commerce for your profile/view. This is a profile / view level setting and can be accessed under Admin > View > E-commerce Settings. Also, add meaningful labels for your checkout steps. We recommend you to label as, Step 1 : Checkout View; Step 2 : Login; Step 3 : Proceed to payment;
@@ -292,10 +290,13 @@ Important Note: When you update the plugin, please save your settings again.
  * gtag.js supported
  * Minor Bug Fixes & Optimization.
 
-  = 2.0.1 - 24/04/2018 =
+ = 2.0.1 - 24/04/2018 =
  * Minor Bug Fixes & Optimization.
 
  = 2.0.2 - 23/05/2018 =
  * IP Anonymization Feature
  * Google Analytics Opt Out
  * Update the Privacy Policy under GDPR Compliance
+
+ = 2.0.3 - 04/06/2018 =
+ * Minor Bug Fixes

@@ -57,15 +57,15 @@ class WPForms_Entries_Single {
 	}
 
 	/**
-	 * Determing if the user is viewing the singley entry page, if so, party on.
+	 * Determine if the user is viewing the single entry page, if so, party on.
 	 *
 	 * @since 1.3.9
 	 */
 	public function init() {
 
 		// Check page and view.
-		$page = ! empty( $_GET['page'] ) ? $_GET['page'] : '';
-		$view = ! empty( $_GET['view'] ) ? $_GET['view'] : '';
+		$page = ! empty( $_GET['page'] ) ? sanitize_key( $_GET['page'] ) : '';
+		$view = ! empty( $_GET['view'] ) ? sanitize_key( $_GET['view'] ) : '';
 
 		if ( 'wpforms-entries' === $page && 'details' === $view ) {
 
@@ -295,7 +295,7 @@ class WPForms_Entries_Single {
 			return;
 		}
 
-		// Check for existing errors
+		// Check for existing errors.
 		if ( $this->abort || empty( $this->entry ) || empty( $this->form ) ) {
 			return;
 		}
@@ -307,7 +307,7 @@ class WPForms_Entries_Single {
 
 		$this->alerts[] = array(
 			'type'    => 'success',
-			'message' => esc_html__( 'Notifications sent!', 'wpforms' ),
+			'message' => esc_html__( 'Notifications were resent!', 'wpforms' ),
 			'dismiss' => true,
 		);
 	}

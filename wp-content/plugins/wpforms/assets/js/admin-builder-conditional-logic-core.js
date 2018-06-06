@@ -91,7 +91,7 @@
 				return;
 			}
 
-			// Remove field types that are not allowed and whitelested
+			// Remove field types that are not allowed and whitelisted.
 			for( key in fields ) {
 				if ( $.inArray( fields[key].type, allowed ) === -1 ){
 					delete fields[key];
@@ -100,7 +100,7 @@
 				}
 			}
 
-			// Now go through each conditional rule in the builder
+			// Now go through each conditional rule in the builder.
 			$rows.each( function() {
 
 				var $this          = $( this ),

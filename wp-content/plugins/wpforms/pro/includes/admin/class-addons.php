@@ -141,7 +141,7 @@ class WPForms_Addons {
 							'</p>';
 					}
 
-					echo '<h4>' . esc_html__( 'Available Addons', 'wpforms' ) . '</h4>';
+					echo '<h4 id="addons-heading" data-text="' . esc_attr__( 'Available Addons', 'wpforms' ) . '">' . esc_html__( 'Available Addons', 'wpforms' ) . '</h4>';
 
 					echo '<div class="addons-container" id="wpforms-admin-addons-list">';
 

@@ -1,6 +1,22 @@
 # Change Log
 All notable changes to this project will be documented in this file, formatted via [this recommendation](http://keepachangelog.com/).
 
+## [1.4.7] - 2018-06-04
+### Added
+- New Providers class and functionality. The Drip addon is the first to leverage the new class and existing provider addons will be updated over time.
+
+### Changed
+- CSV export columns are now filterable (`wpforms_export_get_csv_cols`).
+- Old PHP version (5.2 and 5.3) admin warning adjusted to reflect new August 2018 time line.
+
+### Fixed
+- Multiple Choice fields showing as Radio fields in the builder preview when first created.
+- Duplicating fields in the form builder causing issues with certain field types.
+- Entry ID becomes 0 when resending notifications.
+- Escaping issue with provider connection names contained an apostrophe.
+- Alignment issues with the Addons page display.
+- Incorrect text on the Welcome activation page.
+
 ## [1.4.6] - 2018-05-14
 ### Added
 - GDPR Enhancements plugin setting [doc](https://wpforms.com/how-to-create-gdpr-compliant-forms/).
@@ -40,7 +56,7 @@ All notable changes to this project will be documented in this file, formatted v
 ## [1.4.5.2] - 2018-03-20
 ### Fixed
 - Checkbox and Multiple choice fields not validating when inside pagebreaks.
-- Incorrect documenation link for Input Mask.
+- Incorrect documentation link for Input Mask.
 - Input Mask value disappearing when form builder is refreshed.
 
 ## [1.4.5.1] - 2018-03-20

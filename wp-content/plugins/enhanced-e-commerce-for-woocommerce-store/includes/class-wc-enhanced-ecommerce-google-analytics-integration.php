@@ -18,7 +18,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
      * @return void
      */
     //set plugin version
-    public $tvc_eeVer = '2.0.2';
+    public $tvc_eeVer = '2.0.3';
     public function __construct() {
         
          //Set Global Variables
@@ -112,7 +112,10 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
                     't_df' => $this->ga_DF,
                     't_gUser'=>$this->ga_gUser,
                     't_UAen'=>$this->ga_ST,
-                    't_thr' => $this->ga_imTh,                  
+                    't_thr' => $this->ga_imTh, 
+                    't_IPA' => $this->ga_IPA,
+                    't_OptOut' => $this->ga_OPTOUT,
+                    't_PrivacyPolicy' => $this->ga_PrivacyPolicy,                 
                 )
             );
             $this->wc_version_compare("tvc_smd=" . json_encode($tvc_sMetaData) . ";");        
@@ -220,9 +223,9 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
         }
         // IP Anonymization
         if ($this->ga_IPA) {
-            $ga_ip_anonymization = 'gtag("config", "'.$tracking_id.'", { "anonymize_ip": true });';
+            $ga_ip_anonymization = '"anonymize_ip":true,';
         } else {
-            $ga_ip_anonymization = '';
+            $ga_ip_anonymization ="";
         }
         if($this->ga_OPTOUT) {
                 echo '<script>
@@ -249,8 +252,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
                   window.dataLayer = window.dataLayer || [];
                   function gtag(){dataLayer.push(arguments);}
                   gtag("js", new Date());
-                  '.$ga_ip_anonymization.'
-                  gtag("config", "'.esc_js($tracking_id).'",{"cookie_domain":"'.$set_domain_name.'"});
+                  gtag("config", "'.esc_js($tracking_id).'",{'.$ga_ip_anonymization.' "cookie_domain":"'.$set_domain_name.'"});
                 </script>
                 ';
             echo $code;
@@ -329,7 +331,7 @@ class WC_Enhanced_Ecommerce_Google_Analytics extends WC_Integration {
                 "label" => __("Enable Google Analytics Opt Out (Optional)", "woocommerce"),
                 "type" => "checkbox",
                 "checkboxgroup" => "",
-                "description" => sprintf(__("Use this feature to provide website visitors the ability to prevent their data from being used by Google Analytics As per the GDPR compliance.Click here to check the setup", "woocommerce")),
+                "description" => sprintf(__("Use this feature to provide website visitors the ability to prevent their data from being used by Google Analytics As per the GDPR compliance.Go through the <a href='http://plugins.tatvic.com/downloads/EE-Woocommerce-Plugin-Documentation.pdf' target='_blank' >documentation</a> to check the setup", "woocommerce")),
                 "default" => get_option("ga_OPTOUT") ? get_option("ga_OPTOUT") : "no"  // Backwards compat
             ),
             "ga_PrivacyPolicy" => array(
