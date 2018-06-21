@@ -9,11 +9,19 @@ get_header(); ?>
 <?php $masthead_img = get_field('masthead_image'); ?>
 <div class="masthead" style="background-image: url(<?php echo $masthead_img['url']; ?>);">
     <div class="row">
-        <a href="/" title="home" class="logo"><img src="<?php bloginfo('template_directory'); ?>/img/swift-logo.svg" alt="Swift Biosciences" /></a>
+      <a href="/" title="home" class="logo"><img src="<?php bloginfo('template_directory'); ?>/img/swift-logo.svg" alt="Swift Biosciences" /></a>
+        <div class="col left">
 
-        <div class="text">
-            <h1><?php the_field('masthead_title'); ?></h1>
-            <p><?php the_field('masthead_text'); ?></p>
+
+          <div class="text">
+              <h1><?php the_field('masthead_title'); ?></h1>
+              <p><?php the_field('masthead_text'); ?></p>
+          </div>
+        </div>
+        <div class="col right">
+          <ul class="product-list">
+              <?php wp_nav_menu(array('container' => '', 'items_wrap' => '%3$s', 'theme_location' => 'masthead', 'menu_id' => 'product-menu'));?>
+          </ul>
         </div>
     </div>
 </div>
