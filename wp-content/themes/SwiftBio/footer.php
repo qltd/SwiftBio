@@ -51,7 +51,6 @@
     </div> <!-- #container -->
 
 
-
     <?php /* if (!is_post_type_archive('careers') && !is_page('1080')): ?>
         <script src="https://www.google.com/recaptcha/api.js?onload=CaptchaCallback&render=explicit" async defer></script>
     <?php endif; */ ?>
