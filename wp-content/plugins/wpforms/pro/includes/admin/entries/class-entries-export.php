@@ -103,6 +103,7 @@ class WPForms_Entries_Export {
 				'payment-select',
 				'payment-total',
 				'signature',
+				'net_promoter_score'
 			)
 		);
 

@@ -171,7 +171,7 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 		$this->field_element( 'label', $field, array(
 			'slug'    => 'time_placeholder',
 			'value'   => esc_html__( 'Time', 'wpforms' ),
-			'tooltip' => esc_html__( 'Advanced time options', 'wpforms' ),
+			'tooltip' => esc_html__( 'Advanced time options.', 'wpforms' ),
 		) );
 		echo '<div class="placeholder">';
 		printf( '<input type="text"" class="placeholder" id="wpforms-field-option-%d-time_placeholder" name="fields[%d][time_placeholder]" value="%s">', $field['id'], $field['id'], $time_placeholder );
@@ -447,9 +447,12 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 	public function field_display_date_dropdowns( $format, $field, $field_required, $form_id ) {
 
 		$ranges = apply_filters( 'wpforms_datetime_date_dropdowns', array(
-			'months' => range( 1, 12 ),
-			'days'   => range( 1, 31 ),
-			'years'  => range( date( 'Y' ), 1920 ),
+			'months'       => range( 1, 12 ),
+			'days'         => range( 1, 31 ),
+			'years'        => range( date( 'Y' ), 1920 ),
+			'months_label' => esc_html__( 'MM', 'wpforms' ),
+			'days_label'   => esc_html__( 'DD', 'wpforms' ),
+			'years_label'  => esc_html__( 'YYYY', 'wpforms' ),
 		), $form_id, $field );
 
 		if ( 'm/d/Y' === $format ) {
@@ -465,7 +468,7 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 				$month_class,
 				$field_required
 			);
-			echo '<option class="placeholder" selected disabled>MM</option>';
+			echo '<option class="placeholder" selected disabled>' . esc_html( $ranges['months_label'] ) . '</option>';
 			foreach ( $ranges['months'] as $month ) {
 				printf( '<option value="%d">%d</option>', $month, $month );
 			}
@@ -484,7 +487,7 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 				$day_class,
 				$field_required
 			);
-			echo '<option class="placeholder" selected disabled>DD</option>';
+			echo '<option class="placeholder" selected disabled>' . esc_html( $ranges['days_label'] ) . '</option>';
 			foreach ( $ranges['days'] as $day ) {
 				printf( '<option value="%d">%d</option>', $day, $day );
 			}
@@ -503,7 +506,7 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 				$day_class,
 				$field_required
 			);
-			echo '<option class="placeholder" selected disabled>DD</option>';
+			echo '<option class="placeholder" selected disabled>' . esc_html( $ranges['days_label'] ) . '</option>';
 			foreach ( $ranges['days'] as $day ) {
 				printf( '<option value="%d">%d</option>', $day, $day );
 			}
@@ -522,7 +525,7 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 				$month_class,
 				$field_required
 			);
-			echo '<option class="placeholder" selected disabled>MM</option>';
+			echo '<option class="placeholder" selected disabled>' . esc_html( $ranges['months_label'] ) . '</option>';
 			foreach ( $ranges['months'] as $month ) {
 				printf( '<option value="%d">%d</option>', $month, $month );
 			}
@@ -542,7 +545,7 @@ class WPForms_Field_Date_Time extends WPForms_Field {
 			$year_class,
 			$field_required
 		);
-		echo '<option class="placeholder" selected disabled>YYYY</option>';
+		echo '<option class="placeholder" selected disabled>' . esc_html( $ranges['years_label'] ) . '</option>';
 		foreach ( $ranges['years'] as $year ) {
 			printf( '<option value="%d">%d</option>', $year, $year );
 		}

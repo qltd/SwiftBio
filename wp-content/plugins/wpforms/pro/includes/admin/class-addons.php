@@ -265,28 +265,33 @@ class WPForms_Addons {
 
 						if ( ! empty( $status ) && 'upgrade' !== $status ) {
 							echo '<div class="status">';
-								echo '<strong>' . esc_html__( 'Status', 'wpforms' ) . ':</strong> ';
-								echo '<span class="status-label status-' . $status . '">' . $status_label . '</span>';
+								echo '<strong>' .
+									sprintf(
+										/* translators: %s - addon status label. */
+										esc_html__( 'Status: %s', 'wpforms' ),
+										'<span class="status-label status-' . esc_attr( $status ) . '">' . $status_label . '</span>'
+									) .
+									'</strong> ';
 							echo '</div>';
 						} else {
 							$action_class = 'upgrade-button';
 						}
 
-						echo '<div class="' . $action_class . '">';
+						echo '<div class="' . esc_attr( $action_class ) . '">';
 							if ( 'active' === $status ) {
-								echo '<button class="status-' . $status . '" data-plugin="' . esc_attr( $plugin_basename ) . '">';
+								echo '<button class="status-' . esc_attr( $status ) . '" data-plugin="' . esc_attr( $plugin_basename ) . '">';
 									echo '<i class="fa fa-toggle-on" aria-hidden="true"></i>';
-									_e( 'Deactivate', 'wpforms' );
+									esc_html_e( 'Deactivate', 'wpforms' );
 								echo '</button>';
 							} elseif ( 'inactive' === $status ) {
-								echo '<button class="status-' . $status . '" data-plugin="' . esc_attr( $plugin_basename ) . '">';
+								echo '<button class="status-' . esc_attr( $status ) . '" data-plugin="' . esc_attr( $plugin_basename ) . '">';
 									echo '<i class="fa fa-toggle-on fa-flip-horizontal" aria-hidden="true"></i>';
-									_e( 'Activate', 'wpforms' );
+									esc_html_e( 'Activate', 'wpforms' );
 								echo '</button>';
 							} elseif ( 'download' === $status ) {
-								echo '<button class="status-' . $status . '" data-plugin="' . esc_url( $addon['url'] ) . '">';
+								echo '<button class="status-' . esc_attr( $status ) . '" data-plugin="' . esc_url( $addon['url'] ) . '">';
 									echo '<i class="fa fa-cloud-download" aria-hidden="true"></i>';
-									_e( 'Install Addon', 'wpforms' );
+									esc_html_e( 'Install Addon', 'wpforms' );
 								echo '</button>';
 							} else {
 								echo '<a href="https://wpforms.com/account/" target="_blank" rel="noopener noreferrer" class="wpforms-btn wpforms-btn-orange">' . esc_html__( 'Upgrade Now', 'wpforms' ) . '</a>';
@@ -305,8 +310,6 @@ class WPForms_Addons {
 				unset( $this->addons[ $id ] );
 			}
 		}
-
-		//echo '<div style="clear:both;"></div>';
 	}
 
 	/**

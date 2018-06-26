@@ -115,6 +115,8 @@ class WPForms_Conditional_Logic_Core {
 								<option value="!c">{{ wpforms_builder.operator_not_contains }}</option>
 								<option value="^">{{ wpforms_builder.operator_starts }}</option>
 								<option value="~">{{ wpforms_builder.operator_ends }}</option>
+								<option value=">">{{ wpforms_builder.operator_greater_than }}</option>
+								<option value="<">{{ wpforms_builder.operator_less_than }}</option>
 							</select>
 						</td>
 						<td class="value">
@@ -148,7 +150,7 @@ class WPForms_Conditional_Logic_Core {
 	public function builder_block( $args = array(), $echo = true ) {
 
 		if ( ! empty( $args['form'] ) ) {
-			$form_fields = wpforms_get_form_fields( $args['form'], array( 'text', 'textarea', 'select', 'radio', 'email', 'url', 'checkbox', 'number', 'payment-multiple', 'payment-select', 'hidden', 'rating' ) );
+			$form_fields = wpforms_get_form_fields( $args['form'], array( 'text', 'textarea', 'select', 'radio', 'email', 'url', 'checkbox', 'number', 'payment-multiple', 'payment-select', 'hidden', 'rating', 'net_promoter_score' ) );
 		} else {
 			$form_fields = array();
 		}
@@ -354,7 +356,7 @@ class WPForms_Conditional_Logic_Core {
 												(int) $rule_id
 											);
 
-												echo '<option value="">' . esc_html__( '-- Select Field --', 'wpforms' ) . '</option>';
+												echo '<option value="">' . esc_html__( '--- Select Field ---', 'wpforms' ) . '</option>';
 
 												if ( ! empty( $form_fields ) ) {
 
@@ -402,12 +404,13 @@ class WPForms_Conditional_Logic_Core {
 
 												// Only text based fields support
 												// these additional operators.
-												if ( ! $selected || ( in_array( $form_fields[ $rule['field'] ]['type'], array( 'text', 'textarea', 'email', 'url', 'number', 'hidden' ), true ) ) ) {
-													printf( '<option value="c" %s>%s</option>', selected( $operator, 'c', false ), esc_html__( 'contains', 'wpforms' ) );
-													printf( '<option value="!c" %s>%s</option>', selected( $operator, '!c', false ), esc_html__( 'does not contain', 'wpforms' ) );
-													printf( '<option value="^" %s>%s</option>', selected( $operator, '^', false ), esc_html__( 'starts with', 'wpforms' ) );
-													printf( '<option value="~" %s>%s</option>', selected( $operator, '~', false ), esc_html__( 'ends with', 'wpforms' ) );
-												}
+												$disabled = in_array( $form_fields[ $rule['field'] ]['type'], array( 'text', 'textarea', 'email', 'url', 'number', 'hidden' ), true ) ? '' : ' disabled';
+												printf( '<option value="c" %s%s>%s</option>', selected( $operator, 'c', false ), $disabled, esc_html__( 'contains', 'wpforms' ) );
+												printf( '<option value="!c" %s%s>%s</option>', selected( $operator, '!c', false ), $disabled, esc_html__( 'does not contain', 'wpforms' ) );
+												printf( '<option value="^" %s%s>%s</option>', selected( $operator, '^', false ), $disabled, esc_html__( 'starts with', 'wpforms' ) );
+												printf( '<option value="~" %s%s>%s</option>', selected( $operator, '~', false ), $disabled, esc_html__( 'ends with', 'wpforms' ) );
+												printf( '<option value=">" %s%s>%s</option>', selected( $operator, '>', false ), $disabled, esc_html__( 'greater than', 'wpforms' ) );
+												printf( '<option value="<" %s%s>%s</option>', selected( $operator, '<', false ), $disabled, esc_html__( 'less than', 'wpforms' ) );
 
 											echo '</select>';
 
@@ -428,9 +431,9 @@ class WPForms_Conditional_Logic_Core {
 													$disabled = '';
 												}
 
-												if ( isset( $form_fields[ $rule['field'] ]['type'] ) && in_array( $form_fields[ $rule['field'] ]['type'], array( 'text', 'textarea', 'email', 'url', 'number', 'hidden', 'rating' ), true ) ) {
+												if ( isset( $form_fields[ $rule['field'] ]['type'] ) && in_array( $form_fields[ $rule['field'] ]['type'], array( 'text', 'textarea', 'email', 'url', 'number', 'hidden', 'rating', 'net_promoter_score' ), true ) ) {
 
-													$type = in_array( $form_fields[ $rule['field'] ]['type'], array( 'rating' ), true ) ? 'number' : 'text';
+													$type = in_array( $form_fields[ $rule['field'] ]['type'], array( 'rating', 'net_promoter_score' ), true ) ? 'number' : 'text';
 
 													printf(
 														'<input type="%s" name="%s[conditionals][%s][%s][value]" value="%s" class="wpforms-conditional-value" %s>',
@@ -452,7 +455,7 @@ class WPForms_Conditional_Logic_Core {
 														$disabled
 													);
 
-														echo '<option value="">' . esc_html__( '-- Select Choice --', 'wpforms' ) . '</option>';
+														echo '<option value="">' . esc_html__( '--- Select Choice ---', 'wpforms' ) . '</option>';
 
 														if ( ! empty( $form_fields[ $rule['field'] ]['choices'] ) ) {
 
@@ -566,7 +569,7 @@ class WPForms_Conditional_Logic_Core {
 					$rule_operator = $rule['operator'];
 					$rule_value    = isset( $rule['value'] ) ? $rule['value'] : '';
 
-					if ( in_array( $fields[ $rule_field ]['type'], array( 'text', 'textarea', 'email', 'url', 'number', 'hidden', 'rating' ), true ) ) {
+					if ( in_array( $fields[ $rule_field ]['type'], array( 'text', 'textarea', 'email', 'url', 'number', 'hidden', 'rating', 'net_promoter_score' ), true ) ) {
 
 						// Text based fields.
 						$left  = trim( strtolower( $fields[ $rule_field ]['value'] ) );
@@ -596,6 +599,14 @@ class WPForms_Conditional_Logic_Core {
 								break;
 							case '!e':
 								$pass_rule = ( '' != $left );
+								break;
+							case '>':
+								$left      = preg_replace( '/[^0-9.]/', '', $left );
+								$pass_rule = ( '' !== $left ) && ( floatval( $left ) > floatval( $right ) );
+								break;
+							case '<':
+								$left      = preg_replace( '/[^0-9.]/', '', $left );
+								$pass_rule = ( '' !== $left ) && ( floatval( $left ) < floatval( $right ) );
 								break;
 							default:
 								$pass_rule = apply_filters( 'wpforms_process_conditional_logic', false, $rule_operator, $left, $right );

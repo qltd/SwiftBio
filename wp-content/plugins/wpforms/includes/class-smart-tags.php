@@ -36,7 +36,7 @@ class WPForms_Smart_Tags {
 			'form_id'             => esc_html__( 'Form ID', 'wpforms' ),
 			'form_name'           => esc_html__( 'Form Name', 'wpforms' ),
 			'page_title'          => esc_html__( 'Embedded Post/Page Title', 'wpforms' ),
-			'page_url'            => esc_html__( 'Embedded Post Page URL', 'wpforms' ),
+			'page_url'            => esc_html__( 'Embedded Post/Page URL', 'wpforms' ),
 			'page_id'             => esc_html__( 'Embedded Post/Page ID', 'wpforms' ),
 			'date format="m/d/Y"' => esc_html__( 'Date', 'wpforms' ),
 			'query_var key=""'    => esc_html__( 'Query String Variable', 'wpforms' ),

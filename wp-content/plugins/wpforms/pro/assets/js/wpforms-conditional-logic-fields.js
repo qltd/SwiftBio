@@ -150,7 +150,7 @@
 
 							rule.value = '';
 
-							if ( rule.type === 'radio' || rule.type === 'checkbox' || rule.type === 'payment-multiple' || rule.type === 'rating' ) {
+							if ( rule.type === 'radio' || rule.type === 'checkbox' || rule.type === 'payment-multiple' || rule.type === 'rating' || rule.type === 'net_promoter_score' ) {
 								$check = $form.find( '#wpforms-'+formID+'-field_'+rule.field+'-container input:checked' );
 								if ( $check.length ) {
 									val = true;
@@ -164,12 +164,16 @@
 
 						} else {
 
-							if ( rule.type === 'radio' || rule.type === 'checkbox' || rule.type === 'payment-multiple' || rule.type === 'rating' ) {
+							if ( rule.type === 'radio' || rule.type === 'checkbox' || rule.type === 'payment-multiple' || rule.type === 'rating' || rule.type === 'net_promoter_score' ) {
 								$check = $form.find( '#wpforms-'+formID+'-field_'+rule.field+'-container input:checked' );
 								if ( $check.length ) {
 									$.each( $check, function() {
 										var escapeVal = WPFormsConditionals.escapeText( $( this ).val() );
-										if ( rule.value === escapeVal ) {
+										if ( rule.type === 'checkbox' ) {
+											if ( rule.value === escapeVal ) {
+												val = escapeVal;
+											}
+										} else {
 											val = escapeVal;
 										}
 									});
@@ -177,7 +181,7 @@
 							} else {
 								// text, textarea, number, select
 								val = $form.find( '#wpforms-'+formID+'-field_'+rule.field ).val();
-								if (rule.type === 'select' || rule.type === 'payment-select' ) {
+								if ( rule.type === 'select' || rule.type === 'payment-select' ) {
 									val = WPFormsConditionals.escapeText( val );
 								}
 							}
@@ -186,7 +190,6 @@
 						if ( null === val ) {
 							val = '';
 						}
-
 						left  = $.trim( val.toString().toLowerCase() );
 						right = $.trim( rule.value.toString().toLowerCase() );
 
@@ -214,6 +217,14 @@
 								break;
 							case '!e' :
 								pass_rule = ( left.length > 0 );
+								break;
+							case '>' :
+								left      = left.replace( /[^0-9.]/g, '' );
+								pass_rule = ( '' !== left ) && ( WPFormsConditionals.floatval( left ) > WPFormsConditionals.floatval( right ) );
+								break;
+							case '<' :
+								left      = left.replace( /[^0-9.]/g, '' );
+								pass_rule = ( '' !== left ) && ( WPFormsConditionals.floatval( left ) < WPFormsConditionals.floatval( right ) );
 								break;
 						}
 
@@ -279,6 +290,16 @@
 			};
 
 			return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+		},
+
+		/**
+		 * Parse float. Returns 0 instead of NaN. Similar to PHP floatval().
+		 *
+		 * @since 1.4.7.1
+		 */
+		floatval: function ( mixedVar ) {
+
+			return ( parseFloat( mixedVar ) || 0 );
 		}
 	};
 

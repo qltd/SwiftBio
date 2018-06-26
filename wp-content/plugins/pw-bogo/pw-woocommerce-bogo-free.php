@@ -3,12 +3,12 @@
  * Plugin Name: PW WooCommerce BOGO
  * Plugin URI: https://pimwick.com/pw-bogo
  * Description: Makes Buy One, Get One promotions so easy!
- * Version: 2.69
+ * Version: 2.70
  * Author: Pimwick, LLC
  * Author URI: https://pimwick.com/pw-bogo
  *
  * WC requires at least: 2.6.13
- * WC tested up to: 3.4.1
+ * WC tested up to: 3.4.2
  *
  * Copyright: © Pimwick, LLC
 */
@@ -846,7 +846,7 @@ final class PW_BOGO {
             }
 
         } else {
-            foreach ( $this->get_active_bogos() as $active_bogo ) {
+            foreach ( $this->get_active_bogos( true ) as $active_bogo ) {
                 if ( $this->is_bogo_coupon( $code, $active_bogo ) ) {
                     return true;
                 }

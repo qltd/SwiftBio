@@ -730,8 +730,14 @@ class WPForms_Entries_Single {
 
 					<p class="wpforms-entry-id">
 						<span class="dashicons dashicons-admin-network"></span>
-						<?php esc_html_e( 'Entry ID:', 'wpforms' ); ?>
-						<strong><?php echo absint( $entry->entry_id ); ?></strong>
+						<?php
+						printf(
+							/* translators: %s - entry ID. */
+							esc_html__( 'Entry ID: %s', 'wpforms' ),
+							'<strong>' . absint( $entry->entry_id ) . '</strong>'
+						);
+						?>
+
 					</p>
 
 					<p class="wpforms-entry-date">

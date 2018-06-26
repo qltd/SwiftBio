@@ -603,6 +603,7 @@ function wpforms_get_form_fields( $form = false, $whitelist = array() ) {
 		'payment-multiple',
 		'payment-select',
 		'payment-total',
+		'net_promoter_score'
 	);
 	$allowed_form_fields = apply_filters( 'wpforms_get_form_fields_allowed', $allowed_form_fields );
 

@@ -1449,6 +1449,7 @@
 			$choice.find( 'input.default').attr( 'name', 'fields['+fieldID+'][choices]['+id+'][default]' ).prop( 'checked', false );
 			$choice.find( '.preview' ).empty();
 			$choice.find( '.wpforms-image-upload-add' ).show();
+			$choice.find( '.wpforms-money-input' ).trigger( 'focusout' );
 
 			if ( checked === true ) {
 				$parent.find( 'input.default' ).prop( 'checked', true );
@@ -1608,7 +1609,7 @@
 
 				var importOptions = '<div class="bulk-add-display">';
 
-				importOptions += '<p class="heading">'+wpforms_builder.bulk_add_heading+' <a href="#" class="toggle-bulk-add-presets">'+wpforms_builder.bulk_add_presets_show+'</a></p>';
+				importOptions += '<p class="heading wpforms-clear">'+wpforms_builder.bulk_add_heading+' <a href="#" class="toggle-bulk-add-presets">'+wpforms_builder.bulk_add_presets_show+'</a></p>';
 				importOptions += '<ul>';
 					for(var key in wpforms_preset_choices) {
 						importOptions += '<li><a href="#" data-preset="'+key+'" class="bulk-add-preset-insert">'+wpforms_preset_choices[key].name+'</a></li>';
