@@ -782,15 +782,6 @@ header .menu-bar {
   padding: 70px 2rem 0;
   min-height: 50rem;
   position: relative; }
-  .masthead:after {
-    min-width: 100%;
-    min-height: 100%;
-    content: " ";
-    position: absolute;
-    background: rgba(255, 255, 255, 0.8);
-    top: 0;
-    left: 0;
-    z-index: 0; }
   .masthead .row {
     padding: 20px 0;
     display: -webkit-box;
