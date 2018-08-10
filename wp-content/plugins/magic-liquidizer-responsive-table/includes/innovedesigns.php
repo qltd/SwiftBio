@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) OR exit;
 | License: GLP Version 3                                             |
 |                                                                    |
 | Magic Liquidizer Responsive Table - Make HTML Table Responsive.    |
-| Copyright (C) 2014, Elvin Deza,                                    |
+| Copyright (C) 2018, Elvin Deza,                                    |
 | http://innovedesigns.com/                                          |
 | All rights reserved.                                               |
 |                                                                    |

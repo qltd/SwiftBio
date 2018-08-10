@@ -1,4 +1,4 @@
-<?php 
+<?php
 $options = $currentSource->getParameterHTML();
 ?>
 
@@ -10,7 +10,7 @@ $options = $currentSource->getParameterHTML();
 		<?php echo $message; ?>
 		</p>
 <?php endif; ?>
-	
+
 	<p>
 		<?php printf(__('<b>Selected data source:</b> %s', 'geoip-detect'), geoip_detect2_get_current_source_description() ); ?>
 	</p>
@@ -26,7 +26,7 @@ $options = $currentSource->getParameterHTML();
 			<p><?php echo $options; ?></p>
 			<p>
 			<input type="submit" class="button button-primary" value="<?php _e('Save', 'geoip-detect'); ?>" />
-			</p>	
+			</p>
 		</form>
 	</p>
 	<?php endif; ?>
@@ -58,14 +58,15 @@ $options = $currentSource->getParameterHTML();
 			<label><input type="checkbox" name="options[disable_pagecache]" value="1" <?php if (!empty($wp_options['disable_pagecache'])) { echo 'checked="checked"'; } ?>>&nbsp;<?php _e('Disable caching a page that contains a shortcode or API call to geo-dependent functions.', 'geoip-detect'); ?></label><br />
 			<span class="detail-box">
 				<?php _e('At least WP SuperCache, W3TotalCache and ZenCache are supported.', 'geoip-detect'); ?>
-			</span>	
+			</span>
 				<?php if (!empty($wp_options['set_css_country']) && !empty($wp_options['disable_pagecache'])): ?>
 				<span class="geoip_detect_error"><?php _e('Warning: As the CSS option above is active, this means that all pages are not cached.', 'geoip-detect'); ?></span>
 				<?php endif; ?>
 		</p>
-		
+
 		<p>
 			<label><input type="checkbox" name="options[has_reverse_proxy]" value="1" <?php if (!empty($wp_options['has_reverse_proxy'])) { echo 'checked="checked"'; } ?>>&nbsp;<?php _e('The server is behind a reverse proxy', 'geoip-detect')?></label>
+			<a href="options-general.php?page=<?php echo GEOIP_PLUGIN_BASENAME ?>&geoip_detect_part=client-ip">(<?php _e('Client IP debug panel', 'geoip-detect');?>)</a>
 			<span class="detail-box">
 			<?php if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) : ?>
 			<?php printf(__('(With Proxy: %s - Without Proxy: %s - Client IP with current configuration: %s)', 'geoip-detect'), $_SERVER['HTTP_X_FORWARDED_FOR'], $_SERVER['REMOTE_ADDR'], geoip_detect2_get_client_ip()); ?><br />
@@ -74,6 +75,14 @@ $options = $currentSource->getParameterHTML();
 			<?php endif; ?>
 			</span>
 		</p>
+		<p>
+			<label><?php _e('IPs of trusted proxies:', 'geoip-detect'); ?><input type="text" name="options[trusted_proxy_ips]" <?php echo esc_attr($wp_options['trusted_proxy_ips']); ?>" placeholder="<?php _e('IPs comma-seperated', 'geoip-detect'); ?>" />
+			<span class="detail-box">
+				<?php _e('If specified, only IPs in this list will be treated as proxy.', 'geoip-detect'); ?><br>
+				<?php _e('Make sure to add both IPv4 and IPv6 adresses of the proxy!', 'geoip-detect'); ?>
+			</span>
+		</p>
+
 		<p>
 			<label><?php _e('External IP of this server:', 'geoip-detect'); ?> <input type="text" name="options[external_ip]" value="<?php echo esc_attr($wp_options['external_ip']); ?>" placeholder="<?php _e('detect automatically', 'geoip-detect'); ?>" /></label>
 			<span class="detail-box">
@@ -98,30 +107,3 @@ $options = $currentSource->getParameterHTML();
 	<?php endif; ?>
 	<?php require(GEOIP_PLUGIN_DIR . '/views/footer.php'); ?>
 </div>
-<style>
-.geoip_detect_error {
-	display:block;
-	clear: both;
-    background-color: rgb(255, 255, 255);
-    border-left: rgb(255, 0, 0) solid 4px;
-    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
-    display: inline-block;
-    font-size: 14px;
-    line-height: 19px;
-    margin-bottom: 0;
-    margin-left: 2px;
-    margin-right: 20px;
-    margin-top: 25px;
-    padding-bottom: 11px;
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-top: 11px;
-    text-align: left;
-}
-.detail-box {
-	display: block;
-	margin-left: 50px;
-	color: #777;
-}
-
-</style>

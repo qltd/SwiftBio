@@ -1,7 +1,7 @@
 <?php
 /*
 Copyright 2013-2018 Yellow Tree, Siegen, Germany
-Author: Benjamin Pick (info@yellowtree.de)
+Author: Benjamin Pick (wp-geoip-detect| |posteo.de)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -97,7 +97,7 @@ HTML;
  
 		$tmpfname = wp_tempnam( $url_filename );
 		if ( ! $tmpfname )
-			return new \WP_Error('http_no_file', __('Could not create Temporary file.'));
+			return new \WP_Error('http_no_file', __('Could not create temporary file.', 'geoip-detect'));
 		
 		$headers = array();
 		$headers['User-Agent'] = GEOIP_DETECT_USER_AGENT;
@@ -108,7 +108,7 @@ HTML;
 		$response = wp_safe_remote_get( $url, array('timeout' => 300, 'stream' => true, 'filename' => $tmpfname, 'headers' => $headers ) );
 		$http_response_code = wp_remote_retrieve_response_code( $response );
 		if (304 === $http_response_code) {
-			return new \WP_Error( 'http_304', __('It has not changed since last update.', 'geoip-detect') );
+			return new \WP_Error( 'http_304', __('It has not changed since the last update.', 'geoip-detect') );
 		}
 		if (is_wp_error( $response ) || 200 !=  $http_response_code) {
 			unlink($tmpfname);

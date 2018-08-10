@@ -1,7 +1,7 @@
 <?php
 /*
 Copyright 2013-2018 Yellow Tree, Siegen, Germany
-Author: Benjamin Pick (info@yellowtree.de)
+Author: Benjamin Pick (wp-geoip-detect| |posteo.de)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -108,7 +108,7 @@ HTML;
 				$reader = new \GeoIp2\Database\Reader ( $data_file, $locales );
 			} catch ( \Exception $e ) {
 				if (WP_DEBUG)
-					echo printf(__('Error while creating reader for "%s": %s', 'geoip-detect'), $filename, $e->getMessage ());
+					printf(__('Error while creating reader for "%s": %s', 'geoip-detect'), $data_file, $e->getMessage());
 			}
 		}
 		
@@ -154,8 +154,7 @@ HTML;
 			$metadata = $reader->metadata();
 			$reader->close();
 		} catch ( \Exception $e ) {
-			if (WP_DEBUG)
-				echo printf(__('Error while creating reader for "%s": %s', 'geoip-detect'), $filename, $e->getMessage ());
+			// Not readable, so do not accept this filename
 			return '';
 		}
 	

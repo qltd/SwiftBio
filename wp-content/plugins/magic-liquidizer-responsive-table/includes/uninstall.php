@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) OR exit;
 | License: GLP Version 3                                             |
 |                                                                    |
 | Magic Liquidizer Responsive Table - Make HTML Table Responsive.    |
-| Copyright (C) 2014, Elvin Deza,                                    |
+| Copyright (C) 2018, Elvin Deza,                                    |
 | http://innovedesigns.com/                                          |
 | All rights reserved.                                               |
 |                                                                    |
@@ -22,13 +22,17 @@ function liquidizer_table_uninstall() {
         return;
     }
 	if ( !is_multisite() ) {
-			delete_option('liquidizer_lite_wp_table');
-			delete_option('liquidizer_lite_wp_which_table_element');
-			delete_option('liquidizer_lite_wp_table_width');
+		delete_option('liquidizer_lite_wp_table');
+		delete_option('liquidizer_lite_wp_which_table_element');
+		delete_option('liquidizer_lite_wp_table_width');
+		delete_option('liquidizer_lite_header_selector');
+		delete_option('liquidizer_lite_bodyrow_selector');
 
 	} else {
-        	delete_site_option('liquidizer_lite_wp_table');
-			delete_site_option('liquidizer_lite_wp_which_table_element');
-			delete_site_option('liquidizer_lite_wp_table_width');
+        delete_site_option('liquidizer_lite_wp_table');
+		delete_site_option('liquidizer_lite_wp_which_table_element');
+		delete_site_option('liquidizer_lite_wp_table_width');
+		delete_option('liquidizer_lite_header_selector');
+		delete_option('liquidizer_lite_bodyrow_selector');
 	}
 }	

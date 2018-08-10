@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) OR exit;
 | License: GLP Version 3                                             |
 |                                                                    |
 | Magic Liquidizer Responsive Table - Make HTML Table Responsive.    |
-| Copyright (C) 2014, Elvin Deza,                                    |
+| Copyright (C) 2018, Elvin Deza,                                    |
 | http://innovedesigns.com/                                          |
 | All rights reserved.                                               |
 |                                                                    |
@@ -27,6 +27,8 @@ if (!function_exists('liquidizer_table_activation')) {
 			$liquidizer_lite_options = array(
 			'liquidizer_lite_wp_table' => '1',
 			'liquidizer_lite_wp_which_table_element' => 'table',
+			'liquidizer_lite_header_selector' => 'thead td, thead th, tr th',
+			'liquidizer_lite_bodyrow_selector' => 'tbody tr, tr',
 			'liquidizer_lite_wp_table_width' => '780');
 		
 	/* Handling variable array */	

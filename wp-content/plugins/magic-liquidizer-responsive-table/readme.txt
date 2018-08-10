@@ -1,10 +1,10 @@
 === Magic Liquidizer Responsive Table ===
 Contributors: esstat17
 Donate link: http://www.innovedesigns.com/
-Tags: responsive, table, fluid, mobile screens
+Tags: responsive, table, fluid, mobile, rwd, smartphone, tablet
 Requires at least: 3.0.1
-Tested up to: 4.7
-Stable tag: 1.0.9
+Tested up to: 4.9
+Stable tag: 2.0.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -61,6 +61,15 @@ It's very simple, just add these CSS lines into your stylesheet
 
 == Changelog ==
 
+= 2.0.2 - 08/10/2018 =
+* [Fixed] No display on mobile view due to empty fields on Selectors
+
+= 2.0.1 - 08/04/2018 =
+* [Added] Fields added for table header and table row selectors
+* [Fixed] Duplicate issue on bind JS actions or events in the ID attribute only.
+  @see this thread https://wordpress.org/support/topic/duplicate-content-36/ and https://wordpress.org/support/topic/duplicate-content-fix/ for more details
+  Special thanks to @franciscus and @spiderwisp for helping me to fix this issue.
+
 = 2.0.0 - 02/02/2017 =
 * [Improved] JS to support most of HTML Table Format
 * [Improved] Styling or CSS fixes
@@ -110,6 +119,10 @@ It's very simple, just add these CSS lines into your stylesheet
 * Initial Released Date
 
 == Upgrade Notice ==
+
+= 2.0.2 - 08/10/2018 =
+* [Important] Upgrade is required to avoid bugs. Sorry for inconvenience
+* [Fixed] No display on mobile view due to empty fields on Selectors
 
 = 2.0.0 - 02/02/2017 =
 * [Improved] JS to support most of HTML Table Format
