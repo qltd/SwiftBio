@@ -4,7 +4,7 @@ Donate link: http://www.innovedesigns.com/
 Tags: responsive, table, fluid, mobile, rwd, smartphone, tablet
 Requires at least: 3.0.1
 Tested up to: 4.9
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -60,6 +60,8 @@ It's very simple, just add these CSS lines into your stylesheet
 3. This screenshot was taken from our DEMO page AFTER installation. Client-side screenshot. screenshot-3.png
 
 == Changelog ==
+= 2.0.3 - 08/13/2018 = 
+* [Fixed] Fatal Error on Older PHP versions
 
 = 2.0.2 - 08/10/2018 =
 * [Fixed] No display on mobile view due to empty fields on Selectors
@@ -119,6 +121,9 @@ It's very simple, just add these CSS lines into your stylesheet
 * Initial Released Date
 
 == Upgrade Notice ==
+
+= 2.0.3 - 08/13/2018 = 
+* [Important] Fatal Error on Older PHP versions
 
 = 2.0.2 - 08/10/2018 =
 * [Important] Upgrade is required to avoid bugs. Sorry for inconvenience

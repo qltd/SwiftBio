@@ -4,7 +4,7 @@ Plugin Name: Magic Liquidizer Responsive Table
 Plugin URI: http://www.innovedesigns.com/wordpress/magic-liquidizer-responsive-table-rwd-you-must-have-wp-plugin/
 Author: Elvin D.
 Description: A simple and lightweight plugin that makes HTML &lt;table&gt; tag become responsive. After activation, go to Dashboard > Magic Liquidizer Lite > Table.
-Version: 2.0.2
+Version: 2.0.3
 Tags: responsive, table, fluid, mobile screens
 Author URI: http://innovedesigns.com/author/esstat17
 Text Domain: ml-txt
@@ -260,11 +260,11 @@ if (class_exists('magic_liquidizer_wp_class_lite') && !class_exists('MagicLiquid
 				<label style="color: #333;"><?php _e('<b>Breakpoint</b>. Initiate responsive `table` at breakpoint e.g. 480px, 720px, 840px, or 960px', 'ml-txt'); ?></label>
 			</p>
 			<p>
-				<input id="liquidizer_lite_header_selector" value="<?php echo !empty( get_option('liquidizer_lite_header_selector') ) ? get_option('liquidizer_lite_header_selector') : "thead td, thead th, tr th"; ?>" name="liquidizer_lite_header_selector" type="text">
+				<input id="liquidizer_lite_header_selector" value="<?php $headerSelector = get_option('liquidizer_lite_header_selector'); echo !empty($headerSelector) ? $headerSelector : "thead td, thead th, tr th"; ?>" name="liquidizer_lite_header_selector" type="text">
 				<label style="color: #333;"><?php _e('<b>Header Table Selector</b>. <code>thead td, thead th, tr th</code> default. Specify header html tag within the table.', 'ml-txt'); ?></label>
 			</p>
 			<p>
-				<input id="liquidizer_lite_bodyrow_selector" value="<?php echo !empty( get_option('liquidizer_lite_bodyrow_selector') ) ? get_option('liquidizer_lite_bodyrow_selector') : "tbody tr, tr"; ?>" name="liquidizer_lite_bodyrow_selector" type="text">
+				<input id="liquidizer_lite_bodyrow_selector" value="<?php $bodyRowSelector = get_option('liquidizer_lite_bodyrow_selector'); echo !empty($bodyRowSelector) ? $bodyRowSelector : "tbody tr, tr"; ?>" name="liquidizer_lite_bodyrow_selector" type="text">
 				<label style="color: #333;"><?php _e('<b>Body Table Selector</b>. <code>tbody tr, tr</code> default. Specify `body row` html tag within the table.', 'ml-txt'); ?></label>
 			</p>
 			<p class="submit"><input type="submit" name="submit" class="button-primary" value="<?php _e('Save Changes', 'ml-txt'); ?>" /></p>
@@ -328,23 +328,25 @@ if (class_exists('magic_liquidizer_wp_class_lite') && !class_exists('MagicLiquid
  		}
  		
  		public function magic_liquidizer_table_style() {
-			wp_register_style( 'magic-liquidizer-table-style', plugins_url('idcss/ml-responsive-table.css', __FILE__),array(), '2.0.2', 'all');
+			wp_register_style( 'magic-liquidizer-table-style', plugins_url('idcss/ml-responsive-table.css', __FILE__),array(), '2.0.3', 'all');
   			wp_enqueue_style( 'magic-liquidizer-table-style' );
 		}
 	
  		public function magic_liquidizer_table_scripts() {
-    		wp_register_script( 'magic-liquidizer-table', plugins_url('idjs/ml.responsive.table.min.js', __FILE__), array('jquery'), '2.0.2', false);    	
+    		wp_register_script( 'magic-liquidizer-table', plugins_url('idjs/ml.responsive.table.min.js', __FILE__), array('jquery'), '2.0.3', false);    	
     		wp_enqueue_script( 'magic-liquidizer-table');	    	
     	}
     	
     	    // textarea script
 	function execute_jquery_table_lite() { 
+		$headerSelector = get_option('liquidizer_lite_header_selector');
+		$bodyRowSelector = get_option('liquidizer_lite_bodyrow_selector');
     	echo 
 "
 <script type='text/javascript'>
 	//<![CDATA[
     jQuery(document).ready(function($) { 
-    	$('html').MagicLiquidizerTable({ whichelement: '".str_replace('  ', '', get_option('liquidizer_lite_wp_which_table_element'))."', breakpoint: '".str_replace(array('px','PX','Px','pX','p x',' '), '', get_option('liquidizer_lite_wp_table_width'))."', headerSelector: '".str_replace('  ', '', !empty( get_option('liquidizer_lite_header_selector') ) ? get_option('liquidizer_lite_header_selector') : "thead td, thead th, tr th")."', bodyRowSelector: '".str_replace('  ', '', !empty( get_option('liquidizer_lite_bodyrow_selector') ) ? get_option('liquidizer_lite_bodyrow_selector') : "tbody tr, tr")."', table: '".get_option('liquidizer_lite_wp_table')."' })
+    	$('html').MagicLiquidizerTable({ whichelement: '".str_replace('  ', '', get_option('liquidizer_lite_wp_which_table_element'))."', breakpoint: '".str_replace(array('px','PX','Px','pX','p x',' '), '', get_option('liquidizer_lite_wp_table_width'))."', headerSelector: '".str_replace('  ', '', !empty( $headerSelector ) ? $headerSelector : "thead td, thead th, tr th")."', bodyRowSelector: '".str_replace('  ', '', !empty( $bodyRowSelector ) ? $bodyRowSelector : "tbody tr, tr")."', table: '".get_option('liquidizer_lite_wp_table')."' })
     })
 	//]]>
 </script> 	
